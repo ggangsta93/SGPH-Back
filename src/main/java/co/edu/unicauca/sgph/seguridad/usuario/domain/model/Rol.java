@@ -1,6 +1,6 @@
 package co.edu.unicauca.sgph.seguridad.usuario.domain.model;
 
-import co.edu.unicauca.sgph.common.enums.RolUsuarioEnum;
+import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.output.persistence.entity.RolUsuarioEnum;
 
 public class Rol {
 

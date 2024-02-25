@@ -11,8 +11,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import co.edu.unicauca.sgph.common.enums.RolUsuarioEnum;
-
 @Entity
 @Table(name = "ROL")
 public class RolEntity {

@@ -72,4 +72,20 @@ public class ProgramaEntity {
 	public void setAbreviatura(String abreviatura) {
 		this.abreviatura = abreviatura;
 	}
+
+	public FacultadEntity getFacultad() {
+		return facultad;
+	}
+
+	public void setFacultad(FacultadEntity facultad) {
+		this.facultad = facultad;
+	}
+
+	public List<AsignaturaEntity> getAsignaturas() {
+		return asignaturas;
+	}
+
+	public void setAsignaturas(List<AsignaturaEntity> asignaturas) {
+		this.asignaturas = asignaturas;
+	}
 }

@@ -2,6 +2,8 @@ package co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTORequest;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
+
 public class UsuarioInDTO {
 	
 	private Long idPersona;
@@ -24,7 +26,7 @@ public class UsuarioInDTO {
 	
 	private String password;
 	
-	private Boolean estado;
+	private EstadoUsuarioEnum estado;
 	
 	private List<Long> lstIdRol;
 	
@@ -110,11 +112,11 @@ public class UsuarioInDTO {
 		this.password = password;
 	}
 
-	public Boolean getEstado() {
+	public EstadoUsuarioEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoUsuarioEnum estado) {
 		this.estado = estado;
 	}
 

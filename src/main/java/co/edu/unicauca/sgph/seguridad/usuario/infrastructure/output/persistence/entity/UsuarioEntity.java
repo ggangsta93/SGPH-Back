@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -31,8 +33,9 @@ public class UsuarioEntity extends PersonaEntity {
 	@Column(name = "PASSWORD")
 	private String password;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "ESTADO")
-	private Boolean estado;
+	private EstadoUsuarioEnum estado;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "USUARIO_ROL", joinColumns = @JoinColumn(name = "ID_PERSONA"), inverseJoinColumns = @JoinColumn(name = "ID_ROL"))
@@ -63,11 +66,11 @@ public class UsuarioEntity extends PersonaEntity {
 		this.password = password;
 	}
 
-	public Boolean getEstado() {
+	public EstadoUsuarioEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoUsuarioEnum estado) {
 		this.estado = estado;
 	}
 

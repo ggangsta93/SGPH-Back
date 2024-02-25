@@ -2,6 +2,8 @@ package co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTOResponse;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
+
 public class UsuarioOutDTO {
 
 	private Long idPersona;
@@ -26,7 +28,7 @@ public class UsuarioOutDTO {
 	
 	private String password;
 	
-	private Boolean estado;
+	private EstadoUsuarioEnum estado;
 	
 	private List<Long> lstIdRol;
 	
@@ -38,7 +40,7 @@ public class UsuarioOutDTO {
 
 	public UsuarioOutDTO(Long idPersona, Long idTipoIdentificacion, String numeroIdentificacion,
 			String codigoTipoIdentificacion, String primerNombre, String segundoNombre, String primerApellido,
-			String segundoApellido, String email, String nombreUsuario, String password, Boolean estado) {
+			String segundoApellido, String email, String nombreUsuario, String password, EstadoUsuarioEnum estado) {
 		this.idPersona = idPersona;
 		this.idTipoIdentificacion = idTipoIdentificacion;
 		this.numeroIdentificacion = numeroIdentificacion;
@@ -141,11 +143,11 @@ public class UsuarioOutDTO {
 		this.password = password;
 	}
 
-	public Boolean getEstado() {
+	public EstadoUsuarioEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoUsuarioEnum estado) {
 		this.estado = estado;
 	}
 

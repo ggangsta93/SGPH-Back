@@ -40,4 +40,4 @@ build/
 *.docx
 *.doc
 
-/src/main/resources/application.yml
+consolaSGPH.log

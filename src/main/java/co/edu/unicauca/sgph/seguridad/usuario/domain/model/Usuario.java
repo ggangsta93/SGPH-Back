@@ -5,6 +5,7 @@ import java.util.List;
 
 import co.edu.unicauca.sgph.common.domain.model.Persona;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
+import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 
 public class Usuario extends Persona {
 
@@ -12,7 +13,7 @@ public class Usuario extends Persona {
 
 	private String password;
 
-	private Boolean estado;
+	private EstadoUsuarioEnum estado;
 	
 	private Set<Rol> roles;
 	
@@ -42,11 +43,11 @@ public class Usuario extends Persona {
 		this.password = password;
 	}
 
-	public Boolean getEstado() {
+	public EstadoUsuarioEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoUsuarioEnum estado) {
 		this.estado = estado;
 	}
 
