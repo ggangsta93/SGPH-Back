@@ -8,9 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 import co.edu.unicauca.sgph.aula.infrastructure.output.persistence.entity.AulaEntity;
 import co.edu.unicauca.sgph.aula.infrastructure.output.persistence.entity.TipoAulaEntity;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaAulaDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 
 public interface AulaRepositoryInt extends JpaRepository<AulaEntity, Long> {
 	

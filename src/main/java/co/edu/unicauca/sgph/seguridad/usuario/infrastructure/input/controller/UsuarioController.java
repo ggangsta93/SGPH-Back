@@ -1,7 +1,10 @@
 package co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import co.edu.unicauca.sgph.seguridad.usuario.aplication.input.GestionarUsuarioCUIntPort;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTORequest.UsuarioInDTO;
+import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTOResponse.RolOutDTO;
+import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTOResponse.TipoIdentificacionOutDTO;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.mapper.UsuarioRestMapper;
 
@@ -51,6 +56,44 @@ public class UsuarioController {
 	@PostMapping("/consultarUsuariosPorFiltro")
 	public Page<UsuarioOutDTO> consultarUsuariosPorFiltro(@RequestBody FiltroUsuarioDTO filtroUsuarioDTO) {
 		return this.gestionarUsuarioCUIntPort.consultarUsuariosPorFiltro(filtroUsuarioDTO);
+	}
+
+	/**
+	 * Método encargado de consultar todos los tipos de identificación de
+	 * persona</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return
+	 */
+	@GetMapping("/consultarTiposIdentificacion")
+	public List<TipoIdentificacionOutDTO> consultarTiposIdentificacion() {
+		return this.usuarioRestMapper
+				.toLstTipoIdentificacionOutDTO(this.gestionarUsuarioCUIntPort.consultarTiposIdentificacion());
+	}
+
+	/**
+	 * Método encargado de consultar todos los roles de usuario</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return
+	 */
+	@GetMapping("/consultarRoles")
+	public List<RolOutDTO> consultarRoles() {
+		return this.usuarioRestMapper.toLstRolOutDTO(this.gestionarUsuarioCUIntPort.consultarRoles());
+	}
+
+	/**
+	 * Método encargado de consultar todos los estados de usuario</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return
+	 */
+	@GetMapping("/consultarEstadosUsuario")
+	public List<String> consultarEstadosUsuario() {
+		return this.gestionarUsuarioCUIntPort.consultarEstadosUsuario();
 	}
 
 }

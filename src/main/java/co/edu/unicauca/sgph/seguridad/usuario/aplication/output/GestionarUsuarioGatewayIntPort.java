@@ -1,7 +1,11 @@
 package co.edu.unicauca.sgph.seguridad.usuario.aplication.output;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
+import co.edu.unicauca.sgph.common.domain.model.TipoIdentificacion;
+import co.edu.unicauca.sgph.seguridad.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.seguridad.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
@@ -26,5 +30,33 @@ public interface GestionarUsuarioGatewayIntPort {
 	 * @return
 	 */
 	public Page<UsuarioOutDTO> consultarUsuariosPorFiltro(FiltroUsuarioDTO filtroUsuarioDTO);
+
+	/**
+	 * Método encargado de consultar todos los tipos de identificación de
+	 * persona</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return
+	 */
+	public List<TipoIdentificacion> consultarTiposIdentificacion();
+
+	/**
+	 * Método encargado de consultar todos los roles de usuario</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return
+	 */
+	public List<Rol> consultarRoles();
+
+	/**
+	 * Método encargado de consultar todos los estados de usuario</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return
+	 */
+	public List<String> consultarEstadosUsuario();
 
 }

@@ -1,24 +1,30 @@
 package co.edu.unicauca.sgph.seguridad.usuario.infrastructure.output.persistence.gateway;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import co.edu.unicauca.sgph.common.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.seguridad.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
+import co.edu.unicauca.sgph.seguridad.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.seguridad.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
+import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.output.persistence.repository.UsuarioRepositoryInt;
 
@@ -96,22 +102,23 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 			typedQuery.setParameter(entry.getKey(), entry.getValue());
 		}
 
-		Page<UsuarioOutDTO> listaUsuarios=null;		
+		Page<UsuarioOutDTO> listaUsuarios = null;
 		// Si pageable es nulo, entonces retornar todos los resultados sin paginación
 		if (Objects.isNull(pageable)) {
 			listaUsuarios = new PageImpl<>(typedQuery.getResultList());
 		} else {
-			listaUsuarios = new PageImpl<>(typedQuery.getResultList(), pageable, contarUsuariosConsultados(filtroUsuarioDTO));
+			listaUsuarios = new PageImpl<>(typedQuery.getResultList(), pageable,
+					contarUsuariosConsultados(filtroUsuarioDTO));
 		}
 
-		//Se establecen los identificadores de los roles y programas para cada usuario
+		// Se establecen los identificadores de los roles y programas para cada usuario
 		for (UsuarioOutDTO usuarioOutDTO : listaUsuarios) {
 			usuarioOutDTO
 					.setLstIdRol(this.consultarIdentificadoresRolesUsuarioPorPersona(usuarioOutDTO.getIdPersona()));
 			usuarioOutDTO.setLstIdPrograma(
 					this.consultarIdentificadoresProgramasUsuarioPorPersona(usuarioOutDTO.getIdPersona()));
 		}
-				
+
 		return listaUsuarios;
 	}
 
@@ -188,5 +195,32 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	 */
 	private List<Long> consultarIdentificadoresProgramasUsuarioPorPersona(Long idPersona) {
 		return this.usuarioRepositoryInt.consultarIdentificadoresProgramasUsuarioPorPersona(idPersona);
+	}
+
+	/**
+	 * @see co.edu.unicauca.sgph.seguridad.usuario.aplication.output.GestionarUsuarioGatewayIntPort#consultarTiposIdentificacion()
+	 */
+	@Override
+	public List<TipoIdentificacion> consultarTiposIdentificacion() {
+		return this.modelMapper.map(this.usuarioRepositoryInt.consultarTiposIdentificacion(),
+				new TypeToken<List<TipoIdentificacion>>() {
+				}.getType());
+	}
+
+	/**
+	 * @see co.edu.unicauca.sgph.seguridad.usuario.aplication.output.GestionarUsuarioGatewayIntPort#consultarRoles()
+	 */
+	@Override
+	public List<Rol> consultarRoles() {
+		return this.modelMapper.map(this.usuarioRepositoryInt.consultarRoles(), new TypeToken<List<Rol>>() {
+		}.getType());
+	}
+
+	/**
+	 * @see co.edu.unicauca.sgph.seguridad.usuario.aplication.output.GestionarUsuarioGatewayIntPort#consultarEstadosUsuario()
+	 */
+	@Override
+	public List<String> consultarEstadosUsuario() {
+		return Arrays.stream(EstadoUsuarioEnum.values()).map(Enum::name).collect(Collectors.toList());
 	}
 }

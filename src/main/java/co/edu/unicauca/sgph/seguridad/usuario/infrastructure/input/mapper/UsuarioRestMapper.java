@@ -1,21 +1,32 @@
 package co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.mapper;
 
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import co.edu.unicauca.sgph.common.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import co.edu.unicauca.sgph.seguridad.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.seguridad.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTORequest.UsuarioInDTO;
+import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTOResponse.RolOutDTO;
+import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTOResponse.TipoIdentificacionOutDTO;
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
 
 @Mapper(componentModel = "spring")
 public interface UsuarioRestMapper {
+	
+	RolOutDTO toRolOutDTO(Rol rol);
+	
+	List<RolOutDTO> toLstRolOutDTO(List<Rol> rol);
+	
+	TipoIdentificacionOutDTO toTipoIdentificacionOutDTO(TipoIdentificacion tipoIdentificacion);
+	
+	List<TipoIdentificacionOutDTO> toLstTipoIdentificacionOutDTO(List<TipoIdentificacion> lstTipoIdentificacion);
 
 	@Mapping(target = "idTipoIdentificacion", expression = "java(usuario.getTipoIdentificacion().getIdTipoIdentificacion())")
 	@Mapping(target = "codigoTipoIdentificacion", expression = "java(usuario.getTipoIdentificacion().getCodigoTipoIdentificacion())")

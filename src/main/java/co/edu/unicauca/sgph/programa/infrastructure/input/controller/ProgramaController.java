@@ -57,7 +57,6 @@ public class ProgramaController {
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param lstIdFacultad
 	 * @return
 	 */
 	@GetMapping("/consultarProgramas")
