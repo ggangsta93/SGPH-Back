@@ -11,9 +11,9 @@ import co.edu.unicauca.sgph.aula.infrastructure.output.persistence.entity.TipoAu
 
 public interface AulaRepositoryInt extends JpaRepository<AulaEntity, Long> {
 	
-	public AulaEntity findByIdAula(Long idAula);
 	
-	
+	public AulaEntity findByIdAula(Long idAula);	
+		
 	/**
 	 * Método encargado de obtener los horarios formateados a partir del curso.
 	 * Ejemplo del formato: 'LUNES 07:00-09:00 Salón 204-Edificio nuevo'

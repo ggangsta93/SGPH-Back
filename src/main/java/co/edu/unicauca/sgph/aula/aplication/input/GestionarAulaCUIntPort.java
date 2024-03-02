@@ -18,7 +18,6 @@ public interface GestionarAulaCUIntPort {
 	
 	public List<String> consultarAulaHorarioPorIdCurso(Long idCurso);
 	
-		
 	
 	
 	

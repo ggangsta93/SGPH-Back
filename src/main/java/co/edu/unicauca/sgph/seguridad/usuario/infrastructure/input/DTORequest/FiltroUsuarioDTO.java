@@ -2,6 +2,8 @@ package co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTORequest;
 
 import java.io.Serializable;
 
+import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
+
 public class FiltroUsuarioDTO implements Serializable {
 
 	private static final long serialVersionUID = -8457760909533623061L;
@@ -9,15 +11,15 @@ public class FiltroUsuarioDTO implements Serializable {
 	private String nombre;
 
 	private String numeroIdentificacion;
-		
-	private Boolean estado;
+
+	private EstadoUsuarioEnum estado;
 
 	private Integer pagina;
 
 	private Integer registrosPorPagina;
 
 	public FiltroUsuarioDTO() {
-		//Constructor sin parámetros
+		// Constructor sin parámetros
 	}
 
 	public String getNombre() {
@@ -35,7 +37,7 @@ public class FiltroUsuarioDTO implements Serializable {
 	public void setNumeroIdentificacion(String numeroIdentificacion) {
 		this.numeroIdentificacion = numeroIdentificacion;
 	}
-	
+
 	public Integer getPagina() {
 		return pagina;
 	}
@@ -52,11 +54,11 @@ public class FiltroUsuarioDTO implements Serializable {
 		this.registrosPorPagina = registrosPorPagina;
 	}
 
-	public Boolean getEstado() {
+	public EstadoUsuarioEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoUsuarioEnum estado) {
 		this.estado = estado;
 	}
 }
