@@ -1,0 +1,33 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: sgph
+  datasource:
+    url: jdbc:mysql://localhost/sgph?useSSL=false&serverTimezone=GMT&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    #database-platform: org.hibernate.dialect.MySQL8Dialect 
+    properties:
+      hibernate:  
+        dialect: org.hibernate.dialect.MySQL8Dialect
+      #javax:
+        #persistence:
+          #validation:
+            #mode: none
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: update
+      
+logging:
+  level:
+    root: INFO
+    '[org.hibernate.SQL]': DEBUG
+    '[org.hibernate.type.descriptor.sql.BasicBinder]': TRACE
+  file:
+    name: consolaSGPH.log
+  
+
