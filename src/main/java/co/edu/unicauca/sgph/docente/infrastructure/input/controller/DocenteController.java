@@ -16,7 +16,6 @@ import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteInDTO
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.mapper.DocenteRestMapper;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController

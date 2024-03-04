@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
 
 public interface GestionarDocenteCUIntPort {
 

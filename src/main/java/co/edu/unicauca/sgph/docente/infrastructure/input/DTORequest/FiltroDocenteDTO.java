@@ -2,6 +2,8 @@ package co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest;
 
 import java.io.Serializable;
 
+import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
+
 public class FiltroDocenteDTO implements Serializable {
 
 	private static final long serialVersionUID = -1067303712899236108L;
@@ -12,7 +14,7 @@ public class FiltroDocenteDTO implements Serializable {
 	
 	private String codigo;
 	
-	private Boolean estado;
+	private EstadoDocenteEnum estado;
 
 	private Integer pagina;
 
@@ -62,11 +64,11 @@ public class FiltroDocenteDTO implements Serializable {
 		this.registrosPorPagina = registrosPorPagina;
 	}
 
-	public Boolean getEstado() {
+	public EstadoDocenteEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoDocenteEnum estado) {
 		this.estado = estado;
 	}
 }

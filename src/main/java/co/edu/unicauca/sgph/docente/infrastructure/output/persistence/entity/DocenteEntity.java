@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -25,8 +27,9 @@ public class DocenteEntity extends PersonaEntity {
 	@Column(name = "CODIGO")
 	private String codigo;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "ESTADO")
-	private Boolean estado;
+	private EstadoDocenteEnum estado;
 
 	@JsonBackReference
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -53,11 +56,11 @@ public class DocenteEntity extends PersonaEntity {
 		this.codigo = codigo;
 	}
 
-	public Boolean getEstado() {
+	public EstadoDocenteEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoDocenteEnum estado) {
 		this.estado = estado;
 	}
 }

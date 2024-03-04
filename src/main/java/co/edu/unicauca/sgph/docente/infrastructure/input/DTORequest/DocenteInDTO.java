@@ -1,5 +1,7 @@
 package co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest;
 
+import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
+
 public class DocenteInDTO {
 	private Long idPersona;
 
@@ -19,7 +21,7 @@ public class DocenteInDTO {
 	
 	private String codigo;
 	
-	private Boolean estado;
+	private EstadoDocenteEnum estado;
 	
 	public Long getIdPersona() {
 		return idPersona;
@@ -93,11 +95,11 @@ public class DocenteInDTO {
 		this.codigo = codigo;
 	}
 
-	public Boolean getEstado() {
+	public EstadoDocenteEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoDocenteEnum estado) {
 		this.estado = estado;
-	}	
+	}
 }

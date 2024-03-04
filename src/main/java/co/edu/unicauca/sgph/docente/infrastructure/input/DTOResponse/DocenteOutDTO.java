@@ -1,5 +1,7 @@
 package co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse;
 
+import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
+
 public class DocenteOutDTO {
 
 	private Long idPersona;
@@ -22,7 +24,7 @@ public class DocenteOutDTO {
 
 	private String codigo;
 	
-	private Boolean estado;
+	private EstadoDocenteEnum estado;
 
 	public DocenteOutDTO() {
 		// Constructor sin parámetros
@@ -30,7 +32,7 @@ public class DocenteOutDTO {
 
 	public DocenteOutDTO(Long idPersona, Long idTipoIdentificacion, String numeroIdentificacion,
 			String codigoTipoIdentificacion, String primerNombre, String segundoNombre, String primerApellido,
-			String segundoApellido, String email, String codigo, Boolean estado) {
+			String segundoApellido, String email, String codigo, EstadoDocenteEnum estado) {
 		this.idPersona = idPersona;
 		this.idTipoIdentificacion = idTipoIdentificacion;
 		this.numeroIdentificacion = numeroIdentificacion;
@@ -124,11 +126,11 @@ public class DocenteOutDTO {
 		this.codigoTipoIdentificacion = codigoTipoIdentificacion;
 	}
 
-	public Boolean getEstado() {
+	public EstadoDocenteEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoDocenteEnum estado) {
 		this.estado = estado;
 	}
 }

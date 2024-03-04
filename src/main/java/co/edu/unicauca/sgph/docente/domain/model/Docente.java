@@ -4,12 +4,13 @@ import java.util.List;
 
 import co.edu.unicauca.sgph.common.domain.model.Persona;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
+import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
 
 public class Docente extends Persona {
 
 	private String codigo;
 	
-	private Boolean estado;
+	private EstadoDocenteEnum estado;
 	
 	private List<Curso> cursos;	
 	
@@ -37,11 +38,11 @@ public class Docente extends Persona {
 		this.cursos = cursos;
 	}
 
-	public Boolean getEstado() {
+	public EstadoDocenteEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoDocenteEnum estado) {
 		this.estado = estado;
 	}
 }
