@@ -10,7 +10,11 @@ public enum TipoEspacioFisicoEnum {
 	SALA_DIGITALES_TELEMATICA(7L);	
 
     private final Long idTipoEspacioFisico;
-
+    
+ 	private TipoEspacioFisicoEnum(Long idTipoEspacioFisico) {
+		this.idTipoEspacioFisico = idTipoEspacioFisico;
+	}
+ 	
 	public Long getIdTipoEspacioFisico() {
 		return idTipoEspacioFisico;
 	}
