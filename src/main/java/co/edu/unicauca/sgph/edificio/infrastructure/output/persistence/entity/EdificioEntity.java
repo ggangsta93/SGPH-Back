@@ -18,7 +18,7 @@ import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.Fa
 public class EdificioEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_EDIFICIO_GENERATOR", sequenceName = "SEC_EDIFICIO", allocationSize = 300, initialValue = 1)
+	@SequenceGenerator(name = "SEC_EDIFICIO_GENERATOR", sequenceName = "SEC_EDIFICIO", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_EDIFICIO_GENERATOR")
 	@Column(name = "ID_EDIFICIO", nullable = false)
 	private Long idEdificio;

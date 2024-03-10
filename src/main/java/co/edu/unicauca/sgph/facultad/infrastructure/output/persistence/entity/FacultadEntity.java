@@ -13,7 +13,7 @@ import javax.persistence.Table;
 public class FacultadEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_FACULTAD_GENERATOR", sequenceName = "SEC_FACULTAD", allocationSize = 300, initialValue = 1)
+	@SequenceGenerator(name = "SEC_FACULTAD_GENERATOR", sequenceName = "SEC_FACULTAD", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_FACULTAD_GENERATOR")
 	@Column(name = "ID_FACULTAD", nullable = false)
 	private Long idFacultad;
