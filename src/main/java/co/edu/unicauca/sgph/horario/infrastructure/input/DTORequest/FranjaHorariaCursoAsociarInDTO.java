@@ -6,7 +6,7 @@ public class FranjaHorariaCursoAsociarInDTO {
 
 	private Long idHorario;
 
-	private Long idAula;
+	private Long idEspacioFisico;
 
 	private DiaSemanaEnum dia;
 
@@ -22,12 +22,12 @@ public class FranjaHorariaCursoAsociarInDTO {
 		this.idHorario = idHorario;
 	}
 
-	public Long getIdAula() {
-		return idAula;
+	public Long getIdEspacioFisico() {
+		return idEspacioFisico;
 	}
 
-	public void setIdAula(Long idAula) {
-		this.idAula = idAula;
+	public void setIdEspacioFisico(Long idEspacioFisico) {
+		this.idEspacioFisico = idEspacioFisico;
 	}
 
 	public DiaSemanaEnum getDia() {

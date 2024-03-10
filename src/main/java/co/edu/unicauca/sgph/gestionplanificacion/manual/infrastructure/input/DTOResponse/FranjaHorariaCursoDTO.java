@@ -11,7 +11,7 @@ public class FranjaHorariaCursoDTO implements Serializable {
 
 	private Long idHorario;
 
-	private Long idAula;
+	private Long idEspacioFisico;
 
 	private DiaSemanaEnum dia;
 
@@ -22,20 +22,20 @@ public class FranjaHorariaCursoDTO implements Serializable {
 	public FranjaHorariaCursoDTO() {
 	}
 
-	public FranjaHorariaCursoDTO(Long idHorario, Long idAula, DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin) {
+	public FranjaHorariaCursoDTO(Long idHorario, Long idEspacioFisico, DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin) {
 		this.idHorario = idHorario;
-		this.idAula = idAula;
+		this.idEspacioFisico = idEspacioFisico;
 		this.dia = dia;
 		this.horaInicio = horaInicio.toString();
 		this.horaFin = horaFin.toString();
 	}
 
-	public Long getIdAula() {
-		return idAula;
+	public Long getIdEspacioFisico() {
+		return idEspacioFisico;
 	}
 
-	public void setIdAula(Long idAula) {
-		this.idAula = idAula;
+	public void setIdEspacioFisico(Long idEspacioFisico) {
+		this.idEspacioFisico = idEspacioFisico;
 	}
 
 	public DiaSemanaEnum getDia() {

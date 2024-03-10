@@ -15,9 +15,9 @@ import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.Gestion
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaAulaDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.InfoGeneralCursosPorProgramaDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.output.persistence.mapper.PlanificacionManualRestMapper;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.CrearActualizarDocentesCursoInDTO;
@@ -30,33 +30,41 @@ import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.CrearActual
 @RestController
 @RequestMapping("/PlanificacionManual")
 public class PlanificacionManualController {
-	
+
 	private GestionarPlanificacionManualCUIntPort gestionarPlanificacionManualCUIntPort;
 	private PlanificacionManualRestMapper planificacionManualRestMapper;
-		
+
 	public PlanificacionManualController(GestionarPlanificacionManualCUIntPort gestionarPlanificacionManualCUIntPort,
 			PlanificacionManualRestMapper planificacionManualRestMapper) {
 		this.gestionarPlanificacionManualCUIntPort = gestionarPlanificacionManualCUIntPort;
 		this.planificacionManualRestMapper = planificacionManualRestMapper;
 	}
-	
-	/*
-	@Deprecated
-	@GetMapping("/consultarCruceHorarioDocente")
-	public List<Object[]> consultarCruceHorarioDocente(@RequestParam Long idCurso, @RequestParam DiaSemanaEnum dia,
-			@RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaInicio,
-			@RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaFin) {
-		return this.gestionarHorarioCUIntPort.consultarCruceHorarioDocente(idCurso, dia, horaInicio, horaFin);
-	}
 
-	@Deprecated
-	@GetMapping("/consultarCruceHorarioAula")
-	public List<HorarioOutDTO> consultarCruceHorarioAula(@RequestParam List<Long> lstIdAula,
-			@RequestParam DiaSemanaEnum dia, @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaInicio,
-			@RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaFin) {
-		return this.horarioRestMapper.toLstHorarioOutDTO(this.gestionarHorarioCUIntPort
-				.consultarCruceHorarioAula(lstIdAula, dia, horaInicio, horaFin));
-	}*/
+	/*
+	 * @Deprecated
+	 * 
+	 * @GetMapping("/consultarCruceHorarioDocente") public List<Object[]>
+	 * consultarCruceHorarioDocente(@RequestParam Long idCurso, @RequestParam
+	 * DiaSemanaEnum dia,
+	 * 
+	 * @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaInicio,
+	 * 
+	 * @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaFin) { return
+	 * this.gestionarHorarioCUIntPort.consultarCruceHorarioDocente(idCurso, dia,
+	 * horaInicio, horaFin); }
+	 * 
+	 * @Deprecated
+	 * 
+	 * @GetMapping("/consultarCruceHorarioAula") public List<HorarioOutDTO>
+	 * consultarCruceHorarioAula(@RequestParam List<Long> lstIdAula,
+	 * 
+	 * @RequestParam DiaSemanaEnum dia, @RequestParam @DateTimeFormat(pattern =
+	 * "HH:mm") LocalTime horaInicio,
+	 * 
+	 * @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaFin) { return
+	 * this.horarioRestMapper.toLstHorarioOutDTO(this.gestionarHorarioCUIntPort
+	 * .consultarCruceHorarioAula(lstIdAula, dia, horaInicio, horaFin)); }
+	 */
 
 	/**
 	 * Método encargado de consultar los cursos por diferentes criterios de busqueda
@@ -67,10 +75,12 @@ public class PlanificacionManualController {
 	 * @return
 	 */
 	@PostMapping("/consultarCursosPlanificacionPorFiltro")
-	public Page<CursoPlanificacionOutDTO> consultarCursosPlanificacionPorFiltro(@RequestBody FiltroCursoPlanificacionDTO filtroCursoPlanificacionDTO) {
-		return this.gestionarPlanificacionManualCUIntPort.consultarCursosPlanificacionPorFiltro(filtroCursoPlanificacionDTO);
+	public Page<CursoPlanificacionOutDTO> consultarCursosPlanificacionPorFiltro(
+			@RequestBody FiltroCursoPlanificacionDTO filtroCursoPlanificacionDTO) {
+		return this.gestionarPlanificacionManualCUIntPort
+				.consultarCursosPlanificacionPorFiltro(filtroCursoPlanificacionDTO);
 	}
-	
+
 	/**
 	 * Método encargado de consultar la información gneral de los cursos de un
 	 * programa dado el identificador del programa
@@ -84,7 +94,7 @@ public class PlanificacionManualController {
 	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(@RequestParam Long idPrograma) {
 		return this.gestionarPlanificacionManualCUIntPort.consultarInfoGeneralCursosPorPrograma(idPrograma);
 	}
-	
+
 	/**
 	 * Método encargado de crear y/o actualizar los horarios de un curso.
 	 * 
@@ -98,7 +108,7 @@ public class PlanificacionManualController {
 			@RequestBody CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO) {
 		return this.gestionarPlanificacionManualCUIntPort.crearActualizarHorarioCurso(crearActualizarHorarioCursoInDTO);
 	}
-	
+
 	/**
 	 * Método encargado de crear y/o actualizar los docentes de un curso.
 	 * 
@@ -110,13 +120,14 @@ public class PlanificacionManualController {
 	@PostMapping("/crearActualizarDocentesCursoDTO")
 	public CrearActualizarDocentesCursoOutDTO crearActualizarDocentesCursoDTO(
 			@RequestBody CrearActualizarDocentesCursoInDTO crearActualizarDocentesCursoInDTO) {
-		return this.gestionarPlanificacionManualCUIntPort.crearActualizarDocentesCursoDTO(crearActualizarDocentesCursoInDTO);
-	}	
-	
+		return this.gestionarPlanificacionManualCUIntPort
+				.crearActualizarDocentesCursoDTO(crearActualizarDocentesCursoInDTO);
+	}
+
 	/**
 	 * Método encargado de obtener las franjas disponibles de un curso dado un
 	 * conjunto de criterios de busqueda; este método considera los horarios de los
-	 * docentes y aula.
+	 * docentes y espacios físicos.
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -124,10 +135,12 @@ public class PlanificacionManualController {
 	 * @return
 	 */
 	@PostMapping("/consultarFranjasHorariasDisponiblesPorCurso")
-	public List<FranjaHorariaCursoDTO> consultarFranjasHorariasDisponiblesPorCurso(@RequestBody FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
-		return this.gestionarPlanificacionManualCUIntPort.consultarFranjasHorariasDisponiblesPorCurso(filtroFranjaHorariaDisponibleCursoDTO);
+	public List<FranjaHorariaCursoDTO> consultarFranjasHorariasDisponiblesPorCurso(
+			@RequestBody FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
+		return this.gestionarPlanificacionManualCUIntPort
+				.consultarFranjasHorariasDisponiblesPorCurso(filtroFranjaHorariaDisponibleCursoDTO);
 	}
-	
+
 	/**
 	 * Método encargado de obtener las franjas horarias de un curso dado el
 	 * identificador del curso
@@ -141,9 +154,9 @@ public class PlanificacionManualController {
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(@RequestParam Long idCurso) {
 		return this.gestionarPlanificacionManualCUIntPort.consultarFranjasHorariaCursoPorIdCurso(idCurso);
 	}
-	
+
 	/**
-	 * Método encargado de obtener los nombres completos de cada aula. Ejemplo del
+	 * Método encargado de obtener los nombres completos de cada espacio físico. Ejemplo del
 	 * formato: 'Salón 204-Edificio nuevo'
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
@@ -154,10 +167,11 @@ public class PlanificacionManualController {
 	public List<FormatoPresentacionFranjaHorariaCursoDTO> consultarFormatoPresentacionFranjaHorariaCurso() {
 		return this.gestionarPlanificacionManualCUIntPort.consultarFormatoPresentacionFranjaHorariaCurso();
 	}
-	
-	
-	/****************Consultar horarios para gestionadores, Aula, Docente, y Grupo******************/
-	
+
+	/****************
+	 * Consultar horarios para gestionadores, Espacio físico, Docente, y Grupo
+	 ******************/
+
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un docente
 	 * 
@@ -170,18 +184,20 @@ public class PlanificacionManualController {
 	public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(@RequestParam Long idPersona) {
 		return this.gestionarPlanificacionManualCUIntPort.consultarFranjasDocentePorIdPersona(idPersona);
 	}
-	
+
 	/**
-	 * Método encargado de obtener todas las franjas horarias de un aula
+	 * Método encargado de obtener todas las franjas horarias de un espacio físico
 	 *
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param idAula
+	 * @param idEspacioFisico
 	 * @return
 	 */
-	@GetMapping("/consultarFranjasAulaPorIdAula")
-	public List<FranjaHorariaAulaDTO> consultarFranjasAulaPorIdAula(@RequestParam Long idAula) {
-		return this.gestionarPlanificacionManualCUIntPort.consultarFranjasAulaPorIdAula(idAula);
-	}	
-	
+	@GetMapping("/consultarFranjasEspacioFisicoPorIdEspacioFisico")
+	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(
+			@RequestParam Long idEspacioFisico) {
+		return this.gestionarPlanificacionManualCUIntPort
+				.consultarFranjasEspacioFisicoPorIdEspacioFisico(idEspacioFisico);
+	}
+
 }

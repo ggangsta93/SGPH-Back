@@ -23,9 +23,9 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 	
 	private List<Long> listaIdEdificio;
 	
-	private List<Long> listaIdTipoAula;
+	private List<Long> listaIdTipoEspacioFisico;
 	
-	private List<String> listaNumeroAula;
+	private List<String> listaNumeroEspacioFisico;
 
 	public Long getIdCurso() {
 		return idCurso;
@@ -83,19 +83,19 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 		this.listaIdEdificio = listaIdEdificio;
 	}
 
-	public List<Long> getListaIdTipoAula() {
-		return listaIdTipoAula;
+	public List<Long> getListaIdTipoEspacioFisico() {
+		return listaIdTipoEspacioFisico;
 	}
 
-	public void setListaIdTipoAula(List<Long> listaIdTipoAula) {
-		this.listaIdTipoAula = listaIdTipoAula;
+	public void setListaIdTipoEspacioFisico(List<Long> listaIdTipoEspacioFisico) {
+		this.listaIdTipoEspacioFisico = listaIdTipoEspacioFisico;
 	}
 
-	public List<String> getListaNumeroAula() {
-		return listaNumeroAula;
+	public List<String> getListaNumeroEspacioFisico() {
+		return listaNumeroEspacioFisico;
 	}
 
-	public void setListaNumeroAula(List<String> listaNumeroAula) {
-		this.listaNumeroAula = listaNumeroAula;
+	public void setListaNumeroEspacioFisico(List<String> listaNumeroEspacioFisico) {
+		this.listaNumeroEspacioFisico = listaNumeroEspacioFisico;
 	}
 }

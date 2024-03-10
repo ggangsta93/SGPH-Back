@@ -28,7 +28,7 @@ import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.Gestio
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaAulaDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.InfoGeneralCursosPorProgramaDTO;
@@ -41,10 +41,10 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	private PlanificacionManualRepositoryInt planificacionManualRepositoryInt;
 	private ModelMapper modelMapper;
-	
+
 	public GestionarPlanificacionManualGatewayImplAdapter(
 			PlanificacionManualRepositoryInt planificacionManualRepositoryInt, ModelMapper modelMapper) {
 		this.planificacionManualRepositoryInt = planificacionManualRepositoryInt;
@@ -221,7 +221,7 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		return countQuery.getSingleResult();
 	}
 
-	/** 
+	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarInfoGeneralCursosPorPrograma(java.lang.Long)
 	 */
 	@Override
@@ -244,10 +244,10 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariasDisponiblesPorCurso(
 			FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
 		Long idCurso = filtroFranjaHorariaDisponibleCursoDTO.getIdCurso();
-		Long duracion = filtroFranjaHorariaDisponibleCursoDTO.getDuracion();		
-			
+		Long duracion = filtroFranjaHorariaDisponibleCursoDTO.getDuracion();
+
 		String duracionFormateada = LocalTime.of(duracion.intValue(), 00, 00).toString();
-		
+
 		List<LocalTime> listaHoraInicio = null;
 		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getHoraInicio())) {
 			listaHoraInicio = new ArrayList<LocalTime>();
@@ -255,13 +255,11 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 					LocalTime.of(Integer.parseInt(filtroFranjaHorariaDisponibleCursoDTO.getHoraInicio().split(":")[0]),
 							Integer.parseInt(filtroFranjaHorariaDisponibleCursoDTO.getHoraInicio().split(":")[1])));
 		}
-		
+
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("WITH FranjasPosiblesDocentes AS ( ")
-				.append("    WITH FranjasPosibles AS ( ")
+		queryBuilder.append("WITH FranjasPosiblesDocentes AS ( ").append("    WITH FranjasPosibles AS ( ")
 				.append("        SELECT dia, hora_inicio, ADDTIME(hora_inicio, :duracion) AS hora_fin ")
-				.append("        FROM ( ")
-				.append("            SELECT 'LUNES' AS dia, TIME('07:00:00') AS hora_inicio ")
+				.append("        FROM ( ").append("            SELECT 'LUNES' AS dia, TIME('07:00:00') AS hora_inicio ")
 				.append("            UNION SELECT 'LUNES' AS dia, TIME('08:00:00') AS hora_inicio ")
 				.append("            UNION SELECT 'LUNES' AS dia, TIME('09:00:00') AS hora_inicio ")
 				.append("            UNION SELECT 'LUNES' AS dia, TIME('10:00:00') AS hora_inicio ")
@@ -357,15 +355,12 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 				.append("            UNION SELECT 'SABADO' AS dia, TIME('20:00:00') AS hora_inicio ")
 				.append("            UNION SELECT 'SABADO' AS dia, TIME('21:00:00') AS hora_inicio ")
 				.append("            UNION SELECT 'SABADO' AS dia, TIME('22:00:00') AS hora_inicio ")
-				.append("        ) AS franjas_posibles ")
-				.append("        WHERE ")
+				.append("        ) AS franjas_posibles ").append("        WHERE ")
 				.append("        (ADDTIME(hora_inicio, :duracion) <= TIME('13:00:00') OR hora_inicio >= TIME('14:00:00')) ")
 				.append("        AND ")
 				.append("        (ADDTIME(hora_inicio, :duracion) <= TIME('22:00:00') OR hora_inicio >= TIME('24:00:00')) ")
-				.append("    ), ")
-				.append("    HorariosDocentes AS ( ")
-				.append("        SELECT distinct h.dia, h.hora_inicio, h.hora_fin ")
-				.append("        FROM horario h ")
+				.append("    ), ").append("    HorariosDocentes AS ( ")
+				.append("        SELECT distinct h.dia, h.hora_inicio, h.hora_fin ").append("        FROM horario h ")
 				.append("        INNER JOIN curso c ON h.id_curso = c.id_curso ")
 				.append("        INNER JOIN docente_curso dc ON dc.id_curso = c.id_curso ")
 				.append("        INNER JOIN docente d ON d.id_persona = dc.id_docente ")
@@ -374,8 +369,7 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 				.append("                               FROM docente doc ")
 				.append("                               INNER JOIN docente_curso doc_cur on doc.id_persona = doc_cur.id_docente ")
 				.append("                               INNER JOIN curso cur on doc_cur.id_curso = cur.id_curso ")
-				.append("                               WHERE cur.id_curso =:idCurso) ")
-				.append("    ) ")
+				.append("                               WHERE cur.id_curso =:idCurso) ").append("    ) ")
 				.append("	SELECT dia, hora_inicio, hora_fin ")
 				.append("	FROM ( 	SELECT franjaPosible.dia, franjaPosible.hora_inicio, franjaPosible.hora_fin ")
 				.append("	    	FROM FranjasPosibles franjaPosible ")
@@ -384,77 +378,86 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 				.append("	        					WHERE franjaPosible.dia = hd.dia ")
 				.append("	        					AND franjaPosible.hora_fin>hd.hora_inicio ")
 				.append("	        					AND franjaPosible.hora_inicio < hd.hora_fin )")
-				.append("	) AS franjas_disponibles_por_dia ")
-				.append("	ORDER BY dia ")
-				.append("	/*Finaliza las franjas posibles de los docentes*/ ")
-				.append(") ")
-				.append("SELECT a.id_aula, fp.dia, fp.hora_inicio, fp.hora_fin ")
-				.append("FROM aula a CROSS JOIN FranjasPosiblesDocentes fp ")
-				.append("LEFT JOIN edificio edi on a.id_edificio = edi.id_edificio ")
-				.append("WHERE NOT EXISTS (  SELECT 1 ")
-				.append("                   FROM horario h ")
-				.append("                   INNER JOIN horario_aula ha ON h.id_horario = ha.id_horario ")
-				.append("                   WHERE a.id_aula = ha.id_aula ")
+				.append("	) AS franjas_disponibles_por_dia ").append("	ORDER BY dia ")
+				.append("	/*Finaliza las franjas posibles de los docentes*/ ").append(") ")
+				.append("SELECT sf.id_espacio_fisico, fp.dia, fp.hora_inicio, fp.hora_fin ")
+				.append("FROM espacio_fisico sf CROSS JOIN FranjasPosiblesDocentes fp ")
+				.append("LEFT JOIN edificio edi on sf.id_edificio = edi.id_edificio ")
+				.append("WHERE NOT EXISTS (  SELECT 1 ").append("                   FROM horario h ")
+				.append("                   INNER JOIN horario_espaciofisico hsf ON h.id_horario = hsf.id_horario ")
+				.append("                   WHERE sf.id_espacio_fisico = hsf.id_espacio_fisico ")
 				.append("                   AND fp.dia = h.dia ")
 				.append("                   AND fp.hora_fin > h.hora_inicio ")
 				.append("                   AND fp.hora_inicio < h.hora_fin ) ");
 
 		// Se adicionan criterios de selección
-		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum()) && !filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum().isEmpty()) {
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum().isEmpty()) {
 			queryBuilder.append(" AND fp.dia IN (:listaDiaSemanaEnum)");
 		}
 		if (Objects.nonNull(listaHoraInicio) && !listaHoraInicio.isEmpty()) {
 			queryBuilder.append(" AND fp.hora_inicio IN (:listaHoraInicio)");
 		}
-		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdFacultad()) && !filtroFranjaHorariaDisponibleCursoDTO.getListaIdFacultad().isEmpty()) {
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdFacultad())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaIdFacultad().isEmpty()) {
 			queryBuilder.append(" AND edi.id_facultad IN (:listaIdFacultad)");
 		}
-		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdEdificio()) && !filtroFranjaHorariaDisponibleCursoDTO.getListaIdEdificio().isEmpty()) {
-			queryBuilder.append(" AND a.id_edificio IN (:listaIdEdificio)");
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdEdificio())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaIdEdificio().isEmpty()) {
+			queryBuilder.append(" AND sf.id_edificio IN (:listaIdEdificio)");
 		}
-		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoAula()) && !filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoAula().isEmpty()) {
-			queryBuilder.append(" AND a.id_tipo_aula IN (:listaIdTipoAula)");
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico().isEmpty()) {
+			queryBuilder.append(" AND sf.id_tipo_espacio_fisico IN (:listaIdTipoEspacioFisico)");
 		}
-		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaNumeroAula()) && !filtroFranjaHorariaDisponibleCursoDTO.getListaNumeroAula().isEmpty()) {
-			queryBuilder.append(" AND a.numero_aula IN (:listaNumeroAula)");
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaNumeroEspacioFisico())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaNumeroEspacioFisico().isEmpty()) {
+			queryBuilder.append(" AND sf.numero_espacio_fisico IN (:listaNumeroEspacioFisico)");
 		}
-		queryBuilder.append(" ORDER by a.id_aula, fp.dia, fp.hora_inicio ");
+		queryBuilder.append(" ORDER by sf.id_espacio_fisico, fp.dia, fp.hora_inicio ");
 
 		/* Se establecen parametros */
 		Query query = entityManager.createNativeQuery(queryBuilder.toString());
 		query.setParameter("duracion", duracionFormateada);
 		query.setParameter("idCurso", idCurso);
 
-		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum()) && !filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum().isEmpty()) {
-			query.setParameter("listaDiaSemanaEnum",
-					filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum().stream().map(DiaSemanaEnum::name).collect(Collectors.toList()));
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum().isEmpty()) {
+			query.setParameter("listaDiaSemanaEnum", filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum()
+					.stream().map(DiaSemanaEnum::name).collect(Collectors.toList()));
 		}
 		if (Objects.nonNull(listaHoraInicio) && !listaHoraInicio.isEmpty()) {
 			query.setParameter("listaHoraInicio", listaHoraInicio);
 		}
-		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdFacultad()) && !filtroFranjaHorariaDisponibleCursoDTO.getListaIdFacultad().isEmpty()) {
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdFacultad())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaIdFacultad().isEmpty()) {
 			query.setParameter("listaIdFacultad", filtroFranjaHorariaDisponibleCursoDTO.getListaIdFacultad());
 		}
-		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdEdificio()) && !filtroFranjaHorariaDisponibleCursoDTO.getListaIdEdificio().isEmpty()) {
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdEdificio())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaIdEdificio().isEmpty()) {
 			query.setParameter("listaIdEdificio", filtroFranjaHorariaDisponibleCursoDTO.getListaIdEdificio());
 		}
-		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoAula()) && !filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoAula().isEmpty()) {
-			query.setParameter("listaIdTipoAula", filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoAula());
-		}		
-		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaNumeroAula()) && !filtroFranjaHorariaDisponibleCursoDTO.getListaNumeroAula().isEmpty()) {
-			query.setParameter("listaNumeroAula", filtroFranjaHorariaDisponibleCursoDTO.getListaNumeroAula());
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico().isEmpty()) {
+			query.setParameter("listaIdTipoEspacioFisico",
+					filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico());
+		}
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaNumeroEspacioFisico())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaNumeroEspacioFisico().isEmpty()) {
+			query.setParameter("listaNumeroEspacioFisico",
+					filtroFranjaHorariaDisponibleCursoDTO.getListaNumeroEspacioFisico());
 		}
 
 		List<FranjaHorariaCursoDTO> franjasDisponibles = new ArrayList<>();
 		((List<Object[]>) query.getResultList()).forEach(tupla -> {
-			franjasDisponibles
-					.add(new FranjaHorariaCursoDTO(null, ((BigInteger) tupla[0]).longValue(), DiaSemanaEnum.valueOf((String) tupla[1]),
-							((Time) tupla[2]).toLocalTime(), ((Time) tupla[3]).toLocalTime()));
+			franjasDisponibles.add(new FranjaHorariaCursoDTO(null, ((BigInteger) tupla[0]).longValue(),
+					DiaSemanaEnum.valueOf((String) tupla[1]), ((Time) tupla[2]).toLocalTime(),
+					((Time) tupla[3]).toLocalTime()));
 		});
 
 		return franjasDisponibles;
 	}
-	
+
 	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCruceHorarioDocente(java.lang.Long,
 	 *      co.edu.unicauca.sgph.common.enums.DiaSemanaEnum, java.time.LocalTime,
@@ -466,22 +469,21 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		return this.planificacionManualRepositoryInt.consultarCruceHorarioDocente(idCurso, dia, horaInicio, horaFin);
 	}
 
-	/**
-	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCruceHorarioAula(java.util.List,
-	 *      co.edu.unicauca.sgph.common.enums.DiaSemanaEnum, java.time.LocalTime,
-	 *      java.time.LocalTime)
+	/** 
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCruceHorarioEspacioFisico(java.util.List, co.edu.unicauca.sgph.common.enums.DiaSemanaEnum, java.time.LocalTime, java.time.LocalTime)
 	 */
 	@Override
-	public List<Horario> consultarCruceHorarioAula(List<Long> lstIdAAula, DiaSemanaEnum dia, LocalTime horaInicio,
-			LocalTime horaFin) {
-		return this.modelMapper.map(
-				this.planificacionManualRepositoryInt.consultarCruceHorarioAula(lstIdAAula, dia, horaInicio, horaFin),
-				new TypeToken<List<Horario>>() {
+	public List<Horario> consultarCruceHorarioEspacioFisico(List<Long> lstIdEspacioFisico, DiaSemanaEnum dia,
+			LocalTime horaInicio, LocalTime horaFin) {
+		return this.modelMapper.map(this.planificacionManualRepositoryInt.consultarCruceHorarioEspacioFisico(
+				lstIdEspacioFisico, dia, horaInicio, horaFin), new TypeToken<List<Horario>>() {
 				}.getType());
 	}
 
-	/** 
-	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCruceHorarioDocentePorIdPersona(java.lang.Long, co.edu.unicauca.sgph.common.enums.DiaSemanaEnum, java.time.LocalTime, java.time.LocalTime)
+	/**
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCruceHorarioDocentePorIdPersona(java.lang.Long,
+	 *      co.edu.unicauca.sgph.common.enums.DiaSemanaEnum, java.time.LocalTime,
+	 *      java.time.LocalTime)
 	 */
 	@Override
 	public List<Object[]> consultarCruceHorarioDocentePorIdPersona(Long idPersona, DiaSemanaEnum dia,
@@ -490,20 +492,20 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 				horaInicio, horaFin);
 	}
 
-	/** 
+	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFormatoPresentacionFranjaHorariaCurso()
 	 */
 	@Override
 	public List<FormatoPresentacionFranjaHorariaCursoDTO> consultarFormatoPresentacionFranjaHorariaCurso() {
 		return this.planificacionManualRepositoryInt.consultarFormatoPresentacionFranjaHorariaCurso();
 	}
-	
+
 	@Override
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso) {
 		return this.planificacionManualRepositoryInt.consultarFranjasHorariaCursoPorIdCurso(idCurso);
 	}
 
-	/** 
+	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasDocentePorIdPersona(java.lang.Long)
 	 */
 	@Override
@@ -512,11 +514,11 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	}
 
 	/** 
-	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasAulaPorIdAula(java.lang.Long)
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasEspacioFisicoPorIdEspacioFisico(java.lang.Long)
 	 */
 	@Override
-	public List<FranjaHorariaAulaDTO> consultarFranjasAulaPorIdAula(Long idAula) {
-		return this.planificacionManualRepositoryInt.consultarFranjasAulaPorIdAula(idAula);
-	}	
+	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico) {
+		return this.planificacionManualRepositoryInt.consultarFranjasEspacioFisicoPorIdEspacioFisico(idEspacioFisico);
+	}
 
 }

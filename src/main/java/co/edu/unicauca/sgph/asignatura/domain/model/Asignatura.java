@@ -2,7 +2,7 @@ package co.edu.unicauca.sgph.asignatura.domain.model;
 
 import java.util.List;
 
-import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoAula;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import lombok.Data;
 
@@ -25,7 +25,7 @@ public class Asignatura {
 
 	private Programa programa;
 	
-	private List<TipoAula> tiposAula;
+	private List<TipoEspacioFisico> tiposEspaciosFisicos;
 		
 	public Asignatura() {
 		//Constructor sin parametros
@@ -99,11 +99,11 @@ public class Asignatura {
 		this.programa = programa;
 	}
 
-	public List<TipoAula> getTiposAula() {
-		return tiposAula;
+	public List<TipoEspacioFisico> getTiposEspaciosFisicos() {
+		return tiposEspaciosFisicos;
 	}
 
-	public void setTiposAula(List<TipoAula> tiposAula) {
-		this.tiposAula = tiposAula;
+	public void setTiposEspaciosFisicos(List<TipoEspacioFisico> tiposEspaciosFisicos) {
+		this.tiposEspaciosFisicos = tiposEspaciosFisicos;
 	}	
 }

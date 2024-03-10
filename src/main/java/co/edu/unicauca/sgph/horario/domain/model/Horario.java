@@ -3,7 +3,7 @@ package co.edu.unicauca.sgph.horario.domain.model;
 import java.time.LocalTime;
 import java.util.List;
 
-import co.edu.unicauca.sgph.espaciofisico.domain.model.Aula;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 
@@ -19,7 +19,7 @@ public class Horario {
 
 	private Curso curso;
 	
-	private List<Aula> aulas;
+	private List<EspacioFisico> espaciosFisicos;
 
 	public Long getIdHorario() {
 		return idHorario;
@@ -61,11 +61,11 @@ public class Horario {
 		this.curso = curso;
 	}
 
-	public List<Aula> getAulas() {
-		return aulas;
+	public List<EspacioFisico> getEspaciosFisicos() {
+		return espaciosFisicos;
 	}
 
-	public void setAulas(List<Aula> aulas) {
-		this.aulas = aulas;
+	public void setEspaciosFisicos(List<EspacioFisico> espaciosFisicos) {
+		this.espaciosFisicos = espaciosFisicos;
 	}
 }

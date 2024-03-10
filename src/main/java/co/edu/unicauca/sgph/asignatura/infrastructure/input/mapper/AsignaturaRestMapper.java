@@ -9,36 +9,36 @@ import org.mapstruct.Mapping;
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaInDTO;
-import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoAula;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
 
 @Mapper(componentModel = "spring")
 public interface AsignaturaRestMapper {
 
 	@Mapping(target = "idPrograma", expression = "java(asignatura.getPrograma().getIdPrograma())")
-	@Mapping(target = "lstIdTipoAula", source = "asignatura.tiposAula")
+	@Mapping(target = "lstIdTipoEspacioFisico", source = "asignatura.tiposEspaciosFisicos")
 	AsignaturaOutDTO toAsignaturaOutDTO(Asignatura asignatura);
 
 	@Mapping(target = "programa", expression = "java(new Programa(asignaturaInDTO.getIdPrograma()))")
-	@Mapping(target = "tiposAula", source = "asignaturaInDTO.lstIdTipoAula")
+	@Mapping(target = "tiposEspaciosFisicos", source = "asignaturaInDTO.lstIdTipoEspacioFisico")
 	Asignatura toAsignatura(AsignaturaInDTO asignaturaInDTO);
 
 	List<AsignaturaOutDTO> toLstAsignaturaOutDTO(List<Asignatura> lstAsignatura);
 
-	default List<TipoAula> toTipoAula(List<Long> lstTipoAula) {
-		List<TipoAula> tiposAula = new ArrayList<>();
-		for (Long idTipoAula : lstTipoAula) {
-			TipoAula tipoAula = new TipoAula();
-			tipoAula.setIdTipoAula(idTipoAula);
-			tiposAula.add(tipoAula);
+	default List<TipoEspacioFisico> toTipoEspacioFisico(List<Long> lstTipoEspacioFisico) {
+		List<TipoEspacioFisico> tiposEspaciosFisicos = new ArrayList<>();
+		for (Long idTipoEspacioFisico : lstTipoEspacioFisico) {
+			TipoEspacioFisico tipoEspacioFisico = new TipoEspacioFisico();
+			tipoEspacioFisico.setIdTipoEspacioFisico(idTipoEspacioFisico);
+			tiposEspaciosFisicos.add(tipoEspacioFisico);
 		}
-		return tiposAula;
+		return tiposEspaciosFisicos;
 	}
 
-	default List<Long> tolstIdTipoAula(List<TipoAula> tiposAula) {
-		List<Long> lstIdTipoAula = new ArrayList<>();
-		for (TipoAula tipoAula : tiposAula) {
-			lstIdTipoAula.add(tipoAula.getIdTipoAula());
+	default List<Long> tolstIdTipoEspacioFisico(List<TipoEspacioFisico> tiposEspaciosFisicos) {
+		List<Long> lstIdTipoEspacioFisico = new ArrayList<>();
+		for (TipoEspacioFisico tipoEspacioFisico : tiposEspaciosFisicos) {
+			lstIdTipoEspacioFisico.add(tipoEspacioFisico.getIdTipoEspacioFisico());
 		}
-		return lstIdTipoAula;
+		return lstIdTipoEspacioFisico;
 	}
 }

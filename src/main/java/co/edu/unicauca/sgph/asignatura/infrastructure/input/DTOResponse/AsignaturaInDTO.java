@@ -20,7 +20,7 @@ public class AsignaturaInDTO {
 
 	private Long idPrograma;
 	
-	private List<Long> lstIdTipoAula;
+	private List<Long> lstIdTipoEspacioFisico;
 
 	public Long getIdAsignatura() {
 		return idAsignatura;
@@ -86,11 +86,11 @@ public class AsignaturaInDTO {
 		this.idPrograma = idPrograma;
 	}
 
-	public List<Long> getLstIdTipoAula() {
-		return lstIdTipoAula;
+	public List<Long> getLstIdTipoEspacioFisico() {
+		return lstIdTipoEspacioFisico;
 	}
 
-	public void setLstIdTipoAula(List<Long> lstIdTipoAula) {
-		this.lstIdTipoAula = lstIdTipoAula;
+	public void setLstIdTipoEspacioFisico(List<Long> lstIdTipoEspacioFisico) {
+		this.lstIdTipoEspacioFisico = lstIdTipoEspacioFisico;
 	}
 }

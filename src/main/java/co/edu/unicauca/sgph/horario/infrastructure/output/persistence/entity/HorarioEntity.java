@@ -21,7 +21,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AulaEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 
@@ -51,19 +51,19 @@ public class HorarioEntity {
 
 	@JsonBackReference
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "HORARIO_AULA", joinColumns = @JoinColumn(name = "ID_HORARIO"), inverseJoinColumns = @JoinColumn(name = "ID_AULA"))
-	private List<AulaEntity> aulas;
+	@JoinTable(name = "HORARIO_ESPACIOFISICO", joinColumns = @JoinColumn(name = "ID_HORARIO"), inverseJoinColumns = @JoinColumn(name = "ID_ESPACIO_FISICO"))
+	private List<EspacioFisicoEntity> espaciosFisicos;
 
 	public HorarioEntity() {
-		aulas= new ArrayList<>();
+		espaciosFisicos= new ArrayList<>();
 	}
 
-	public HorarioEntity(DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin, CursoEntity curso, List<AulaEntity> aulas) {
+	public HorarioEntity(DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin, CursoEntity curso, List<EspacioFisicoEntity> espaciosFisicos) {
 		this.dia = dia;
 		this.horaInicio = horaInicio;
 		this.horaFin = horaFin;
 		this.curso = curso;
-		this.aulas = aulas;
+		this.espaciosFisicos = espaciosFisicos;
 	}
 
 	public Long getIdHorario() {
@@ -106,11 +106,11 @@ public class HorarioEntity {
 		this.curso = curso;
 	}
 
-	public List<AulaEntity> getAulas() {
-		return aulas;
+	public List<EspacioFisicoEntity> getEspaciosFisicos() {
+		return espaciosFisicos;
 	}
 
-	public void setAulas(List<AulaEntity> aulas) {
-		this.aulas = aulas;
+	public void setEspaciosFisicos(List<EspacioFisicoEntity> espaciosFisicos) {
+		this.espaciosFisicos = espaciosFisicos;
 	}
 }

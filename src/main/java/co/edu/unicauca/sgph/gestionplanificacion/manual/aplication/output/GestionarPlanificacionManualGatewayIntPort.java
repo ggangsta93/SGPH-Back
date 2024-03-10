@@ -9,7 +9,7 @@ import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaAulaDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.InfoGeneralCursosPorProgramaDTO;
@@ -44,7 +44,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	/**
 	 * Método encargado de obtener las franjas disponibles de un curso dado un
 	 * conjunto de criterios de busqueda; este método considera los horarios de los
-	 * docentes y aula.
+	 * docentes y espacios físicos.
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -71,19 +71,19 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 			LocalTime horaFin);
 	
 	/**
-	 * Método encargado de validar si existe cruces en aulas dado una franja
-	 * horaria. Si no retorna resultados es porque no hay cruces, caso contrario
-	 * retorna las franjas solapadas.
+	 * Método encargado de validar si existe cruces en espacios físicos dado una
+	 * franja horaria. Si no retorna resultados es porque no hay cruces, caso
+	 * contrario retorna las franjas solapadas.
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param lstIdAula
+	 * @param lstIdEspacioFisico
 	 * @param dia
 	 * @param horaInicio
 	 * @param horaFin
 	 * @return
 	 */
-	public List<Horario> consultarCruceHorarioAula(List<Long> lstIdAula, DiaSemanaEnum dia, LocalTime horaInicio,
+	public List<Horario> consultarCruceHorarioEspacioFisico(List<Long> lstIdEspacioFisico, DiaSemanaEnum dia, LocalTime horaInicio,
 			LocalTime horaFin);
 	
 	/**
@@ -102,8 +102,8 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 			LocalTime horaFin);
 	
 	/**
-	 * Método encargado de obtener los nombres completos de cada aula. Ejemplo del
-	 * formato: 'Salón 204-Edificio nuevo'
+	 * Método encargado de obtener los nombres completos de cada espacio físico.
+	 * Ejemplo del formato: 'Salón 204-Edificio nuevo'
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -124,12 +124,12 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona);
 	
 	/**
-	 * Método encargado de obtener todas las franjas horarias de un aula
+	 * Método encargado de obtener todas las franjas horarias de un espacio físico
 	 *
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param idAula
+	 * @param idEspacioFisico
 	 * @return
 	 */
-	public List<FranjaHorariaAulaDTO> consultarFranjasAulaPorIdAula(Long idAula);
+	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico);
 }

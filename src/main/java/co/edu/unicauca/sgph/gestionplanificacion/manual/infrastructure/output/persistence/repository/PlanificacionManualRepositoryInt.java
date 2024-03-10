@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaAulaDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
@@ -36,12 +36,12 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 				@Param("horaInicio") LocalTime horaInicio, @Param("horaFin") LocalTime horaFin);
 
 		@Query("SELECT h "
-				 + "FROM HorarioEntity h JOIN FETCH h.aulas au "
-				 + "WHERE au.idAula IN (:lstIdAula) "
+				 + "FROM HorarioEntity h JOIN FETCH h.espaciosFisicos espaciosFisicos "
+				 + "WHERE espaciosFisicos.idEspacioFisico IN (:lstIdEspacioFisico) "
 				 + "AND h.dia = :dia "
 				 + "AND h.horaInicio < :horaFin "
 				 + "AND h.horaFin > :horaInicio ")
-		public List<HorarioEntity> consultarCruceHorarioAula(@Param("lstIdAula") List<Long> lstIdAula,
+		public List<HorarioEntity> consultarCruceHorarioEspacioFisico(@Param("lstIdEspacioFisico") List<Long> lstIdEspacioFisico,
 				@Param("dia") DiaSemanaEnum dia, @Param("horaInicio") LocalTime horaInicio,
 				@Param("horaFin") LocalTime horaFin);
 		
@@ -57,7 +57,7 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 				@Param("horaFin") LocalTime horaFin);
 		
 		/**
-		 * Método encargado de obtener los nombres completos de cada aula.
+		 * Método encargado de obtener los nombres completos de cada espacio físico.
 		 * Ejemplo del formato: 'Salón 204-Edificio nuevo'
 		 * 
 		 * 
@@ -66,12 +66,12 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		 * @return
 		 */
 		@Query("SELECT new co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO( "
-		        + " aula.idAula, TRIM(CONCAT(COALESCE(tipoAula.tipo, 'Sin asignar'), COALESCE(CONCAT(' ', aula.numeroAula), ''), COALESCE(CONCAT('-', edi.nombre), '') )) "
+		        + " espacioFisico.idEspacioFisico, TRIM(CONCAT(COALESCE(tipoEspacioFisico.tipo, 'Sin asignar'), COALESCE(CONCAT(' ', espacioFisico.numeroEspacioFisico), ''), COALESCE(CONCAT('-', edi.nombre), '') )) "
 		        + " ) "
-		        + " FROM AulaEntity aula "
-		        + " LEFT JOIN aula.edificio edi"
-		        + " LEFT JOIN aula.tipoAula tipoAula "
-		        + " ORDER BY aula.idAula ")
+		        + " FROM EspacioFisicoEntity espacioFisico "
+		        + " LEFT JOIN espacioFisico.edificio edi"
+		        + " LEFT JOIN espacioFisico.tipoEspacioFisico tipoEspacioFisico "
+		        + " ORDER BY espacioFisico.idEspacioFisico ")
 		public List<FormatoPresentacionFranjaHorariaCursoDTO> consultarFormatoPresentacionFranjaHorariaCurso();	
 		
 		/**
@@ -84,10 +84,10 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		 * @return
 		 */
 		@Query("SELECT new co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO( "
-				+ " hor.idHorario, aul.idAula, hor.dia, hor.horaInicio, hor.horaFin "
+				+ " hor.idHorario, espaciosFisicos.idEspacioFisico, hor.dia, hor.horaInicio, hor.horaFin "
 				+ " ) "
 				+ " FROM HorarioEntity hor "
-				+ " JOIN hor.aulas aul "
+				+ " JOIN hor.espaciosFisicos espaciosFisicos "
 				+ " WHERE hor.curso.idCurso = :idCurso")
 		public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso);
 		
@@ -111,25 +111,25 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona);
 		
 		/**
-		 * Método encargado de obtener todas las franjas horarias de un aula
+		 * Método encargado de obtener todas las franjas horarias de un espacio físico
 		 * 
 		 * 
 		 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 		 * 
-		 * @param idAula
+		 * @param idEspacioFisico
 		 * @return
 		 */
-		@Query("SELECT new co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaAulaDTO( "
-				+ " aul.idAula, hor.dia, hor.horaInicio, hor.horaFin, "
+		@Query("SELECT new co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO( "
+				+ " espaciosFisicos.idEspacioFisico, hor.dia, hor.horaInicio, hor.horaFin, "
 				+ " CONCAT(pro.abreviatura,'-',asi.nombre,' ',cur.grupo) "
 				+ " ) "
 				+ " FROM HorarioEntity hor "
 				+ " JOIN hor.curso cur "
 				+ " JOIN cur.asignatura asi "
 				+ " JOIN asi.programa pro "
-				+ " JOIN hor.aulas aul "
-				+ " WHERE aul.idAula = :idAula "
+				+ " JOIN hor.espaciosFisicos espaciosFisicos "
+				+ " WHERE espaciosFisicos.idEspacioFisico = :idEspacioFisico "
 				+ " ORDER BY hor.dia, hor.horaInicio ")
-		public List<FranjaHorariaAulaDTO> consultarFranjasAulaPorIdAula(Long idAula);
+		public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico);
 		
 }

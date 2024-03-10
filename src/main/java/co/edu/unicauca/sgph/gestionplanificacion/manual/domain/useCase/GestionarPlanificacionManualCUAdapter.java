@@ -18,14 +18,14 @@ import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
-import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAulaGatewayIntPort;
-import co.edu.unicauca.sgph.espaciofisico.domain.model.Aula;
+import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaAulaDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.InfoGeneralCursosPorProgramaDTO;
@@ -43,7 +43,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	private GestionarPlanificacionManualGatewayIntPort gestionarPlanificacionManualGatewayIntPort;
 	private CursoFormatterResultsIntPort cursoFormatterResultsIntPort;
 	private GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort;
-	private GestionarAulaGatewayIntPort gestionarAulaGatewayIntPort;
+	private GestionarEspacioFisicoGatewayIntPort gestionarEspacioFisicoGatewayIntPort;
 	private GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort;
 	private GestionarHorarioGatewayIntPort gestionarHorarioGatewayIntPort;
 
@@ -55,13 +55,13 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			GestionarPlanificacionManualGatewayIntPort gestionarPlanificacionManualGatewayIntPort,
 			CursoFormatterResultsIntPort cursoFormatterResultsIntPort,
 			GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort,
-			GestionarAulaGatewayIntPort gestionarAulaGatewayIntPort,
+			GestionarEspacioFisicoGatewayIntPort gestionarEspacioFisicoGatewayIntPort,
 			GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort,
 			GestionarHorarioGatewayIntPort gestionarHorarioGatewayIntPort) {
 		this.gestionarPlanificacionManualGatewayIntPort = gestionarPlanificacionManualGatewayIntPort;
 		this.cursoFormatterResultsIntPort = cursoFormatterResultsIntPort;
 		this.gestionarDocenteGatewayIntPort = gestionarDocenteGatewayIntPort;
-		this.gestionarAulaGatewayIntPort = gestionarAulaGatewayIntPort;
+		this.gestionarEspacioFisicoGatewayIntPort = gestionarEspacioFisicoGatewayIntPort;
 		this.gestionarCursoGatewayIntPort = gestionarCursoGatewayIntPort;
 		this.gestionarHorarioGatewayIntPort = gestionarHorarioGatewayIntPort;
 	}
@@ -77,7 +77,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		for (CursoPlanificacionOutDTO cursoDTO : listaCursosDTO) {
 			cursoDTO.setDocentes(
 					this.gestionarDocenteGatewayIntPort.consultarNombresDocentesPorIdCurso(cursoDTO.getIdCurso()));
-			cursoDTO.setHorarios(gestionarAulaGatewayIntPort.consultarAulaHorarioPorIdCurso(cursoDTO.getIdCurso()));
+			cursoDTO.setHorarios(gestionarEspacioFisicoGatewayIntPort.consultarEspacioFisicoHorarioPorIdCurso(cursoDTO.getIdCurso()));
 		}
 		return listaCursosDTO;
 	}
@@ -207,7 +207,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 				.getListaFranjaHorariaCursoAsociarInDTO()) {
 
 			if (Objects.isNull(franjaHorariaCursoAsociarInDTO.getIdHorario())) {
-				Long idAula = franjaHorariaCursoAsociarInDTO.getIdAula();
+				Long idEspacioFisico= franjaHorariaCursoAsociarInDTO.getIdEspacioFisico();
 
 				DiaSemanaEnum dia = franjaHorariaCursoAsociarInDTO.getDia();
 				LocalTime horaInicio = LocalTime.of(
@@ -217,13 +217,13 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 						Integer.parseInt(franjaHorariaCursoAsociarInDTO.getHoraFin().split(":")[0]),
 						Integer.parseInt(franjaHorariaCursoAsociarInDTO.getHoraFin().split(":")[1]));
 
-				List<Horario> listaCruceHorarioAula = this.gestionarPlanificacionManualGatewayIntPort
-						.consultarCruceHorarioAula(Arrays.asList(idAula), dia, horaInicio, horaFin);
+				List<Horario> listaCruceHorarioEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
+						.consultarCruceHorarioEspacioFisico(Arrays.asList(idEspacioFisico), dia, horaInicio, horaFin);
 				List<Object[]> listaCruceHorarioDocente = this.gestionarPlanificacionManualGatewayIntPort
 						.consultarCruceHorarioDocente(idCurso, dia, horaInicio, horaFin);
 
-				if (!listaCruceHorarioAula.isEmpty()) {
-					throw new RuntimeException("Existe cruce de aula");
+				if (!listaCruceHorarioEspacioFisico.isEmpty()) {
+					throw new RuntimeException("Existe cruce de espacio físico");
 
 				}
 
@@ -236,7 +236,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 				horario.setHoraInicio(horaInicio);
 				horario.setHoraFin(horaFin);
 				horario.setCurso(new Curso(idCurso));
-				horario.setAulas(Arrays.asList(new Aula(idAula)));
+				horario.setEspaciosFisicos(Arrays.asList(new EspacioFisico(idEspacioFisico)));;
 				this.gestionarHorarioGatewayIntPort.guardarHorario(horario);
 			}
 		}
@@ -266,11 +266,11 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	}
 
 	/** 
-	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort#consultarFranjasAulaPorIdAula(java.lang.Long)
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort#consultarFranjasEspacioFisicoPorIdEspacioFisico(java.lang.Long)
 	 */
 	@Override
-	public List<FranjaHorariaAulaDTO> consultarFranjasAulaPorIdAula(Long idAula) {
-		 return this.gestionarPlanificacionManualGatewayIntPort.consultarFranjasAulaPorIdAula(idAula);
+	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico) {
+		 return this.gestionarPlanificacionManualGatewayIntPort.consultarFranjasEspacioFisicoPorIdEspacioFisico(idEspacioFisico);
 	}
 
 	@Override

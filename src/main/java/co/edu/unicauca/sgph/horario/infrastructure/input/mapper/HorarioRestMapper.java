@@ -16,7 +16,7 @@ public interface HorarioRestMapper {
 	HorarioOutDTO toHorarioOutDTO(Horario horario);
 
 	@Mapping(target = "curso", expression = "java(new Curso(horarioInDTO.getIdCurso()))")
-	@Mapping(target = "aulas", ignore = true)
+	@Mapping(target = "espaciosFisicos", ignore = true)
 	Horario toHorario(HorarioInDTO horarioInDTO);
 
 	List<HorarioOutDTO> toLstHorarioOutDTO(List<Horario> lstHorario);

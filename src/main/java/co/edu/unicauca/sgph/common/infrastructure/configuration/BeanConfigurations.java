@@ -15,12 +15,12 @@ import co.edu.unicauca.sgph.docente.domain.useCase.GestionarDocenteCUAdapter;
 import co.edu.unicauca.sgph.edificio.aplication.output.EdificioFormatterResultsIntPort;
 import co.edu.unicauca.sgph.edificio.aplication.output.GestionarEdificioGatewayIntPort;
 import co.edu.unicauca.sgph.edificio.domain.useCase.GestionarEdificioCUAdapter;
-import co.edu.unicauca.sgph.espaciofisico.aplication.output.AulaFormatterResultsIntPort;
-import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAulaGatewayIntPort;
-import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarTipoAulaGatewayIntPort;
-import co.edu.unicauca.sgph.espaciofisico.aplication.output.TipoAulaFormatterResultsIntPort;
-import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarAulaCUAdapter;
-import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarTipoAulaCUAdapter;
+import co.edu.unicauca.sgph.espaciofisico.aplication.output.EspacioFisicoFormatterResultsIntPort;
+import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort;
+import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarTipoEspacioFisicoGatewayIntPort;
+import co.edu.unicauca.sgph.espaciofisico.aplication.output.TipoEspacioFisicoFormatterResultsIntPort;
+import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarEspacioFisicoCUAdapter;
+import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarTipoEspacioFisicoCUAdapter;
 import co.edu.unicauca.sgph.facultad.aplication.output.FacultadFormatterResultsIntPort;
 import co.edu.unicauca.sgph.facultad.aplication.output.GestionarFacultadGatewayIntPort;
 import co.edu.unicauca.sgph.facultad.domain.useCase.GestionarFacultadCUAdapter;
@@ -82,16 +82,19 @@ public class BeanConfigurations {
 	}
 
 	@Bean
-	GestionarAulaCUAdapter crearGestionarAulaCUInt(GestionarAulaGatewayIntPort gestionarAulaGatewayIntPort,
-			AulaFormatterResultsIntPort aulaFormatterResultsIntPort) {
-		return new GestionarAulaCUAdapter(gestionarAulaGatewayIntPort, aulaFormatterResultsIntPort);
+	GestionarEspacioFisicoCUAdapter crearGestionarEspacioFisicoCUInt(
+			GestionarEspacioFisicoGatewayIntPort gestionarEspacioFisicoGatewayIntPort,
+			EspacioFisicoFormatterResultsIntPort espacioFisicoFormatterResultsIntPort) {
+		return new GestionarEspacioFisicoCUAdapter(gestionarEspacioFisicoGatewayIntPort,
+				espacioFisicoFormatterResultsIntPort);
 	}
 
 	@Bean
-	GestionarTipoAulaCUAdapter crearGestionarTipoAulaCUInt(
-			GestionarTipoAulaGatewayIntPort gestionarTipoAulaGatewayIntPort,
-			TipoAulaFormatterResultsIntPort tipoAulaFormatterResultsIntPort) {
-		return new GestionarTipoAulaCUAdapter(gestionarTipoAulaGatewayIntPort, tipoAulaFormatterResultsIntPort);
+	GestionarTipoEspacioFisicoCUAdapter crearGestionarTipoEspacioFisicoCUInt(
+			GestionarTipoEspacioFisicoGatewayIntPort gestionarTipoEspacioFisicoGatewayIntPort,
+			TipoEspacioFisicoFormatterResultsIntPort tipoEspacioFisicoFormatterResultsIntPort) {
+		return new GestionarTipoEspacioFisicoCUAdapter(gestionarTipoEspacioFisicoGatewayIntPort,
+				tipoEspacioFisicoFormatterResultsIntPort);
 	}
 
 	@Bean
@@ -100,26 +103,26 @@ public class BeanConfigurations {
 			EdificioFormatterResultsIntPort edificioFormatterResultsIntPort) {
 		return new GestionarEdificioCUAdapter(gestionarEdificioGatewayIntPort, edificioFormatterResultsIntPort);
 	}
-	
+
 	@Bean
 	GestionarUsuarioCUAdapter crearGestionarUsuarioCUInt(GestionarUsuarioGatewayIntPort gestionarUsuarioGatewayIntPort,
 			UsuarioFormatterResultsIntPort usuarioFormatterResultsIntPort) {
-		return new GestionarUsuarioCUAdapter(gestionarUsuarioGatewayIntPort, usuarioFormatterResultsIntPort);	
+		return new GestionarUsuarioCUAdapter(gestionarUsuarioGatewayIntPort, usuarioFormatterResultsIntPort);
 	}
-	
+
 	@Bean
 	GestionarPlanificacionManualCUAdapter crearGestionarPlanificacionManualCUInt(
 			GestionarPlanificacionManualGatewayIntPort gestionarPlanificacionManualGatewayIntPort,
 			CursoFormatterResultsIntPort cursoFormatterResultsIntPort,
 			GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort,
-			GestionarAulaGatewayIntPort gestionarAulaGatewayIntPort,
+			GestionarEspacioFisicoGatewayIntPort gestionarEspacioFisicoGatewayIntPort,
 			GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort,
 			GestionarHorarioGatewayIntPort gestionarHorarioGatewayIntPort) {
 		return new GestionarPlanificacionManualCUAdapter(gestionarPlanificacionManualGatewayIntPort,
-				cursoFormatterResultsIntPort, gestionarDocenteGatewayIntPort, gestionarAulaGatewayIntPort,
+				cursoFormatterResultsIntPort, gestionarDocenteGatewayIntPort, gestionarEspacioFisicoGatewayIntPort,
 				gestionarCursoGatewayIntPort, gestionarHorarioGatewayIntPort);
 	}
-	
+
 	@Bean
 	GestionarPeriodoAcademicoCUAdapter crearGestionarPeriodoAcademicoCUInt(
 			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort,
@@ -127,5 +130,5 @@ public class BeanConfigurations {
 		return new GestionarPeriodoAcademicoCUAdapter(gestionarPeriodoAcademicoGatewayIntPort,
 				periodoAcademicoFormatterResultsIntPort);
 	}
-	
+
 }

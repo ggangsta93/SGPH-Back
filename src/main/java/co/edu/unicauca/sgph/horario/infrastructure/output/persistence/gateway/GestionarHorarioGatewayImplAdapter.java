@@ -1,28 +1,18 @@
 package co.edu.unicauca.sgph.horario.infrastructure.output.persistence.gateway;
 
-import java.math.BigInteger;
-import java.sql.Time;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
-import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.horario.aplication.output.GestionarHorarioGatewayIntPort;
 import co.edu.unicauca.sgph.horario.domain.model.Horario;
-import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.FiltroFranjaHorariaDisponibleCursoDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.repository.HorarioRepositoryInt;
 

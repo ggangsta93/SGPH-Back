@@ -17,8 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.TipoAulaEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.TipoEspacioFisicoEntity;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
 
 @Entity
@@ -57,8 +57,8 @@ public class AsignaturaEntity {
 	private List<CursoEntity> cursos;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ASIGNATURA_TIPOAULA", joinColumns = @JoinColumn(name = "ID_ASIGNATURA"), inverseJoinColumns = @JoinColumn(name = "ID_TIPO_AULA"))
-	private List<TipoAulaEntity> tiposAula;
+	@JoinTable(name = "ASIGNATURA_ESPACIOFISICO", joinColumns = @JoinColumn(name = "ID_ASIGNATURA"), inverseJoinColumns = @JoinColumn(name = "ID_TIPO_ESPACIO_FISICO"))
+	private List<TipoEspacioFisicoEntity> tiposEspacioFisico;
 
 	public AsignaturaEntity() {
 	}
@@ -146,11 +146,11 @@ public class AsignaturaEntity {
 		this.cursos = cursos;
 	}
 
-	public List<TipoAulaEntity> getTiposAula() {
-		return tiposAula;
+	public List<TipoEspacioFisicoEntity> getTiposEspacioFisico() {
+		return tiposEspacioFisico;
 	}
 
-	public void setTiposAula(List<TipoAulaEntity> tiposAula) {
-		this.tiposAula = tiposAula;
+	public void setTiposEspacioFisico(List<TipoEspacioFisicoEntity> tiposEspacioFisico) {
+		this.tiposEspacioFisico = tiposEspacioFisico;
 	}
 }
