@@ -26,7 +26,7 @@ import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.Pr
 public class AsignaturaEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_ASIGNATURA_GENERATOR", sequenceName = "SEC_ASIGNATURA", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEC_ASIGNATURA_GENERATOR", sequenceName = "SEC_ASIGNATURA", allocationSize = 1, initialValue = 926)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_ASIGNATURA_GENERATOR")
 	@Column(name = "ID_ASIGNATURA", nullable = false)
 	private Long idAsignatura;

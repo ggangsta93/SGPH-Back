@@ -22,7 +22,7 @@ import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.Hor
 public class AulaEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_AULA_GENERATOR", sequenceName = "SEC_AULA", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEC_AULA_GENERATOR", sequenceName = "SEC_AULA", allocationSize = 1, initialValue = 904)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_AULA_GENERATOR")
 	@Column(name = "ID_AULA", nullable = false)
 	private Long idAula;

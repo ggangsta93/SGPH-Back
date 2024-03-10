@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "ROL")
 public class RolEntity {
 	@Id
-	@SequenceGenerator(name = "SEC_ROL_GENERATOR", sequenceName = "SEC_ROL", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEC_ROL_GENERATOR", sequenceName = "SEC_ROL", allocationSize = 1, initialValue = 4)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_ROL_GENERATOR")
 	private Long idRol;
 

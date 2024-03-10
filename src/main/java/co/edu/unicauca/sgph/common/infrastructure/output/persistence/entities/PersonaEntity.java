@@ -18,7 +18,7 @@ import javax.persistence.Table;
 public class PersonaEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_PERSONA_GENERATOR", sequenceName = "SEC_PERSONA", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEC_PERSONA_GENERATOR", sequenceName = "SEC_PERSONA", allocationSize = 1, initialValue = 907)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_PERSONA_GENERATOR")
 	@Column(name = "ID_PERSONA", nullable = false)
 	private Long idPersona;

@@ -23,7 +23,7 @@ import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.Fa
 public class ProgramaEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_PROGRAMA_GENERATOR", sequenceName = "SEC_PROGRAMA", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEC_PROGRAMA_GENERATOR", sequenceName = "SEC_PROGRAMA", allocationSize = 1, initialValue = 1040)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_PROGRAMA_GENERATOR")
 	@Column(name = "ID_PROGRAMA", nullable = false)
 	private Long idPrograma;

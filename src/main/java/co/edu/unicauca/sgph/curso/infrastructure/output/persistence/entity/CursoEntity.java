@@ -25,7 +25,7 @@ import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.Hor
 public class CursoEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_CURSO_GENERATOR", sequenceName = "SEC_CURSO", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEC_CURSO_GENERATOR", sequenceName = "SEC_CURSO", allocationSize = 1, initialValue = 929)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_CURSO_GENERATOR")
 	@Column(name = "ID_CURSO", nullable = false)
 	private Long idCurso;

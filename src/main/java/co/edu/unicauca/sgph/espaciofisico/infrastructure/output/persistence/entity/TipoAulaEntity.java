@@ -13,7 +13,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "TIPO_AULA", uniqueConstraints = { @UniqueConstraint(columnNames = { "tipo"}) })
 public class TipoAulaEntity {
 	@Id
-	@SequenceGenerator(name = "SEC_TIPO_AULA_GENERATOR", sequenceName = "SEC_TIPO_AULA", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "SEC_TIPO_AULA_GENERATOR", sequenceName = "SEC_TIPO_AULA", allocationSize = 1, initialValue = 8)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_TIPO_AULA_GENERATOR")
 	@Column(name = "ID_TIPO_AULA", nullable = false)
 	private Long idTipoAula;
