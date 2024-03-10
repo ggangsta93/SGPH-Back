@@ -8,17 +8,20 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.controller.AsignaturaController;
-import co.edu.unicauca.sgph.aula.infrastructure.input.controller.AulaController;
 import co.edu.unicauca.sgph.curso.infrastructure.input.controller.CursoController;
 import co.edu.unicauca.sgph.docente.infrastructure.input.controller.DocenteController;
 import co.edu.unicauca.sgph.edificio.infrastructure.input.controller.EdificioController;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.controller.AulaController;
 import co.edu.unicauca.sgph.facultad.infrastructure.input.controller.FacultadRestController;
 import co.edu.unicauca.sgph.horario.infrastructure.input.controller.HorarioController;
 import co.edu.unicauca.sgph.programa.infrastructure.input.controller.ProgramaController;
 
 
 @SpringBootApplication
+//@ComponentScan(basePackages = {"co.edu.unicauca.sgph"})
 public class SGPHApplication implements CommandLineRunner {
+	
+	
 	private final FacultadRestController facultadController;
 	private final ProgramaController programaController;
 	private final AsignaturaController asignaturaController;

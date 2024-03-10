@@ -17,7 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import co.edu.unicauca.sgph.aula.infrastructure.output.persistence.entity.TipoAulaEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.TipoAulaEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
 

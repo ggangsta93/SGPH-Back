@@ -3,7 +3,7 @@ package co.edu.unicauca.sgph.horario.domain.model;
 import java.time.LocalTime;
 import java.util.List;
 
-import co.edu.unicauca.sgph.aula.domain.model.Aula;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.Aula;
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 

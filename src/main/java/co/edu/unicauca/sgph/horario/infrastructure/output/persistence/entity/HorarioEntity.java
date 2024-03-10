@@ -21,7 +21,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import co.edu.unicauca.sgph.aula.infrastructure.output.persistence.entity.AulaEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AulaEntity;
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 

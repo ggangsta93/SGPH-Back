@@ -2,30 +2,37 @@ package co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.DTORequest;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 
 public class UsuarioInDTO {
 	
 	private Long idPersona;
-
+	@NotNull
 	private Long  idTipoIdentificacion;
-
+	@NotEmpty
 	private String numeroIdentificacion;
-
+	@NotEmpty
 	private String primerNombre;
 
 	private String segundoNombre;
-
+	@NotEmpty
 	private String primerApellido;
 
 	private String segundoApellido;
 
+	@NotEmpty(message = "{usuario.email.not.null}")
 	private String email;
 	
+	@NotEmpty
 	private String nombreUsuario;
 	
+	@NotEmpty
 	private String password;
 	
+	@NotNull
 	private EstadoUsuarioEnum estado;
 	
 	private List<Long> lstIdRol;

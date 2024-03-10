@@ -21,6 +21,9 @@ spring:
     generate-ddl: false
     hibernate:
       ddl-auto: update
+  messages:
+      basename: messages
+   
       
 logging:
   level:

@@ -2,7 +2,7 @@ package co.edu.unicauca.sgph.asignatura.domain.model;
 
 import java.util.List;
 
-import co.edu.unicauca.sgph.aula.domain.model.TipoAula;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoAula;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import lombok.Data;
 

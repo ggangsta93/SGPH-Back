@@ -1,8 +1,21 @@
 package co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +36,9 @@ import co.edu.unicauca.sgph.seguridad.usuario.infrastructure.input.mapper.Usuari
 @RequestMapping("/AdministrarUsuario")
 public class UsuarioController {
 
+	@Autowired
+    private MessageSource messageSource;
+	
 	private GestionarUsuarioCUIntPort gestionarUsuarioCUIntPort;
 	private UsuarioRestMapper usuarioRestMapper;
 
@@ -40,9 +56,26 @@ public class UsuarioController {
 	 * @return
 	 */
 	@PostMapping("/guardarUsuario")
-	public UsuarioOutDTO guardarUsuario(@RequestBody UsuarioInDTO usuarioInDTO) {
-		return this.usuarioRestMapper.toUsuarioOutDTO(
+	public ResponseEntity<?> guardarUsuario(@Valid @RequestBody UsuarioInDTO usuarioInDTO, BindingResult result) {
+		HashMap<String, Object> respuestas = new HashMap<>();
+
+		if (result.hasErrors()) {
+			List<String> listaErrores = new ArrayList<>();
+			for (FieldError error : result.getFieldErrors()) {
+				listaErrores.add(error.getField() + ": " + error.getDefaultMessage());
+			}
+			respuestas.put("errors", listaErrores);
+			return new ResponseEntity<Map<String, Object>>(respuestas, HttpStatus.BAD_REQUEST);
+		}
+		
+		UsuarioOutDTO usuarioOutDTO = this.usuarioRestMapper.toUsuarioOutDTO(
 				this.gestionarUsuarioCUIntPort.guardarUsuario(this.usuarioRestMapper.toUsuario(usuarioInDTO)));
+
+		if (Objects.equals(usuarioInDTO.getIdPersona(), usuarioOutDTO.getIdPersona())) {
+			return new ResponseEntity<UsuarioOutDTO>(usuarioOutDTO,	HttpStatus.OK);
+		}else {
+			return new ResponseEntity<UsuarioOutDTO>(usuarioOutDTO,	HttpStatus.CREATED);
+		}
 	}
 
 	/**
@@ -55,7 +88,11 @@ public class UsuarioController {
 	 */
 	@PostMapping("/consultarUsuariosPorFiltro")
 	public Page<UsuarioOutDTO> consultarUsuariosPorFiltro(@RequestBody FiltroUsuarioDTO filtroUsuarioDTO) {
-		return this.gestionarUsuarioCUIntPort.consultarUsuariosPorFiltro(filtroUsuarioDTO);
+		Page<UsuarioOutDTO>  respuesta = this.gestionarUsuarioCUIntPort.consultarUsuariosPorFiltro(filtroUsuarioDTO);
+		
+		String mensajito = messageSource.getMessage("correo.de.prueba", null, LocaleContextHolder.getLocale());
+		respuesta.getContent().get(0).setEmail(mensajito);
+		return respuesta;
 	}
 
 	/**
