@@ -22,7 +22,8 @@ import co.edu.unicauca.sgph.docente.infrastructure.input.mapper.DocenteRestMappe
 @RequestMapping("/AdministrarDocente")
 public class DocenteController {
 
-	//private static final Logger log = LoggerFactory.getLogger(DocenteController.class);
+	// private static final Logger log =
+	// LoggerFactory.getLogger(DocenteController.class);
 
 	private GestionarDocenteCUIntPort gestionarDocenteCUIntPort;
 	private DocenteRestMapper docenteRestMapper;
@@ -43,24 +44,26 @@ public class DocenteController {
 			@RequestParam String numeroIdentificacion) {
 		return this.docenteRestMapper.toDocenteOutDTO(this.gestionarDocenteCUIntPort
 				.consultarDocentePorIdentificacion(idTipoIdentificacion, numeroIdentificacion));
-	}	
-
-	@Deprecated
-	@GetMapping("/consultarDocentePorIdPersona")
-	public DocenteOutDTO consultarDocentePorIdPersona(@RequestParam Long idPersona) {
-		return this.docenteRestMapper
-				.toDocenteOutDTO(this.gestionarDocenteCUIntPort.consultarDocentePorIdPersona(idPersona));
 	}
-	
+
+	/**
+	 * Método encargado de consultar los nombres de docentes por curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idCurso
+	 * @return
+	 */
 	@GetMapping("/consultarNombresDocentesPorIdCurso")
 	public List<String> consultarNombresDocentesPorIdCurso(@RequestParam Long idCurso) {
 		return this.gestionarDocenteCUIntPort.consultarNombresDocentesPorIdCurso(idCurso);
 	}
-	
+
 	/**
-	 * Método encargado de consultar los docentes por diferentes criterios de busqueda
-	 * y retornarlos de manera paginada
+	 * Método encargado de consultar los docentes por diferentes criterios de
+	 * busqueda y retornarlos de manera paginada
 	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co> *
 	 * 
 	 * @param filtroDocenteDTO DTO con los filtros de busqueda
 	 * @return
@@ -69,7 +72,7 @@ public class DocenteController {
 	public Page<DocenteOutDTO> consultarDocentes(@RequestBody FiltroDocenteDTO filtroDocenteDTO) {
 		return this.gestionarDocenteCUIntPort.consultarDocentes(filtroDocenteDTO);
 	}
-	
+
 	/**
 	 * Método encargado de obtener los docentes asociadas a un curso.
 	 * 

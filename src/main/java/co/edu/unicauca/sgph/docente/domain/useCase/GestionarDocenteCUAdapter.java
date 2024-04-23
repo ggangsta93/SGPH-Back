@@ -28,12 +28,19 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 		return this.gestionarDocenteGatewayIntPort.guardarDocente(docente);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.docente.aplication.input.GestionarDocenteCUIntPort#consultarDocentePorIdentificacion(java.lang.Long,
+	 *      java.lang.String)
+	 */
 	@Override
 	public Docente consultarDocentePorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion) {
 		return this.gestionarDocenteGatewayIntPort.consultarDocentePorIdentificacion(idTipoIdentificacion,
 				numeroIdentificacion);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.docente.aplication.input.GestionarDocenteCUIntPort#consultarDocentePorIdPersona(java.lang.Long)
+	 */
 	@Override
 	public Docente consultarDocentePorIdPersona(Long idPersona) {
 		Docente docente = this.gestionarDocenteGatewayIntPort.consultarDocentePorIdPersona(idPersona);
@@ -42,16 +49,25 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 						.prepararRespuestaFallida("No se encontró docente con ese idPersona");
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.docente.aplication.input.GestionarDocenteCUIntPort#consultarNombresDocentesPorIdCurso(java.lang.Long)
+	 */
 	@Override
 	public List<String> consultarNombresDocentesPorIdCurso(Long idCurso) {
 		return this.gestionarDocenteGatewayIntPort.consultarNombresDocentesPorIdCurso(idCurso);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.docente.aplication.input.GestionarDocenteCUIntPort#consultarDocentes(co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO)
+	 */
 	@Override
 	public Page<DocenteOutDTO> consultarDocentes(FiltroDocenteDTO filtroDocenteDTO) {
 		return this.gestionarDocenteGatewayIntPort.consultarDocentes(filtroDocenteDTO);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.docente.aplication.input.GestionarDocenteCUIntPort#consultarDocentePorIdCurso(java.lang.Long)
+	 */
 	@Override
 	public List<Docente> consultarDocentePorIdCurso(Long idCurso) {
 		return this.gestionarDocenteGatewayIntPort.consultarDocentePorIdCurso(idCurso);

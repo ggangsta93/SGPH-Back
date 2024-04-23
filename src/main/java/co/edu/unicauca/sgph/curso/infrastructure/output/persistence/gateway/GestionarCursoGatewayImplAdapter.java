@@ -26,19 +26,30 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 		this.modelMapper = modelMapper;
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort#consultarCursoPorGrupoYAsignatura(java.lang.String,
+	 *      java.lang.Long)
+	 */
 	@Override
+	@Deprecated
 	public Curso consultarCursoPorGrupoYAsignatura(String grupo, Long idAsignatura) {
 		return this.modelMapper.map(
 				this.cursoRepositoryInt.findByGrupoAndAsignatura(grupo, new AsignaturaEntity(idAsignatura)),
 				Curso.class);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort#guardarCurso(co.edu.unicauca.sgph.curso.domain.model.Curso)
+	 */
 	@Override
-	public Curso guardarCurso(Curso curso) {		
+	public Curso guardarCurso(Curso curso) {
 		return this.modelMapper.map(this.cursoRepositoryInt.save(this.modelMapper.map(curso, CursoEntity.class)),
 				Curso.class);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort#consultarCursoPorIdCurso(java.lang.Long)
+	 */
 	@Override
 	public Curso consultarCursoPorIdCurso(Long idCurso) {
 		return this.modelMapper.map(this.cursoRepositoryInt.findByIdCurso(idCurso), Curso.class);

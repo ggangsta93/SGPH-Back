@@ -44,13 +44,18 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 				Docente.class);
 	}
 
-	/* Javier Arias */
+	/** 
+	 * @see co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort#consultarDocentePorIdentificacion(java.lang.Long, java.lang.String)
+	 */
 	@Override
 	public Docente consultarDocentePorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion) {
 		return this.modelMapper.map(this.docenteRepositoryInt.findByTipoIdentificacionAndNumeroIdentificacion(
 				new TipoIdentificacionEntity(idTipoIdentificacion), numeroIdentificacion), Docente.class);
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort#consultarDocentePorIdPersona(java.lang.Long)
+	 */
 	@Override
 	public Docente consultarDocentePorIdPersona(Long idPersona) {
 		DocenteEntity docenteEntity = this.docenteRepositoryInt.findByIdPersona(idPersona);
@@ -61,11 +66,17 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 		}
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort#consultarNombresDocentesPorIdCurso(java.lang.Long)
+	 */
 	@Override
 	public List<String> consultarNombresDocentesPorIdCurso(Long idCurso) {
 		return this.docenteRepositoryInt.consultarNombresDocentesPorIdCurso(idCurso);
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort#consultarDocentes(co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO)
+	 */
 	@Override
 	public Page<DocenteOutDTO> consultarDocentes(FiltroDocenteDTO filtroDocenteDTO) {
 		PageRequest pageable = null;
@@ -132,6 +143,14 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 	    }
 	}
 
+	/**
+	 * Método encargado de contabilizar los docentes por filtro</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param filtroDocenteDTO
+	 * @return
+	 */
 	private Long contarDocentesConsultados(FiltroDocenteDTO filtroDocenteDTO) {
 
 		// Construcción de la consulta con StringBuilder
@@ -178,6 +197,9 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 		return countQuery.getSingleResult();
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort#consultarDocentePorIdCurso(java.lang.Long)
+	 */
 	@Override
 	public List<Docente> consultarDocentePorIdCurso(Long idCurso) {
 		List<DocenteEntity> docenteEntities = this.docenteRepositoryInt.consultarDocentePorIdCurso(idCurso);

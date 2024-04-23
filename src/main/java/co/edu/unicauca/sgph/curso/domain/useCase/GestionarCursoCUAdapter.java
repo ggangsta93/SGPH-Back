@@ -16,16 +16,26 @@ public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
 		this.cursoFormatterResultsIntPort = cursoFormatterResultsIntPort;
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort#consultarCursoPorGrupoYAsignatura(java.lang.String, java.lang.Long)
+	 */
 	@Override
+	@Deprecated
 	public Curso consultarCursoPorGrupoYAsignatura(String grupo, Long idAsignatura) {
 		return this.gestionarCursoGatewayIntPort.consultarCursoPorGrupoYAsignatura(grupo, idAsignatura);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort#guardarCurso(co.edu.unicauca.sgph.curso.domain.model.Curso)
+	 */
 	@Override
 	public Curso guardarCurso(Curso curso) {
 		return this.gestionarCursoGatewayIntPort.guardarCurso(curso);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort#consultarCursoPorIdCurso(java.lang.Long)
+	 */
 	@Override
 	public Curso consultarCursoPorIdCurso(Long idCurso) {
 		return this.gestionarCursoGatewayIntPort.consultarCursoPorIdCurso(idCurso);

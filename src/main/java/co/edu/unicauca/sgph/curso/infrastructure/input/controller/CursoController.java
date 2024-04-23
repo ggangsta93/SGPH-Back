@@ -24,23 +24,32 @@ public class CursoController {
 		this.cursoRestMapper = cursoRestMapper;
 	}
 
-	public CursoOutDTO consultarCursoPorGrupoYAsignatura(String grupo, Long idAsignatura) {
-		return this.cursoRestMapper
-				.toCursoOutDTO(this.gestionarCursoCUIntPort.consultarCursoPorGrupoYAsignatura(grupo, idAsignatura));
-	}
-
-
 	/**
-	 * Método encargado de guardar o actualizar un curso </br>
+	 * Método encargado de guardar o actualizar un curso <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param periodoAcademicoInDTO
+	 * @param cursoInDTO
 	 * @return
 	 */
 	@PostMapping("/guardarCurso")
 	public CursoOutDTO guardarCurso(@RequestBody CursoInDTO cursoInDTO) {
 		return this.cursoRestMapper
 				.toCursoOutDTO(this.gestionarCursoCUIntPort.guardarCurso(this.cursoRestMapper.toCurso(cursoInDTO)));
-	}	
+	}
+
+	/**
+	 * Método encargado de consultar un curso por grupo y asignatura <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param grupo
+	 * @param idAsignatura
+	 * @return
+	 */
+	@Deprecated
+	public CursoOutDTO consultarCursoPorGrupoYAsignatura(String grupo, Long idAsignatura) {
+		return this.cursoRestMapper
+				.toCursoOutDTO(this.gestionarCursoCUIntPort.consultarCursoPorGrupoYAsignatura(grupo, idAsignatura));
+	}
 }
