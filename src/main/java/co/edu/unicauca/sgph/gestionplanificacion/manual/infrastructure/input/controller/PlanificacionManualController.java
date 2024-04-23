@@ -19,7 +19,7 @@ import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTO
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.InfoGeneralCursosPorProgramaDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.output.persistence.mapper.PlanificacionManualRestMapper;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.mapper.PlanificacionManualRestMapper;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.CrearActualizarDocentesCursoInDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.CrearActualizarHorarioCursoInDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.FiltroFranjaHorariaDisponibleCursoDTO;

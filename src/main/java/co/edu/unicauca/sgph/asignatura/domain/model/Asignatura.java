@@ -1,6 +1,7 @@
 package co.edu.unicauca.sgph.asignatura.domain.model;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
@@ -14,7 +15,7 @@ public class Asignatura {
 	private String nombre;
 
 	private String codigoAsignatura;
-	
+
 	private String OID;
 
 	private Integer semestre;
@@ -24,11 +25,11 @@ public class Asignatura {
 	private Integer horasSemana;
 
 	private Programa programa;
-	
+
 	private List<TipoEspacioFisico> tiposEspaciosFisicos;
-		
+
 	public Asignatura() {
-		//Constructor sin parametros
+		tiposEspaciosFisicos = new ArrayList<>();
 	}
 
 	public Asignatura(Long idAsignatura) {
@@ -105,5 +106,5 @@ public class Asignatura {
 
 	public void setTiposEspaciosFisicos(List<TipoEspacioFisico> tiposEspaciosFisicos) {
 		this.tiposEspaciosFisicos = tiposEspaciosFisicos;
-	}	
+	}
 }

@@ -1,0 +1,13 @@
+package co.edu.unicauca.sgph.gestionplanificacion.labordocencia.domain.useCase;
+
+import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.aplication.input.GestionarLaborDocenciaCUIntPort;
+import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.aplication.output.GestionarLaborDocenciaGatewayIntPort;
+
+public class GestionarLaborDocenciaCUAdapter implements GestionarLaborDocenciaCUIntPort {
+
+	private GestionarLaborDocenciaGatewayIntPort gestionarLaborDocenciaGatewayIntPort;
+
+	public GestionarLaborDocenciaCUAdapter(GestionarLaborDocenciaGatewayIntPort gestionarLaborDocenciaGatewayIntPort) {
+		gestionarLaborDocenciaGatewayIntPort = gestionarLaborDocenciaGatewayIntPort;
+	}
+}

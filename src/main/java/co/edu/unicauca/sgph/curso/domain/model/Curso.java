@@ -4,7 +4,7 @@ import java.util.List;
 
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
-import co.edu.unicauca.sgph.gestionplanificacion.periodoacademico.domain.model.PeriodoAcademico;
+import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 
 public class Curso {
 

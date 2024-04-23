@@ -17,8 +17,8 @@ import javax.persistence.Table;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
-import co.edu.unicauca.sgph.gestionplanificacion.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 
 @Entity
 @Table(name = "CURSO")

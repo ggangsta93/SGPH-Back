@@ -33,7 +33,11 @@ public class DocenteEntity extends PersonaEntity {
 
 	@JsonBackReference
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "DOCENTE_CURSO", joinColumns = @JoinColumn(name = "ID_DOCENTE"), inverseJoinColumns = @JoinColumn(name = "ID_CURSO"))
+	@JoinTable(
+			name = "DOCENTE_CURSO",
+			joinColumns = @JoinColumn(name = "ID_DOCENTE"),
+			inverseJoinColumns = @JoinColumn(name = "ID_CURSO")
+	)
 	private List<CursoEntity> cursos;
 
 	public DocenteEntity() {

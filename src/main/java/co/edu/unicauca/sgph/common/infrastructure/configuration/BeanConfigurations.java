@@ -24,20 +24,22 @@ import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarTipoEspacioFis
 import co.edu.unicauca.sgph.facultad.aplication.output.FacultadFormatterResultsIntPort;
 import co.edu.unicauca.sgph.facultad.aplication.output.GestionarFacultadGatewayIntPort;
 import co.edu.unicauca.sgph.facultad.domain.useCase.GestionarFacultadCUAdapter;
+import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.aplication.output.GestionarLaborDocenciaGatewayIntPort;
+import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.domain.useCase.GestionarLaborDocenciaCUAdapter;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.useCase.GestionarPlanificacionManualCUAdapter;
-import co.edu.unicauca.sgph.gestionplanificacion.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
-import co.edu.unicauca.sgph.gestionplanificacion.periodoacademico.aplication.output.PeriodoAcademicoFormatterResultsIntPort;
-import co.edu.unicauca.sgph.gestionplanificacion.periodoacademico.domain.useCase.GestionarPeriodoAcademicoCUAdapter;
 import co.edu.unicauca.sgph.horario.aplication.output.GestionarHorarioGatewayIntPort;
 import co.edu.unicauca.sgph.horario.aplication.output.HorarioFormatterResultsIntPort;
 import co.edu.unicauca.sgph.horario.domain.useCase.GestionarHorarioCUAdapter;
+import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
+import co.edu.unicauca.sgph.periodoacademico.aplication.output.PeriodoAcademicoFormatterResultsIntPort;
+import co.edu.unicauca.sgph.periodoacademico.domain.useCase.GestionarPeriodoAcademicoCUAdapter;
 import co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort;
 import co.edu.unicauca.sgph.programa.aplication.output.ProgramaFormatterResultsIntPort;
 import co.edu.unicauca.sgph.programa.domain.useCase.GestionarProgramaCUAdapter;
-import co.edu.unicauca.sgph.seguridad.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
-import co.edu.unicauca.sgph.seguridad.usuario.aplication.output.UsuarioFormatterResultsIntPort;
-import co.edu.unicauca.sgph.seguridad.usuario.domain.useCase.GestionarUsuarioCUAdapter;
+import co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
+import co.edu.unicauca.sgph.usuario.aplication.output.UsuarioFormatterResultsIntPort;
+import co.edu.unicauca.sgph.usuario.domain.useCase.GestionarUsuarioCUAdapter;
 
 @Configuration
 public class BeanConfigurations {
@@ -129,6 +131,12 @@ public class BeanConfigurations {
 			PeriodoAcademicoFormatterResultsIntPort periodoAcademicoFormatterResultsIntPort) {
 		return new GestionarPeriodoAcademicoCUAdapter(gestionarPeriodoAcademicoGatewayIntPort,
 				periodoAcademicoFormatterResultsIntPort);
+	}
+
+	@Bean
+	GestionarLaborDocenciaCUAdapter crearGestionarLaborDocenciaCUInt(
+			GestionarLaborDocenciaGatewayIntPort gestionarLaborDocenciaGatewayIntPort) {
+		return new GestionarLaborDocenciaCUAdapter(gestionarLaborDocenciaGatewayIntPort);
 	}
 
 }

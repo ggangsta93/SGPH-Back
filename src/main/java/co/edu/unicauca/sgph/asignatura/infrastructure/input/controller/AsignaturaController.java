@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
+import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
@@ -46,7 +47,7 @@ public class AsignaturaController {
 
 	@GetMapping("/consultarAsignaturasPorIdPrograma")
 	public List<AsignaturaOutDTO> consultarAsignaturasPorIdPrograma(@RequestParam Long idPrograma) {
-		return this.asignaturaRestMapper
-				.toLstAsignaturaOutDTO(this.gestionarAsignaturaCUIntPort.consultarAsignaturasPorIdPrograma(idPrograma));
+		List<Asignatura> aisgnaturas = this.gestionarAsignaturaCUIntPort.consultarAsignaturasPorIdPrograma(idPrograma);
+		return this.asignaturaRestMapper.toLstAsignaturaOutDTO(aisgnaturas);
 	}
 }

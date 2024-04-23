@@ -1,6 +1,7 @@
 package co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -61,6 +62,8 @@ public class AsignaturaEntity {
 	private List<TipoEspacioFisicoEntity> tiposEspacioFisico;
 
 	public AsignaturaEntity() {
+		this.cursos=new ArrayList<>();
+		this.tiposEspacioFisico=new ArrayList<>();
 	}
 
 	public AsignaturaEntity(Long idAsignatura) {
