@@ -47,7 +47,16 @@ public class EspacioFisicoController {
 				.guardarEspacioFisico(this.espacioFisicoRestMapper.toEspacioFisico(espacioFisicoInDTO)));
 	}
 
-	// Servicio utilizado en la pantalla de Gestionar espacios físicos
+	/**
+	 * Método encargado de consultar un espacio físico por su identificador
+	 * único<br>
+	 * -Utilizado en la pantalla de Gestionar espacios físicos<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idEspacioFisico
+	 * @return
+	 */
 	@GetMapping("/consultarEspacioFisicoPorIdEspacioFisico")
 	public EspacioFisicoOutDTO consultarEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico) {
 		return this.espacioFisicoRestMapper.toEspacioFisicoOutDTO(
@@ -55,7 +64,7 @@ public class EspacioFisicoController {
 	}
 
 	/**
-	 * Método encargado de consultar los tipos de espacios físicos por facultad
+	 * Método encargado de consultar los tipos de espacios físicos por facultad<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -71,8 +80,9 @@ public class EspacioFisicoController {
 
 	/**
 	 * Método encargado de consultar los espacios físicos por diferentes criterios
-	 * de busqueda y retornarlos de manera paginada
+	 * de busqueda y retornarlos de manera paginada<br>
 	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param filtroEspacioFisicoDTO DTO con los filtros de busqueda
 	 * @return
@@ -84,7 +94,7 @@ public class EspacioFisicoController {
 
 	/**
 	 * Método encargado de consultar los tipos de espacios físicos asociados a una
-	 * lista de edificios </br>
+	 * lista de edificios <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -97,5 +107,4 @@ public class EspacioFisicoController {
 		return this.espacioFisicoRestMapper.toLstTipoEspacioFisicoOutDTO(
 				this.gestionarEspacioFisicoCUIntPort.consultarTiposEspaciosFisicosPorIdEdificio(lstIdEdificio));
 	}
-
 }

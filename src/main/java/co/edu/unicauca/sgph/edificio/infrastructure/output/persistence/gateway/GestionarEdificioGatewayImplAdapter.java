@@ -36,6 +36,9 @@ public class GestionarEdificioGatewayImplAdapter implements GestionarEdificioGat
 		return this.modelMapper.map(edificioEntity, Edificio.class);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.edificio.aplication.output.GestionarEdificioGatewayIntPort#consultarEdificiosPorIdFacultad(java.util.List)
+	 */
 	@Override
 	public List<Edificio> consultarEdificiosPorIdFacultad(List<Long> lstIdFacultad) {
 		List<EdificioEntity> edificioEntities = this.edificioRepositoryInt

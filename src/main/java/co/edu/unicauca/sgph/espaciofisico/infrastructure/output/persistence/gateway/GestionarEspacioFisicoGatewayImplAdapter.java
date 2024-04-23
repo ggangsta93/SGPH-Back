@@ -41,23 +41,32 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 	}
 
 	@Override
-	public EspacioFisico consultarEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico) {
-		return this.modelMapper.map(this.espacioFisicoRepositoryInt.findByIdEspacioFisico(idEspacioFisico),
-				EspacioFisico.class);
-	}
-
-	@Override
 	public EspacioFisico guardarEspacioFisico(EspacioFisico espacioFisico) {
 		EspacioFisicoEntity espacioFisicoEntity = this.espacioFisicoRepositoryInt
 				.save(this.modelMapper.map(espacioFisico, EspacioFisicoEntity.class));
 		return this.modelMapper.map(espacioFisicoEntity, EspacioFisico.class);
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarEspacioFisicoPorIdEspacioFisico(java.lang.Long)
+	 */
+	@Override
+	public EspacioFisico consultarEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico) {
+		return this.modelMapper.map(this.espacioFisicoRepositoryInt.findByIdEspacioFisico(idEspacioFisico),
+				EspacioFisico.class);
+	}
+	
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarEspacioFisicoHorarioPorIdCurso(java.lang.Long)
+	 */
 	@Override
 	public List<String> consultarEspacioFisicoHorarioPorIdCurso(Long idCurso) {
 		return this.espacioFisicoRepositoryInt.consultarEspacioFisicoHorarioPorIdCurso(idCurso);
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarEspaciosFisicos(co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO)
+	 */
 	@Override
 	public Page<EspacioFisicoDTO> consultarEspaciosFisicos(FiltroEspacioFisicoDTO filtroEspacioFisicoDTO) {
 		PageRequest pageable = null;
@@ -187,6 +196,9 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		return countQuery.getSingleResult();
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarTiposEspaciosFisicosPorIdEdificio(java.util.List)
+	 */
 	@Override
 	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorIdEdificio(List<Long> lstIdEdificio) {
 		List<TipoEspacioFisicoEntity> lstTipoEspacioFisicoEntity = this.espacioFisicoRepositoryInt

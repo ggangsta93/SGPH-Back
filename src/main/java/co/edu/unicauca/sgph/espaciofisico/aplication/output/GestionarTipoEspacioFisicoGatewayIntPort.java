@@ -7,8 +7,7 @@ import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
 public interface GestionarTipoEspacioFisicoGatewayIntPort {
 
 	/**
-	 * Método encargado de consultar los tipos de espacios físicos por facultad
-	 * </br>
+	 * Método encargado de consultar los tipos de espacios físicos por facultad <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 

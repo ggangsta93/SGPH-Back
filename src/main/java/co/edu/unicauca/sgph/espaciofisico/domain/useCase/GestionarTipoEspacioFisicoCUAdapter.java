@@ -18,6 +18,9 @@ public class GestionarTipoEspacioFisicoCUAdapter implements GestionarTipoEspacio
 		this.tipoEspacioFisicoFormatterResultsIntPort = tipoEspacioFisicoFormatterResultsIntPort;
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarTipoEspacioFisicoCUIntPort#consultarTiposEspaciosFisicosPorIdFacultad(java.util.List)
+	 */
 	@Override
 	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorIdFacultad(List<Long> lstIdFacultad) {
 		return this.gestionarTipoEspacioFisicoGatewayIntPort.consultarTiposEspaciosFisicosPorIdFacultad(lstIdFacultad);

@@ -12,7 +12,7 @@ public interface GestionarEdificioCUIntPort {
 	
 	/**
 	 * Método encargado de consultar los edificios asociados a una lista de
-	 * facultades </br>
+	 * facultades <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 

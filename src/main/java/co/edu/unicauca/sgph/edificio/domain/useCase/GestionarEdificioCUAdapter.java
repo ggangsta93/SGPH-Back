@@ -32,6 +32,9 @@ public class GestionarEdificioCUAdapter implements GestionarEdificioCUIntPort {
 		return this.gestionarEdificioGatewayIntPort.guardarEdificio(edificio);
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.edificio.aplication.input.GestionarEdificioCUIntPort#consultarEdificiosPorIdFacultad(java.util.List)
+	 */
 	@Override
 	public List<Edificio> consultarEdificiosPorIdFacultad(List<Long> lstIdFacultad) {
 		return this.gestionarEdificioGatewayIntPort.consultarEdificiosPorIdFacultad(lstIdFacultad);

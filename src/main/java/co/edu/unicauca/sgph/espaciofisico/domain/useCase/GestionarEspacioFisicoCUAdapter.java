@@ -24,25 +24,37 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	}
 
 	@Override
-	public EspacioFisico consultarEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico) {
-		return this.gestionarEspacioFisicoGatewayIntPort.consultarEspacioFisicoPorIdEspacioFisico(idEspacioFisico);
-	}
-
-	@Override
 	public EspacioFisico guardarEspacioFisico(EspacioFisico espacioFisico) {
 		return this.gestionarEspacioFisicoGatewayIntPort.guardarEspacioFisico(espacioFisico);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort#consultarEspacioFisicoHorarioPorIdCurso(java.lang.Long)
+	 */
 	@Override
 	public List<String> consultarEspacioFisicoHorarioPorIdCurso(Long idCurso) {
 		return this.gestionarEspacioFisicoGatewayIntPort.consultarEspacioFisicoHorarioPorIdCurso(idCurso);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort#consultarEspacioFisicoPorIdEspacioFisico(java.lang.Long)
+	 */
+	@Override
+	public EspacioFisico consultarEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico) {
+		return this.gestionarEspacioFisicoGatewayIntPort.consultarEspacioFisicoPorIdEspacioFisico(idEspacioFisico);
+	}
+
+	/**
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort#consultarEspaciosFisicos(co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO)
+	 */
 	@Override
 	public Page<EspacioFisicoDTO> consultarEspaciosFisicos(FiltroEspacioFisicoDTO filtroEspacioFisicoDTO) {
 		return this.gestionarEspacioFisicoGatewayIntPort.consultarEspaciosFisicos(filtroEspacioFisicoDTO);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort#consultarTiposEspaciosFisicosPorIdEdificio(java.util.List)
+	 */
 	@Override
 	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorIdEdificio(List<Long> lstIdEdificio) {
 		return this.gestionarEspacioFisicoGatewayIntPort.consultarTiposEspaciosFisicosPorIdEdificio(lstIdEdificio);
