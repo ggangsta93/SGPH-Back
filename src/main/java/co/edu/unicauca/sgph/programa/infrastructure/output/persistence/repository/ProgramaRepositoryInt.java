@@ -14,7 +14,7 @@ public interface ProgramaRepositoryInt extends JpaRepository<ProgramaEntity, Lon
 
 	/**
 	 * Método encargado de consultar los programas asociados a una lista de
-	 * facultades </br>
+	 * facultades <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 

@@ -144,7 +144,7 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 	}
 
 	/**
-	 * Método encargado de contabilizar los docentes por filtro</br>
+	 * Método encargado de contabilizar los docentes por filtro<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 

@@ -12,6 +12,16 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.enti
 public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoEntity, Long> {
 	
 	
+	/**
+	 * Método encargado de consultar un espacio físico por su identificador
+	 * único<br>
+	 * -Utilizado en la pantalla de Gestionar espacios físicos<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idEspacioFisico
+	 * @return
+	 */
 	public EspacioFisicoEntity findByIdEspacioFisico(Long idEspacioFisico);	
 		
 	/**

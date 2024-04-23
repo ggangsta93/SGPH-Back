@@ -7,7 +7,7 @@ import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 public interface GestionarAsignaturaCUIntPort {
 	
 	/**
-	 * Método encargado de guardar o actualizar una asignatura </br>
+	 * Método encargado de guardar o actualizar una asignatura <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 

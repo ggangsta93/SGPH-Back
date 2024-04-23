@@ -13,15 +13,30 @@ import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.Doc
 
 public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long> {
 
+	/**
+	 * Método encargado de consultar un docente por su identificación<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idTipoIdentificacion
+	 * @param numeroIdentificacion
+	 * @return
+	 */
 	public DocenteEntity findByTipoIdentificacionAndNumeroIdentificacion(TipoIdentificacionEntity tipoIdentificacion,
 			String numeroIdentificacion);
 
+	/**
+	 * Método encargado de consultar un docente por su identificador único <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idPersona
+	 * @return
+	 */
 	public DocenteEntity findByIdPersona(Long idPersona);
-
-	
 	
 	/**
-	 * Método encargado de consultar los nombres de los docentes de un curso
+	 * Método encargado de consultar los nombres de los docentes de un curso<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -35,7 +50,7 @@ public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long>
 	
 	
 	/**
-	 * Método encargado de obtener los docentes asociadas a un curso.
+	 * Método encargado de obtener los docentes asociadas a un curso.<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 

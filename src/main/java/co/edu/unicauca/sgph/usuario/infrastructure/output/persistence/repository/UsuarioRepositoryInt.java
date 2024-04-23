@@ -13,7 +13,7 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 
 	/**
 	 * Método encargado de consultar los identificadores de programas asociados a un
-	 * usuario </br>
+	 * usuario <br>
 	 * 
 	 * @param idPersona
 	 * @return
@@ -23,7 +23,7 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 
 	/**
 	 * Método encargado de consultar los identificadores de roles asociados a un
-	 * usuario </br>
+	 * usuario <br>
 	 * 
 	 * @param idPersona
 	 * @return
@@ -33,7 +33,7 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 	
 	
 	/**
-	 * Método encargado de consultar todos los tipos de identificación persona </br>
+	 * Método encargado de consultar todos los tipos de identificación persona <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -43,7 +43,7 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 	public List<TipoIdentificacionEntity> consultarTiposIdentificacion();
 	
 	/**
-	 * Método encargado de consultar todos los roles de usuario</br>
+	 * Método encargado de consultar todos los roles de usuario<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 

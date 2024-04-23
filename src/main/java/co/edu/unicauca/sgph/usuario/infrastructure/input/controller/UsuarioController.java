@@ -48,7 +48,7 @@ public class UsuarioController {
 	}
 
 	/**
-	 * Método encargado de guardar o actualizar un usuario </br>
+	 * Método encargado de guardar o actualizar un usuario <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -92,8 +92,9 @@ public class UsuarioController {
 
 	/**
 	 * Método encargado de consultar los usuarios por diferentes criterios de
-	 * busqueda y retornarlos de manera paginada
+	 * busqueda y retornarlos de manera paginada<br>
 	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param filtroUsuarioDTO DTO con los criterios de busqueda
 	 * @return
@@ -109,7 +110,7 @@ public class UsuarioController {
 
 	/**
 	 * Método encargado de consultar todos los tipos de identificación de
-	 * persona</br>
+	 * persona<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -122,7 +123,7 @@ public class UsuarioController {
 	}
 
 	/**
-	 * Método encargado de consultar todos los roles de usuario</br>
+	 * Método encargado de consultar todos los roles de usuario<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -134,7 +135,7 @@ public class UsuarioController {
 	}
 
 	/**
-	 * Método encargado de consultar todos los estados de usuario</br>
+	 * Método encargado de consultar todos los estados de usuario<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 

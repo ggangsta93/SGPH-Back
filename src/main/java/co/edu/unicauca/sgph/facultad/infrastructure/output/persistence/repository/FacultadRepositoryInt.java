@@ -10,5 +10,12 @@ public interface FacultadRepositoryInt extends JpaRepository<FacultadEntity, Lon
 	
 	public FacultadEntity findByNombre(String nombre);
     
+	/**
+	 * Método encargado de consultar todas las facultades<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return
+	 */
 	public List<FacultadEntity> findAll();
 }

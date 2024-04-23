@@ -13,7 +13,7 @@ import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutD
 public interface GestionarUsuarioGatewayIntPort {
 
 	/**
-	 * Método encargado de guardar o actualizar un usuario </br>
+	 * Método encargado de guardar o actualizar un usuario <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -24,7 +24,7 @@ public interface GestionarUsuarioGatewayIntPort {
 
 	/**
 	 * Método encargado de consultar los usuarios por diferentes criterios de
-	 * busqueda y retornarlos de manera paginada </br>
+	 * busqueda y retornarlos de manera paginada <br>
 	 * 
 	 * @param filtroUsuarioDTO DTO con los criterios de busqueda
 	 * @return
@@ -33,7 +33,7 @@ public interface GestionarUsuarioGatewayIntPort {
 
 	/**
 	 * Método encargado de consultar todos los tipos de identificación de
-	 * persona</br>
+	 * persona<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -42,7 +42,7 @@ public interface GestionarUsuarioGatewayIntPort {
 	public List<TipoIdentificacion> consultarTiposIdentificacion();
 
 	/**
-	 * Método encargado de consultar todos los roles de usuario</br>
+	 * Método encargado de consultar todos los roles de usuario<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -51,7 +51,7 @@ public interface GestionarUsuarioGatewayIntPort {
 	public List<Rol> consultarRoles();
 
 	/**
-	 * Método encargado de consultar todos los estados de usuario</br>
+	 * Método encargado de consultar todos los estados de usuario<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 

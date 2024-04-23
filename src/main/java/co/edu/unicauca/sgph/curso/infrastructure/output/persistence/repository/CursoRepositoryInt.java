@@ -20,7 +20,7 @@ public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
 	public CursoEntity findByGrupoAndAsignatura(String grupo, AsignaturaEntity asignatura);
 
 	/**
-	 * Método encargado de obtener el curso por su identificador
+	 * Método encargado de obtener el curso por su identificador<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
 	 * 

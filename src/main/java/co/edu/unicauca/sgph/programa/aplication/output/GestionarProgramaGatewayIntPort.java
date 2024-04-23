@@ -12,7 +12,7 @@ public interface GestionarProgramaGatewayIntPort {
 
 	/**
 	 * Método encargado de consultar los programas asociados a una lista de
-	 * facultades </br>
+	 * facultades <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -22,7 +22,7 @@ public interface GestionarProgramaGatewayIntPort {
 	public List<Programa> consultarProgramasPorIdFacultad(List<Long> lstIdFacultad);
 	
 	/**
-	 * Método encargado de consultar todos los programas</br>
+	 * Método encargado de consultar todos los programas<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 

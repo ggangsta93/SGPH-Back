@@ -7,12 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
-import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
 
 public interface AsignaturaRepositoryInt extends JpaRepository<AsignaturaEntity, Long> {
-	
-	public AsignaturaEntity findByNombreAndPrograma(String nombre, ProgramaEntity programa);
-	
+		
 	/**
 	 * Método encargado de obtener las materias de un programa
 	 * 

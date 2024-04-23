@@ -42,7 +42,7 @@ public class PeriodoAcademicoController {
 	}
 
 	/**
-	 * Método encargado de guardar o actualizar un periodo academico </br>
+	 * Método encargado de guardar o actualizar un periodo academico <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
