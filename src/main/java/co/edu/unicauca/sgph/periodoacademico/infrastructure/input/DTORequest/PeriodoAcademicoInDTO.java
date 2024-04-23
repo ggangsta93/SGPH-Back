@@ -6,11 +6,11 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.validation.ExistsByAnioAndPeriodo;
-import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.validation.PeriodoFinalGreaterThanPeriodoInicial;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.validation.FechaFinPeriodoGreaterThanFechaInicioPeriodo;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.EstadoPeriodoAcademicoEnum;
 
 @ExistsByAnioAndPeriodo
-@PeriodoFinalGreaterThanPeriodoInicial
+@FechaFinPeriodoGreaterThanFechaInicioPeriodo
 public class PeriodoAcademicoInDTO implements Serializable {
 
 	/**

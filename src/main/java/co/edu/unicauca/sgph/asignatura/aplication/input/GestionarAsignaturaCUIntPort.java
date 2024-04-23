@@ -16,5 +16,13 @@ public interface GestionarAsignaturaCUIntPort {
 	 */
 	public Asignatura guardarAsignatura(Asignatura asignatura);
 
+	/**
+	 * Método encargado de consultar las asignaturas por programa <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idPrograma
+	 * @return
+	 */
 	public List<Asignatura> consultarAsignaturasPorIdPrograma(Long idPrograma);
 }

@@ -25,6 +25,9 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		this.asignaturaMapper = asignaturaMapper;
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort#guardarAsignatura(co.edu.unicauca.sgph.asignatura.domain.model.Asignatura)
+	 */
 	@Override
 	public Asignatura guardarAsignatura(Asignatura asignatura) {
 		return this.asignaturaMapper.map(
@@ -32,6 +35,9 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 				Asignatura.class);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort#consultarAsignaturasPorIdPrograma(java.lang.Long)
+	 */
 	@Override
 	public List<Asignatura> consultarAsignaturasPorIdPrograma(Long idPrograma) {
 		List<AsignaturaEntity> lstAsignaturaEntity = this.asignaturaRepositoryInt

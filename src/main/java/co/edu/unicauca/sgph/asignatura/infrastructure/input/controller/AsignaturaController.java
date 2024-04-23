@@ -30,9 +30,8 @@ public class AsignaturaController {
 		this.asignaturaRestMapper = asignaturaRestMapper;
 	}
 
-	
 	/**
-	 * Método encargado de guardar o actualizar una asignatura </br>
+	 * Método encargado de guardar o actualizar una asignatura <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -45,6 +44,14 @@ public class AsignaturaController {
 				.guardarAsignatura(this.asignaturaRestMapper.toAsignatura(asignaturaInDTO)));
 	}
 
+	/**
+	 * Método encargado de consultar las asignaturas por programa <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idPrograma
+	 * @return
+	 */
 	@GetMapping("/consultarAsignaturasPorIdPrograma")
 	public List<AsignaturaOutDTO> consultarAsignaturasPorIdPrograma(@RequestParam Long idPrograma) {
 		List<Asignatura> aisgnaturas = this.gestionarAsignaturaCUIntPort.consultarAsignaturasPorIdPrograma(idPrograma);

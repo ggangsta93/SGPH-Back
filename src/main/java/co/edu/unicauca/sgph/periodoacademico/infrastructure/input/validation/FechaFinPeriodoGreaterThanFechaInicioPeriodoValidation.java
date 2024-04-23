@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.PeriodoAcademicoInDTO;
 
 @Component
-public class PeriodoFinalGreaterThanPeriodoInicialValidation
-		implements ConstraintValidator<PeriodoFinalGreaterThanPeriodoInicial, PeriodoAcademicoInDTO> {
+public class FechaFinPeriodoGreaterThanFechaInicioPeriodoValidation
+		implements ConstraintValidator<FechaFinPeriodoGreaterThanFechaInicioPeriodo, PeriodoAcademicoInDTO> {
 
 	@Override
 	public boolean isValid(PeriodoAcademicoInDTO periodoAcademicoInDTO, ConstraintValidatorContext context) {
