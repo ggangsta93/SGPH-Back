@@ -1,7 +1,7 @@
 package co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,7 +15,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
@@ -27,11 +26,10 @@ import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.Pr
 public class AsignaturaEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_ASIGNATURA_GENERATOR", sequenceName = "SEC_ASIGNATURA", allocationSize = 1, initialValue = 926)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_ASIGNATURA_GENERATOR")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_ASIGNATURA", nullable = false)
 	private Long idAsignatura;
-
+	
 	@Column(name = "NOMBRE")
 	private String nombre;
 

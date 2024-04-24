@@ -55,7 +55,7 @@ public class PeriodoAcademicoController {
 
 		Set<String> validaciones = new HashSet<String>();
 		validaciones.add("ExistsByAnioAndPeriodo");
-		validaciones.add("FechaFinPeriodoGreaterThanFechaInicioPeriodoValidation");
+		validaciones.add("FechaFinPeriodoGreaterThanFechaInicioPeriodo");
 		
 		if (result.hasErrors()) {
 			return validacion(result, validaciones);

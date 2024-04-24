@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
@@ -18,8 +17,7 @@ import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.Fa
 public class EdificioEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_EDIFICIO_GENERATOR", sequenceName = "SEC_EDIFICIO", allocationSize = 1, initialValue = 9)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_EDIFICIO_GENERATOR")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_EDIFICIO", nullable = false)
 	private Long idEdificio;
 

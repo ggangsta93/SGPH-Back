@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -13,8 +12,7 @@ import javax.persistence.Table;
 public class FacultadEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_FACULTAD_GENERATOR", sequenceName = "SEC_FACULTAD", allocationSize = 1, initialValue = 10)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_FACULTAD_GENERATOR")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_FACULTAD", nullable = false)
 	private Long idFacultad;
 

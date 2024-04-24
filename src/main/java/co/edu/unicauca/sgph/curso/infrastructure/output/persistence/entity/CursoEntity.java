@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
@@ -25,8 +24,7 @@ import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.e
 public class CursoEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_CURSO_GENERATOR", sequenceName = "SEC_CURSO", allocationSize = 1, initialValue = 929)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_CURSO_GENERATOR")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_CURSO", nullable = false)
 	private Long idCurso;
 
