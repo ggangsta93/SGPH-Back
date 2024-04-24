@@ -2,7 +2,7 @@ package co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse;
 
 import java.util.List;
 
-public class AsignaturaInDTO {
+public class AsignaturaOutDTO {
 
 	private Long idAsignatura;
 
