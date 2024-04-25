@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaDTO;
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaInDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
 
 @CrossOrigin(origins = { "http://localhost:4200" })

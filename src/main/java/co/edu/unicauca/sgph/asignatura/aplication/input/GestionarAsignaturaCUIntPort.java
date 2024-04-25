@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaDTO;
 
 public interface GestionarAsignaturaCUIntPort {

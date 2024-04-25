@@ -2,7 +2,7 @@ package co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse;
 
 import java.util.List;
 
-public class AsignaturaInDTO {
+public class AsignaturaOutDTO {
 
 	private Long idAsignatura;
 
@@ -20,7 +20,31 @@ public class AsignaturaInDTO {
 
 	private Long idPrograma;
 	
+	private String abreviaturaPrograma;
+	
 	private List<Long> lstIdTipoEspacioFisico;
+
+	
+	
+	/**
+	 * @param nombre
+	 * @param codigoAsignatura
+	 * @param oID
+	 * @param semestre
+	 * @param pensum
+	 * @param horasSemana
+	 * @param abreviaturaPrograma
+	 */
+	public AsignaturaOutDTO(String abreviaturaPrograma, Integer semestre, String nombre, String codigoAsignatura, String oID, Integer horasSemana, String pensum) {
+		super();
+		this.nombre = nombre;
+		this.codigoAsignatura = codigoAsignatura;
+		OID = oID;
+		this.semestre = semestre;
+		this.pensum = pensum;
+		this.horasSemana = horasSemana;
+		this.abreviaturaPrograma = abreviaturaPrograma;
+	}
 
 	public Long getIdAsignatura() {
 		return idAsignatura;
@@ -88,6 +112,14 @@ public class AsignaturaInDTO {
 
 	public List<Long> getLstIdTipoEspacioFisico() {
 		return lstIdTipoEspacioFisico;
+	}
+
+	public String getAbreviaturaPrograma() {
+		return abreviaturaPrograma;
+	}
+
+	public void setAbreviaturaPrograma(String abreviaturaPrograma) {
+		this.abreviaturaPrograma = abreviaturaPrograma;
 	}
 
 	public void setLstIdTipoEspacioFisico(List<Long> lstIdTipoEspacioFisico) {

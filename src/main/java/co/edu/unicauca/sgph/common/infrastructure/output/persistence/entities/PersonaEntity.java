@@ -9,7 +9,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -18,8 +17,7 @@ import javax.persistence.Table;
 public class PersonaEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_PERSONA_GENERATOR", sequenceName = "SEC_PERSONA", allocationSize = 1, initialValue = 907)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_PERSONA_GENERATOR")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PERSONA", nullable = false)
 	private Long idPersona;
 

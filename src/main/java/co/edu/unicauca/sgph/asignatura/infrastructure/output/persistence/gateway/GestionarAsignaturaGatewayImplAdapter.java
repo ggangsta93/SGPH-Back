@@ -20,8 +20,8 @@ import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.repository.AsignaturaRepositoryInt;
 
@@ -73,7 +73,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 
 				// Construcción de la consulta con StringBuilder
 				StringBuilder queryBuilder = new StringBuilder();
-				queryBuilder.append(" SELECT NEW co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaOutDTO(");
+				queryBuilder.append(" SELECT NEW co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO(");
 				queryBuilder.append(" pr.abreviatura, a.semestre, a.nombre, a.codigoAsignatura, a.OID, a.horasSemana, a.pensum) ");		
 				queryBuilder.append(" FROM AsignaturaEntity a");
 				queryBuilder.append(" JOIN a.programa pr");

@@ -54,8 +54,12 @@ public class GestionarPeriodoAcademicoGatewayImplAdapter implements GestionarPer
 	 */
 	@Override
 	public PeriodoAcademico consultarPeriodoAcademicoVigente() {
-		return this.modelMapper.map(this.periodoAcademicoRepositoryInt.consultarPeriodoAcademicoVigente(),
-				PeriodoAcademico.class);
+		try {
+			return this.modelMapper.map(this.periodoAcademicoRepositoryInt.consultarPeriodoAcademicoVigente(),
+					PeriodoAcademico.class);			
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	/**

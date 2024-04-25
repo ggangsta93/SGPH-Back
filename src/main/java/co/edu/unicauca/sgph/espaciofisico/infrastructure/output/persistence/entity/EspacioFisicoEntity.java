@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import co.edu.unicauca.sgph.edificio.infrastructure.output.persistence.entity.EdificioEntity;
@@ -22,8 +21,7 @@ import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.Hor
 public class EspacioFisicoEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_ESPACIO_FISICO_GENERATOR", sequenceName = "SEC_ESPACIO_FISICO", allocationSize = 1, initialValue = 904)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_ESPACIO_FISICO_GENERATOR")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_ESPACIO_FISICO", nullable = false)
 	private Long idEspacioFisico;
 

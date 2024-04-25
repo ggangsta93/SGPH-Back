@@ -8,7 +8,7 @@ import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUInt
 import co.edu.unicauca.sgph.asignatura.aplication.output.AsignaturaFormatterResultsIntPort;
 import co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaDTO;
 
 public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPort {
@@ -44,4 +44,6 @@ public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPor
 				.consultarAsignaturasPorFiltro(filtroAsignaturaDTO);		
 		return listaAsignaturasDTO;
 	}
+	
+	
 }

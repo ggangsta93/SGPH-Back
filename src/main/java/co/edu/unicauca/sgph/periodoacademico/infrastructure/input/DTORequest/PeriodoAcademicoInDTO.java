@@ -31,6 +31,12 @@ public class PeriodoAcademicoInDTO implements Serializable {
 	@NotNull
 	private EstadoPeriodoAcademicoEnum estado;
 
+	/**
+	 * Atributo que determina si la invocación es para validar la información o
+	 * persistirla
+	 */
+	private Boolean esValidar;
+
 	public Long getIdPeriodoAcademico() {
 		return idPeriodoAcademico;
 	}
@@ -77,5 +83,13 @@ public class PeriodoAcademicoInDTO implements Serializable {
 
 	public void setEstado(EstadoPeriodoAcademicoEnum estado) {
 		this.estado = estado;
+	}
+
+	public Boolean getEsValidar() {
+		return esValidar;
+	}
+
+	public void setEsValidar(Boolean esValidar) {
+		this.esValidar = esValidar;
 	}
 }

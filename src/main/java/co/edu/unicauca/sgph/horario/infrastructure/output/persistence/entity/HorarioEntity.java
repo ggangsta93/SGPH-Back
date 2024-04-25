@@ -16,22 +16,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
 
 @Entity
 @Table(name = "HORARIO")
 public class HorarioEntity {
 
 	@Id
-	@SequenceGenerator(name = "SEC_HORARIO_GENERATOR", sequenceName = "SEC_HORARIO", allocationSize = 1, initialValue = 948)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_HORARIO_GENERATOR")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_HORARIO", nullable = false)
 	private Long idHorario;
 
