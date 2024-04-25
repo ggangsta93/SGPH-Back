@@ -42,7 +42,7 @@ public class PeriodoAcademicoController {
 	}
 
 	/**
-	 * Método encargado de guardar o actualizar un periodo academico <br>
+	 * Método encargado de guardar o actualizar un periodo académico <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -60,15 +60,20 @@ public class PeriodoAcademicoController {
 		if (result.hasErrors()) {
 			return validacion(result, validaciones);
 		}
-		PeriodoAcademicoOutDTO periodoAcademicoOutDTO = this.periodoAcademicoRestMapper
-				.toPeriodoAcademicoOutDTO(this.gestionarPeriodoAcademicoCUIntPort.guardarPeriodoAcademico(
-						this.periodoAcademicoRestMapper.toPeriodoAcademico(periodoAcademicoInDTO)));
-
-		if (Objects.equals(periodoAcademicoInDTO.getIdPeriodoAcademico(),
-				periodoAcademicoOutDTO.getIdPeriodoAcademico())) {
-			return new ResponseEntity<PeriodoAcademicoOutDTO>(periodoAcademicoOutDTO, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<PeriodoAcademicoOutDTO>(periodoAcademicoOutDTO, HttpStatus.CREATED);
+		
+		if(Boolean.FALSE.equals(periodoAcademicoInDTO.getEsValidar())) {
+			PeriodoAcademicoOutDTO periodoAcademicoOutDTO = this.periodoAcademicoRestMapper
+					.toPeriodoAcademicoOutDTO(this.gestionarPeriodoAcademicoCUIntPort.guardarPeriodoAcademico(
+							this.periodoAcademicoRestMapper.toPeriodoAcademico(periodoAcademicoInDTO)));
+			
+			if (Objects.equals(periodoAcademicoInDTO.getIdPeriodoAcademico(),
+					periodoAcademicoOutDTO.getIdPeriodoAcademico())) {
+				return new ResponseEntity<PeriodoAcademicoOutDTO>(periodoAcademicoOutDTO, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<PeriodoAcademicoOutDTO>(periodoAcademicoOutDTO, HttpStatus.CREATED);
+			}			
+		}else {
+			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
 		}
 	}
 

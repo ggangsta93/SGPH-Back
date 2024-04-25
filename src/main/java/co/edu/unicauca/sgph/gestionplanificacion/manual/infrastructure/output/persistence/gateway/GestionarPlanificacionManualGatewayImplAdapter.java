@@ -86,6 +86,7 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 
 		Map<String, Object> parametros = new HashMap<>();
 		
+		//Se consulta el periodo académico que está 'ABIERTO'
 		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort.consultarPeriodoAcademicoVigente();
 		if (Objects.nonNull(periodoAcademicoVigente)) {
 			queryBuilder.append(" AND c.periodoAcademico.idPeriodoAcademico =:idPeriodoAcademico");
@@ -246,6 +247,7 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	 */
 	@Override
 	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma) {
+		//Se consulta el periodo académico que está 'ABIERTO'
 		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
 				.consultarPeriodoAcademicoVigente();
 
@@ -533,7 +535,12 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	 */
 	@Override
 	public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona) {
-		return this.planificacionManualRepositoryInt.consultarFranjasDocentePorIdPersona(idPersona);
+		//Se consulta el periodo académico que está 'ABIERTO'
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
+		
+		return this.planificacionManualRepositoryInt.consultarFranjasDocentePorIdPersona(idPersona,
+				Objects.isNull(periodoAcademicoVigente) ? null : periodoAcademicoVigente.getIdPeriodoAcademico());
 	}
 
 	/** 
@@ -541,7 +548,12 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	 */
 	@Override
 	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico) {
-		return this.planificacionManualRepositoryInt.consultarFranjasEspacioFisicoPorIdEspacioFisico(idEspacioFisico);
+		//Se consulta el periodo académico que está 'ABIERTO'
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
+		
+		return this.planificacionManualRepositoryInt.consultarFranjasEspacioFisicoPorIdEspacioFisico(idEspacioFisico,
+				Objects.isNull(periodoAcademicoVigente) ? null : periodoAcademicoVigente.getIdPeriodoAcademico());
 	}
 
 }

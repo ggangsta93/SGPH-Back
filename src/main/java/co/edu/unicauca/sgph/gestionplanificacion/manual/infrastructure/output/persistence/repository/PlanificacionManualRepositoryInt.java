@@ -107,8 +107,9 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 				+ "JOIN cur.docentes docentes "
 				+ "JOIN cur.asignatura asi "
 				+ "JOIN asi.programa pro "
-				+ "WHERE docentes.idPersona =:idPersona ")
-		public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona);
+				+ "WHERE docentes.idPersona =:idPersona "
+				+ "AND (cur.periodoAcademico.idPeriodoAcademico =:idPeriodoAcademico) ")
+		public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona, Long idPeriodoAcademico);
 		
 		/**
 		 * Método encargado de obtener todas las franjas horarias de un espacio físico
@@ -129,7 +130,8 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 				+ " JOIN asi.programa pro "
 				+ " JOIN hor.espaciosFisicos espaciosFisicos "
 				+ " WHERE espaciosFisicos.idEspacioFisico = :idEspacioFisico "
+				+ " AND (cur.periodoAcademico.idPeriodoAcademico =:idPeriodoAcademico) "
 				+ " ORDER BY hor.dia, hor.horaInicio ")
-		public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico);
+		public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico, Long idPeriodoAcademico);
 		
 }
