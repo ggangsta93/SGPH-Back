@@ -2,7 +2,11 @@ package co.edu.unicauca.sgph.asignatura.aplication.input;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaDTO;
 
 public interface GestionarAsignaturaCUIntPort {
 	
@@ -25,4 +29,16 @@ public interface GestionarAsignaturaCUIntPort {
 	 * @return
 	 */
 	public List<Asignatura> consultarAsignaturasPorIdPrograma(Long idPrograma);
+	
+	/**
+	 * Método encargado de obtener las asignaturas dado un conjunto de criterios de
+	 * busqueda.
+	 * 
+	 * @author Julieth Fernanda Hurtado Sanchez <juliethhs@unicauca.edu.co>
+	 * 
+	 * @param filtroAsignaturaDTO
+	 * @return
+	 */	
+	public Page<AsignaturaOutDTO> consultarAsignaturasPorFiltro(
+			FiltroAsignaturaDTO filtroAsignaturaDTO);
 }

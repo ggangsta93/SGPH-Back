@@ -2,6 +2,7 @@ package co.edu.unicauca.sgph.asignatura.infrastructure.input.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
 
@@ -54,7 +56,23 @@ public class AsignaturaController {
 	 */
 	@GetMapping("/consultarAsignaturasPorIdPrograma")
 	public List<AsignaturaOutDTO> consultarAsignaturasPorIdPrograma(@RequestParam Long idPrograma) {
-		List<Asignatura> aisgnaturas = this.gestionarAsignaturaCUIntPort.consultarAsignaturasPorIdPrograma(idPrograma);
-		return this.asignaturaRestMapper.toLstAsignaturaOutDTO(aisgnaturas);
+		List<Asignatura> asignaturas = this.gestionarAsignaturaCUIntPort.consultarAsignaturasPorIdPrograma(idPrograma);
+		return this.asignaturaRestMapper.toLstAsignaturaOutDTO(asignaturas);
+	}
+	
+	/**
+	 * Método encargado de obtener las asignaturas dado un conjunto de criterios de
+	 * busqueda.
+	 * 
+	 * @author Julieth Fernanda Hurtado Sanchez <juliethhs@unicauca.edu.co>
+	 * 
+	 * @param filtroAsignaturaDTO
+	 * @return
+	 */	
+	@PostMapping("/consultarAsignaturasPorFiltro")
+	public Page<AsignaturaOutDTO> consultarAsignaturasPorFiltro(
+			@RequestBody FiltroAsignaturaDTO filtroAsignaturaDTO){
+		return this.gestionarAsignaturaCUIntPort
+				.consultarAsignaturasPorFiltro(filtroAsignaturaDTO);
 	}
 }

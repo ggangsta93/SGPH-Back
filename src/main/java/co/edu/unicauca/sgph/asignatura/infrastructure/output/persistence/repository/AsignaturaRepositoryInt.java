@@ -23,4 +23,5 @@ public interface AsignaturaRepositoryInt extends JpaRepository<AsignaturaEntity,
 			+ " WHERE asi.programa.idPrograma =:idPrograma "
 			+ " ORDER BY asi.semestre ")
     public List<AsignaturaEntity> consultarAsignaturasPorIdPrograma(@Param("idPrograma") Long idPrograma);
+	
 }
