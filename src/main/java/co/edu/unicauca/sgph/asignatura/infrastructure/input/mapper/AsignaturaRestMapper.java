@@ -15,11 +15,11 @@ import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
 public interface AsignaturaRestMapper {
 
 	@Mapping(target = "idPrograma", expression = "java(asignatura.getPrograma().getIdPrograma())")
-	@Mapping(target = "lstIdTipoEspacioFisico", source = "asignatura.tiposEspaciosFisicos")
+	@Mapping(target = "lstIdTipoEspacioFisico", source = "asignatura.tiposEspacioFisico")
 	AsignaturaOutDTO toAsignaturaOutDTO(Asignatura asignatura);
 
 	@Mapping(target = "programa", expression = "java(new Programa(asignaturaInDTO.getIdPrograma()))")
-	@Mapping(target = "tiposEspaciosFisicos", source = "asignaturaInDTO.lstIdTipoEspacioFisico")
+	@Mapping(target = "tiposEspacioFisico", source = "asignaturaInDTO.lstIdTipoEspacioFisico")
 	Asignatura toAsignatura(AsignaturaInDTO asignaturaInDTO);
 
 	List<AsignaturaOutDTO> toLstAsignaturaOutDTO(List<Asignatura> lstAsignatura);

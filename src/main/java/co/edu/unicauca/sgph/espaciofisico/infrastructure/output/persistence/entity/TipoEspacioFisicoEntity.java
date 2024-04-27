@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -13,8 +12,7 @@ import javax.persistence.UniqueConstraint;
 @Table(name = "TIPO_ESPACIO_FISICO", uniqueConstraints = { @UniqueConstraint(columnNames = { "tipo"}) })
 public class TipoEspacioFisicoEntity {
 	@Id
-	@SequenceGenerator(name = "SEC_TIPO_ESPACIO_FISICO_GENERATOR", sequenceName = "SEC_TIPO_ESPACIO_FISICO", allocationSize = 1, initialValue = 8)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_TIPO_ESPACIO_FISICO_GENERATOR")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_TIPO_ESPACIO_FISICO", nullable = false)
 	private Long idTipoEspacioFisico;
 

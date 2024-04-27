@@ -26,10 +26,10 @@ public class Asignatura {
 
 	private Programa programa;
 
-	private List<TipoEspacioFisico> tiposEspaciosFisicos;
+	private List<TipoEspacioFisico> tiposEspacioFisico;
 
 	public Asignatura() {
-		tiposEspaciosFisicos = new ArrayList<>();
+		tiposEspacioFisico = new ArrayList<>();
 	}
 
 	public Asignatura(Long idAsignatura) {
@@ -100,11 +100,11 @@ public class Asignatura {
 		this.programa = programa;
 	}
 
-	public List<TipoEspacioFisico> getTiposEspaciosFisicos() {
-		return tiposEspaciosFisicos;
+	public List<TipoEspacioFisico> getTiposEspacioFisico() {
+		return tiposEspacioFisico;
 	}
 
-	public void setTiposEspaciosFisicos(List<TipoEspacioFisico> tiposEspaciosFisicos) {
-		this.tiposEspaciosFisicos = tiposEspaciosFisicos;
+	public void setTiposEspacioFisico(List<TipoEspacioFisico> tiposEspacioFisico) {
+		this.tiposEspacioFisico = tiposEspacioFisico;
 	}
 }
