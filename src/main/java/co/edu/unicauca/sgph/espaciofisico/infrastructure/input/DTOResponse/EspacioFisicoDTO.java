@@ -7,7 +7,7 @@ public class EspacioFisicoDTO {
 	private Long idEspacioFisico;
 	private Long capacidad;
 	private EstadoEspacioFisicoEnum estado;
-	private String numeroEspacioFisico;
+	private String salon;
 	private String edificio;
 	private String ubicacion;
 	private String tipoEspacioFisico;
@@ -16,12 +16,12 @@ public class EspacioFisicoDTO {
 		// Cosntructor sin parámetros
 	}
 
-	public EspacioFisicoDTO(String ubicacion, String edificio, String tipoEspacioFisico, String numeroEspacioFisico,
+	public EspacioFisicoDTO(String ubicacion, String edificio, String tipoEspacioFisico, String salon,
 			Long capacidad, EstadoEspacioFisicoEnum estado, Long idEspacioFisico) {
 		this.idEspacioFisico = idEspacioFisico;
 		this.capacidad = capacidad;
 		this.estado = estado;
-		this.numeroEspacioFisico = numeroEspacioFisico;
+		this.salon = salon;
 		this.edificio = edificio;
 		this.ubicacion = ubicacion;
 		this.tipoEspacioFisico = tipoEspacioFisico;
@@ -66,13 +66,13 @@ public class EspacioFisicoDTO {
 	public void setTipoEspacioFisico(String tipoEspacioFisico) {
 		this.tipoEspacioFisico = tipoEspacioFisico;
 	}
-
-	public String getNumeroEspacioFisico() {
-		return numeroEspacioFisico;
+	
+	public String getSalon() {
+		return salon;
 	}
 
-	public void setNumeroEspacioFisico(String numeroEspacioFisico) {
-		this.numeroEspacioFisico = numeroEspacioFisico;
+	public void setSalon(String salon) {
+		this.salon = salon;
 	}
 
 	public Long getIdEspacioFisico() {

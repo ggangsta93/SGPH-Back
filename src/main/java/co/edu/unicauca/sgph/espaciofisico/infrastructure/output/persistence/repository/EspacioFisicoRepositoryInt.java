@@ -37,7 +37,7 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	@Query("SELECT TRIM(CONCAT(h.dia,' ',"
 			+ " LPAD(EXTRACT(HOUR FROM h.horaInicio), 2, '0'),':',LPAD(EXTRACT(MINUTE FROM h.horaInicio), 2, '0'),'-',"
 			+ " LPAD(EXTRACT(HOUR FROM h.horaFin), 2, '0'),':',LPAD(EXTRACT(MINUTE FROM h.horaFin), 2, '0'),' ',"
-			+ " COALESCE(tef.tipo, 'Sin asignar'),' ',ef.numeroEspacioFisico,'-',ef.edificio))"
+			+ " ef.salon))"
 			+ " FROM HorarioEntity h "
 			+ " JOIN h.espaciosFisicos ef "
 			+ " LEFT JOIN ef.tipoEspacioFisico tef"

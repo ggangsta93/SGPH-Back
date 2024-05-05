@@ -60,13 +60,12 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		 * Método encargado de obtener los nombres completos de cada espacio físico.
 		 * Ejemplo del formato: 'Salón 204-Edificio nuevo'
 		 * 
-		 * 
 		 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 		 * 
 		 * @return
 		 */
 		@Query("SELECT new co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO( "
-		        + " espacioFisico.idEspacioFisico, TRIM(CONCAT(COALESCE(tipoEspacioFisico.tipo, 'Sin asignar'), COALESCE(CONCAT(' ', espacioFisico.numeroEspacioFisico), ''), COALESCE(CONCAT('-', espacioFisico.edificio), '') )) "
+		        + " espacioFisico.idEspacioFisico, espacioFisico.salon"
 		        + " ) "
 		        + " FROM EspacioFisicoEntity espacioFisico "
 		        + " LEFT JOIN espacioFisico.tipoEspacioFisico tipoEspacioFisico "

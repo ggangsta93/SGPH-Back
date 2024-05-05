@@ -8,11 +8,13 @@ public class EspacioFisicoInDTO {
 
 	private Long idEspacioFisico;
 
+	private String OID;
+
 	private Long capacidad;
 
 	private EstadoEspacioFisicoEnum estado;
 
-	private String numeroEspacioFisico;
+	private String salon;
 
 	private String edificio;
 
@@ -21,6 +23,8 @@ public class EspacioFisicoInDTO {
 	private Long idTipoEspacioFisico;
 
 	private List<Long> lstIdAgrupadorEspacioFisico;
+
+	private String municipio;
 
 	public Long getIdEspacioFisico() {
 		return idEspacioFisico;
@@ -46,14 +50,14 @@ public class EspacioFisicoInDTO {
 		this.estado = estado;
 	}
 
-	public String getNumeroEspacioFisico() {
-		return numeroEspacioFisico;
+	public String getSalon() {
+		return salon;
 	}
 
-	public void setNumeroEspacioFisico(String numeroEspacioFisico) {
-		this.numeroEspacioFisico = numeroEspacioFisico;
+	public void setSalon(String salon) {
+		this.salon = salon;
 	}
-	
+
 	public String getEdificio() {
 		return edificio;
 	}
@@ -84,5 +88,21 @@ public class EspacioFisicoInDTO {
 
 	public void setLstIdAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
 		this.lstIdAgrupadorEspacioFisico = lstIdAgrupadorEspacioFisico;
+	}
+
+	public String getOID() {
+		return OID;
+	}
+
+	public void setOID(String oID) {
+		OID = oID;
+	}
+
+	public String getMunicipio() {
+		return municipio;
+	}
+
+	public void setMunicipio(String municipio) {
+		this.municipio = municipio;
 	}
 }

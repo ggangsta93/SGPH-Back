@@ -29,6 +29,9 @@ public class EspacioFisicoEntity {
 	@Column(name = "ID_ESPACIO_FISICO", nullable = false)
 	private Long idEspacioFisico;
 	
+	@Column(name = "OID")
+	private String OID;
+	
 	@Column(name = "CAPACIDAD")
 	private Long capacidad;
 	
@@ -36,8 +39,8 @@ public class EspacioFisicoEntity {
 	@Column(name = "ESTADO")
 	private EstadoEspacioFisicoEnum estado;
 
-	@Column(name = "NUMERO_ESPACIO_FISICO")
-	private String numeroEspacioFisico;
+	@Column(name = "SALON")
+	private String salon;
 	
 	@Column(name = "EDIFICIO")
 	private String edificio;
@@ -58,6 +61,9 @@ public class EspacioFisicoEntity {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "ESPACIOFISICO_AGRUPADOR_ESP_FIS", joinColumns = @JoinColumn(name = "ID_ESPACIO_FISICO"), inverseJoinColumns = @JoinColumn(name = "ID_AGRUPADOR_ESPACIO_FISICO"))
 	private List<AgrupadorEspacioFisicoEntity> agrupadores;
+	
+	@Column(name = "MUNICIPIO")
+	private String municipio;
 
 	public EspacioFisicoEntity() {
 		this.agrupadores=new ArrayList<>();
@@ -95,12 +101,12 @@ public class EspacioFisicoEntity {
 		this.tipoEspacioFisico = tipoEspacioFisico;
 	}
 
-	public String getNumeroEspacioFisico() {
-		return numeroEspacioFisico;
+	public String getSalon() {
+		return salon;
 	}
 
-	public void setNumeroEspacioFisico(String numeroEspacioFisico) {
-		this.numeroEspacioFisico = numeroEspacioFisico;
+	public void setSalon(String salon) {
+		this.salon = salon;
 	}
 
 	public List<HorarioEntity> getHorarios() {
@@ -141,5 +147,21 @@ public class EspacioFisicoEntity {
 
 	public void setAgrupadores(List<AgrupadorEspacioFisicoEntity> agrupadores) {
 		this.agrupadores = agrupadores;
+	}
+
+	public String getOID() {
+		return OID;
+	}
+
+	public void setOID(String oID) {
+		OID = oID;
+	}
+
+	public String getMunicipio() {
+		return municipio;
+	}
+
+	public void setMunicipio(String municipio) {
+		this.municipio = municipio;
 	}
 }

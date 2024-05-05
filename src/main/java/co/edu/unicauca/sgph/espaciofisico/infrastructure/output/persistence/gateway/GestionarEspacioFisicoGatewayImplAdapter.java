@@ -85,7 +85,7 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(" SELECT NEW co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO(");
 		queryBuilder.append(" espacioFisico.ubicacion, espacioFisico.edificio, ");
-		queryBuilder.append(" tipoEspacioFisico.tipo, espacioFisico.numeroEspacioFisico,");
+		queryBuilder.append(" tipoEspacioFisico.tipo, espacioFisico.salon,");
 		queryBuilder.append(" espacioFisico.capacidad, espacioFisico.estado, espacioFisico.idEspacioFisico)");
 		queryBuilder.append(" FROM EspacioFisicoEntity espacioFisico");
 		queryBuilder.append(" LEFT JOIN espacioFisico.tipoEspacioFisico tipoEspacioFisico");
@@ -108,9 +108,9 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 			queryBuilder.append(" AND tipoEspacioFisico.idTipoEspacioFisico IN (:listaIdTipoEspacioFisico)");
 			parametros.put("listaIdTipoEspacioFisico", filtroEspacioFisicoDTO.getListaIdTipoEspacioFisico());
 		}
-		if (Objects.nonNull(filtroEspacioFisicoDTO.getNumeroEspacioFisico())) {
-			queryBuilder.append(" AND espacioFisico.numeroEspacioFisico =:numeroEspacioFisico");
-			parametros.put("numeroEspacioFisico", filtroEspacioFisicoDTO.getNumeroEspacioFisico());
+		if (Objects.nonNull(filtroEspacioFisicoDTO.getSalon())) {
+			queryBuilder.append(" AND espacioFisico.salon =:salon");
+			parametros.put("salon", filtroEspacioFisicoDTO.getSalon());
 		}
 		if (Objects.nonNull(filtroEspacioFisicoDTO.getEstado())) {
 			queryBuilder.append(" AND espacioFisico.estado =:estado");
@@ -171,9 +171,9 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 			queryBuilder.append(" AND tipoEspacioFisico.idTipoEspacioFisico IN (:listaIdTipoEspacioFisico)");
 			parametros.put("listaIdTipoEspacioFisico", filtroEspacioFisicoDTO.getListaIdTipoEspacioFisico());
 		}
-		if (Objects.nonNull(filtroEspacioFisicoDTO.getNumeroEspacioFisico())) {
-			queryBuilder.append(" AND espacioFisico.numeroEspacioFisico =:numeroEspacioFisico");
-			parametros.put("numeroEspacioFisico", filtroEspacioFisicoDTO.getNumeroEspacioFisico());
+		if (Objects.nonNull(filtroEspacioFisicoDTO.getSalon())) {
+			queryBuilder.append(" AND espacioFisico.salon =:salon");
+			parametros.put("salon", filtroEspacioFisicoDTO.getSalon());
 		}
 		if (Objects.nonNull(filtroEspacioFisicoDTO.getEstado())) {
 			queryBuilder.append(" AND espacioFisico.estado =:estado");

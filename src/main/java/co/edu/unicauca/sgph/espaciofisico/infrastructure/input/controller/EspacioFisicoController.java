@@ -2,6 +2,8 @@ package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.controller;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarTipoEspacioFisicoCUIntPort;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
@@ -42,9 +45,12 @@ public class EspacioFisicoController {
 	}
 
 	@PostMapping("/guardarEspacioFisico")
+	@Transactional
 	public EspacioFisicoOutDTO guardarEspacioFisico(@RequestBody EspacioFisicoInDTO espacioFisicoInDTO) {
-		return this.espacioFisicoRestMapper.toEspacioFisicoOutDTO(this.gestionarEspacioFisicoCUIntPort
-				.guardarEspacioFisico(this.espacioFisicoRestMapper.toEspacioFisico(espacioFisicoInDTO)));
+		EspacioFisico espacioFisico = this.gestionarEspacioFisicoCUIntPort
+		.guardarEspacioFisico(this.espacioFisicoRestMapper.toEspacioFisico(espacioFisicoInDTO));
+		
+		return this.espacioFisicoRestMapper.toEspacioFisicoOutDTO(espacioFisico);
 	}
 
 	/**

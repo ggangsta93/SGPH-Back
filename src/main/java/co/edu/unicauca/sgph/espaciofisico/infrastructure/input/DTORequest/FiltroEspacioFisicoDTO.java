@@ -15,7 +15,7 @@ public class FiltroEspacioFisicoDTO implements Serializable {
 
 	private List<Long> listaIdTipoEspacioFisico;
 
-	private String numeroEspacioFisico;
+	private String salon;
 
 	private EstadoEspacioFisicoEnum estado;
 
@@ -85,11 +85,11 @@ public class FiltroEspacioFisicoDTO implements Serializable {
 		this.listaIdTipoEspacioFisico = listaIdTipoEspacioFisico;
 	}
 
-	public String getNumeroEspacioFisico() {
-		return numeroEspacioFisico;
+	public String getSalon() {
+		return salon;
 	}
 
-	public void setNumeroEspacioFisico(String numeroEspacioFisico) {
-		this.numeroEspacioFisico = numeroEspacioFisico;
+	public void setSalon(String salon) {
+		this.salon = salon;
 	}
 }
