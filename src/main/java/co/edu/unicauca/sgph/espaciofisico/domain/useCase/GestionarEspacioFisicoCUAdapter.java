@@ -51,13 +51,36 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	public Page<EspacioFisicoDTO> consultarEspaciosFisicos(FiltroEspacioFisicoDTO filtroEspacioFisicoDTO) {
 		return this.gestionarEspacioFisicoGatewayIntPort.consultarEspaciosFisicos(filtroEspacioFisicoDTO);
 	}
-
-	/**
-	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort#consultarTiposEspaciosFisicosPorIdEdificio(java.util.List)
+	
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort#consultarTiposEspaciosFisicosPorEdificio(java.util.List)
 	 */
 	@Override
-	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorIdEdificio(List<Long> lstIdEdificio) {
-		return this.gestionarEspacioFisicoGatewayIntPort.consultarTiposEspaciosFisicosPorIdEdificio(lstIdEdificio);
+	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorEdificio(List<String> lstEdificio) {
+		return this.gestionarEspacioFisicoGatewayIntPort.consultarTiposEspaciosFisicosPorEdificio(lstEdificio);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort#consultarEdificios()
+	 */
+	@Override
+	public List<String> consultarEdificios() {
+		return this.gestionarEspacioFisicoGatewayIntPort.consultarEdificios();
+	}
+
+	/**
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort#consultarUbicaciones()
+	 */
+	@Override
+	public List<String> consultarUbicaciones() {
+		return this.gestionarEspacioFisicoGatewayIntPort.consultarUbicaciones();
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort#consultarEdificiosPorUbicacion(java.util.List)
+	 */
+	@Override
+	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion) {
+		return this.gestionarEspacioFisicoGatewayIntPort.consultarEdificiosPorUbicacion(lstUbicacion);
+	}
 }

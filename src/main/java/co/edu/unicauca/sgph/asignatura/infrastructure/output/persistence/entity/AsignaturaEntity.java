@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.TipoEspacioFisicoEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
 
 @Entity
@@ -54,14 +54,14 @@ public class AsignaturaEntity {
 
 	@OneToMany(mappedBy = "asignatura", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<CursoEntity> cursos;
-	
+		
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ASIGNATURA_ESPACIOFISICO", joinColumns = @JoinColumn(name = "ID_ASIGNATURA"), inverseJoinColumns = @JoinColumn(name = "ID_TIPO_ESPACIO_FISICO"))
-	private List<TipoEspacioFisicoEntity> tiposEspacioFisico;
+	@JoinTable(name = "ASIGNATURA_AGRUPADOR_ESP_FIS", joinColumns = @JoinColumn(name = "ID_ASIGNATURA"), inverseJoinColumns = @JoinColumn(name = "ID_AGRUPADOR_ESPACIO_FISICO"))
+	private List<AgrupadorEspacioFisicoEntity> agrupadores;
 
 	public AsignaturaEntity() {
 		this.cursos=new ArrayList<>();
-		this.tiposEspacioFisico=new ArrayList<>();
+		this.agrupadores=new ArrayList<>();
 	}
 
 	public AsignaturaEntity(Long idAsignatura) {
@@ -147,11 +147,11 @@ public class AsignaturaEntity {
 		this.cursos = cursos;
 	}
 
-	public List<TipoEspacioFisicoEntity> getTiposEspacioFisico() {
-		return tiposEspacioFisico;
+	public List<AgrupadorEspacioFisicoEntity> getAgrupadores() {
+		return agrupadores;
 	}
 
-	public void setTiposEspacioFisico(List<TipoEspacioFisicoEntity> tiposEspacioFisico) {
-		this.tiposEspacioFisico = tiposEspacioFisico;
+	public void setAgrupadores(List<AgrupadorEspacioFisicoEntity> agrupadores) {
+		this.agrupadores = agrupadores;
 	}
 }

@@ -1,9 +1,9 @@
 package co.edu.unicauca.sgph.asignatura.domain.model;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
-import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import lombok.Data;
 
@@ -26,10 +26,10 @@ public class Asignatura {
 
 	private Programa programa;
 
-	private List<TipoEspacioFisico> tiposEspacioFisico;
+	private List<AgrupadorEspacioFisico> agrupadores;
 
 	public Asignatura() {
-		tiposEspacioFisico = new ArrayList<>();
+		agrupadores = new ArrayList<>();
 	}
 
 	public Asignatura(Long idAsignatura) {
@@ -100,11 +100,11 @@ public class Asignatura {
 		this.programa = programa;
 	}
 
-	public List<TipoEspacioFisico> getTiposEspacioFisico() {
-		return tiposEspacioFisico;
+	public List<AgrupadorEspacioFisico> getAgrupadores() {
+		return agrupadores;
 	}
 
-	public void setTiposEspacioFisico(List<TipoEspacioFisico> tiposEspacioFisico) {
-		this.tiposEspacioFisico = tiposEspacioFisico;
+	public void setAgrupadores(List<AgrupadorEspacioFisico> agrupadores) {
+		this.agrupadores = agrupadores;
 	}
 }

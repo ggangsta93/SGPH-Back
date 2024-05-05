@@ -3,19 +3,21 @@ package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest;
 import java.io.Serializable;
 import java.util.List;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
+
 public class FiltroEspacioFisicoDTO implements Serializable {
 
 	private static final long serialVersionUID = -147848070840420608L;
 
-	private List<Long> listaIdFacultad;
+	private List<String> listaUbicacion;
 
-	private List<Long> listaIdEdificio;
+	private List<String> listaEdificio;
 
 	private List<Long> listaIdTipoEspacioFisico;
 
 	private String numeroEspacioFisico;
 
-	private Boolean estado;
+	private EstadoEspacioFisicoEnum estado;
 
 	private Long capacidad;
 
@@ -27,27 +29,27 @@ public class FiltroEspacioFisicoDTO implements Serializable {
 		super();
 	}
 
-	public List<Long> getListaIdFacultad() {
-		return listaIdFacultad;
+	public List<String> getListaUbicacion() {
+		return listaUbicacion;
 	}
 
-	public void setListaIdFacultad(List<Long> listaIdFacultad) {
-		this.listaIdFacultad = listaIdFacultad;
+	public void setListaUbicacion(List<String> listaUbicacion) {
+		this.listaUbicacion = listaUbicacion;
 	}
 
-	public List<Long> getListaIdEdificio() {
-		return listaIdEdificio;
+	public List<String> getListaEdificio() {
+		return listaEdificio;
 	}
 
-	public void setListaIdEdificio(List<Long> listaIdEdificio) {
-		this.listaIdEdificio = listaIdEdificio;
+	public void setListaEdificio(List<String> listaEdificio) {
+		this.listaEdificio = listaEdificio;
 	}
 
-	public Boolean getEstado() {
+	public EstadoEspacioFisicoEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoEspacioFisicoEnum estado) {
 		this.estado = estado;
 	}
 

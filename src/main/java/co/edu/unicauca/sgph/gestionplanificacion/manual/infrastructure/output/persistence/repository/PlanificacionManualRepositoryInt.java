@@ -66,10 +66,9 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		 * @return
 		 */
 		@Query("SELECT new co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO( "
-		        + " espacioFisico.idEspacioFisico, TRIM(CONCAT(COALESCE(tipoEspacioFisico.tipo, 'Sin asignar'), COALESCE(CONCAT(' ', espacioFisico.numeroEspacioFisico), ''), COALESCE(CONCAT('-', edi.nombre), '') )) "
+		        + " espacioFisico.idEspacioFisico, TRIM(CONCAT(COALESCE(tipoEspacioFisico.tipo, 'Sin asignar'), COALESCE(CONCAT(' ', espacioFisico.numeroEspacioFisico), ''), COALESCE(CONCAT('-', espacioFisico.edificio), '') )) "
 		        + " ) "
 		        + " FROM EspacioFisicoEntity espacioFisico "
-		        + " LEFT JOIN espacioFisico.edificio edi"
 		        + " LEFT JOIN espacioFisico.tipoEspacioFisico tipoEspacioFisico "
 		        + " ORDER BY espacioFisico.idEspacioFisico ")
 		public List<FormatoPresentacionFranjaHorariaCursoDTO> consultarFormatoPresentacionFranjaHorariaCurso();	

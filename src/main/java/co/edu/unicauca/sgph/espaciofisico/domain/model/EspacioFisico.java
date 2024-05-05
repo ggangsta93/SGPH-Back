@@ -1,36 +1,41 @@
 package co.edu.unicauca.sgph.espaciofisico.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import co.edu.unicauca.sgph.edificio.domain.model.Edificio;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
 import co.edu.unicauca.sgph.horario.domain.model.Horario;
 
 public class EspacioFisico {
 
 	private Long idEspacioFisico;
 
-	private TipoEspacioFisico tipoEspacioFisico;
+	private Long capacidad;
+
+	private EstadoEspacioFisicoEnum estado;
 
 	private String numeroEspacioFisico;
 
-	private Long capacidad;
-	
-	private Boolean estado;
+	private String edificio;
+
+	private String ubicacion;
+
+	private TipoEspacioFisico tipoEspacioFisico;
 
 	private List<Horario> horarios;
 
-	private Edificio edificio;
-
 	private List<RecursoEspacioFisico> recursosEspacioFisico;
-	
+
+	private List<AgrupadorEspacioFisico> agrupadores;
+
 	public EspacioFisico() {
-		//Constructor sin argumentos
+		agrupadores = new ArrayList<>();
 	}
-	
+
 	public EspacioFisico(Long idEspacioFisico) {
 		this.idEspacioFisico = idEspacioFisico;
 	}
-	
+
 	public Long getIdEspacioFisico() {
 		return idEspacioFisico;
 	}
@@ -71,11 +76,11 @@ public class EspacioFisico {
 		this.capacidad = capacidad;
 	}
 
-	public Boolean getEstado() {
+	public EstadoEspacioFisicoEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoEspacioFisicoEnum estado) {
 		this.estado = estado;
 	}
 
@@ -87,11 +92,27 @@ public class EspacioFisico {
 		this.horarios = horarios;
 	}
 
-	public Edificio getEdificio() {
+	public String getEdificio() {
 		return edificio;
 	}
 
-	public void setEdificio(Edificio edificio) {
+	public void setEdificio(String edificio) {
 		this.edificio = edificio;
-	}	
+	}
+
+	public String getUbicacion() {
+		return ubicacion;
+	}
+
+	public void setUbicacion(String ubicacion) {
+		this.ubicacion = ubicacion;
+	}
+
+	public List<AgrupadorEspacioFisico> getAgrupadores() {
+		return agrupadores;
+	}
+
+	public void setAgrupadores(List<AgrupadorEspacioFisico> agrupadores) {
+		this.agrupadores = agrupadores;
+	}
 }

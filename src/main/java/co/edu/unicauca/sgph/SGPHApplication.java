@@ -1,15 +1,7 @@
 package co.edu.unicauca.sgph;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.function.ToLongBiFunction;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,11 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.controller.AsignaturaController;
 import co.edu.unicauca.sgph.curso.infrastructure.input.controller.CursoController;
 import co.edu.unicauca.sgph.docente.infrastructure.input.controller.DocenteController;
-import co.edu.unicauca.sgph.edificio.infrastructure.input.controller.EdificioController;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.controller.EspacioFisicoController;
 import co.edu.unicauca.sgph.facultad.infrastructure.input.controller.FacultadRestController;
 import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.infrastructure.input.controller.LaborDocenciaController;
-import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.infrastructure.output.persistence.entity.LaborDocenciaEntity;
 import co.edu.unicauca.sgph.horario.infrastructure.input.controller.HorarioController;
 import co.edu.unicauca.sgph.programa.infrastructure.input.controller.ProgramaController;
 
@@ -37,7 +27,6 @@ public class SGPHApplication implements CommandLineRunner {
 	private final DocenteController docenteController;
 	private final HorarioController horarioController;
 	private final EspacioFisicoController espacioFisicoController;
-	private final EdificioController edificioController;
 	private final LaborDocenciaController laborDocenciaController;
 
 	private Integer contadorCruces = 0;
@@ -51,7 +40,7 @@ public class SGPHApplication implements CommandLineRunner {
 	public SGPHApplication(FacultadRestController facultadController, ProgramaController programaController,
 			AsignaturaController asignaturaController, CursoController cursoController,
 			DocenteController docenteController, HorarioController horarioController,
-			EspacioFisicoController espacioFisicoController, EdificioController edificioController,
+			EspacioFisicoController espacioFisicoController,
 			LaborDocenciaController laborDocenciaController) {
 		super();
 		this.facultadController = facultadController;
@@ -61,7 +50,6 @@ public class SGPHApplication implements CommandLineRunner {
 		this.docenteController = docenteController;
 		this.horarioController = horarioController;
 		this.espacioFisicoController = espacioFisicoController;
-		this.edificioController = edificioController;
 		this.laborDocenciaController = laborDocenciaController;
 	}
 

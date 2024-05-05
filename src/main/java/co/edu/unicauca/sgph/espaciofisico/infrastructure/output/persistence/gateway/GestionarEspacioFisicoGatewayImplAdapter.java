@@ -1,5 +1,6 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.gateway;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.Espac
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.TipoEspacioFisicoEntity;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.EspacioFisicoRepositoryInt;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.TipoEspacioFisicoRepositoryInt;
 
 @Service
 public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspacioFisicoGatewayIntPort {
@@ -32,11 +34,13 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 	private EntityManager entityManager;
 
 	private EspacioFisicoRepositoryInt espacioFisicoRepositoryInt;
+	private TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt;
 	private ModelMapper modelMapper;
 
 	public GestionarEspacioFisicoGatewayImplAdapter(EspacioFisicoRepositoryInt espacioFisicoRepositoryInt,
-			ModelMapper modelMapper) {
+			TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt, ModelMapper modelMapper) {
 		this.espacioFisicoRepositoryInt = espacioFisicoRepositoryInt;
+		this.tipoEspacioFisicoRepositoryInt=tipoEspacioFisicoRepositoryInt;
 		this.modelMapper = modelMapper;
 	}
 
@@ -80,26 +84,24 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		// Construcción de la consulta con StringBuilder
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(" SELECT NEW co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO(");
-		queryBuilder.append(" facultad.abreviatura, edificio.nombre, ");
+		queryBuilder.append(" espacioFisico.ubicacion, espacioFisico.edificio, ");
 		queryBuilder.append(" tipoEspacioFisico.tipo, espacioFisico.numeroEspacioFisico,");
 		queryBuilder.append(" espacioFisico.capacidad, espacioFisico.estado, espacioFisico.idEspacioFisico)");
 		queryBuilder.append(" FROM EspacioFisicoEntity espacioFisico");
-		queryBuilder.append(" JOIN espacioFisico.edificio edificio");
-		queryBuilder.append(" JOIN edificio.facultad facultad");
 		queryBuilder.append(" LEFT JOIN espacioFisico.tipoEspacioFisico tipoEspacioFisico");
 		queryBuilder.append(" WHERE 1=1");
 
 		Map<String, Object> parametros = new HashMap<>();
 
-		if (Objects.nonNull(filtroEspacioFisicoDTO.getListaIdFacultad())
-				&& !filtroEspacioFisicoDTO.getListaIdFacultad().isEmpty()) {
-			queryBuilder.append(" AND facultad.idFacultad IN (:listaIdFacultad)");
-			parametros.put("listaIdFacultad", filtroEspacioFisicoDTO.getListaIdFacultad());
+		if (Objects.nonNull(filtroEspacioFisicoDTO.getListaUbicacion())
+				&& !filtroEspacioFisicoDTO.getListaUbicacion().isEmpty()) {
+			queryBuilder.append(" AND espacioFisico.ubicacion IN (:listaUbicacion)");
+			parametros.put("listaUbicacion", filtroEspacioFisicoDTO.getListaUbicacion());
 		}
-		if (Objects.nonNull(filtroEspacioFisicoDTO.getListaIdEdificio())
-				&& !filtroEspacioFisicoDTO.getListaIdEdificio().isEmpty()) {
-			queryBuilder.append(" AND edificio.idEdificio IN (:listaIdEdificio)");
-			parametros.put("listaIdEdificio", filtroEspacioFisicoDTO.getListaIdEdificio());
+		if (Objects.nonNull(filtroEspacioFisicoDTO.getListaEdificio())
+				&& !filtroEspacioFisicoDTO.getListaEdificio().isEmpty()) {
+			queryBuilder.append(" AND espacioFisico.edificio IN (:listaEdificio)");
+			parametros.put("listaEdificio", filtroEspacioFisicoDTO.getListaEdificio());
 		}
 		if (Objects.nonNull(filtroEspacioFisicoDTO.getListaIdTipoEspacioFisico())
 				&& !filtroEspacioFisicoDTO.getListaIdTipoEspacioFisico().isEmpty()) {
@@ -118,7 +120,7 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 			queryBuilder.append(" AND espacioFisico.capacidad =:capacidad");
 			parametros.put("capacidad", filtroEspacioFisicoDTO.getCapacidad());
 		}
-		queryBuilder.append(" ORDER BY facultad.abreviatura asc, edificio.nombre asc ");
+		queryBuilder.append(" ORDER BY espacioFisico.ubicacion asc, espacioFisico.edificio asc ");
 
 		// Realiza la consulta paginada
 		TypedQuery<EspacioFisicoDTO> typedQuery = entityManager.createQuery(queryBuilder.toString(),
@@ -149,22 +151,20 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(" SELECT COUNT(espacioFisico)");
 		queryBuilder.append(" FROM EspacioFisicoEntity espacioFisico");
-		queryBuilder.append(" JOIN espacioFisico.edificio edificio");
-		queryBuilder.append(" JOIN edificio.facultad facultad");
 		queryBuilder.append(" LEFT JOIN espacioFisico.tipoEspacioFisico tipoEspacioFisico");
 		queryBuilder.append(" WHERE 1=1");
 
 		Map<String, Object> parametros = new HashMap<>();
 
-		if (Objects.nonNull(filtroEspacioFisicoDTO.getListaIdFacultad())
-				&& !filtroEspacioFisicoDTO.getListaIdFacultad().isEmpty()) {
-			queryBuilder.append(" AND facultad.idFacultad IN (:listaIdFacultad)");
-			parametros.put("listaIdFacultad", filtroEspacioFisicoDTO.getListaIdFacultad());
+		if (Objects.nonNull(filtroEspacioFisicoDTO.getListaUbicacion())
+				&& !filtroEspacioFisicoDTO.getListaUbicacion().isEmpty()) {
+			queryBuilder.append(" AND espacioFisico.ubicacion IN (:listaUbicacion)");
+			parametros.put("listaUbicacion", filtroEspacioFisicoDTO.getListaUbicacion());
 		}
-		if (Objects.nonNull(filtroEspacioFisicoDTO.getListaIdEdificio())
-				&& !filtroEspacioFisicoDTO.getListaIdEdificio().isEmpty()) {
-			queryBuilder.append(" AND edificio.idEdificio IN (:listaIdEdificio)");
-			parametros.put("listaIdEdificio", filtroEspacioFisicoDTO.getListaIdEdificio());
+		if (Objects.nonNull(filtroEspacioFisicoDTO.getListaEdificio())
+				&& !filtroEspacioFisicoDTO.getListaEdificio().isEmpty()) {
+			queryBuilder.append(" AND espacioFisico.edificio IN (:listaEdificio)");
+			parametros.put("listaEdificio", filtroEspacioFisicoDTO.getListaEdificio());
 		}
 		if (Objects.nonNull(filtroEspacioFisicoDTO.getListaIdTipoEspacioFisico())
 				&& !filtroEspacioFisicoDTO.getListaIdTipoEspacioFisico().isEmpty()) {
@@ -183,7 +183,7 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 			queryBuilder.append(" AND espacioFisico.capacidad =:capacidad");
 			parametros.put("capacidad", filtroEspacioFisicoDTO.getCapacidad());
 		}
-		queryBuilder.append(" ORDER BY facultad.abreviatura asc, edificio.nombre asc ");
+		queryBuilder.append(" ORDER BY espacioFisico.ubicacion asc, espacioFisico.edificio asc ");
 
 		// Realiza la consulta para contar
 		TypedQuery<Long> countQuery = entityManager.createQuery(queryBuilder.toString(), Long.class);
@@ -196,15 +196,45 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		return countQuery.getSingleResult();
 	}
 
+	
 	/** 
-	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarTiposEspaciosFisicosPorIdEdificio(java.util.List)
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarTiposEspaciosFisicosPorEdificio(java.util.List)
 	 */
 	@Override
-	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorIdEdificio(List<Long> lstIdEdificio) {
-		List<TipoEspacioFisicoEntity> lstTipoEspacioFisicoEntity = this.espacioFisicoRepositoryInt
-				.consultarTiposEspaciosFisicosPorIdEdificio(lstIdEdificio);
+	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorEdificio(List<String> lstEdificio) {
+		List<TipoEspacioFisicoEntity> lstTipoEspacioFisicoEntity = this.tipoEspacioFisicoRepositoryInt
+				.consultarTiposEspaciosFisicosPorEdificio(lstEdificio);
 		return this.modelMapper.map(lstTipoEspacioFisicoEntity, new TypeToken<List<TipoEspacioFisico>>() {
 		}.getType());
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarEdificios()
+	 */
+	@Override
+	public List<String> consultarEdificios() {
+		return this.espacioFisicoRepositoryInt.consultarEdificios();
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarUbicaciones()
+	 */
+	@Override
+	public List<String> consultarUbicaciones() {
+		return this.espacioFisicoRepositoryInt.consultarUbicaciones();
+
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarEdificiosPorUbicacion(java.util.List)
+	 */
+	@Override
+	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion) {
+		if(!lstUbicacion.isEmpty()) {
+			return this.espacioFisicoRepositoryInt.consultarEdificiosPorUbicacion(lstUbicacion);
+		}else {
+			return new ArrayList<>();
+		}
+		
+	}
 }

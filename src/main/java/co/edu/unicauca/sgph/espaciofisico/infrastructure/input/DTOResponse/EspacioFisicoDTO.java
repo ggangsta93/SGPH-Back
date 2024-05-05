@@ -1,51 +1,61 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
+
 public class EspacioFisicoDTO {
 
-	private String abreviaturaFacultad;
-	private String nombreEdificio;
-	private String tipoEspacioFisico;
-	private String numeroEspacioFisico;
-	private Long capacidad;
-	private Boolean estado;
 	private Long idEspacioFisico;
-	
+	private Long capacidad;
+	private EstadoEspacioFisicoEnum estado;
+	private String numeroEspacioFisico;
+	private String edificio;
+	private String ubicacion;
+	private String tipoEspacioFisico;
+
 	public EspacioFisicoDTO() {
-		//Cosntructor sin parámetros
+		// Cosntructor sin parámetros
 	}
-	
-	public EspacioFisicoDTO(String abreviaturaFacultad, String nombreEdificio, String tipoEspacioFisico, String numeroEspacioFisico,
-			Long capacidad, Boolean estado, Long idEspacioFisico) {
-		this.abreviaturaFacultad = abreviaturaFacultad;
-		this.nombreEdificio = nombreEdificio;
-		this.tipoEspacioFisico = tipoEspacioFisico;
-		this.numeroEspacioFisico = numeroEspacioFisico;
+
+	public EspacioFisicoDTO(String ubicacion, String edificio, String tipoEspacioFisico, String numeroEspacioFisico,
+			Long capacidad, EstadoEspacioFisicoEnum estado, Long idEspacioFisico) {
+		this.idEspacioFisico = idEspacioFisico;
 		this.capacidad = capacidad;
 		this.estado = estado;
-		this.idEspacioFisico=idEspacioFisico;
+		this.numeroEspacioFisico = numeroEspacioFisico;
+		this.edificio = edificio;
+		this.ubicacion = ubicacion;
+		this.tipoEspacioFisico = tipoEspacioFisico;
 	}
-	public String getAbreviaturaFacultad() {
-		return abreviaturaFacultad;
+
+	public String getUbicacion() {
+		return ubicacion;
 	}
-	public void setAbreviaturaFacultad(String abreviaturaFacultad) {
-		this.abreviaturaFacultad = abreviaturaFacultad;
+
+	public void setUbicacion(String ubicacion) {
+		this.ubicacion = ubicacion;
 	}
-	public String getNombreEdificio() {
-		return nombreEdificio;
+
+	public String getEdificio() {
+		return edificio;
 	}
-	public void setNombreEdificio(String nombreEdificio) {
-		this.nombreEdificio = nombreEdificio;
+
+	public void setEdificio(String edificio) {
+		this.edificio = edificio;
 	}
+
 	public Long getCapacidad() {
 		return capacidad;
 	}
+
 	public void setCapacidad(Long capacidad) {
 		this.capacidad = capacidad;
 	}
-	public Boolean getEstado() {
+
+	public EstadoEspacioFisicoEnum getEstado() {
 		return estado;
 	}
-	public void setEstado(Boolean estado) {
+
+	public void setEstado(EstadoEspacioFisicoEnum estado) {
 		this.estado = estado;
 	}
 

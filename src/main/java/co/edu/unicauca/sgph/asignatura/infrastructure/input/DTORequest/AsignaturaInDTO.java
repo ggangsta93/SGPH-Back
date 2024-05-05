@@ -19,8 +19,8 @@ public class AsignaturaInDTO {
 	private Integer horasSemana;
 
 	private Long idPrograma;
-	
-	private List<Long> lstIdTipoEspacioFisico;
+		
+	private List<Long> lstIdAgrupadorEspacioFisico;
 
 	public Long getIdAsignatura() {
 		return idAsignatura;
@@ -86,11 +86,11 @@ public class AsignaturaInDTO {
 		this.idPrograma = idPrograma;
 	}
 
-	public List<Long> getLstIdTipoEspacioFisico() {
-		return lstIdTipoEspacioFisico;
+	public List<Long> getLstIdAgrupadorEspacioFisico() {
+		return lstIdAgrupadorEspacioFisico;
 	}
 
-	public void setLstIdTipoEspacioFisico(List<Long> lstIdTipoEspacioFisico) {
-		this.lstIdTipoEspacioFisico = lstIdTipoEspacioFisico;
+	public void setLstIdAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
+		this.lstIdAgrupadorEspacioFisico = lstIdAgrupadorEspacioFisico;
 	}
 }

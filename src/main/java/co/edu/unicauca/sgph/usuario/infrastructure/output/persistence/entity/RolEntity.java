@@ -7,7 +7,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -15,8 +14,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "ROL")
 public class RolEntity {
 	@Id
-	@SequenceGenerator(name = "SEC_ROL_GENERATOR", sequenceName = "SEC_ROL", allocationSize = 1, initialValue = 4)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEC_ROL_GENERATOR")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idRol;
 
 	@NotNull

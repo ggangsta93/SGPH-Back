@@ -98,13 +98,52 @@ public class EspacioFisicoController {
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param lstIdEdificio
+	 * @param lstEdificio
 	 * @return
 	 */
-	@GetMapping("/consultarTiposEspaciosFisicosPorIdEdificio")
-	public List<TipoEspacioFisicoOutDTO> consultarTiposEspaciosFisicosPorIdEdificio(
-			@RequestParam List<Long> lstIdEdificio) {
+	@GetMapping("/consultarTiposEspaciosFisicosPorEdificio")
+	public List<TipoEspacioFisicoOutDTO> consultarTiposEspaciosFisicosPorEdificio(
+			@RequestParam List<String> lstEdificio) {
 		return this.espacioFisicoRestMapper.toLstTipoEspacioFisicoOutDTO(
-				this.gestionarEspacioFisicoCUIntPort.consultarTiposEspaciosFisicosPorIdEdificio(lstIdEdificio));
+				this.gestionarEspacioFisicoCUIntPort.consultarTiposEspaciosFisicosPorEdificio(lstEdificio));
 	}
+
+	/**
+	 * Método encargado de consultar todos los edificios de los espacios físicos
+	 * <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return Nombres de los edificios
+	 */
+	@GetMapping("/consultarEdificios")
+	public List<String> consultarEdificios() {
+		return this.gestionarEspacioFisicoCUIntPort.consultarEdificios();
+	}
+
+	/**
+	 * Método encargado de consultar todas las ubicaciones de los espacios físicos
+	 * <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return Nombres de las ubicaciones
+	 */
+	@GetMapping("/consultarUbicaciones")
+	public List<String> consultarUbicaciones() {
+		return this.gestionarEspacioFisicoCUIntPort.consultarUbicaciones();
+	}
+	
+	/**
+	 * Método encargado de consultar los edificios de los espacios físicos por
+	 * ubicación <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return Nombres de los edificios
+	 */
+	@GetMapping("/consultarEdificiosPorUbicacion")
+	public List<String> consultarEdificiosPorUbicacion(@RequestParam List<String> lstUbicacion) {
+		return this.gestionarEspacioFisicoCUIntPort.consultarEdificiosPorUbicacion(lstUbicacion);
+	}	
 }

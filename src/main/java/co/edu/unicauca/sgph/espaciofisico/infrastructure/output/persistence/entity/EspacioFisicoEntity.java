@@ -1,19 +1,23 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import co.edu.unicauca.sgph.edificio.infrastructure.output.persistence.entity.EdificioEntity;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
 
 @Entity
@@ -24,33 +28,40 @@ public class EspacioFisicoEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_ESPACIO_FISICO", nullable = false)
 	private Long idEspacioFisico;
+	
+	@Column(name = "CAPACIDAD")
+	private Long capacidad;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "ESTADO")
+	private EstadoEspacioFisicoEnum estado;
 
+	@Column(name = "NUMERO_ESPACIO_FISICO")
+	private String numeroEspacioFisico;
+	
+	@Column(name = "EDIFICIO")
+	private String edificio;
+	
+	@Column(name = "UBICACION")
+	private String ubicacion;	
+	
 	@ManyToOne
 	@JoinColumn(name = "ID_TIPO_ESPACIO_FISICO")
 	private TipoEspacioFisicoEntity tipoEspacioFisico;
 
-	@Column(name = "NUMERO_ESPACIO_FISICO")
-	private String numeroEspacioFisico;
-
-	@Column(name = "CAPACIDAD")
-	private Long capacidad;
-	
-	@Column(name = "ESTADO")
-	private Boolean estado;
-
 	@ManyToMany(mappedBy = "espaciosFisicos")
 	private List<HorarioEntity> horarios;
 
-	@ManyToOne
-	@JoinColumn(name = "ID_EDIFICIO")
-	private EdificioEntity edificio;
-
 	@OneToMany(mappedBy = "espacioFisico")
-	private List<RecursoEspacioFisicoEntity> recursosEspacioFisico; 
+	private List<RecursoEspacioFisicoEntity> recursosEspacioFisico;
 	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ESPACIOFISICO_AGRUPADOR_ESP_FIS", joinColumns = @JoinColumn(name = "ID_ESPACIO_FISICO"), inverseJoinColumns = @JoinColumn(name = "ID_AGRUPADOR_ESPACIO_FISICO"))
+	private List<AgrupadorEspacioFisicoEntity> agrupadores;
+
 	public EspacioFisicoEntity() {
-        // Constructor sin argumentos requerido por ModelMapper y JPA
-    }
+		this.agrupadores=new ArrayList<>();
+	}
 
 	public Long getCapacidad() {
 		return capacidad;
@@ -60,19 +71,11 @@ public class EspacioFisicoEntity {
 		this.capacidad = capacidad;
 	}
 
-	public EdificioEntity getEdificio() {
-		return edificio;
-	}
-
-	public void setEdificio(EdificioEntity edificio) {
-		this.edificio = edificio;
-	}
-
-	public Boolean getEstado() {
+	public EstadoEspacioFisicoEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoEspacioFisicoEnum estado) {
 		this.estado = estado;
 	}
 
@@ -114,5 +117,29 @@ public class EspacioFisicoEntity {
 
 	public void setRecursosEspacioFisico(List<RecursoEspacioFisicoEntity> recursosEspacioFisico) {
 		this.recursosEspacioFisico = recursosEspacioFisico;
-	}	
+	}
+
+	public String getEdificio() {
+		return edificio;
+	}
+
+	public void setEdificio(String edificio) {
+		this.edificio = edificio;
+	}
+
+	public String getUbicacion() {
+		return ubicacion;
+	}
+
+	public void setUbicacion(String ubicacion) {
+		this.ubicacion = ubicacion;
+	}
+
+	public List<AgrupadorEspacioFisicoEntity> getAgrupadores() {
+		return agrupadores;
+	}
+
+	public void setAgrupadores(List<AgrupadorEspacioFisicoEntity> agrupadores) {
+		this.agrupadores = agrupadores;
+	}
 }

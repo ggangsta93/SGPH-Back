@@ -37,24 +37,45 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	@Query("SELECT TRIM(CONCAT(h.dia,' ',"
 			+ " LPAD(EXTRACT(HOUR FROM h.horaInicio), 2, '0'),':',LPAD(EXTRACT(MINUTE FROM h.horaInicio), 2, '0'),'-',"
 			+ " LPAD(EXTRACT(HOUR FROM h.horaFin), 2, '0'),':',LPAD(EXTRACT(MINUTE FROM h.horaFin), 2, '0'),' ',"
-			+ " COALESCE(tef.tipo, 'Sin asignar'),' ',ef.numeroEspacioFisico,'-',edi.nombre))"
+			+ " COALESCE(tef.tipo, 'Sin asignar'),' ',ef.numeroEspacioFisico,'-',ef.edificio))"
 			+ " FROM HorarioEntity h "
 			+ " JOIN h.espaciosFisicos ef "
 			+ " LEFT JOIN ef.tipoEspacioFisico tef"
-			+ " LEFT JOIN ef.edificio edi"
-			+ " JOIN edi.facultad fac"
 			+ " WHERE h.curso.idCurso = :idCurso")
 	public List<String> consultarEspacioFisicoHorarioPorIdCurso(Long idCurso);	
-	
+
 	/**
-	 * Método encargado de consultar los tipo de espacios físicos
-	 * asociados a una lista de edificios
+	 * Método encargado de consultar todos los edificios de los espacios físicos
+	 * <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param lstIdEdificio
-	 * @return
+	 * @return Nombres de los edificios
 	 */
-	@Query("SELECT DISTINCT espacioFisico.tipoEspacioFisico FROM EspacioFisicoEntity espacioFisico WHERE espacioFisico.edificio.idEdificio IN (:lstIdEdificio)")
-	public List<TipoEspacioFisicoEntity> consultarTiposEspaciosFisicosPorIdEdificio(@Param("lstIdEdificio")List<Long> lstIdEdificio);
+	@Query("SELECT DISTINCT e.edificio FROM EspacioFisicoEntity e")
+	public List<String> consultarEdificios();
+
+	/**
+	 * Método encargado de consultar todos las ubicaciones de los espacios físicos
+	 * <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return Nombres de las ubicaciones
+	 */
+	@Query("SELECT DISTINCT e.ubicacion FROM EspacioFisicoEntity e")
+	public List<String> consultarUbicaciones();
+	
+	
+	/**
+	 * Método encargado de consultar los edificios de los espacios físicos por
+	 * ubicación <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return Nombres de los edificios
+	 */
+	@Query("SELECT DISTINCT e.edificio FROM EspacioFisicoEntity e WHERE e.ubicacion IN (:lstUbicacion)")
+	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion);
+
 }

@@ -1,18 +1,26 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest;
 
+import java.util.List;
+
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
+
 public class EspacioFisicoInDTO {
 
 	private Long idEspacioFisico;
 
 	private Long capacidad;
 
-	private Boolean estado;
+	private EstadoEspacioFisicoEnum estado;
 
 	private String numeroEspacioFisico;
 
-	private Long idEdificio;
+	private String edificio;
+
+	private String ubicacion;
 
 	private Long idTipoEspacioFisico;
+
+	private List<Long> lstIdAgrupadorEspacioFisico;
 
 	public Long getIdEspacioFisico() {
 		return idEspacioFisico;
@@ -30,11 +38,11 @@ public class EspacioFisicoInDTO {
 		this.capacidad = capacidad;
 	}
 
-	public Boolean getEstado() {
+	public EstadoEspacioFisicoEnum getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(EstadoEspacioFisicoEnum estado) {
 		this.estado = estado;
 	}
 
@@ -45,13 +53,13 @@ public class EspacioFisicoInDTO {
 	public void setNumeroEspacioFisico(String numeroEspacioFisico) {
 		this.numeroEspacioFisico = numeroEspacioFisico;
 	}
-
-	public Long getIdEdificio() {
-		return idEdificio;
+	
+	public String getEdificio() {
+		return edificio;
 	}
 
-	public void setIdEdificio(Long idEdificio) {
-		this.idEdificio = idEdificio;
+	public void setEdificio(String edificio) {
+		this.edificio = edificio;
 	}
 
 	public Long getIdTipoEspacioFisico() {
@@ -60,5 +68,21 @@ public class EspacioFisicoInDTO {
 
 	public void setIdTipoEspacioFisico(Long idTipoEspacioFisico) {
 		this.idTipoEspacioFisico = idTipoEspacioFisico;
+	}
+
+	public String getUbicacion() {
+		return ubicacion;
+	}
+
+	public void setUbicacion(String ubicacion) {
+		this.ubicacion = ubicacion;
+	}
+
+	public List<Long> getLstIdAgrupadorEspacioFisico() {
+		return lstIdAgrupadorEspacioFisico;
+	}
+
+	public void setLstIdAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
+		this.lstIdAgrupadorEspacioFisico = lstIdAgrupadorEspacioFisico;
 	}
 }

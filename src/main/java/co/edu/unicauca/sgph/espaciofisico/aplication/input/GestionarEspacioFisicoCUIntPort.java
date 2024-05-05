@@ -56,8 +56,36 @@ public interface GestionarEspacioFisicoCUIntPort {
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param lstIdEdificio
+	 * @param lstEdificio
 	 * @return
 	 */
-	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorIdEdificio(List<Long> lstIdEdificio);
+	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorEdificio(List<String> lstEdificio);
+	
+	/**
+	 * Método encargado de consultar todos los edificios de los espacios físicos <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return Nombres de los edificios
+	 */
+	public List<String> consultarEdificios();
+	
+	/**
+	 * Método encargado de consultar todas las ubicaciones de los espacios físicos <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return Nombres de las ubicaciones
+	 */
+	public List<String> consultarUbicaciones();
+	
+	/**
+	 * Método encargado de consultar los edificios de los espacios físicos por
+	 * ubicación <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return Nombres de los edificios
+	 */
+	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion);		
 }

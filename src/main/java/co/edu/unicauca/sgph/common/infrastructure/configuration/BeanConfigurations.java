@@ -12,9 +12,6 @@ import co.edu.unicauca.sgph.curso.domain.useCase.GestionarCursoCUAdapter;
 import co.edu.unicauca.sgph.docente.aplication.output.DocenteFormatterResultsIntPort;
 import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
 import co.edu.unicauca.sgph.docente.domain.useCase.GestionarDocenteCUAdapter;
-import co.edu.unicauca.sgph.edificio.aplication.output.EdificioFormatterResultsIntPort;
-import co.edu.unicauca.sgph.edificio.aplication.output.GestionarEdificioGatewayIntPort;
-import co.edu.unicauca.sgph.edificio.domain.useCase.GestionarEdificioCUAdapter;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.EspacioFisicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarTipoEspacioFisicoGatewayIntPort;
@@ -97,13 +94,6 @@ public class BeanConfigurations {
 			TipoEspacioFisicoFormatterResultsIntPort tipoEspacioFisicoFormatterResultsIntPort) {
 		return new GestionarTipoEspacioFisicoCUAdapter(gestionarTipoEspacioFisicoGatewayIntPort,
 				tipoEspacioFisicoFormatterResultsIntPort);
-	}
-
-	@Bean
-	GestionarEdificioCUAdapter crearGestionarEdificioCUInt(
-			GestionarEdificioGatewayIntPort gestionarEdificioGatewayIntPort,
-			EdificioFormatterResultsIntPort edificioFormatterResultsIntPort) {
-		return new GestionarEdificioCUAdapter(gestionarEdificioGatewayIntPort, edificioFormatterResultsIntPort);
 	}
 
 	@Bean
