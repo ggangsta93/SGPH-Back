@@ -12,10 +12,13 @@ import co.edu.unicauca.sgph.curso.domain.useCase.GestionarCursoCUAdapter;
 import co.edu.unicauca.sgph.docente.aplication.output.DocenteFormatterResultsIntPort;
 import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
 import co.edu.unicauca.sgph.docente.domain.useCase.GestionarDocenteCUAdapter;
+import co.edu.unicauca.sgph.espaciofisico.aplication.output.AgrupadorEspacioFisicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.EspacioFisicoFormatterResultsIntPort;
+import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarTipoEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.TipoEspacioFisicoFormatterResultsIntPort;
+import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarAgrupadorEspacioFisicoCUAdapter;
 import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarEspacioFisicoCUAdapter;
 import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarTipoEspacioFisicoCUAdapter;
 import co.edu.unicauca.sgph.facultad.aplication.output.FacultadFormatterResultsIntPort;
@@ -94,6 +97,14 @@ public class BeanConfigurations {
 			TipoEspacioFisicoFormatterResultsIntPort tipoEspacioFisicoFormatterResultsIntPort) {
 		return new GestionarTipoEspacioFisicoCUAdapter(gestionarTipoEspacioFisicoGatewayIntPort,
 				tipoEspacioFisicoFormatterResultsIntPort);
+	}
+
+	@Bean
+	GestionarAgrupadorEspacioFisicoCUAdapter crearGestionarAgrupadorEspacioFisicoCUInt(
+			GestionarAgrupadorEspacioFisicoGatewayIntPort gestionarAgrupadorEspacioFisicoGatewayIntPort,
+			AgrupadorEspacioFisicoFormatterResultsIntPort agrupadorEspacioFisicoFormatterResultsIntPort) {
+		return new GestionarAgrupadorEspacioFisicoCUAdapter(gestionarAgrupadorEspacioFisicoGatewayIntPort,
+				agrupadorEspacioFisicoFormatterResultsIntPort);
 	}
 
 	@Bean

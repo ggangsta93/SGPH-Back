@@ -10,22 +10,20 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 	private static final long serialVersionUID = -1067303712899236108L;
 
 	private Long idCurso;
-	
+
 	private String horaInicio;
-	
+
 	private String horaFin;
-	
+
 	private Long duracion;
-	
+
 	private List<DiaSemanaEnum> listaDiaSemanaEnum;
-	
-	private List<Long> listaIdFacultad;
-	
-	private List<Long> listaIdEdificio;
-	
+
+	private List<Long> listaIdAgrupadorEspacioFisico;
+
 	private List<Long> listaIdTipoEspacioFisico;
-	
-	private List<String> listaNumeroEspacioFisico;
+
+	private String salon;
 
 	public Long getIdCurso() {
 		return idCurso;
@@ -67,22 +65,6 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 		this.listaDiaSemanaEnum = listaDiaSemanaEnum;
 	}
 
-	public List<Long> getListaIdFacultad() {
-		return listaIdFacultad;
-	}
-
-	public void setListaIdFacultad(List<Long> listaIdFacultad) {
-		this.listaIdFacultad = listaIdFacultad;
-	}
-
-	public List<Long> getListaIdEdificio() {
-		return listaIdEdificio;
-	}
-
-	public void setListaIdEdificio(List<Long> listaIdEdificio) {
-		this.listaIdEdificio = listaIdEdificio;
-	}
-
 	public List<Long> getListaIdTipoEspacioFisico() {
 		return listaIdTipoEspacioFisico;
 	}
@@ -91,11 +73,19 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 		this.listaIdTipoEspacioFisico = listaIdTipoEspacioFisico;
 	}
 
-	public List<String> getListaNumeroEspacioFisico() {
-		return listaNumeroEspacioFisico;
+	public List<Long> getListaIdAgrupadorEspacioFisico() {
+		return listaIdAgrupadorEspacioFisico;
 	}
 
-	public void setListaNumeroEspacioFisico(List<String> listaNumeroEspacioFisico) {
-		this.listaNumeroEspacioFisico = listaNumeroEspacioFisico;
+	public void setListaIdAgrupadorEspacioFisico(List<Long> listaIdAgrupadorEspacioFisico) {
+		this.listaIdAgrupadorEspacioFisico = listaIdAgrupadorEspacioFisico;
+	}
+
+	public String getSalon() {
+		return salon;
+	}
+
+	public void setSalon(String salon) {
+		this.salon = salon;
 	}
 }

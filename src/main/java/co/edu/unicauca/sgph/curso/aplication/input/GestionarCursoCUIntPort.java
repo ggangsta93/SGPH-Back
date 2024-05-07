@@ -1,5 +1,7 @@
 package co.edu.unicauca.sgph.curso.aplication.input;
 
+import java.util.List;
+
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 
 public interface GestionarCursoCUIntPort {
@@ -27,7 +29,7 @@ public interface GestionarCursoCUIntPort {
 	public Curso guardarCurso(Curso curso);
 
 	/**
-	 * Método encargado de obtener el curso por su identificador
+	 * Método encargado de obtener el curso por su identificador<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
 	 * 
@@ -36,4 +38,14 @@ public interface GestionarCursoCUIntPort {
 	 */
 	public Curso consultarCursoPorIdCurso(Long idCurso);
 
+	/**
+	 * Método encargado de consultar los agrupadores de espacios físicos asociados
+	 * al curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param cursoInDTO
+	 * @return Lista de idAgrupadorEspacioFisico
+	 */
+	public List<Long> consultarAgrupadoresEspaciosFisicosPorCurso(Long idCurso);
 }

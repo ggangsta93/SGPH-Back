@@ -13,14 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarTipoEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.TipoEspacioFisicoOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.AgrupadorEspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.EspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.TipoEspacioFisicoRestMapper;
 
@@ -33,23 +36,29 @@ public class EspacioFisicoController {
 	private EspacioFisicoRestMapper espacioFisicoRestMapper;
 	private GestionarTipoEspacioFisicoCUIntPort gestionarTipoEspacioFisicoCUIntPort;
 	private TipoEspacioFisicoRestMapper tipoEspacioFisicoRestMapper;
+	private GestionarAgrupadorEspacioFisicoCUIntPort gestionarAgrupadorEspacioFisicoCUIntPort;
+	private AgrupadorEspacioFisicoRestMapper agrupadorEspacioFisicoRestMapper;
 
 	public EspacioFisicoController(GestionarEspacioFisicoCUIntPort gestionarEspacioFisicoCUIntPort,
 			EspacioFisicoRestMapper espacioFisicoRestMapper,
 			GestionarTipoEspacioFisicoCUIntPort gestionarTipoEspacioFisicoCUIntPort,
-			TipoEspacioFisicoRestMapper tipoEspacioFisicoRestMapper) {
+			TipoEspacioFisicoRestMapper tipoEspacioFisicoRestMapper,
+			GestionarAgrupadorEspacioFisicoCUIntPort gestionarAgrupadorEspacioFisicoCUIntPort,
+			AgrupadorEspacioFisicoRestMapper agrupadorEspacioFisicoRestMapper) {
 		this.gestionarEspacioFisicoCUIntPort = gestionarEspacioFisicoCUIntPort;
 		this.espacioFisicoRestMapper = espacioFisicoRestMapper;
 		this.gestionarTipoEspacioFisicoCUIntPort = gestionarTipoEspacioFisicoCUIntPort;
 		this.tipoEspacioFisicoRestMapper = tipoEspacioFisicoRestMapper;
+		this.gestionarAgrupadorEspacioFisicoCUIntPort = gestionarAgrupadorEspacioFisicoCUIntPort;
+		this.agrupadorEspacioFisicoRestMapper = agrupadorEspacioFisicoRestMapper;
 	}
 
 	@PostMapping("/guardarEspacioFisico")
 	@Transactional
 	public EspacioFisicoOutDTO guardarEspacioFisico(@RequestBody EspacioFisicoInDTO espacioFisicoInDTO) {
 		EspacioFisico espacioFisico = this.gestionarEspacioFisicoCUIntPort
-		.guardarEspacioFisico(this.espacioFisicoRestMapper.toEspacioFisico(espacioFisicoInDTO));
-		
+				.guardarEspacioFisico(this.espacioFisicoRestMapper.toEspacioFisico(espacioFisicoInDTO));
+
 		return this.espacioFisicoRestMapper.toEspacioFisicoOutDTO(espacioFisico);
 	}
 
@@ -139,7 +148,7 @@ public class EspacioFisicoController {
 	public List<String> consultarUbicaciones() {
 		return this.gestionarEspacioFisicoCUIntPort.consultarUbicaciones();
 	}
-	
+
 	/**
 	 * Método encargado de consultar los edificios de los espacios físicos por
 	 * ubicación <br>
@@ -151,5 +160,39 @@ public class EspacioFisicoController {
 	@GetMapping("/consultarEdificiosPorUbicacion")
 	public List<String> consultarEdificiosPorUbicacion(@RequestParam List<String> lstUbicacion) {
 		return this.gestionarEspacioFisicoCUIntPort.consultarEdificiosPorUbicacion(lstUbicacion);
-	}	
+	}
+
+	/**
+	 * Método encargado de consultar los agrupadores de espacios físicos dado una
+	 * lista de identificadores únicos<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idAgrupadorEspacioFisico
+	 * @return Lista de instancias de AgrupadorEspacioFisico
+	 */
+	@GetMapping("/consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico")
+	public List<AgrupadorEspacioFisicoOutDTO> consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico(
+			@RequestParam List<Long> idAgrupadorEspacioFisico) {
+		return this.agrupadorEspacioFisicoRestMapper
+				.toLstAgrupadorEspacioFisicoOutDTO(this.gestionarAgrupadorEspacioFisicoCUIntPort
+						.consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico(idAgrupadorEspacioFisico));
+	}
+
+	/**
+	 * Método encargado de consultar los agrupadores de espacios físicos dado una
+	 * lista de identificadores únicos de facultades<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idFacultad
+	 * @return Lista de instancias de AgrupadorEspacioFisico
+	 */
+	@GetMapping("/consultarAgrupadoresEspaciosFisicosPorIdFacultad")
+	public List<AgrupadorEspacioFisicoOutDTO> consultarAgrupadoresEspaciosFisicosPorIdFacultad(
+			@RequestParam List<Long> idFacultad) {
+		return this.agrupadorEspacioFisicoRestMapper
+				.toLstAgrupadorEspacioFisicoOutDTO(this.gestionarAgrupadorEspacioFisicoCUIntPort
+						.consultarAgrupadoresEspaciosFisicosPorIdFacultad(idFacultad));
+	}
 }

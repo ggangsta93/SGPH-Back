@@ -1,5 +1,7 @@
 package co.edu.unicauca.sgph.curso.aplication.output;
 
+import java.util.List;
+
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 
 public interface GestionarCursoGatewayIntPort {
@@ -35,5 +37,16 @@ public interface GestionarCursoGatewayIntPort {
 	 * @return
 	 */
 	public Curso consultarCursoPorIdCurso(Long idCurso);
+
+	/**
+	 * Método encargado de consultar los agrupadores de espacios físicos asociados
+	 * al curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param cursoInDTO
+	 * @return Lista de idAgrupadorEspacioFisico
+	 */
+	public List<Long> consultarAgrupadoresEspaciosFisicosPorCurso(Long idCurso);
 
 }

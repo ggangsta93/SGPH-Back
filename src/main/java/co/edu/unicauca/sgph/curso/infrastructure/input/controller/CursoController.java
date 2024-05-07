@@ -1,9 +1,13 @@
 package co.edu.unicauca.sgph.curso.infrastructure.input.controller;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
@@ -36,6 +40,20 @@ public class CursoController {
 	public CursoOutDTO guardarCurso(@RequestBody CursoInDTO cursoInDTO) {
 		return this.cursoRestMapper
 				.toCursoOutDTO(this.gestionarCursoCUIntPort.guardarCurso(this.cursoRestMapper.toCurso(cursoInDTO)));
+	}
+	
+	/**
+	 * Método encargado de consultar los agrupadores de espacios físicos asociados
+	 * al curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param cursoInDTO
+	 * @return Lista de idAgrupadorEspacioFisico
+	 */
+	@GetMapping("/consultarAgrupadoresEspaciosFisicosPorCurso")
+	public List<Long> consultarAgrupadoresEspaciosFisicosPorCurso(@RequestParam Long idCurso) {
+		return this.gestionarCursoCUIntPort.consultarAgrupadoresEspaciosFisicosPorCurso(idCurso);
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package co.edu.unicauca.sgph.curso.infrastructure.output.persistence.gateway;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -53,6 +55,14 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 	@Override
 	public Curso consultarCursoPorIdCurso(Long idCurso) {
 		return this.modelMapper.map(this.cursoRepositoryInt.findByIdCurso(idCurso), Curso.class);
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort#consultarAgrupadoresEspaciosFisicosPorCurso(java.lang.Long)
+	 */
+	@Override
+	public List<Long> consultarAgrupadoresEspaciosFisicosPorCurso(Long idCurso) {
+		return this.cursoRepositoryInt.consultarAgrupadoresEspaciosFisicosPorCurso(idCurso);
 	}
 
 }

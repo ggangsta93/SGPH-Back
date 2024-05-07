@@ -1,6 +1,9 @@
 package co.edu.unicauca.sgph.curso.infrastructure.output.persistence.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
@@ -28,4 +31,21 @@ public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
 	 * @return
 	 */
 	public CursoEntity findByIdCurso(Long idCurso);
+	
+	
+	/**
+	 * Método encargado de consultar los agrupadores de espacios físicos asociados
+	 * al curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param cursoInDTO
+	 * @return Lista de idAgrupadorEspacioFisico
+	 */
+	@Query("SELECT DISTINCT(agrupadores.idAgrupadorEspacioFisico)"
+			+ " FROM CursoEntity curso "
+			+ " JOIN curso.asignatura asignatura "
+			+ " JOIN asignatura.agrupadores agrupadores "
+			+ " WHERE curso.idCurso =:idCurso")
+	public List<Long> consultarAgrupadoresEspaciosFisicosPorCurso(Long idCurso);
 }

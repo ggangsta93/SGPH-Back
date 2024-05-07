@@ -1,5 +1,7 @@
 package co.edu.unicauca.sgph.curso.domain.useCase;
 
+import java.util.List;
+
 import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
 import co.edu.unicauca.sgph.curso.aplication.output.CursoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort;
@@ -16,8 +18,9 @@ public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
 		this.cursoFormatterResultsIntPort = cursoFormatterResultsIntPort;
 	}
 
-	/** 
-	 * @see co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort#consultarCursoPorGrupoYAsignatura(java.lang.String, java.lang.Long)
+	/**
+	 * @see co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort#consultarCursoPorGrupoYAsignatura(java.lang.String,
+	 *      java.lang.Long)
 	 */
 	@Override
 	@Deprecated
@@ -39,6 +42,14 @@ public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
 	@Override
 	public Curso consultarCursoPorIdCurso(Long idCurso) {
 		return this.gestionarCursoGatewayIntPort.consultarCursoPorIdCurso(idCurso);
+	}
+
+	/**
+	 * @see co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort#consultarAgrupadoresEspaciosFisicosPorCurso(java.lang.Long)
+	 */
+	@Override
+	public List<Long> consultarAgrupadoresEspaciosFisicosPorCurso(Long idCurso) {
+		return this.gestionarCursoGatewayIntPort.consultarAgrupadoresEspaciosFisicosPorCurso(idCurso);
 	}
 
 }
