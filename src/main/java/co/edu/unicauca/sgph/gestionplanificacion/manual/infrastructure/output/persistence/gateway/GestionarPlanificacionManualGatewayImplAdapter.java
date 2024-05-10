@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,15 +254,15 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 
 		InfoGeneralCursosPorProgramaDTO infoGeneralCursosPorProgramaDTO = new InfoGeneralCursosPorProgramaDTO();
 		infoGeneralCursosPorProgramaDTO.setCantidadCursosHorarioParcial(this.contarCursosConsultados(null,
-				List.of(idPrograma), null, null, EstadoCursoHorarioEnum.PARCIALMENTE, null, periodoAcademicoVigente));
+				Arrays.asList(idPrograma), null, null, EstadoCursoHorarioEnum.PARCIALMENTE, null, periodoAcademicoVigente));
 		infoGeneralCursosPorProgramaDTO.setCantidadCursosSinHorario(this.contarCursosConsultados(null,
-				List.of(idPrograma), null, null, EstadoCursoHorarioEnum.SIN_ASIGNAR, null, periodoAcademicoVigente));
+				Arrays.asList(idPrograma), null, null, EstadoCursoHorarioEnum.SIN_ASIGNAR, null, periodoAcademicoVigente));
 		infoGeneralCursosPorProgramaDTO.setCantidadCursosConHorario(this.contarCursosConsultados(null,
-				List.of(idPrograma), null, null, EstadoCursoHorarioEnum.ASIGNADO, null, periodoAcademicoVigente));
-		infoGeneralCursosPorProgramaDTO.setTotalCursos(this.contarCursosConsultados(null, List.of(idPrograma), null,
+				Arrays.asList(idPrograma), null, null, EstadoCursoHorarioEnum.ASIGNADO, null, periodoAcademicoVigente));
+		infoGeneralCursosPorProgramaDTO.setTotalCursos(this.contarCursosConsultados(null, Arrays.asList(idPrograma), null,
 				null, null, null, periodoAcademicoVigente));
 		infoGeneralCursosPorProgramaDTO.setCantidadCursosSinDocente(
-				this.contarCursosConsultados(null, List.of(idPrograma), null, null, null, 0, periodoAcademicoVigente));
+				this.contarCursosConsultados(null, Arrays.asList(idPrograma), null, null, null, 0, periodoAcademicoVigente));
 		return infoGeneralCursosPorProgramaDTO;
 	}
 

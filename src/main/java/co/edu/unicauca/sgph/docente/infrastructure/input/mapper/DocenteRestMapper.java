@@ -12,8 +12,8 @@ import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutD
 @Mapper(componentModel = "spring")
 public interface DocenteRestMapper {
 
-	@Mapping(target = "idTipoIdentificacion", expression = "java(docente.getTipoIdentificacion().getIdTipoIdentificacion())")
-	@Mapping(target = "codigoTipoIdentificacion", expression = "java(docente.getTipoIdentificacion().getCodigoTipoIdentificacion())")
+	@Mapping(target = "idTipoIdentificacion", source = "docente.tipoIdentificacion.idTipoIdentificacion")
+	@Mapping(target = "codigoTipoIdentificacion", source = "docente.tipoIdentificacion.codigoTipoIdentificacion")
 	DocenteOutDTO toDocenteOutDTO(Docente docente);
 
 	@Mapping(target = "tipoIdentificacion", expression = "java(new TipoIdentificacion(docenteInDTO.getIdTipoIdentificacion()))")

@@ -2,6 +2,8 @@ package co.edu.unicauca.sgph.asignatura.infrastructure.input.controller;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,5 +58,14 @@ public class AsignaturaController {
 	public List<AsignaturaOutDTO> consultarAsignaturasPorIdPrograma(@RequestParam Long idPrograma) {
 		List<Asignatura> aisgnaturas = this.gestionarAsignaturaCUIntPort.consultarAsignaturasPorIdPrograma(idPrograma);
 		return this.asignaturaRestMapper.toLstAsignaturaOutDTO(aisgnaturas);
+	}
+
+	@GetMapping("/consultarAsignaturaPorId")
+	public AsignaturaOutDTO obtenerAsignaturaPorId(@RequestParam Long idAsignatura) {
+		return this.gestionarAsignaturaCUIntPort.obtenerAsignaturaPorId(idAsignatura);
+	}
+	@PostMapping("filtrarAsignaturas")
+	public Page<AsignaturaOutDTO> filtrarAsignaturas(@RequestBody FiltroAsignaturaInDTO filtro) {
+		return this.gestionarAsignaturaCUIntPort.filtrarAsignaturas(filtro);
 	}
 }

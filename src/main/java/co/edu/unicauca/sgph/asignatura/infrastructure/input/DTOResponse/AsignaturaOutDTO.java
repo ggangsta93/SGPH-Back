@@ -19,8 +19,12 @@ public class AsignaturaOutDTO {
 	private Integer horasSemana;
 
 	private Long idPrograma;
+	private String nombrePrograma;
+	private String nombreFacultad;
+	private Long idFacultad;
 		
 	private List<Long> lstIdAgrupadorEspacioFisico;
+	private List<AgrupadorEspacioFisicoDTO> agrupadores;
 
 	public Long getIdAsignatura() {
 		return idAsignatura;
@@ -92,5 +96,37 @@ public class AsignaturaOutDTO {
 
 	public void setLstIdAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
 		this.lstIdAgrupadorEspacioFisico = lstIdAgrupadorEspacioFisico;
+	}
+
+	public String getNombrePrograma() {
+		return nombrePrograma;
+	}
+
+	public void setNombrePrograma(String nombrePrograma) {
+		this.nombrePrograma = nombrePrograma;
+	}
+
+	public String getNombreFacultad() {
+		return nombreFacultad;
+	}
+
+	public void setNombreFacultad(String nombreFacultad) {
+		this.nombreFacultad = nombreFacultad;
+	}
+
+	public List<AgrupadorEspacioFisicoDTO> getAgrupadores() {
+		return agrupadores;
+	}
+
+	public void setAgrupadores(List<AgrupadorEspacioFisicoDTO> agrupadores) {
+		this.agrupadores = agrupadores;
+	}
+
+	public Long getIdFacultad() {
+		return idFacultad;
+	}
+
+	public void setIdFacultad(Long idFacultad) {
+		this.idFacultad = idFacultad;
 	}
 }

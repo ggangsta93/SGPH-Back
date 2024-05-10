@@ -6,6 +6,9 @@ import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUInt
 import co.edu.unicauca.sgph.asignatura.aplication.output.AsignaturaFormatterResultsIntPort;
 import co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
+import org.springframework.data.domain.Page;
 
 public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPort {
 
@@ -32,5 +35,15 @@ public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPor
 	@Override
 	public List<Asignatura> consultarAsignaturasPorIdPrograma(Long idPrograma) {
 		return this.gestionarAsignaturaGatewayIntPort.consultarAsignaturasPorIdPrograma(idPrograma);
+	}
+
+	@Override
+	public AsignaturaOutDTO obtenerAsignaturaPorId(final Long idAsignatura) {
+		return this.gestionarAsignaturaGatewayIntPort.obtenerAsignaturaPorId(idAsignatura);
+	}
+
+	@Override
+	public Page<AsignaturaOutDTO> filtrarAsignaturas(FiltroAsignaturaInDTO filtro) {
+		return this.gestionarAsignaturaGatewayIntPort.filtrarAsignaturas(filtro);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +27,9 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.TipoE
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.AgrupadorEspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.EspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.TipoEspacioFisicoRestMapper;
-
-@CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/AdministrarEspacioFisico")
+@CrossOrigin(origins = "http://localhost:4200")
 public class EspacioFisicoController {
 
 	private GestionarEspacioFisicoCUIntPort gestionarEspacioFisicoCUIntPort;

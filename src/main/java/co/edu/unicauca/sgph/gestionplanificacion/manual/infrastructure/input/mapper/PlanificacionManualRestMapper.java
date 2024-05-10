@@ -12,7 +12,7 @@ import co.edu.unicauca.sgph.curso.infrastructure.input.DTOResponse.CursoOutDTO;
 @Mapper(componentModel = "spring")
 public interface PlanificacionManualRestMapper {
 
-	@Mapping(target = "idAsignatura", expression = "java(curso.getAsignatura().getIdAsignatura())")
+	@Mapping(target = "idAsignatura", source = "curso.asignatura.idAsignatura")
 	CursoOutDTO toCursoOutDTO(Curso curso);
 
 	@Mapping(target = "asignatura", expression = "java(new Asignatura(cursoInDTO.getIdAsignatura()))")
