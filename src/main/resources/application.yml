@@ -4,9 +4,9 @@ spring:
   application:
     name: sgph
   datasource:
-    url: jdbc:mysql://localhost/arias?useSSL=false&serverTimezone=GMT&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost/sgph?useSSL=false&serverTimezone=GMT&allowPublicKeyRetrieval=true
     username: root
-    password: admin
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     #database-platform: org.hibernate.dialect.MySQL8Dialect
