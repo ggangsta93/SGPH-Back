@@ -26,6 +26,9 @@ public class AsignaturaOutDTO {
 	private List<Long> lstIdAgrupadorEspacioFisico;
 	private List<AgrupadorEspacioFisicoDTO> agrupadores;
 
+	private Boolean error;
+	private String mensaje;
+
 	public Long getIdAsignatura() {
 		return idAsignatura;
 	}
@@ -128,5 +131,21 @@ public class AsignaturaOutDTO {
 
 	public void setIdFacultad(Long idFacultad) {
 		this.idFacultad = idFacultad;
+	}
+
+	public Boolean getError() {
+		return error;
+	}
+
+	public void setError(Boolean error) {
+		this.error = error;
+	}
+
+	public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
 	}
 }

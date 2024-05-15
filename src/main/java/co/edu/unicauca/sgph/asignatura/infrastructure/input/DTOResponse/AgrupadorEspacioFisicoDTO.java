@@ -5,8 +5,8 @@ import java.util.List;
 public class AgrupadorEspacioFisicoDTO {
 	private String nombreFacultad;
     private Long idFacultad;
-    private Long idAgrupador;
-    private String nombreAgrupador;
+    private Long idAgrupadorEspacioFisico;
+    private String nombre;
 
     public AgrupadorEspacioFisicoDTO() {
     }
@@ -27,19 +27,19 @@ public class AgrupadorEspacioFisicoDTO {
         this.idFacultad = idFacultad;
     }
 
-    public Long getIdAgrupador() {
-        return idAgrupador;
+    public Long getIdAgrupadorEspacioFisico() {
+        return idAgrupadorEspacioFisico;
     }
 
-    public void setIdAgrupador(Long idAgrupador) {
-        this.idAgrupador = idAgrupador;
+    public void setIdAgrupadorEspacioFisico(Long idAgrupador) {
+        this.idAgrupadorEspacioFisico = idAgrupador;
     }
 
-    public String getNombreAgrupador() {
-        return nombreAgrupador;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombreAgrupador(String nombreAgrupador) {
-        this.nombreAgrupador = nombreAgrupador;
+    public void setNombre(String nombreAgrupador) {
+        this.nombre = nombreAgrupador;
     }
 }

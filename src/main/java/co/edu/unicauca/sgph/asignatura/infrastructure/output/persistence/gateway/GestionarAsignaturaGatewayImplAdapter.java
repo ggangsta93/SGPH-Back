@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
@@ -121,6 +122,17 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		return resultado.map(this::mapearDTO);
 	}
 
+	@Override
+	public Asignatura inactivarAsignaturaPorId(Long idAsignatura) {
+		Optional<AsignaturaEntity> asignatura = this.asignaturaRepositoryInt.findById(idAsignatura);
+		if (asignatura.isPresent()) {
+			AsignaturaEntity asignaturaEntity = asignatura.get();
+			asignaturaEntity.setEstado(EstadoAsignaturaEnum.INACTIVO);
+			return this.asignaturaMapper.map(this.asignaturaRepositoryInt.save(asignaturaEntity), Asignatura.class);
+		}
+		return null;
+	}
+
 	private Long contarAsignaturas(FiltroAsignaturaInDTO filtro, CriteriaBuilder criteriaBuilder) {
 		// Contar el total de resultados
 		CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
@@ -164,7 +176,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		asignaturaOutDTO.setIdAsignatura(entidad.getIdAsignatura());
 		asignaturaOutDTO.setCodigoAsignatura(entidad.getCodigoAsignatura());
 		asignaturaOutDTO.setNombre(entidad.getNombre());
-		asignaturaOutDTO.setOID(entidad.getOID());
+		asignaturaOutDTO.setOID(entidad.getOid());
 		asignaturaOutDTO.setPensum(entidad.getPensum());
 		asignaturaOutDTO.setHorasSemana(entidad.getHorasSemana());
 		asignaturaOutDTO.setIdPrograma(entidad.getPrograma().getIdPrograma());
@@ -178,9 +190,9 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 	private AgrupadorEspacioFisicoDTO mapAgrupador(AgrupadorEspacioFisicoEntity entidad) {
 		AgrupadorEspacioFisicoDTO dto = new AgrupadorEspacioFisicoDTO();
 		dto.setIdFacultad(entidad.getFacultad().getIdFacultad());
-		dto.setNombreAgrupador(entidad.getNombre());
+		dto.setNombre(entidad.getNombre());
 		dto.setNombreFacultad(entidad.getFacultad().getNombre());
-		dto.setIdAgrupador(entidad.getIdAgrupadorEspacioFisico());
+		dto.setIdAgrupadorEspacioFisico(entidad.getIdAgrupadorEspacioFisico());
 		return dto;
 	}
 }

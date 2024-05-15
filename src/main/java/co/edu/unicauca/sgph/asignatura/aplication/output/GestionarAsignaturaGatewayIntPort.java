@@ -32,4 +32,6 @@ public interface GestionarAsignaturaGatewayIntPort {
     AsignaturaOutDTO obtenerAsignaturaPorId(Long idAsignatura);
 
 	Page<AsignaturaOutDTO> filtrarAsignaturas(FiltroAsignaturaInDTO filtro);
+
+	Asignatura inactivarAsignaturaPorId(Long idAsignatura);
 }

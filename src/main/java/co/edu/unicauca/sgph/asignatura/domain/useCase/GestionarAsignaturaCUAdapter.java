@@ -46,4 +46,9 @@ public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPor
 	public Page<AsignaturaOutDTO> filtrarAsignaturas(FiltroAsignaturaInDTO filtro) {
 		return this.gestionarAsignaturaGatewayIntPort.filtrarAsignaturas(filtro);
 	}
+
+	@Override
+	public Asignatura inactivarAsignaturaPorId(Long idAsignatura) {
+		return this.gestionarAsignaturaGatewayIntPort.inactivarAsignaturaPorId(idAsignatura);
+	}
 }
