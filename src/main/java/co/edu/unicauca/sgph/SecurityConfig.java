@@ -21,5 +21,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          .logout().permitAll();
 		 
 		 http.csrf().disable(); //Esto me permite hacer peticiones post utilizando DTO
- }
+ 	}
 }

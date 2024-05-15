@@ -14,7 +14,7 @@ import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
 @Mapper(componentModel = "spring")
 public interface AsignaturaRestMapper {
 
-	@Mapping(target = "idPrograma", expression = "java(asignatura.getPrograma().getIdPrograma())")
+	@Mapping(target = "idPrograma", source = "asignatura.programa.idPrograma")
 	@Mapping(target = "lstIdAgrupadorEspacioFisico", source = "asignatura.agrupadores")
 	AsignaturaOutDTO toAsignaturaOutDTO(Asignatura asignatura);
 

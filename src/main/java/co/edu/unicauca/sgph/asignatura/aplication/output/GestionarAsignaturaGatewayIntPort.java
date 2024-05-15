@@ -3,6 +3,9 @@ package co.edu.unicauca.sgph.asignatura.aplication.output;
 import java.util.List;
 
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
+import org.springframework.data.domain.Page;
 
 public interface GestionarAsignaturaGatewayIntPort {
 
@@ -25,4 +28,10 @@ public interface GestionarAsignaturaGatewayIntPort {
 	 * @return
 	 */
 	public List<Asignatura> consultarAsignaturasPorIdPrograma(Long idPrograma);
+
+    AsignaturaOutDTO obtenerAsignaturaPorId(Long idAsignatura);
+
+	Page<AsignaturaOutDTO> filtrarAsignaturas(FiltroAsignaturaInDTO filtro);
+
+	Asignatura inactivarAsignaturaPorId(Long idAsignatura);
 }
