@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.common.enums.EstadoCursoHorarioEnum;
+import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
@@ -47,13 +49,16 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	private PlanificacionManualRepositoryInt planificacionManualRepositoryInt;
 	private ModelMapper modelMapper;
 	private GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort;
+	private GestionarAgrupadorEspacioFisicoGatewayIntPort gestionarAgrupadorEspacioFisicoGatewayIntPort;
 
 	public GestionarPlanificacionManualGatewayImplAdapter(
 			PlanificacionManualRepositoryInt planificacionManualRepositoryInt, ModelMapper modelMapper,
-			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort) {
+			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort,
+			GestionarAgrupadorEspacioFisicoGatewayIntPort gestionarAgrupadorEspacioFisicoGatewayIntPort) {
 		this.planificacionManualRepositoryInt = planificacionManualRepositoryInt;
 		this.modelMapper = modelMapper;
 		this.gestionarPeriodoAcademicoGatewayIntPort = gestionarPeriodoAcademicoGatewayIntPort;
+		this.gestionarAgrupadorEspacioFisicoGatewayIntPort=gestionarAgrupadorEspacioFisicoGatewayIntPort;
 	}
 
 	/**
@@ -421,9 +426,17 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 				.append("                   WHERE sf.id_espacio_fisico = hsf.id_espacio_fisico ")
 				.append("                   AND fp.dia = h.dia ")
 				.append("                   AND fp.hora_fin > h.hora_inicio ")
-				.append("                   AND fp.hora_inicio < h.hora_fin ) ");
+				.append("                   AND fp.hora_inicio < h.hora_fin ) ");					
+		
+		
+		// Se filtra espacios físicos si el curso tiene grupos asociados
+		List<AgrupadorEspacioFisico> listaAgrupadoresCurso = this.gestionarAgrupadorEspacioFisicoGatewayIntPort
+				.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso);
+		if (!listaAgrupadoresCurso.isEmpty()) {
+			queryBuilder.append(" AND agrupador.ID_AGRUPADOR_ESPACIO_FISICO IN (:listaAgrupadoresCurso)");
+		}
 
-		// Se adicionan criterios de selección
+		// Se adicionan criterios de selección según el filtro 
 		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum())
 				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum().isEmpty()) {
 			queryBuilder.append(" AND fp.dia IN (:listaDiaSemanaEnum)");
@@ -431,6 +444,10 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		if (Objects.nonNull(listaHoraInicio) && !listaHoraInicio.isEmpty()) {
 			queryBuilder.append(" AND fp.hora_inicio IN (:listaHoraInicio)");
 		}
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaUbicaciones())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaUbicaciones().isEmpty()) {
+			queryBuilder.append(" AND sf.UBICACION IN (:listaUbicaciones)");
+		}		
 		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico())
 				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico().isEmpty()) {
 			queryBuilder.append(" AND agrupador.ID_AGRUPADOR_ESPACIO_FISICO IN (:listaIdAgrupadorEspacioFisico)");
@@ -441,7 +458,7 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		}
 		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getSalon())
 				&& !filtroFranjaHorariaDisponibleCursoDTO.getSalon().isEmpty()) {
-			queryBuilder.append(" AND UPPER(sf.salon) LIKE UPPER(:salon)");
+			queryBuilder.append(" AND sf.salon LIKE :salon");
 		}
 		queryBuilder.append(" ORDER by sf.id_espacio_fisico, fp.dia, fp.hora_inicio ");
 
@@ -449,7 +466,14 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		Query query = entityManager.createNativeQuery(queryBuilder.toString());
 		query.setParameter("duracion", duracionFormateada);
 		query.setParameter("idCurso", idCurso);
-
+		
+		// Se filtra espacios físicos si el curso tiene grupos asociados
+		if (!listaAgrupadoresCurso.isEmpty()) {
+			query.setParameter("listaAgrupadoresCurso", listaAgrupadoresCurso.stream()
+					.map(AgrupadorEspacioFisico::getIdAgrupadorEspacioFisico).collect(Collectors.toList()));
+		}
+		
+		// Se establecen parametros según el filtro 
 		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum())
 				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum().isEmpty()) {
 			query.setParameter("listaDiaSemanaEnum", filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum()
@@ -457,6 +481,11 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		}
 		if (Objects.nonNull(listaHoraInicio) && !listaHoraInicio.isEmpty()) {
 			query.setParameter("listaHoraInicio", listaHoraInicio);
+		}
+		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaUbicaciones())
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaUbicaciones().isEmpty()) {
+			query.setParameter("listaUbicaciones",
+					filtroFranjaHorariaDisponibleCursoDTO.getListaUbicaciones());
 		}
 		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico())
 				&& !filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico().isEmpty()) {
@@ -469,8 +498,8 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 					filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico());
 		}
 		if (Objects.nonNull(filtroFranjaHorariaDisponibleCursoDTO.getSalon())
-				&& !filtroFranjaHorariaDisponibleCursoDTO.getSalon().isEmpty()) {
-			query.setParameter("salon", "%"+filtroFranjaHorariaDisponibleCursoDTO.getSalon()+"%");
+				&& !filtroFranjaHorariaDisponibleCursoDTO.getSalon().isEmpty()) {		
+			query.setParameter("salon", "%"+filtroFranjaHorariaDisponibleCursoDTO.getSalon().replaceAll("\\s+", " ").trim()+"%");
 		}
 
 		List<FranjaHorariaCursoDTO> franjasDisponibles = new ArrayList<>();

@@ -27,6 +27,8 @@ public class CursoPlanificacionOutDTO implements Serializable {
 	private Integer horasSemana;
 
 	private Integer cupo;
+	
+	private List<Long> lstIdAgrupadorEspacioFisico;
 
 	public CursoPlanificacionOutDTO() {
 	}
@@ -125,5 +127,13 @@ public class CursoPlanificacionOutDTO implements Serializable {
 
 	public void setCupo(Integer cupo) {
 		this.cupo = cupo;
+	}
+
+	public List<Long> getLstIdAgrupadorEspacioFisico() {
+		return lstIdAgrupadorEspacioFisico;
+	}
+
+	public void setLstIdAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
+		this.lstIdAgrupadorEspacioFisico = lstIdAgrupadorEspacioFisico;
 	}
 }

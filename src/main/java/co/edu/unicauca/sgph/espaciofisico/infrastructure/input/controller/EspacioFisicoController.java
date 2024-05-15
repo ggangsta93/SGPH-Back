@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarTipoEspacioFisicoCUIntPort;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
@@ -26,6 +28,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.TipoE
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.AgrupadorEspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.EspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.TipoEspacioFisicoRestMapper;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.TipoEspacioFisicoEntity;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
@@ -79,18 +82,19 @@ public class EspacioFisicoController {
 	}
 
 	/**
-	 * Método encargado de consultar los tipos de espacios físicos por facultad<br>
+	 * Método encargado de consultar los tipos de espacios físicos por
+	 * ubicaciones<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param lstIdFacultad
+	 * @param lstUbicaciones
 	 * @return
 	 */
-	@GetMapping("/consultarTiposEspaciosFisicosPorIdFacultad")
-	public List<TipoEspacioFisicoOutDTO> consultarTiposEspaciosFisicosPorIdFacultad(
-			@RequestParam List<Long> lstIdFacultad) {
+	@GetMapping("/consultarTiposEspaciosFisicosPorUbicaciones")
+	public List<TipoEspacioFisicoOutDTO> consultarTiposEspaciosFisicosPorUbicaciones(
+			@RequestParam List<String> lstUbicaciones) {
 		return this.tipoEspacioFisicoRestMapper.toLstTipoEspacioFisicoOutDTO(
-				this.gestionarTipoEspacioFisicoCUIntPort.consultarTiposEspaciosFisicosPorIdFacultad(lstIdFacultad));
+				this.gestionarTipoEspacioFisicoCUIntPort.consultarTiposEspaciosFisicosPorUbicaciones(lstUbicaciones));
 	}
 
 	/**
@@ -194,5 +198,22 @@ public class EspacioFisicoController {
 		return this.agrupadorEspacioFisicoRestMapper
 				.toLstAgrupadorEspacioFisicoOutDTO(this.gestionarAgrupadorEspacioFisicoCUIntPort
 						.consultarAgrupadoresEspaciosFisicosPorIdFacultad(idFacultad));
+	}
+
+	/**
+	 * Método encargado de consultar los agrupadores de espacios físicos asociados a
+	 * un curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idCurso
+	 * @return Lista de instancias de AgrupadorEspacioFisico
+	 */
+	@GetMapping("/consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso")
+	public List<AgrupadorEspacioFisicoOutDTO> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(
+			@RequestParam Long idCurso) {
+		return this.agrupadorEspacioFisicoRestMapper
+				.toLstAgrupadorEspacioFisicoOutDTO(this.gestionarAgrupadorEspacioFisicoCUIntPort
+						.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso));
 	}
 }

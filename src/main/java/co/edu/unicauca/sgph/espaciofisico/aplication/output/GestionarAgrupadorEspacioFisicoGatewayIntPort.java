@@ -29,6 +29,16 @@ public interface GestionarAgrupadorEspacioFisicoGatewayIntPort {
 	 * @param idFacultad
 	 * @return Lista de instancias de AgrupadorEspacioFisico
 	 */
-	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosPorIdFacultad(
-			@RequestParam List<Long> idFacultad);
+	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosPorIdFacultad(List<Long> idFacultad);
+
+	/**
+	 * Método encargado de consultar los agrupadores de espacios físicos asociados a
+	 * un curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idCurso
+	 * @return Lista de instancias de AgrupadorEspacioFisico
+	 */
+	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(Long idCurso);
 }

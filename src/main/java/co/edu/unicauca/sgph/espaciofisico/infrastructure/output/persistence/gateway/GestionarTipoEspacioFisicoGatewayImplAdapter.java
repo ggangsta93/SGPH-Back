@@ -1,5 +1,6 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.gateway;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,30 +28,26 @@ public class GestionarTipoEspacioFisicoGatewayImplAdapter implements GestionarTi
 	private TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt;
 	private ModelMapper modelMapper;
 
-	public GestionarTipoEspacioFisicoGatewayImplAdapter(TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt, ModelMapper modelMapper) {
+	public GestionarTipoEspacioFisicoGatewayImplAdapter(TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt,
+			ModelMapper modelMapper) {
 		this.tipoEspacioFisicoRepositoryInt = tipoEspacioFisicoRepositoryInt;
 		this.modelMapper = modelMapper;
 	}
 
-	/** 
-	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarTipoEspacioFisicoGatewayIntPort#consultarTiposEspaciosFisicosPorIdFacultad(java.util.List)
+	/**
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarTipoEspacioFisicoGatewayIntPort#consultarTiposEspaciosFisicosPorUbicaciones(java.util.List)
 	 */
 	@Override
-	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorIdFacultad(List<Long> lstIdFacultad) {
-
+	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorUbicaciones(List<String> lstUbicaciones) {
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("SELECT DISTINCT tipoEspacioFisico FROM TipoEspacioFisicoEntity tipoEspacioFisico WHERE 1=1 ");
+		queryBuilder.append(
+				"SELECT DISTINCT tipoEspacioFisico FROM EspacioFisicoEntity espacioFisico JOIN espacioFisico.tipoEspacioFisico tipoEspacioFisico WHERE 1=1 ");
 
 		Map<String, Object> parametros = new HashMap<>();
 
-		if (Objects.nonNull(lstIdFacultad) && !lstIdFacultad.isEmpty()) {
-			queryBuilder.append(" AND tipoEspacioFisico IN ( ");
-			queryBuilder.append(" SELECT DISTINCT espacioFisico.tipoEspacioFisico ");
-			queryBuilder.append(" FROM EspacioFisicoEntity espacioFisico ");
-			queryBuilder.append(" JOIN espacioFisico.edificio edi ");
-			queryBuilder.append(" JOIN edi.facultad fac ");
-			queryBuilder.append(" WHERE fac.idFacultad IN :lstIdFacultad) ");
-			parametros.put("lstIdFacultad", lstIdFacultad);
+		if (Objects.nonNull(lstUbicaciones) && !lstUbicaciones.isEmpty()) {
+			queryBuilder.append(" AND espacioFisico.ubicacion IN (:lstUbicaciones) ");
+			parametros.put("lstUbicaciones", lstUbicaciones);
 		}
 
 		TypedQuery<TipoEspacioFisicoEntity> typedQuery = entityManager.createQuery(queryBuilder.toString(),

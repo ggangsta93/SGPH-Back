@@ -16,6 +16,8 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 	private String horaFin;
 
 	private Long duracion;
+	
+	private List<String> listaUbicaciones;
 
 	private List<DiaSemanaEnum> listaDiaSemanaEnum;
 
@@ -87,5 +89,13 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 
 	public void setSalon(String salon) {
 		this.salon = salon;
+	}
+
+	public List<String> getListaUbicaciones() {
+		return listaUbicaciones;
+	}
+
+	public void setListaUbicaciones(List<String> listaUbicaciones) {
+		this.listaUbicaciones = listaUbicaciones;
 	}
 }

@@ -77,7 +77,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		for (CursoPlanificacionOutDTO cursoDTO : listaCursosDTO) {
 			cursoDTO.setDocentes(
 					this.gestionarDocenteGatewayIntPort.consultarNombresDocentesPorIdCurso(cursoDTO.getIdCurso()));
-			cursoDTO.setHorarios(gestionarEspacioFisicoGatewayIntPort.consultarEspacioFisicoHorarioPorIdCurso(cursoDTO.getIdCurso()));
+			cursoDTO.setHorarios(gestionarEspacioFisicoGatewayIntPort.consultarEspacioFisicoHorarioPorIdCurso(cursoDTO.getIdCurso()));		
 		}
 		return listaCursosDTO;
 	}
@@ -248,6 +248,23 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	@Override
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariasDisponiblesPorCurso(
 			FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
+		
+		// Tiene propiedades: 	DiaSemanaEnum dia, horaInicio, horaFin;
+		/*listaFranjaEvaluarDTO
+		
+		for(Long idEspacioFisico: listaIdEspacioFisicoDFiltrados) {
+			
+			for (FranjaEvaluarDTO franjaEvaluarDTO : listaFranjaEvaluarDTO) {				
+				if(!existeCruceDocentes(idCurso, listaFranjaEvaluarDTO) 
+						&& !existeCruceFranja(idCurso, idEspacioFisico, FranjaEvaluarDTO) 
+						&& existeCruceCursosSemestre(idCurso, FranjaEvaluarDTO)) {
+					
+				}		
+			}
+			
+		}
+		*/
+		
 		return this.gestionarPlanificacionManualGatewayIntPort
 				.consultarFranjasHorariasDisponiblesPorCurso(filtroFranjaHorariaDisponibleCursoDTO);
 	}

@@ -38,4 +38,22 @@ public interface AgrupadorEspacioFisicoRepositoryInt extends JpaRepository<Agrup
 			+ " FROM AgrupadorEspacioFisicoEntity agrupador "
 			+ " WHERE agrupador.facultad.idFacultad IN (:idFacultad)")
 	public List<AgrupadorEspacioFisicoEntity> consultarAgrupadoresEspaciosFisicosPorIdFacultad(List<Long> idFacultad);
+	
+	
+
+	/**
+	 * Método encargado de consultar los agrupadores de espacios físicos asociados a
+	 * un curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idCurso
+	 * @return Lista de instancias de AgrupadorEspacioFisico
+	 */
+	@Query("SELECT agrupadores" 
+			+ " FROM CursoEntity curso "
+			+ " JOIN curso.asignatura asignatura"
+			+ " JOIN asignatura.agrupadores agrupadores"
+			+ " WHERE curso.idCurso =:idCurso")
+	public List<AgrupadorEspacioFisicoEntity> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(Long idCurso);	
 }

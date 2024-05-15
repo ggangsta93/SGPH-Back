@@ -37,4 +37,13 @@ public class GestionarAgrupadorEspacioFisicoCUAdapter implements GestionarAgrupa
 		return this.gestionarAgrupadorEspacioFisicoGatewayIntPort
 				.consultarAgrupadoresEspaciosFisicosPorIdFacultad(idFacultad);
 	}
+
+	/**
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort#consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(java.lang.Long)
+	 */
+	@Override
+	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(Long idCurso) {
+		return this.gestionarAgrupadorEspacioFisicoGatewayIntPort
+				.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso);
+	}
 }

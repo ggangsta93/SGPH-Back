@@ -53,4 +53,15 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 		}.getType());
 	}
 
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort#consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(java.lang.Long)
+	 */
+	@Override
+	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(Long idCurso) {
+		List<AgrupadorEspacioFisicoEntity> lstAgrupadorEspacioFisicoEntity = this.agrupadorEspacioFisicoRepositoryInt
+				.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso);
+		return this.modelMapper.map(lstAgrupadorEspacioFisicoEntity, new TypeToken<List<AgrupadorEspacioFisico>>() {
+		}.getType());
+	}
+
 }
