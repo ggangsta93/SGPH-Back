@@ -290,7 +290,8 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		queryBuilder.append("WITH FranjasPosiblesDocentes AS ( ")
 				.append("    WITH FranjasPosibles AS ( ")
 				.append("        SELECT dia, hora_inicio, ADDTIME(hora_inicio, :duracion) AS hora_fin ")
-				.append("        FROM ( ").append("            SELECT 'LUNES' AS dia, TIME('07:00:00') AS hora_inicio ")
+				.append("        FROM ( ")
+				.append("            SELECT 'LUNES' AS dia, TIME('07:00:00') AS hora_inicio ")
 				.append("            UNION SELECT 'LUNES' AS dia, TIME('08:00:00') AS hora_inicio ")
 				.append("            UNION SELECT 'LUNES' AS dia, TIME('09:00:00') AS hora_inicio ")
 				.append("            UNION SELECT 'LUNES' AS dia, TIME('10:00:00') AS hora_inicio ")
@@ -583,6 +584,47 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		
 		return this.planificacionManualRepositoryInt.consultarFranjasEspacioFisicoPorIdEspacioFisico(idEspacioFisico,
 				Objects.isNull(periodoAcademicoVigente) ? null : periodoAcademicoVigente.getIdPeriodoAcademico());
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarLstIdEspacioFisicoDisponiblesPorCursoYRestricciones(java.lang.Long, java.util.List, java.util.List, java.lang.String)
+	 */
+	@Override
+	public List<Long> consultarLstIdEspacioFisicoDisponiblesPorCursoYRestricciones(Long idCurso,
+			List<String> listaUbicaciones, List<Long> listaIdAgrupadorEspacioFisico, String salon) {
+
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append("SELECT DISTINCT espacioFisico.idEspacioFisico ");
+		queryBuilder.append("FROM EspacioFisicoEntity espacioFisico ");
+		queryBuilder.append("LEFT JOIN espacioFisico.agrupadores agrupadores ");
+		queryBuilder.append("WHERE 1=1 ");
+
+		Map<String, Object> parametros = new HashMap<>();
+
+		if (Objects.nonNull(listaUbicaciones) && !listaUbicaciones.isEmpty()) {
+			queryBuilder.append("AND espacioFisico.ubicacion IN (:listaUbicaciones) ");
+			parametros.put("listaUbicaciones", listaUbicaciones);
+		}
+
+		if (Objects.nonNull(listaIdAgrupadorEspacioFisico) && !listaIdAgrupadorEspacioFisico.isEmpty()) {
+			queryBuilder.append("AND agrupadores.idAgrupadorEspacioFisico IN (:listaIdAgrupadorEspacioFisico) ");
+			parametros.put("listaIdAgrupadorEspacioFisico", listaIdAgrupadorEspacioFisico);
+		}
+
+		if (Objects.nonNull(salon) && !salon.isEmpty()) {
+			queryBuilder.append("AND espacioFisico.salon LIKE :salon ");
+			parametros.put("salon", "%"+salon.replaceAll("\\s+", " ").trim()+"%");
+		}
+
+		// Crea la consulta
+		TypedQuery<Long> typedQuery = entityManager.createQuery(queryBuilder.toString(), Long.class);
+
+		// Asigna los parámetros a la consulta
+		for (Map.Entry<String, Object> entry : parametros.entrySet()) {
+			typedQuery.setParameter(entry.getKey(), entry.getValue());
+		}
+
+		return typedQuery.getResultList();
 	}
 
 }

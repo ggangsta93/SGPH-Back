@@ -136,7 +136,7 @@ public class PlanificacionManualController {
 	 */
 	@PostMapping("/consultarFranjasHorariasDisponiblesPorCurso")
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariasDisponiblesPorCurso(
-			@RequestBody FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
+			@RequestBody FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {	
 		return this.gestionarPlanificacionManualCUIntPort
 				.consultarFranjasHorariasDisponiblesPorCurso(filtroFranjaHorariaDisponibleCursoDTO);
 	}

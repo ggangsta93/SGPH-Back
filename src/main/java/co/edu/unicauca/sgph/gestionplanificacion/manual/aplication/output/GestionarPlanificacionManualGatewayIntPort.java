@@ -40,7 +40,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @return
 	 */
 	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma);
-	
+
 	/**
 	 * Método encargado de obtener las franjas disponibles de un curso dado un
 	 * conjunto de criterios de busqueda; este método considera los horarios de los
@@ -53,7 +53,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 */
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariasDisponiblesPorCurso(
 			FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO);
-	
+
 	/**
 	 * Método encargado de validar si existe cruces con horarios de docentes de un
 	 * curso dado una franja horaria. Si no retorna resultados es porque no hay
@@ -69,7 +69,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 */
 	public List<Object[]> consultarCruceHorarioDocente(Long idCurso, DiaSemanaEnum dia, LocalTime horaInicio,
 			LocalTime horaFin);
-	
+
 	/**
 	 * Método encargado de validar si existe cruces en espacios físicos dado una
 	 * franja horaria. Si no retorna resultados es porque no hay cruces, caso
@@ -83,9 +83,9 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @param horaFin
 	 * @return
 	 */
-	public List<Horario> consultarCruceHorarioEspacioFisico(List<Long> lstIdEspacioFisico, DiaSemanaEnum dia, LocalTime horaInicio,
-			LocalTime horaFin);
-	
+	public List<Horario> consultarCruceHorarioEspacioFisico(List<Long> lstIdEspacioFisico, DiaSemanaEnum dia,
+			LocalTime horaInicio, LocalTime horaFin);
+
 	/**
 	 * Método encargado de validar si existe cruces con el horario del docente dado
 	 * una franja horaria y el identificador de la persona
@@ -98,9 +98,9 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @param horaFin
 	 * @return
 	 */
-	public List<Object[]> consultarCruceHorarioDocentePorIdPersona(Long idPersona, DiaSemanaEnum dia, LocalTime horaInicio,
-			LocalTime horaFin);
-	
+	public List<Object[]> consultarCruceHorarioDocentePorIdPersona(Long idPersona, DiaSemanaEnum dia,
+			LocalTime horaInicio, LocalTime horaFin);
+
 	/**
 	 * Método encargado de obtener los nombres completos de cada espacio físico.
 	 * Ejemplo del formato: 'Salón 204-Edificio nuevo'
@@ -110,9 +110,18 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @return
 	 */
 	public List<FormatoPresentacionFranjaHorariaCursoDTO> consultarFormatoPresentacionFranjaHorariaCurso();
-	
+
+	/**
+	 * Método encargado de obtener las franjas horarias de un curso dado el
+	 * identificador del curso
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idCurso
+	 * @return
+	 */
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso);
-	
+
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un docente
 	 * 
@@ -122,7 +131,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @return
 	 */
 	public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona);
-	
+
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un espacio físico
 	 *
@@ -132,4 +141,16 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @return
 	 */
 	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico);
+
+	/**
+	 * Método encargado de consultar los espacios físicos adecuados para un
+	 * determinado curso. Se filtran los espacios físicos por: Ubicación,
+	 * agrupadores o salón <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return Nombres de los edificios
+	 */
+	public List<Long> consultarLstIdEspacioFisicoDisponiblesPorCursoYRestricciones(Long idCurso,
+			List<String> listaUbicaciones, List<Long> listaIdAgrupadorEspacioFisico, String salon);
 }

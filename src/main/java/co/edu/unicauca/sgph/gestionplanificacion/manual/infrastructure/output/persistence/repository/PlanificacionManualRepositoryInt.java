@@ -131,5 +131,4 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 				+ " AND (cur.periodoAcademico.idPeriodoAcademico =:idPeriodoAcademico) "
 				+ " ORDER BY hor.dia, hor.horaInicio ")
 		public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico, Long idPeriodoAcademico);
-		
 }
