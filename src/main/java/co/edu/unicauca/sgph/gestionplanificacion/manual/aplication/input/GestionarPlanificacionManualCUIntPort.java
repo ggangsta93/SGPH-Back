@@ -87,6 +87,15 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 */
 	public List<FormatoPresentacionFranjaHorariaCursoDTO> consultarFormatoPresentacionFranjaHorariaCurso();
 
+	/**
+	 * Método encargado de obtener las franjas horarias de un curso dado el
+	 * identificador del curso
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idCurso
+	 * @return
+	 */
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso);
 
 	/**
