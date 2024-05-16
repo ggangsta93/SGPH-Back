@@ -12,7 +12,7 @@ import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.HorarioOutD
 @Mapper(componentModel = "spring")
 public interface HorarioRestMapper {
 
-	@Mapping(target = "idCurso", expression = "java(horario.getCurso().getIdCurso())")
+	@Mapping(target = "idCurso", source = "horario.curso.idCurso")
 	HorarioOutDTO toHorarioOutDTO(Horario horario);
 
 	@Mapping(target = "curso", expression = "java(new Curso(horarioInDTO.getIdCurso()))")

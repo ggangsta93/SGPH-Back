@@ -2,6 +2,8 @@ package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.rep
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -55,5 +57,7 @@ public interface AgrupadorEspacioFisicoRepositoryInt extends JpaRepository<Agrup
 			+ " JOIN curso.asignatura asignatura"
 			+ " JOIN asignatura.agrupadores agrupadores"
 			+ " WHERE curso.idCurso =:idCurso")
-	public List<AgrupadorEspacioFisicoEntity> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(Long idCurso);	
+	public List<AgrupadorEspacioFisicoEntity> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(Long idCurso);
+
+	Page<AgrupadorEspacioFisicoEntity> findByFacultadIdFacultadIn(List<Long> idFacultad, Pageable page);
 }

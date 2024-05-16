@@ -12,12 +12,12 @@ import co.edu.unicauca.sgph.programa.infrastructure.input.DTOResponse.ProgramaOu
 @Mapper(componentModel = "spring")
 public interface ProgramaRestMapper {
 
-	@Mapping(target = "idFacultad", expression = "java(programa.getFacultad().getIdFacultad())")
+	@Mapping(target = "idFacultad", source = "programa.facultad.idFacultad")
 	ProgramaOutDTO toProgramaOutDTO(Programa programa);
 
-	@Mapping(target = "facultad", expression = "java(new Facultad(ProgramaInDTO.getIdFacultad()))")
+	@Mapping(target = "facultad", expression = "java(new Facultad(programaInDTO.getIdFacultad()))")
 	@Mapping(target = "asignaturas", ignore = true)
-	Programa toPrograma(ProgramaInDTO ProgramaInDTO);
+	Programa toPrograma(ProgramaInDTO programaInDTO);
 
 	List<ProgramaOutDTO> toLstProgramaOutDTO(List<Programa> lstPrograma);
 }

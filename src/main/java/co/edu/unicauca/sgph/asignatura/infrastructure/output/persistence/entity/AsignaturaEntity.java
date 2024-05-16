@@ -37,7 +37,7 @@ public class AsignaturaEntity {
 	private String codigoAsignatura;
 
 	@Column(name = "OID")
-	private String OID;
+	private String oid;
 
 	@Column(name = "SEMESTRE")
 	private Integer semestre;
@@ -58,6 +58,9 @@ public class AsignaturaEntity {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "ASIGNATURA_AGRUPADOR_ESP_FIS", joinColumns = @JoinColumn(name = "ID_ASIGNATURA"), inverseJoinColumns = @JoinColumn(name = "ID_AGRUPADOR_ESPACIO_FISICO"))
 	private List<AgrupadorEspacioFisicoEntity> agrupadores;
+
+	@Column(name = "ESTADO")
+	private EstadoAsignaturaEnum estado;
 
 	public AsignaturaEntity() {
 		this.cursos=new ArrayList<>();
@@ -99,12 +102,12 @@ public class AsignaturaEntity {
 		this.codigoAsignatura = codigoAsignatura;
 	}
 
-	public String getOID() {
-		return OID;
+	public String getOid() {
+		return oid;
 	}
 
-	public void setOID(String oID) {
-		OID = oID;
+	public void setOid(String oid) {
+		oid = oid;
 	}
 
 	public Integer getSemestre() {
@@ -153,5 +156,13 @@ public class AsignaturaEntity {
 
 	public void setAgrupadores(List<AgrupadorEspacioFisicoEntity> agrupadores) {
 		this.agrupadores = agrupadores;
+	}
+
+	public EstadoAsignaturaEnum getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoAsignaturaEnum estado) {
+		this.estado = estado;
 	}
 }

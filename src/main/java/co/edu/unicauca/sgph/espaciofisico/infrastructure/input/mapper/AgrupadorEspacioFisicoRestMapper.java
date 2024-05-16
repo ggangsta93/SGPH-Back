@@ -12,7 +12,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.Agrup
 @Mapper(componentModel = "spring")
 public interface AgrupadorEspacioFisicoRestMapper {
 
-	@Mapping(target = "idFacultad", expression = "java(agrupadorEspacioFisico.getFacultad().getIdFacultad())")
+	@Mapping(target = "idFacultad", source = "agrupadorEspacioFisico.facultad.idFacultad")
 	AgrupadorEspacioFisicoOutDTO toAgrupadorEspacioFisicoOutDTO(AgrupadorEspacioFisico agrupadorEspacioFisico);
 
 	@Mapping(target = "facultad", expression = "java(new Facultad(agrupadorEspacioFisicoInDTO.getIdFacultad()))")

@@ -86,4 +86,8 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	 * @return Nombres de los edificios
 	 */
 	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion);
+
+	List<EspacioFisicoDTO> obtenerEspaciosFisicosPorAgrupadorId(Long idAgrupador);
+
+	List<EspacioFisicoDTO> obtenerEspaciosFisicosSinAsignarAAgrupadorId(Long idAgrupador);
 }

@@ -9,6 +9,10 @@ public class AgrupadorEspacioFisicoOutDTO {
 	private String observacion;
 
 	private Long idFacultad;
+	private String nombreFacultad;
+
+	public AgrupadorEspacioFisicoOutDTO() {
+	}
 
 	public AgrupadorEspacioFisicoOutDTO(Long idAgrupadorEspacioFisico) {
 		this.idAgrupadorEspacioFisico = idAgrupadorEspacioFisico;
@@ -44,5 +48,13 @@ public class AgrupadorEspacioFisicoOutDTO {
 
 	public void setIdFacultad(Long idFacultad) {
 		this.idFacultad = idFacultad;
+	}
+
+	public String getNombreFacultad() {
+		return nombreFacultad;
+	}
+
+	public void setNombreFacultad(String nombreFacultad) {
+		this.nombreFacultad = nombreFacultad;
 	}
 }

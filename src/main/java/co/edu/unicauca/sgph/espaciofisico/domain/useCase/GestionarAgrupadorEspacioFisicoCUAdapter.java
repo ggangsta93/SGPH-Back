@@ -6,6 +6,9 @@ import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarAgrupadorEsp
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.AgrupadorEspacioFisicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
+import org.springframework.data.domain.Page;
 
 public class GestionarAgrupadorEspacioFisicoCUAdapter implements GestionarAgrupadorEspacioFisicoCUIntPort {
 
@@ -45,5 +48,15 @@ public class GestionarAgrupadorEspacioFisicoCUAdapter implements GestionarAgrupa
 	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(Long idCurso) {
 		return this.gestionarAgrupadorEspacioFisicoGatewayIntPort
 				.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso);
+	}
+
+	@Override
+	public Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(FiltroGrupoDTO filtro) {
+		return this.gestionarAgrupadorEspacioFisicoGatewayIntPort.filtrarGrupos(filtro);
+	}
+
+	@Override
+	public AgrupadorEspacioFisicoOutDTO guardarGrupo(AgrupadorEspacioFisicoOutDTO agrupador) {
+		return this.gestionarAgrupadorEspacioFisicoGatewayIntPort.guardarGrupo(agrupador);
 	}
 }

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -236,5 +238,30 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 			return new ArrayList<>();
 		}
 		
+	}
+
+	@Override
+	public List<EspacioFisicoDTO> obtenerEspaciosFisicosPorAgrupadorId(Long idAgrupador) {
+		List<EspacioFisicoEntity> espaciosFisicos = this.espacioFisicoRepositoryInt.findAll();
+		List<EspacioFisicoEntity> espaciosFisicosAsignados = espaciosFisicos.stream()
+				.filter(espacio -> espacio.getAgrupadores().stream()
+						.anyMatch(agrupador -> agrupador.getIdAgrupadorEspacioFisico().equals(idAgrupador))).collect(Collectors.toList());
+	return espaciosFisicosAsignados.stream().map(this::mapEspacioFisico).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<EspacioFisicoDTO> obtenerEspaciosFisicosSinAsignarAAgrupadorId(Long idAgrupador) {
+		List<EspacioFisicoEntity> espaciosFisicos = this.espacioFisicoRepositoryInt.findAll();
+		List<EspacioFisicoEntity> espaciosFisicosSinAsignar = espaciosFisicos.stream()
+				.filter(espacio -> espacio.getAgrupadores().isEmpty())
+				.collect(Collectors.toList());
+		return espaciosFisicosSinAsignar.stream().map(this::mapEspacioFisico).collect(Collectors.toList());
+	}
+
+	private EspacioFisicoDTO mapEspacioFisico(EspacioFisicoEntity entidad) {
+		EspacioFisicoDTO dto = new EspacioFisicoDTO();
+		dto.setIdEspacioFisico(entidad.getIdEspacioFisico());
+		dto.setSalon(entidad.getSalon());
+		return dto;
 	}
 }

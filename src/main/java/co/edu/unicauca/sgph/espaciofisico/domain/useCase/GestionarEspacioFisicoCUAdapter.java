@@ -83,4 +83,14 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion) {
 		return this.gestionarEspacioFisicoGatewayIntPort.consultarEdificiosPorUbicacion(lstUbicacion);
 	}
+
+	@Override
+	public List<EspacioFisicoDTO> obtenerEspaciosFisicosPorAgrupadorId(Long idAgrupador) {
+		return this.gestionarEspacioFisicoGatewayIntPort.obtenerEspaciosFisicosPorAgrupadorId(idAgrupador);
+	}
+
+	@Override
+	public List<EspacioFisicoDTO> obtenerEspaciosFisicosSinAsignarAAgrupadorId(Long idAgrupador) {
+		return this.gestionarEspacioFisicoGatewayIntPort.obtenerEspaciosFisicosSinAsignarAAgrupadorId(idAgrupador);
+	}
 }

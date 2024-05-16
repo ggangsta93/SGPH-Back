@@ -3,6 +3,9 @@ package co.edu.unicauca.sgph.espaciofisico.aplication.input;
 import java.util.List;
 
 import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
+import org.springframework.data.domain.Page;
 
 public interface GestionarAgrupadorEspacioFisicoCUIntPort {
 
@@ -39,4 +42,8 @@ public interface GestionarAgrupadorEspacioFisicoCUIntPort {
 	 * @return Lista de instancias de AgrupadorEspacioFisico
 	 */
 	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(Long idCurso);
+
+	Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(FiltroGrupoDTO filtro);
+
+    AgrupadorEspacioFisicoOutDTO guardarGrupo(AgrupadorEspacioFisicoOutDTO agrupador);
 }
