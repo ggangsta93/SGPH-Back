@@ -4,10 +4,12 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -216,5 +218,21 @@ public class EspacioFisicoController {
 		return this.agrupadorEspacioFisicoRestMapper
 				.toLstAgrupadorEspacioFisicoOutDTO(this.gestionarAgrupadorEspacioFisicoCUIntPort
 						.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso));
+	}
+	@PostMapping("/filtrarGrupos")
+	public Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(@RequestBody FiltroGrupoDTO filtro) {
+		return this.gestionarAgrupadorEspacioFisicoCUIntPort.filtrarGrupos(filtro);
+	}
+	@PostMapping("/guardarGrupo")
+	public AgrupadorEspacioFisicoOutDTO guardarGrupo(@RequestBody AgrupadorEspacioFisicoOutDTO agrupador) {
+		return this.gestionarAgrupadorEspacioFisicoCUIntPort.guardarGrupo(agrupador);
+	}
+	@GetMapping("/obtenerEspaciosFisicosAsignadosAAgrupadorId/{idAgrupador}")
+	public List<EspacioFisicoDTO> obtenerEspaciosFisicosPorAgrupadorId(@PathVariable Long idAgrupador) {
+		return this.gestionarEspacioFisicoCUIntPort.obtenerEspaciosFisicosPorAgrupadorId(idAgrupador);
+	}
+	@GetMapping("/obtenerEspaciosFisicosSinAsignarAAgrupadorId/{idAgrupador}")
+	public List<EspacioFisicoDTO> obtenerEspaciosFisicosSinAsignarAAgrupadorId(@PathVariable Long idAgrupador) {
+		return this.gestionarEspacioFisicoCUIntPort.obtenerEspaciosFisicosSinAsignarAAgrupadorId(idAgrupador);
 	}
 }
