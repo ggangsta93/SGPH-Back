@@ -1,9 +1,11 @@
 package co.edu.unicauca.sgph.gestionplanificacion.manual.domain.useCase;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -22,10 +24,10 @@ import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisi
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaBasicaDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
@@ -253,24 +255,72 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
 
 		// Se consultan las franjas horarias de los espacios físicos
-		List<Long> lstIdEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
-				.consultarLstIdEspacioFisicoDisponiblesPorCursoYRestricciones(null,
+		Map<Long, List<FranjaHorariaBasicaDTO>> mapaFranjasHorariasPorEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
+				.consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(null,
 						filtroFranjaHorariaDisponibleCursoDTO.getListaUbicaciones(),
 						filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico(),
-						filtroFranjaHorariaDisponibleCursoDTO.getSalon());
+						filtroFranjaHorariaDisponibleCursoDTO.getSalon())
+				.stream().collect(Collectors.groupingBy(FranjaHorariaBasicaDTO::getIdEspacioFisico));
 
+		// Se consultan las franjas horarias de cursos del semestre
+		List<FranjaHorariaBasicaDTO> lstFranjasHorariasCursosSemestre = this.gestionarPlanificacionManualGatewayIntPort
+				.consultarFranjasHorariasDeSemestrePorCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso());
+		
+		
+		for (FranjaHorariaBasicaDTO franjaHorariaBasicaDTO : lstFranjasHorariasCursosSemestre) {
+			System.out.println(franjaHorariaBasicaDTO.getDia() + " " + franjaHorariaBasicaDTO.getHoraInicio() + "-"
+					+ franjaHorariaBasicaDTO.getHoraFin());
+		}
+
+		// Se consultan las franjas horarias de los docentes asociados al curso
+		List<FranjaHorariaBasicaDTO> lstFranjasHorariasDocentes = this.gestionarPlanificacionManualGatewayIntPort
+				.consultarFranjasHorariasDeDocentesAsociadosACurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso());
+
+		// Se consultan las franjas candidatas por filtro
 		List<FranjaHorariaBasicaDTO> listaFranjasCandidatas = this
 				.consultarFranjasCandidatas(filtroFranjaHorariaDisponibleCursoDTO);
 
-		return this.gestionarPlanificacionManualGatewayIntPort
-				.consultarFranjasHorariasDisponiblesPorCurso(filtroFranjaHorariaDisponibleCursoDTO);
+		// Resultado de las franjas disponibles
+		List<FranjaHorariaCursoDTO> listaDeFranjasDisponibles = new ArrayList<>();
+
+		// Se recorre cada espacio físico para evaluar las franjas candidatas
+		for (Map.Entry<Long, List<FranjaHorariaBasicaDTO>> entry : mapaFranjasHorariasPorEspacioFisico.entrySet()) {
+			for (FranjaHorariaBasicaDTO franjaHorariaBasicaDTO : listaFranjasCandidatas) {
+				if (!seSuperponeConFranjasEspaciosFisicos(franjaHorariaBasicaDTO, entry.getValue())
+						&& !seSuperponeConFranjasDocentes(franjaHorariaBasicaDTO, lstFranjasHorariasDocentes)
+						/*&& !seSuperponeConFranjasCursosSemestre(franjaHorariaBasicaDTO,
+								lstFranjasHorariasCursosSemestre)*/) {
+					listaDeFranjasDisponibles
+							.add(new FranjaHorariaCursoDTO(entry.getKey(), franjaHorariaBasicaDTO.getDia(),
+									franjaHorariaBasicaDTO.getHoraInicio(), franjaHorariaBasicaDTO.getHoraFin()));
+				}
+			}
+		}
+
+		return listaDeFranjasDisponibles;
+		/*
+		 * return this.gestionarPlanificacionManualGatewayIntPort
+		 * .consultarFranjasHorariasDisponiblesPorCurso(
+		 * filtroFranjaHorariaDisponibleCursoDTO);
+		 */
 	}
 
 	private List<FranjaHorariaBasicaDTO> consultarFranjasCandidatas(
 			FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
-		// Frajas restrictivas
-		List<FranjaHorariaBasicaDTO> listaFranjasRestringidas = new ArrayList<>();
-		listaFranjasRestringidas.add(new FranjaHorariaBasicaDTO(LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		// Frajas restrictivas de LUNES a SABADO de 13:00 a 14:00
+		List<FranjaHorariaBasicaDTO> lstFranjasRestringidas = new ArrayList<>();
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.LUNES, LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.MARTES, LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.MIERCOLES, LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.JUEVES, LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.VIERNES, LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.SABADO, LocalTime.of(13, 0), LocalTime.of(14, 0)));
 
 		// Franjas candidas a evaluar
 		List<FranjaHorariaBasicaDTO> listaFranjasCandidatas = new ArrayList<>();
@@ -294,7 +344,8 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 						LocalTime horaFin = horaInicio.plusHours(duracionFranja);
 						if ((Objects.isNull(filtroFranjaHorariaDisponibleCursoDTO.getHoraInicio()) ? Boolean.TRUE
 								: horaInicio.toString().equals(filtroFranjaHorariaDisponibleCursoDTO.getHoraInicio()))
-								&& !seSuperponeConListaFranjas(horaInicio, horaFin, listaFranjasRestringidas)) {
+								&& !seSuperponeConListaFranjasRestringidas(dia, horaInicio, horaFin,
+										lstFranjasRestringidas)) {
 							listaFranjasCandidatas.add(new FranjaHorariaBasicaDTO(dia, horaInicio, horaFin));
 						}
 					}
@@ -304,11 +355,38 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		return listaFranjasCandidatas;
 	}
 
-	private boolean seSuperponeConListaFranjas(LocalTime horaInicio, LocalTime horaFin,
-			List<FranjaHorariaBasicaDTO> franjas) {
-		for (FranjaHorariaBasicaDTO franja : franjas) {
-			if (horaFin.toSecondOfDay() > franja.getHoraInicio().toSecondOfDay()
+	private boolean seSuperponeConListaFranjasRestringidas(DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin,
+			List<FranjaHorariaBasicaDTO> lstFranjasRestringidas) {
+		for (FranjaHorariaBasicaDTO franja : lstFranjasRestringidas) {
+			if (dia.equals(franja.getDia()) && horaFin.toSecondOfDay() > franja.getHoraInicio().toSecondOfDay()
 					&& horaInicio.toSecondOfDay() < franja.getHoraFin().toSecondOfDay()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean seSuperponeConFranjasCursosSemestre(FranjaHorariaBasicaDTO franjaCandidata,
+			List<FranjaHorariaBasicaDTO> lstFranjasDeCursosSemestre) {
+		return this.seSuperponeConListaFranjas(franjaCandidata, lstFranjasDeCursosSemestre);
+	}
+	
+	private boolean seSuperponeConFranjasEspaciosFisicos(FranjaHorariaBasicaDTO franjaCandidata,
+			List<FranjaHorariaBasicaDTO> lstFranjasDeEspacioFisico) {
+		return this.seSuperponeConListaFranjas(franjaCandidata, lstFranjasDeEspacioFisico);
+	}
+
+	private boolean seSuperponeConFranjasDocentes(FranjaHorariaBasicaDTO franjaCandidata,
+			List<FranjaHorariaBasicaDTO> lstFranjasDeDocentes) {
+		return this.seSuperponeConListaFranjas(franjaCandidata, lstFranjasDeDocentes);
+	}
+
+	private boolean seSuperponeConListaFranjas(FranjaHorariaBasicaDTO franjaCandidata,
+			List<FranjaHorariaBasicaDTO> lstFranjaHoraria) {
+		for (FranjaHorariaBasicaDTO franja : lstFranjaHoraria) {
+			if (franjaCandidata.getDia().equals(franja.getDia())
+					&& franjaCandidata.getHoraFin().toSecondOfDay() > franja.getHoraInicio().toSecondOfDay()
+					&& franjaCandidata.getHoraInicio().toSecondOfDay() < franja.getHoraFin().toSecondOfDay()) {
 				return true;
 			}
 		}

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
@@ -151,6 +152,15 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * 
 	 * @return Nombres de los edificios
 	 */
-	public List<Long> consultarLstIdEspacioFisicoDisponiblesPorCursoYRestricciones(Long idCurso,
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(Long idCurso,
 			List<String> listaUbicaciones, List<Long> listaIdAgrupadorEspacioFisico, String salon);
+	
+	
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeDocentesAsociadosACurso(Long idCurso);
+	
+	
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeSemestrePorCurso(Long idCurso);
+
+	
+	
 }

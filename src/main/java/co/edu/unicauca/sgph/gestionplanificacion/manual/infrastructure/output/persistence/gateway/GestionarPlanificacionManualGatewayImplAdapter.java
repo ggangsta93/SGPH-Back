@@ -28,6 +28,7 @@ import co.edu.unicauca.sgph.common.enums.EstadoCursoHorarioEnum;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
@@ -586,19 +587,24 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		return this.planificacionManualRepositoryInt.consultarFranjasEspacioFisicoPorIdEspacioFisico(idEspacioFisico,
 				Objects.isNull(periodoAcademicoVigente) ? null : periodoAcademicoVigente.getIdPeriodoAcademico());
 	}
-
-	/** 
-	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarLstIdEspacioFisicoDisponiblesPorCursoYRestricciones(java.lang.Long, java.util.List, java.util.List, java.lang.String)
-	 */
+	
+	
+	
 	@Override
-	public List<Long> consultarLstIdEspacioFisicoDisponiblesPorCursoYRestricciones(Long idCurso,
-			List<String> listaUbicaciones, List<Long> listaIdAgrupadorEspacioFisico, String salon) {
-
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(Long idCurso,
+			List<String> listaUbicaciones, List<Long> listaIdAgrupadorEspacioFisico, String salon) {		
+		
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append("SELECT DISTINCT espacioFisico.idEspacioFisico ");
-		queryBuilder.append("FROM EspacioFisicoEntity espacioFisico ");
-		queryBuilder.append("LEFT JOIN espacioFisico.agrupadores agrupadores ");
-		queryBuilder.append("WHERE 1=1 ");
+			
+		queryBuilder.append("SELECT NEW co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO( ");	
+		queryBuilder.append("horario.idHorario, espaciosFisicos.idEspacioFisico, horario.dia, horario.horaInicio, horario.horaFin ) ");
+		queryBuilder.append("FROM HorarioEntity horario ");
+		queryBuilder.append("JOIN horario.espaciosFisicos espaciosFisicos ");
+		queryBuilder.append("WHERE espaciosFisicos.idEspacioFisico IN  (");
+		queryBuilder.append("                                            SELECT DISTINCT espacioFisico.idEspacioFisico ");
+		queryBuilder.append("                                            FROM EspacioFisicoEntity espacioFisico ");
+		queryBuilder.append("                                            LEFT JOIN espacioFisico.agrupadores agrupadores ");
+		queryBuilder.append("                                            WHERE 1=1 ");
 
 		Map<String, Object> parametros = new HashMap<>();
 
@@ -616,9 +622,64 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 			queryBuilder.append("AND espacioFisico.salon LIKE :salon ");
 			parametros.put("salon", "%"+salon.replaceAll("\\s+", " ").trim()+"%");
 		}
+		queryBuilder.append(") ");
 
 		// Crea la consulta
-		TypedQuery<Long> typedQuery = entityManager.createQuery(queryBuilder.toString(), Long.class);
+		TypedQuery<FranjaHorariaBasicaDTO> typedQuery = entityManager.createQuery(queryBuilder.toString(), FranjaHorariaBasicaDTO.class);
+
+		// Asigna los parámetros a la consulta
+		for (Map.Entry<String, Object> entry : parametros.entrySet()) {
+			typedQuery.setParameter(entry.getKey(), entry.getValue());
+		}
+
+		return typedQuery.getResultList();
+	}
+
+	@Override
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeDocentesAsociadosACurso(Long idCurso) {
+		StringBuilder queryBuilder = new StringBuilder();
+				
+		queryBuilder.append("SELECT DISTINCT NEW co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO( ");	
+		queryBuilder.append("horarios.idHorario, horarios.dia, horarios.horaInicio, horarios.horaFin ) ");
+		queryBuilder.append("FROM CursoEntity curso ");		
+		queryBuilder.append("JOIN curso.docentes docentes ");
+		queryBuilder.append("JOIN curso.horarios horarios ");
+		queryBuilder.append("WHERE docentes.idPersona IN (");		
+		queryBuilder.append("SELECT docente.idPersona FROM DocenteEntity docente JOIN docente.cursos cursos WHERE cursos.idCurso = :idCurso ");
+		queryBuilder.append(") ");
+
+		Map<String, Object> parametros = new HashMap<>();
+
+		parametros.put("idCurso", idCurso);
+
+		// Crea la consulta
+		TypedQuery<FranjaHorariaBasicaDTO> typedQuery = entityManager.createQuery(queryBuilder.toString(), FranjaHorariaBasicaDTO.class);
+
+		// Asigna los parámetros a la consulta
+		for (Map.Entry<String, Object> entry : parametros.entrySet()) {
+			typedQuery.setParameter(entry.getKey(), entry.getValue());
+		}
+
+		return typedQuery.getResultList();
+	}
+
+	@Override
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeSemestrePorCurso(Long idCurso) {
+		StringBuilder queryBuilder = new StringBuilder();
+		
+		queryBuilder.append("SELECT DISTINCT NEW co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO( ");	
+		queryBuilder.append("horarios.idHorario, horarios.dia, horarios.horaInicio, horarios.horaFin, asignatura.idAsignatura) ");
+		queryBuilder.append("FROM CursoEntity curso ");
+		queryBuilder.append("JOIN curso.asignatura asignatura ");
+		queryBuilder.append("JOIN curso.horarios horarios ");
+		queryBuilder.append("WHERE asignatura.semestre = (SELECT asig.semestre FROM CursoEntity cur JOIN cur.asignatura asig WHERE cur.idCurso = :idCurso) ");
+		
+		Map<String, Object> parametros = new HashMap<>();
+
+		parametros.put("idCurso", idCurso);
+
+		// Crea la consulta
+		TypedQuery<FranjaHorariaBasicaDTO> typedQuery = entityManager.createQuery(queryBuilder.toString(), FranjaHorariaBasicaDTO.class);
 
 		// Asigna los parámetros a la consulta
 		for (Map.Entry<String, Object> entry : parametros.entrySet()) {

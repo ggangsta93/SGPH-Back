@@ -29,6 +29,13 @@ public class FranjaHorariaCursoDTO implements Serializable {
 		this.horaInicio = horaInicio.toString();
 		this.horaFin = horaFin.toString();
 	}
+	
+	public FranjaHorariaCursoDTO(Long idEspacioFisico, DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin) {
+		this.idEspacioFisico = idEspacioFisico;
+		this.dia = dia;
+		this.horaInicio = horaInicio.toString();
+		this.horaFin = horaFin.toString();
+	}
 
 	public Long getIdEspacioFisico() {
 		return idEspacioFisico;
