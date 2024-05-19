@@ -7,7 +7,7 @@ import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 public class FranjaHorariaBasicaDTO {
 
 	private Long idAsignatura;
-	
+
 	private Long idHorario;
 
 	private Long idEspacioFisico;
@@ -20,24 +20,20 @@ public class FranjaHorariaBasicaDTO {
 
 	public FranjaHorariaBasicaDTO() {
 	}
-	
-	
+
 	/**
-	 * Constructor de la clase para las franjas de cursos por semestre
+	 * Constructor de la clase para las franjas de los cursos del semestre
 	 * 
-	 * @param idAsignatura
-	 * @param idHorario
 	 * @param dia
 	 * @param horaInicio
 	 * @param horaFin
+	 * @param idAsignatura
 	 */
-	public FranjaHorariaBasicaDTO(Long idHorario, DiaSemanaEnum dia, LocalTime horaInicio,
-			LocalTime horaFin, Long idAsignatura) {
-		this.idAsignatura = idAsignatura;
-		this.idHorario = idHorario;
+	public FranjaHorariaBasicaDTO(DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin, Long idAsignatura) {
 		this.dia = dia;
 		this.horaInicio = horaInicio;
 		this.horaFin = horaFin;
+		this.idAsignatura = idAsignatura;
 	}
 
 	/**
@@ -74,7 +70,9 @@ public class FranjaHorariaBasicaDTO {
 	}
 
 	/**
-	 * Constructor de la clase para las franjas restringidas
+	 * Constructor de la clase para crear las franjas restringidas
+	 * Constructor de la clase para consultar las franjas del curso
+	 * 
 	 * @param dia
 	 * @param horaInicio
 	 * @param horaFin

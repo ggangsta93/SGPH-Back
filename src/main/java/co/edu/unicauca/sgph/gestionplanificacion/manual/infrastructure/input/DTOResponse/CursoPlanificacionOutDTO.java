@@ -10,6 +10,8 @@ public class CursoPlanificacionOutDTO implements Serializable {
 
 	private Long idCurso;
 
+	private Long idAsignatura;
+
 	private String nombrePrograma;
 
 	private Integer semestre;
@@ -27,14 +29,14 @@ public class CursoPlanificacionOutDTO implements Serializable {
 	private Integer horasSemana;
 
 	private Integer cupo;
-	
+
 	private List<Long> lstIdAgrupadorEspacioFisico;
 
 	public CursoPlanificacionOutDTO() {
 	}
 
-	public CursoPlanificacionOutDTO(Long idCurso, String nombrePrograma, Integer semestre, String nombreAsignatura, String grupo,
-			Long horasAsignadas, Integer horasSemana, Integer cupo) {
+	public CursoPlanificacionOutDTO(Long idCurso, String nombrePrograma, Integer semestre, String nombreAsignatura,
+			String grupo, Long horasAsignadas, Integer horasSemana, Integer cupo, Long idAsignatura) {
 		this.idCurso = idCurso;
 		this.nombrePrograma = nombrePrograma;
 		this.semestre = semestre;
@@ -47,6 +49,7 @@ public class CursoPlanificacionOutDTO implements Serializable {
 		}
 		this.horasSemana = horasSemana;
 		this.cupo = cupo;
+		this.idAsignatura = idAsignatura;
 	}
 
 	public String getNombrePrograma() {
@@ -135,5 +138,13 @@ public class CursoPlanificacionOutDTO implements Serializable {
 
 	public void setLstIdAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
 		this.lstIdAgrupadorEspacioFisico = lstIdAgrupadorEspacioFisico;
+	}
+
+	public Long getIdAsignatura() {
+		return idAsignatura;
+	}
+
+	public void setIdAsignatura(Long idAsignatura) {
+		this.idAsignatura = idAsignatura;
 	}
 }

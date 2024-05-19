@@ -10,12 +10,11 @@ import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorar
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.InfoGeneralCursosPorProgramaDTO;
 import co.edu.unicauca.sgph.horario.domain.model.Horario;
-import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.FiltroFranjaHorariaDisponibleCursoDTO;
 
 public interface GestionarPlanificacionManualGatewayIntPort {
 
@@ -41,19 +40,6 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @return
 	 */
 	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma);
-
-	/**
-	 * Método encargado de obtener las franjas disponibles de un curso dado un
-	 * conjunto de criterios de busqueda; este método considera los horarios de los
-	 * docentes y espacios físicos.
-	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
-	 * @param filtroFranjaHorariaDisponibleCursoDTO
-	 * @return
-	 */
-	public List<FranjaHorariaCursoDTO> consultarFranjasHorariasDisponiblesPorCurso(
-			FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO);
 
 	/**
 	 * Método encargado de validar si existe cruces con horarios de docentes de un
@@ -144,23 +130,65 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico);
 
 	/**
-	 * Método encargado de consultar los espacios físicos adecuados para un
-	 * determinado curso. Se filtran los espacios físicos por: Ubicación,
-	 * agrupadores o salón <br>
+	 * Método encargado de consultar las franjas horarias de los espacios físicos.
+	 * EL usuario puede filtrar los espacios físicos por: Ubicación, tipo espacio
+	 * (Salón y/o Sala) físico, agrupadores o salón(Coincidencia por nombre) <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @return Nombres de los edificios
+	 * @param idCurso
+	 * @param listaUbicaciones
+	 * @param listaIdAgrupadorEspacioFisico
+	 * @param listaIdTipoEspacioFisico
+	 * @param salon
+	 * @return
 	 */
 	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(Long idCurso,
-			List<String> listaUbicaciones, List<Long> listaIdAgrupadorEspacioFisico, String salon);
-	
-	
-	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeDocentesAsociadosACurso(Long idCurso);
-	
-	
-	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeSemestrePorCurso(Long idCurso);
+			List<String> listaUbicaciones, List<Long> listaIdTipoEspacioFisico,
+			List<Long> listaIdAgrupadorEspacioFisico, String salon);
 
-	
-	
+	/**
+	 * Método encargado de consultar todas las franjas horarias del docente o
+	 * docentes que imparten el curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idCurso
+	 * @return
+	 */
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeDocentesAsociadosACurso(Long idCurso);
+
+	/**
+	 * Método encargado de consultar todas las franjas horarias de los cursos de un
+	 * semestre partiendo del curso que ingresa por parámetro <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idCurso
+	 * @param idAsignatura
+	 * @return
+	 */
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeSemestrePorCurso(Long idCurso, Long idAsignatura);
+
+	/**
+	 * Método encargado de consultar las franajas horarias del curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idCurso
+	 * @return
+	 */
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeCursoPorCurso(Long idCurso);
+
+	/**
+	 * Método encargado de consultar la asignatura a la que pertenece un curso, su
+	 * cupo y la cantidad de horas por semana<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idCurso
+	 * @return
+	 */
+	public Object consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(Long idCurso);
+
 }
