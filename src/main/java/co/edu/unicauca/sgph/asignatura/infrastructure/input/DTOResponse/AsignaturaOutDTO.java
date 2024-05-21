@@ -28,6 +28,7 @@ public class AsignaturaOutDTO {
 
 	private Boolean error;
 	private String mensaje;
+	private String estado;
 
 	public Long getIdAsignatura() {
 		return idAsignatura;
@@ -147,5 +148,13 @@ public class AsignaturaOutDTO {
 
 	public void setMensaje(String mensaje) {
 		this.mensaje = mensaje;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 }

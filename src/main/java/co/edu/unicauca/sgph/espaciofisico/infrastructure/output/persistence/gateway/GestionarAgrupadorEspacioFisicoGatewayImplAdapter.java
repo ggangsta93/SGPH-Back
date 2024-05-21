@@ -2,6 +2,7 @@ package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.gat
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,8 +14,10 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.facultad.domain.model.Facultad;
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
@@ -93,7 +96,6 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 		AgrupadorEspacioFisicoEntity entidad = this.agrupadorEspacioFisicoRepositoryInt.save(this.mapGrupoEntidad(agrupador));
 		return this.mapGrupo(entidad);
 	}
-
 	private AgrupadorEspacioFisicoEntity mapGrupoEntidad(AgrupadorEspacioFisicoOutDTO dto) {
 		AgrupadorEspacioFisicoEntity entidad = new AgrupadorEspacioFisicoEntity();
 		if (dto.getIdAgrupadorEspacioFisico() != null) {

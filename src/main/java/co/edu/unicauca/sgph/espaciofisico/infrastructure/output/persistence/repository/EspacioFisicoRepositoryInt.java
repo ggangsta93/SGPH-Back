@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
+import org.springframework.data.repository.query.Param;
 
 public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoEntity, Long> {
 	
@@ -76,4 +77,11 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	@Query("SELECT DISTINCT e.edificio FROM EspacioFisicoEntity e WHERE e.ubicacion IN (:lstUbicacion)")
 	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion);
 
+	@Query("SELECT e FROM EspacioFisicoEntity e WHERE " +
+			"(:salon IS NULL OR LOWER(e.salon) LIKE LOWER(CONCAT('%', :salon, '%'))) AND " +
+			"(:ubicacion IS NULL OR LOWER(e.ubicacion) LIKE LOWER(CONCAT('%', :ubicacion, '%'))) AND " +
+			"(:tipoEspacioFisico IS NULL OR LOWER(e.tipoEspacioFisico.tipo) LIKE LOWER(CONCAT('%', :tipoEspacioFisico, '%')))")
+	List<EspacioFisicoEntity> obtenerEspacioFisicoPorFiltro(@Param("salon") String salon,
+												 @Param("ubicacion") String ubicacion,
+												 @Param("tipoEspacioFisico") String tipoEspacioFisico);
 }
