@@ -9,6 +9,8 @@ public class FranjaHorariaDocenteDTO implements Serializable {
 
 	private static final long serialVersionUID = -7584575311009644688L;
 
+	private Long idHorario;
+	
 	private DiaSemanaEnum dia;
 
 	private LocalTime horaInicio;
@@ -30,6 +32,21 @@ public class FranjaHorariaDocenteDTO implements Serializable {
 		this.horaInicio = horaInicio;
 		this.horaFin = horaFin;
 		this.nombreCurso = nombreCurso;
+	}
+
+	/**
+	 * Constructor para obtener las franjas horarias
+	 * 
+	 * @param idHorario
+	 * @param dia
+	 * @param horaInicio
+	 * @param horaFin
+	 */
+	public FranjaHorariaDocenteDTO(Long idHorario, DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin) {
+		this.idHorario = idHorario;
+		this.dia = dia;
+		this.horaInicio = horaInicio;
+		this.horaFin = horaFin;
 	}
 
 	public DiaSemanaEnum getDia() {
@@ -62,5 +79,13 @@ public class FranjaHorariaDocenteDTO implements Serializable {
 
 	public void setNombreCurso(String nombreCurso) {
 		this.nombreCurso = nombreCurso;
+	}
+
+	public Long getIdHorario() {
+		return idHorario;
+	}
+
+	public void setIdHorario(Long idHorario) {
+		this.idHorario = idHorario;
 	}
 }

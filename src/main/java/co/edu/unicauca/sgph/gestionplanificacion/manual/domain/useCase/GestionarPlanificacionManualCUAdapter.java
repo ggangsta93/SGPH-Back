@@ -4,8 +4,12 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -22,10 +26,10 @@ import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisi
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaBasicaDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
@@ -51,6 +55,9 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	@Autowired
 	@Lazy
 	private GestionarPlanificacionManualCUAdapter gestionarPlanificacionManualCUAdapter;
+
+	@PersistenceContext
+	EntityManager entityManager;
 
 	public GestionarPlanificacionManualCUAdapter(
 			GestionarPlanificacionManualGatewayIntPort gestionarPlanificacionManualGatewayIntPort,
@@ -188,21 +195,37 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			throws RuntimeException {
 		Long idCurso = crearActualizarHorarioCursoInDTO.getIdCurso();
 
-		// Se consulta los horarios del curso
-		List<Horario> listaHorarioCurso = this.gestionarHorarioGatewayIntPort
-				.consultarHorarioPorCurso(new Curso(idCurso));
-		// Se excluyen aquellos cursos que tengan coincidencia con el idHorario
-		List<Horario> listaHorarioExcluir = listaHorarioCurso.stream()
-				.filter(horario -> crearActualizarHorarioCursoInDTO.getListaFranjaHorariaCursoAsociarInDTO().stream()
-						.anyMatch(fraHorCurso -> Objects.equals(fraHorCurso.getIdHorario(), horario.getIdHorario())))
-				.collect(Collectors.toList());
-		// Se elimina la diferencia de cursos listaHorarioCurso-listaHorarioExcluir
-		listaHorarioCurso.removeAll(listaHorarioExcluir);
-		List<Horario> listaHorarioEliminar = listaHorarioCurso;
+		// Se consulta información inicial: idAsignatura, cupo del curso, cantidad horas semana
+		Object[] infoCurso = (Object[]) this.gestionarPlanificacionManualGatewayIntPort
+				.consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(idCurso);
 
-		for (Horario horario : listaHorarioEliminar) {
-			this.gestionarHorarioGatewayIntPort.eliminarHorario(horario);
-		}
+		// Se valida la cantidad de horas de las franjas a actualizar
+		this.validarCantidadHorasPermitidasParaCurso(crearActualizarHorarioCursoInDTO, (Integer) infoCurso[2]);
+
+		// Se validan que las franjas a actualizar no se solapen entre elllas
+		this.validarSolapamientoEntreFranjasAActualizar(crearActualizarHorarioCursoInDTO);
+
+		// Se validan que las franjas a actualizar no se encuentren repetidas
+		this.validarFranjasHorariasAActualizarNoSeanRepetidas(crearActualizarHorarioCursoInDTO);
+		/*
+		 * Se elimina de la base de datos las franjas horarias del curso que no están en
+		 * las franjas a actualizar
+		 */
+		this.eliminarFranjasDelCurso(crearActualizarHorarioCursoInDTO);
+		/*
+		 * Se hace flush para reflejar los cambios cuando se invoca
+		 * consultarFranjasHorariasDeSemestrePorCurso
+		 */
+		entityManager.flush();
+		/*
+		 * Se validan que las franjas a actualizar no se solapen con las franjas de los
+		 * cursos del mismo semestre
+		 */
+		this.validarSolapamientoFranjasAActualizarConCursosDelMismoSemestre(crearActualizarHorarioCursoInDTO,
+				(Long) infoCurso[0]);
+
+		// TODO: Está pendiente validar el cupo del curso con la capacidad del espacio
+		// físico
 
 		// Se validan cruces
 		for (FranjaHorariaCursoAsociarInDTO franjaHorariaCursoAsociarInDTO : crearActualizarHorarioCursoInDTO
@@ -212,12 +235,8 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 				Long idEspacioFisico = franjaHorariaCursoAsociarInDTO.getIdEspacioFisico();
 
 				DiaSemanaEnum dia = franjaHorariaCursoAsociarInDTO.getDia();
-				LocalTime horaInicio = LocalTime.of(
-						Integer.parseInt(franjaHorariaCursoAsociarInDTO.getHoraInicio().split(":")[0]),
-						Integer.parseInt(franjaHorariaCursoAsociarInDTO.getHoraInicio().split(":")[1]));
-				LocalTime horaFin = LocalTime.of(
-						Integer.parseInt(franjaHorariaCursoAsociarInDTO.getHoraFin().split(":")[0]),
-						Integer.parseInt(franjaHorariaCursoAsociarInDTO.getHoraFin().split(":")[1]));
+				LocalTime horaInicio = this.convertirToLocalTime(franjaHorariaCursoAsociarInDTO.getHoraInicio());
+				LocalTime horaFin = this.convertirToLocalTime(franjaHorariaCursoAsociarInDTO.getHoraFin());
 
 				List<Horario> listaCruceHorarioEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
 						.consultarCruceHorarioEspacioFisico(Arrays.asList(idEspacioFisico), dia, horaInicio, horaFin);
@@ -239,10 +258,123 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 				horario.setHoraFin(horaFin);
 				horario.setCurso(new Curso(idCurso));
 				horario.setEspaciosFisicos(Arrays.asList(new EspacioFisico(idEspacioFisico)));
-				;
+
 				this.gestionarHorarioGatewayIntPort.guardarHorario(horario);
 			}
 		}
+	}
+
+	private LocalTime convertirToLocalTime(String hora) {
+		return LocalTime.of(Integer.parseInt(hora.split(":")[0]), Integer.parseInt(hora.split(":")[1]));
+	}
+
+	private void eliminarFranjasDelCurso(CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO) {
+		// Se consulta las franjas horarias del curso
+		List<Horario> listaFranjasHoriasActualDelCurso = this.gestionarHorarioGatewayIntPort
+				.consultarHorarioPorCurso(new Curso(crearActualizarHorarioCursoInDTO.getIdCurso()));
+		// Se filtran aquellas franjas que aún se mantienen
+		List<Horario> listaFranjasHorariasQueSeMantienen = listaFranjasHoriasActualDelCurso.stream()
+				.filter(horario -> crearActualizarHorarioCursoInDTO.getListaFranjaHorariaCursoAsociarInDTO().stream()
+						.anyMatch(fraHorCurso -> Objects.equals(fraHorCurso.getIdHorario(), horario.getIdHorario())))
+				.collect(Collectors.toList());
+		// Se eliminan las franjas horarias del curso que ya no se mantienen
+		listaFranjasHoriasActualDelCurso.removeAll(listaFranjasHorariasQueSeMantienen);
+		List<Horario> listaHorarioEliminar = listaFranjasHoriasActualDelCurso;
+
+		for (Horario horario : listaHorarioEliminar) {
+			this.gestionarHorarioGatewayIntPort.eliminarHorario(horario);
+		}
+	}
+
+	private void validarSolapamientoFranjasAActualizarConCursosDelMismoSemestre(
+			CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO, Long idAsignatura) {
+		// Se consultan las franjas horarias de cursos del semestre
+		List<FranjaHorariaBasicaDTO> lstFranjasHorariasCursosSemestre = this.gestionarPlanificacionManualGatewayIntPort
+				.consultarFranjasHorariasDeSemestrePorCurso(crearActualizarHorarioCursoInDTO.getIdCurso(),
+						idAsignatura);
+
+		List<String> franjasQueSolapan = new ArrayList<>();
+		for (FranjaHorariaCursoAsociarInDTO franjaActualizar : crearActualizarHorarioCursoInDTO
+				.getListaFranjaHorariaCursoAsociarInDTO()) {
+			FranjaHorariaBasicaDTO franjaHorariaBasicaDTO = new FranjaHorariaBasicaDTO(franjaActualizar.getDia(),
+					this.convertirToLocalTime(franjaActualizar.getHoraInicio()),
+					this.convertirToLocalTime(franjaActualizar.getHoraFin()));
+
+			if (this.seSuperponeConFranjasCursosSemestre(franjaHorariaBasicaDTO, lstFranjasHorariasCursosSemestre,
+					idAsignatura)) {
+				franjasQueSolapan.add(franjaHorariaBasicaDTO.getDia() + " " + franjaHorariaBasicaDTO.getHoraInicio()
+						+ "-" + franjaHorariaBasicaDTO.getHoraFin());
+			}
+
+		}
+
+		if (!franjasQueSolapan.isEmpty()) {
+			throw new RuntimeException("Las siguientes franjas solapan franjas de cursos del mismo semestre: "
+					+ String.join(", ", franjasQueSolapan));
+		}
+	}
+
+	private void validarFranjasHorariasAActualizarNoSeanRepetidas(
+			CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO) {
+		// Se validan que las franjas a actualizar no se repitan entre ellas
+		Map<String, List<FranjaHorariaCursoAsociarInDTO>> mapaFranjaHorariasAGrupadas = crearActualizarHorarioCursoInDTO
+				.getListaFranjaHorariaCursoAsociarInDTO().stream().collect(Collectors
+						.groupingBy(obj -> obj.getDia() + "-" + obj.getHoraInicio() + "-" + obj.getHoraFin()));
+
+		List<String> franjasRepetidas = new ArrayList<>();
+		for (Map.Entry<String, List<FranjaHorariaCursoAsociarInDTO>> entry : mapaFranjaHorariasAGrupadas.entrySet()) {
+			if (entry.getValue().size() > 1) {
+				franjasRepetidas.add(entry.getValue().get(0).getDia() + " " + entry.getValue().get(0).getHoraInicio()
+						+ "-" + entry.getValue().get(0).getHoraFin());
+			}
+		}
+
+		if (!franjasRepetidas.isEmpty()) {
+			throw new RuntimeException(
+					"Las siguientes franjas están repetidas: " + String.join(", ", franjasRepetidas));
+		}
+	}
+
+	private void validarSolapamientoEntreFranjasAActualizar(
+			CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO) {
+
+		List<FranjaHorariaBasicaDTO> listaFranjasAActualizar = new ArrayList<>();
+		for (FranjaHorariaCursoAsociarInDTO franjaActualizar : crearActualizarHorarioCursoInDTO
+				.getListaFranjaHorariaCursoAsociarInDTO()) {
+			listaFranjasAActualizar.add(new FranjaHorariaBasicaDTO(franjaActualizar.getDia(),
+					this.convertirToLocalTime(franjaActualizar.getHoraInicio()),
+					this.convertirToLocalTime(franjaActualizar.getHoraFin())));
+		}
+
+		for (FranjaHorariaBasicaDTO franjaActualizar : listaFranjasAActualizar) {
+
+			List<FranjaHorariaBasicaDTO> listaFranjasFiltradas = listaFranjasAActualizar.stream()
+					.filter(franja -> !(franja.getDia().equals(franjaActualizar.getDia())
+							&& franja.getHoraInicio().equals(franjaActualizar.getHoraInicio())
+							&& franja.getHoraFin().equals(franjaActualizar.getHoraFin())))
+					.collect(Collectors.toList());
+
+			if (this.seSuperponeConListaFranjas(franjaActualizar, listaFranjasFiltradas)) {
+				throw new RuntimeException("Las franjas a actualizar se están solapando");
+			}
+
+		}
+	}
+
+	private void validarCantidadHorasPermitidasParaCurso(
+			CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO, Integer horasSemana) {
+		int sumaHorasFranjasAActualizar = 0;
+		for (FranjaHorariaCursoAsociarInDTO franjaHorariaCursoAsociarInDTO : crearActualizarHorarioCursoInDTO
+				.getListaFranjaHorariaCursoAsociarInDTO()) {
+			sumaHorasFranjasAActualizar += Integer.parseInt(franjaHorariaCursoAsociarInDTO.getHoraFin().split(":")[0])
+					- Integer.parseInt(franjaHorariaCursoAsociarInDTO.getHoraInicio().split(":")[0]);
+		}
+
+		if (sumaHorasFranjasAActualizar > horasSemana) {
+			throw new RuntimeException(
+					"Las franjas a actualizar superan la cantidad de horas permitidas para el curso");
+		}
+
 	}
 
 	/**
@@ -252,30 +384,101 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariasDisponiblesPorCurso(
 			FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
 
-		// Se consultan las franjas horarias de los espacios físicos
-		List<Long> lstIdEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
-				.consultarLstIdEspacioFisicoDisponiblesPorCursoYRestricciones(null,
-						filtroFranjaHorariaDisponibleCursoDTO.getListaUbicaciones(),
-						filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico(),
-						filtroFranjaHorariaDisponibleCursoDTO.getSalon());
+		// Se consulta lass franjas horarias actuales del curso
+		List<FranjaHorariaBasicaDTO> lstFranjasHorariasCurso = this.gestionarPlanificacionManualGatewayIntPort
+				.consultarFranjasHorariasDeCursoPorCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso());
 
+		// Se consultan las franjas horarias de los espacios físicos
+		Map<Long, List<FranjaHorariaBasicaDTO>> mapaFranjasHorariasPorEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
+				.consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(
+						filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
+						filtroFranjaHorariaDisponibleCursoDTO.getListaUbicaciones(),
+						filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico(),
+						filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico(),
+						filtroFranjaHorariaDisponibleCursoDTO.getSalon())
+				.stream().collect(Collectors.groupingBy(FranjaHorariaBasicaDTO::getIdEspacioFisico));
+
+		// Se consultan las franjas horarias de cursos del semestre
+		List<FranjaHorariaBasicaDTO> lstFranjasHorariasCursosSemestre = this.gestionarPlanificacionManualGatewayIntPort
+				.consultarFranjasHorariasDeSemestrePorCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
+						filtroFranjaHorariaDisponibleCursoDTO.getIdAsignatura());
+
+		// Se consultan las franjas horarias de los docentes asociados al curso
+		List<FranjaHorariaBasicaDTO> lstFranjasHorariasDocentes = this.gestionarPlanificacionManualGatewayIntPort
+				.consultarFranjasHorariasDeDocentesAsociadosACurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso());
+
+		// Se consultan las franjas candidatas por filtro
 		List<FranjaHorariaBasicaDTO> listaFranjasCandidatas = this
 				.consultarFranjasCandidatas(filtroFranjaHorariaDisponibleCursoDTO);
 
-		return this.gestionarPlanificacionManualGatewayIntPort
-				.consultarFranjasHorariasDisponiblesPorCurso(filtroFranjaHorariaDisponibleCursoDTO);
+		// Resultado de las franjas disponibles
+		List<FranjaHorariaCursoDTO> listaDeFranjasDisponibles = new ArrayList<>();
+
+		// Se recorre cada espacio físico para evaluarle las franjas candidatas
+		for (Map.Entry<Long, List<FranjaHorariaBasicaDTO>> entry : mapaFranjasHorariasPorEspacioFisico.entrySet()) {
+
+			// Se recorre cada franja candidata para validarla contra las restricciones
+			for (FranjaHorariaBasicaDTO franjaCandidata : listaFranjasCandidatas) {
+
+				// Restricciones
+				Boolean noseSuperponeConFranjasEspaciosFisicos = !seSuperponeConFranjasEspaciosFisicos(franjaCandidata,
+						entry.getValue());
+				Boolean noseSuperponeConFranjasDocentes = !seSuperponeConFranjasDocentes(franjaCandidata,
+						lstFranjasHorariasDocentes);
+				Boolean noseSuperponeConFranjasCursosSemestre = !seSuperponeConFranjasCursosSemestre(franjaCandidata,
+						lstFranjasHorariasCursosSemestre, filtroFranjaHorariaDisponibleCursoDTO.getIdAsignatura());
+				Boolean noseSuperponeConFranjasDelMismoCurso = !seSuperponeConFranjasCurso(franjaCandidata,
+						lstFranjasHorariasCurso);
+
+				// Se validan las restricciones
+				if (noseSuperponeConFranjasEspaciosFisicos && noseSuperponeConFranjasDocentes
+						&& noseSuperponeConFranjasCursosSemestre && noseSuperponeConFranjasDelMismoCurso) {
+					// Se adiciona la franja candidata como franja posible
+					listaDeFranjasDisponibles.add(new FranjaHorariaCursoDTO(entry.getKey(), franjaCandidata.getDia(),
+							franjaCandidata.getHoraInicio(), franjaCandidata.getHoraFin()));
+				}
+			}
+		}
+
+		return listaDeFranjasDisponibles;
 	}
 
+	/**
+	 * Método encargado de generar las franjas horarias candidatas teniendo en
+	 * cuenta las franjas restrictivas y los criterios de busqueda ingresados por el
+	 * usuario. Los criterios de busqueda del usuario pueden ser: Filtrar por días
+	 * de la semana (Opcional), cantidad de horas por franja (Obligatorio), y por
+	 * hora de inicio(Opcional).<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param filtroFranjaHorariaDisponibleCursoDTO
+	 * @return
+	 */
 	private List<FranjaHorariaBasicaDTO> consultarFranjasCandidatas(
 			FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
-		// Frajas restrictivas
-		List<FranjaHorariaBasicaDTO> listaFranjasRestringidas = new ArrayList<>();
-		listaFranjasRestringidas.add(new FranjaHorariaBasicaDTO(LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		// Frajas restrictivas de LUNES a SABADO de 13:00 a 14:00
+		List<FranjaHorariaBasicaDTO> lstFranjasRestringidas = new ArrayList<>();
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.LUNES, LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.MARTES, LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.MIERCOLES, LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.JUEVES, LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.VIERNES, LocalTime.of(13, 0), LocalTime.of(14, 0)));
+		lstFranjasRestringidas
+				.add(new FranjaHorariaBasicaDTO(DiaSemanaEnum.SABADO, LocalTime.of(13, 0), LocalTime.of(14, 0)));
 
-		// Franjas candidas a evaluar
+		// Lista que almacena las franjas candidas a evaluar
 		List<FranjaHorariaBasicaDTO> listaFranjasCandidatas = new ArrayList<>();
+
+		// El usuario debe enviar al menos la duración de la franja, siempre obligatorio
 		int duracionFranja = filtroFranjaHorariaDisponibleCursoDTO.getDuracion().intValue();
 
+		// Si el usuario no filtra por días, por defecto se filtra de Lunes a Sabado
 		List<DiaSemanaEnum> diasPosibles = Arrays.asList(DiaSemanaEnum.LUNES, DiaSemanaEnum.MARTES,
 				DiaSemanaEnum.MIERCOLES, DiaSemanaEnum.JUEVES, DiaSemanaEnum.VIERNES, DiaSemanaEnum.SABADO);
 
@@ -284,6 +487,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			diasPosibles = filtroFranjaHorariaDisponibleCursoDTO.getListaDiaSemanaEnum();
 		}
 
+		// Se crean las franjas candidatas que van desde el rango de 7:00 a 22:00
 		for (DiaSemanaEnum dia : DiaSemanaEnum.values()) {
 			if (diasPosibles.contains(dia)) {
 				// Franjas posibles de 07:00 a 22:00
@@ -292,9 +496,14 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 					if (hora + duracionFranja <= 22) {
 						LocalTime horaInicio = LocalTime.of(hora, 0);
 						LocalTime horaFin = horaInicio.plusHours(duracionFranja);
+						/*
+						 * Si el usuario no filtra por hora inicio, por defecto muestra todas las
+						 * franjas
+						 */
 						if ((Objects.isNull(filtroFranjaHorariaDisponibleCursoDTO.getHoraInicio()) ? Boolean.TRUE
 								: horaInicio.toString().equals(filtroFranjaHorariaDisponibleCursoDTO.getHoraInicio()))
-								&& !seSuperponeConListaFranjas(horaInicio, horaFin, listaFranjasRestringidas)) {
+								&& !seSuperponeConListaFranjasRestringidas(dia, horaInicio, horaFin,
+										lstFranjasRestringidas)) {
 							listaFranjasCandidatas.add(new FranjaHorariaBasicaDTO(dia, horaInicio, horaFin));
 						}
 					}
@@ -304,11 +513,119 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		return listaFranjasCandidatas;
 	}
 
-	private boolean seSuperponeConListaFranjas(LocalTime horaInicio, LocalTime horaFin,
-			List<FranjaHorariaBasicaDTO> franjas) {
-		for (FranjaHorariaBasicaDTO franja : franjas) {
-			if (horaFin.toSecondOfDay() > franja.getHoraInicio().toSecondOfDay()
+	/**
+	 * Método encargado de validar si una franja horaria se superpone en una lista
+	 * de franjas restringidas. Una franja restringida es aquella en la que no se
+	 * puede establecer un horario, por ejemplo. la franja de 13:00-14:00 de lunes a
+	 * sabado es restringida porque es reservada para el almuerzo de los estudiantes
+	 * y docentes.<br>
+	 * 
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param dia
+	 * @param horaInicio
+	 * @param horaFin
+	 * @param lstFranjasRestringidas
+	 * @return
+	 */
+	private boolean seSuperponeConListaFranjasRestringidas(DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin,
+			List<FranjaHorariaBasicaDTO> lstFranjasRestringidas) {
+		for (FranjaHorariaBasicaDTO franja : lstFranjasRestringidas) {
+			if (dia.equals(franja.getDia()) && horaFin.toSecondOfDay() > franja.getHoraInicio().toSecondOfDay()
 					&& horaInicio.toSecondOfDay() < franja.getHoraFin().toSecondOfDay()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Método encargado de validar la restricción: Los cursos de un mismo semestre
+	 * no deben sobreponerse, excepto los mismos cursos que pertenecen a la misma
+	 * asignatura. <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param franjaCandidata
+	 * @param lstFranjasDeCursosSemestre
+	 * @param idAsignatura
+	 * @return
+	 */
+	private boolean seSuperponeConFranjasCursosSemestre(FranjaHorariaBasicaDTO franjaCandidata,
+			List<FranjaHorariaBasicaDTO> lstFranjasDeCursosSemestre, Long idAsignatura) {
+		for (FranjaHorariaBasicaDTO franja : lstFranjasDeCursosSemestre) {
+			if (franjaCandidata.getDia().equals(franja.getDia())
+					&& franjaCandidata.getHoraFin().toSecondOfDay() > franja.getHoraInicio().toSecondOfDay()
+					&& franjaCandidata.getHoraInicio().toSecondOfDay() < franja.getHoraFin().toSecondOfDay()
+					&& !franja.getIdAsignatura().equals(idAsignatura)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Método encargado de validar que una franja candidata no se sobreponga con el
+	 * horario de un espacio<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param franjaCandidata
+	 * @param lstFranjasDeEspacioFisico
+	 * @return
+	 */
+	private boolean seSuperponeConFranjasEspaciosFisicos(FranjaHorariaBasicaDTO franjaCandidata,
+			List<FranjaHorariaBasicaDTO> lstFranjasDeEspacioFisico) {
+		return this.seSuperponeConListaFranjas(franjaCandidata, lstFranjasDeEspacioFisico);
+	}
+
+	/**
+	 * Método encargado de validar que una franja candidata no se sobreponga con los
+	 * horarios de los docentes que orientan el curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param franjaCandidata
+	 * @param lstFranjasDeEspacioFisico
+	 * @return
+	 */
+	private boolean seSuperponeConFranjasDocentes(FranjaHorariaBasicaDTO franjaCandidata,
+			List<FranjaHorariaBasicaDTO> lstFranjasDeDocentes) {
+		return this.seSuperponeConListaFranjas(franjaCandidata, lstFranjasDeDocentes);
+	}
+
+	/**
+	 * Método encargado de validar que una franja candidata no se sobreponga con los
+	 * horarios del mismo curso<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param franjaCandidata
+	 * @param lstFranjasDeEspacioFisico
+	 * @return
+	 */
+	private boolean seSuperponeConFranjasCurso(FranjaHorariaBasicaDTO franjaCandidata,
+			List<FranjaHorariaBasicaDTO> lstFranjasDeDocentes) {
+		return this.seSuperponeConListaFranjas(franjaCandidata, lstFranjasDeDocentes);
+	}
+
+	/**
+	 * Método que refactoriza parte de la lógica en común para validar el
+	 * solapamiento de una franja candidata en una lista de franjas <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param franjaCandidata
+	 * @param lstFranjasDeEspacioFisico
+	 * @return
+	 */
+	private boolean seSuperponeConListaFranjas(FranjaHorariaBasicaDTO franjaCandidata,
+			List<FranjaHorariaBasicaDTO> lstFranjaHoraria) {
+		for (FranjaHorariaBasicaDTO franja : lstFranjaHoraria) {
+			if (franjaCandidata.getDia().equals(franja.getDia())
+					&& franjaCandidata.getHoraFin().toSecondOfDay() > franja.getHoraInicio().toSecondOfDay()
+					&& franjaCandidata.getHoraInicio().toSecondOfDay() < franja.getHoraFin().toSecondOfDay()) {
 				return true;
 			}
 		}

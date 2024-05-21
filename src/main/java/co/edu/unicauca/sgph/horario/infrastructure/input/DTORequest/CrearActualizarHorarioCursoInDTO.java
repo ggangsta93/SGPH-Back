@@ -15,7 +15,7 @@ public class CrearActualizarHorarioCursoInDTO {
 	public void setIdCurso(Long idCurso) {
 		this.idCurso = idCurso;
 	}
-
+	
 	public List<FranjaHorariaCursoAsociarInDTO> getListaFranjaHorariaCursoAsociarInDTO() {
 		return listaFranjaHorariaCursoAsociarInDTO;
 	}
