@@ -24,6 +24,7 @@ import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayInt
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO;
@@ -195,7 +196,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			throws RuntimeException {
 		Long idCurso = crearActualizarHorarioCursoInDTO.getIdCurso();
 
-		// Se consulta información inicial: idAsignatura, cupo del curso, cantidad horas semana
+		// Se consulta información inicial: idAsignatura, cupo, cantidad horas semana
 		Object[] infoCurso = (Object[]) this.gestionarPlanificacionManualGatewayIntPort
 				.consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(idCurso);
 
@@ -224,8 +225,17 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		this.validarSolapamientoFranjasAActualizarConCursosDelMismoSemestre(crearActualizarHorarioCursoInDTO,
 				(Long) infoCurso[0]);
 
-		// TODO: Está pendiente validar el cupo del curso con la capacidad del espacio
-		// físico
+		List<EspacioFisico> lstEspacioFisicoAActualizar = this.gestionarEspacioFisicoGatewayIntPort
+				.consultarCapacidadEstadoYSalonPorListaIdEspacioFisico(
+						crearActualizarHorarioCursoInDTO.getListaFranjaHorariaCursoAsociarInDTO().stream()
+								.map(FranjaHorariaCursoAsociarInDTO::getIdEspacioFisico).collect(Collectors.toList()));
+
+		// Se valida capacidad de espacios físicos contra cupo del curso
+		this.validarCapacidadEspaciosFisicosContraCupoDelCurso(crearActualizarHorarioCursoInDTO, (Integer) infoCurso[1],
+				lstEspacioFisicoAActualizar);
+
+		// Se valida que el estado sea ACTIVO de los espacios físicos
+		this.validarEstadoActivoEspaciosFisicos(crearActualizarHorarioCursoInDTO, lstEspacioFisicoAActualizar);
 
 		// Se validan cruces
 		for (FranjaHorariaCursoAsociarInDTO franjaHorariaCursoAsociarInDTO : crearActualizarHorarioCursoInDTO
@@ -283,6 +293,36 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 
 		for (Horario horario : listaHorarioEliminar) {
 			this.gestionarHorarioGatewayIntPort.eliminarHorario(horario);
+		}
+	}
+
+	private void validarEstadoActivoEspaciosFisicos(CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO,
+			List<EspacioFisico> lstEspacioFisicoAActualizar) {
+		List<String> espaciosFisicosDiferenteDeActivo = new ArrayList<>();
+		for (EspacioFisico espacioFisico : lstEspacioFisicoAActualizar) {
+			if (!espacioFisico.getEstado().equals(EstadoEspacioFisicoEnum.ACTIVO)) {
+				espaciosFisicosDiferenteDeActivo.add(espacioFisico.getSalon());
+			}
+		}
+		if (!espaciosFisicosDiferenteDeActivo.isEmpty()) {
+			throw new RuntimeException("Estado no permitido para los espacios físicos: "
+					+ String.join(", ", espaciosFisicosDiferenteDeActivo));
+		}
+	}
+
+	private void validarCapacidadEspaciosFisicosContraCupoDelCurso(
+			CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO, Integer capacidadCurso,
+			List<EspacioFisico> lstEspacioFisicoAActualizar) {
+
+		List<String> espaciosFisicosInsuficienteCapacidad = new ArrayList<>();
+		for (EspacioFisico espacioFisico : lstEspacioFisicoAActualizar) {
+			if (espacioFisico.getCapacidad() < capacidadCurso) {
+				espaciosFisicosInsuficienteCapacidad.add(espacioFisico.getSalon());
+			}
+		}
+		if (!espaciosFisicosInsuficienteCapacidad.isEmpty()) {
+			throw new RuntimeException("Capacidad insuficiente para los espacios físicos: "
+					+ String.join(", ", espaciosFisicosInsuficienteCapacidad));
 		}
 	}
 

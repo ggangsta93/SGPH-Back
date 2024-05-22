@@ -75,5 +75,20 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	 */
 	@Query("SELECT DISTINCT e.edificio FROM EspacioFisicoEntity e WHERE e.ubicacion IN (:lstUbicacion)")
 	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion);
+	
+		
+	/**
+	 * Método encargado de consultar la capacidad, el estado y salon de espacios
+	 * físicos dado una lista de identificadores únicos <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param lstIdEspacioFisico
+	 * @return
+	 */
+	@Query("SELECT new co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity(e.idEspacioFisico, e.capacidad, e.salon, e.estado)"
+			+ " FROM EspacioFisicoEntity e "
+			+ "WHERE e.idEspacioFisico IN (:lstIdEspacioFisico)")
+	public List<EspacioFisicoEntity> consultarCapacidadEstadoYSalonPorListaIdEspacioFisico(List<Long> lstIdEspacioFisico);
 
 }

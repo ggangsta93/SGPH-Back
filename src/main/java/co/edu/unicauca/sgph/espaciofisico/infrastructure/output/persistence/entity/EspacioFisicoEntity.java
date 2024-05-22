@@ -65,6 +65,26 @@ public class EspacioFisicoEntity {
 	@Column(name = "MUNICIPIO")
 	private String municipio;
 
+	
+	/**
+	 * Constructor de la clase para el método:
+	 * -consultarCapacidadYSalonPorListaIdEspacioFisico
+	 * 
+	 * @param idEspacioFisico
+	 * @param capacidad
+	 * @param salon
+	 * @param estado
+	 */
+	public EspacioFisicoEntity(Long idEspacioFisico, Long capacidad, String salon, EstadoEspacioFisicoEnum estado) {
+		this.idEspacioFisico = idEspacioFisico;
+		this.capacidad = capacidad;
+		this.salon = salon;
+		this.estado = estado;
+	}
+
+	/**
+	 * Constructor de la clase sin parámetros
+	 */
 	public EspacioFisicoEntity() {
 		this.agrupadores=new ArrayList<>();
 	}

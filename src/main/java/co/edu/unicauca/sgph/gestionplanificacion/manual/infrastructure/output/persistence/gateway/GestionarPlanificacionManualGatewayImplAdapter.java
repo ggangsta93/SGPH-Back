@@ -400,7 +400,8 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		queryBuilder.append(
 				"AND espaciosFisicos.capacidad >= (SELECT curso.cupo FROM CursoEntity curso WHERE curso.idCurso = :idCurso) ");
 		parametros.put("idCurso", idCurso);
-
+		// El estado del espacio físico debe ser ACTIVO
+		queryBuilder.append("AND espaciosFisicos.estado = 'ACTIVO' ");
 		if (!listaAgrupadoresCurso.isEmpty()) {
 			/*
 			 * Se filtra grupos del curso si tiene. Esta opción es requerida para cuando un

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -237,7 +236,18 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		}else {
 			return new ArrayList<>();
 		}
-		
+	}
+	
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarCapacidadEstadoYSalonPorListaIdEspacioFisico(java.util.List)
+	 */
+	@Override
+	public List<EspacioFisico> consultarCapacidadEstadoYSalonPorListaIdEspacioFisico(List<Long> lstIdEspacioFisico) {
+		List<EspacioFisicoEntity> lstEspacioFisicoEntity = this.espacioFisicoRepositoryInt
+				.consultarCapacidadEstadoYSalonPorListaIdEspacioFisico(lstIdEspacioFisico);
+
+		return this.modelMapper.map(lstEspacioFisicoEntity, new TypeToken<List<EspacioFisico>>() {
+		}.getType());
 	}
 
 	@Override
@@ -264,4 +274,5 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		dto.setSalon(entidad.getSalon());
 		return dto;
 	}
+
 }

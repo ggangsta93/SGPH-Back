@@ -16,7 +16,7 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 
 	/**
 	 * Método encargado de obtener los horarios formateados a partir del curso<br>
-	 * Ejemplo del formato: 'LUNES 07:00-09:00 Salón 204-Edificio nuevo'	 
+	 * Ejemplo del formato: 'LUNES 07:00-09:00 Salón 204-Edificio nuevo'
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
@@ -58,25 +58,27 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	 * @return
 	 */
 	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorEdificio(List<String> lstEdificio);
-	
+
 	/**
-	 * Método encargado de consultar todos los edificios de los espacios físicos <br>
+	 * Método encargado de consultar todos los edificios de los espacios físicos
+	 * <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @return Nombres de los edificios
 	 */
 	public List<String> consultarEdificios();
-	
+
 	/**
-	 * Método encargado de consultar todas las ubicaciones de los espacios físicos <br>
+	 * Método encargado de consultar todas las ubicaciones de los espacios físicos
+	 * <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @return Nombres de las ubicaciones
 	 */
 	public List<String> consultarUbicaciones();
-	
+
 	/**
 	 * Método encargado de consultar los edificios de los espacios físicos por
 	 * ubicación <br>
@@ -86,6 +88,17 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	 * @return Nombres de los edificios
 	 */
 	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion);
+
+	/**
+	 * Método encargado de consultar la capacidad, estado y salon de espacios
+	 * físicos dado una lista de identificadores únicos <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param lstIdEspacioFisico
+	 * @return
+	 */
+	public List<EspacioFisico> consultarCapacidadEstadoYSalonPorListaIdEspacioFisico(List<Long> lstIdEspacioFisico);
 
 	List<EspacioFisicoDTO> obtenerEspaciosFisicosPorAgrupadorId(Long idAgrupador);
 

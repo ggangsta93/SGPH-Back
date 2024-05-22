@@ -190,5 +190,6 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @return
 	 */
 	public Object consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(Long idCurso);
+	
 
 }
