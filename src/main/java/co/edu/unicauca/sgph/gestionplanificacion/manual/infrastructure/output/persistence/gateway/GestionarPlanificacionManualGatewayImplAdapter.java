@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -352,24 +353,15 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	 *      java.util.List, java.util.List, java.lang.String)
 	 */
 	@Override
-	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(Long idCurso,
-			List<String> listaUbicaciones, List<Long> listaIdTipoEspacioFisico,
+	public Map<Long, List<FranjaHorariaBasicaDTO>> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(
+			Long idCurso, List<String> listaUbicaciones, List<Long> listaIdTipoEspacioFisico,
 			List<Long> listaIdAgrupadorEspacioFisico, String salon) {
 
 		StringBuilder queryBuilder = new StringBuilder();
-
-		queryBuilder.append(
-				"SELECT NEW co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO( ");
-		queryBuilder.append("horario.idHorario, espaciosFisicos.idEspacioFisico, ");
-		queryBuilder.append("horario.dia, horario.horaInicio, horario.horaFin ) ");
-		queryBuilder.append("FROM HorarioEntity horario ");
-		queryBuilder.append("JOIN horario.espaciosFisicos espaciosFisicos ");
-		queryBuilder.append("JOIN espaciosFisicos.agrupadores agrupadores ");
-		queryBuilder.append("WHERE espaciosFisicos.idEspacioFisico IN  (");
-		queryBuilder.append("           SELECT DISTINCT espacioFisico.idEspacioFisico ");
-		queryBuilder.append("  			FROM EspacioFisicoEntity espacioFisico ");
-		queryBuilder.append("  			LEFT JOIN espacioFisico.agrupadores agrupadores ");
-		queryBuilder.append("  			WHERE 1=1 ");
+		queryBuilder.append("SELECT DISTINCT espacioFisico.idEspacioFisico ");
+		queryBuilder.append("FROM EspacioFisicoEntity espacioFisico ");
+		queryBuilder.append("LEFT JOIN espacioFisico.agrupadores agrupadores ");
+		queryBuilder.append("WHERE 1=1 ");
 
 		List<AgrupadorEspacioFisico> listaAgrupadoresCurso = this.gestionarAgrupadorEspacioFisicoGatewayIntPort
 				.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso);
@@ -379,29 +371,25 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 			queryBuilder.append("AND espacioFisico.ubicacion IN (:listaUbicaciones) ");
 			parametros.put("listaUbicaciones", listaUbicaciones);
 		}
-
 		if (Objects.nonNull(listaIdTipoEspacioFisico) && !listaIdTipoEspacioFisico.isEmpty()) {
 			queryBuilder
 					.append("AND espacioFisico.tipoEspacioFisico.idTipoEspacioFisico IN (:listaIdTipoEspacioFisico) ");
 			parametros.put("listaIdTipoEspacioFisico", listaIdTipoEspacioFisico);
 		}
-
 		if (Objects.nonNull(listaIdAgrupadorEspacioFisico) && !listaIdAgrupadorEspacioFisico.isEmpty()) {
 			queryBuilder.append("AND agrupadores.idAgrupadorEspacioFisico IN (:listaIdAgrupadorEspacioFisico) ");
 			parametros.put("listaIdAgrupadorEspacioFisico", listaIdAgrupadorEspacioFisico);
 		}
-
 		if (Objects.nonNull(salon) && !salon.isEmpty()) {
 			queryBuilder.append("AND espacioFisico.salon LIKE :salon ");
 			parametros.put("salon", "%" + salon.replaceAll("\\s+", " ").trim() + "%");
 		}
-		queryBuilder.append(") ");// Cierre de la subconsulta
 		// La capacidad del espacio físico debe ser mayor o igual al cupo del curso
 		queryBuilder.append(
-				"AND espaciosFisicos.capacidad >= (SELECT curso.cupo FROM CursoEntity curso WHERE curso.idCurso = :idCurso) ");
+				"AND espacioFisico.capacidad >= (SELECT curso.cupo FROM CursoEntity curso WHERE curso.idCurso = :idCurso) ");
 		parametros.put("idCurso", idCurso);
 		// El estado del espacio físico debe ser ACTIVO
-		queryBuilder.append("AND espaciosFisicos.estado = 'ACTIVO' ");
+		queryBuilder.append("AND espacioFisico.estado = 'ACTIVO' ");
 		if (!listaAgrupadoresCurso.isEmpty()) {
 			/*
 			 * Se filtra grupos del curso si tiene. Esta opción es requerida para cuando un
@@ -414,15 +402,51 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		}
 
 		// Crea la consulta
-		TypedQuery<FranjaHorariaBasicaDTO> typedQuery = entityManager.createQuery(queryBuilder.toString(),
-				FranjaHorariaBasicaDTO.class);
+		TypedQuery<Long> typedQuery = entityManager.createQuery(queryBuilder.toString(), Long.class);
 
 		// Asigna los parámetros a la consulta
 		for (Map.Entry<String, Object> entry : parametros.entrySet()) {
 			typedQuery.setParameter(entry.getKey(), entry.getValue());
 		}
 
-		return typedQuery.getResultList();
+		List<Long> listaIdEspacioFisico = typedQuery.getResultList();
+
+		if (!listaIdEspacioFisico.isEmpty()) {
+			queryBuilder = new StringBuilder();
+			queryBuilder.append(
+					"SELECT NEW co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO( ");
+			queryBuilder.append("horario.idHorario, espacioFisico.idEspacioFisico, ");
+			queryBuilder.append("horario.dia, horario.horaInicio, horario.horaFin ) ");
+			queryBuilder.append("FROM HorarioEntity horario ");
+			queryBuilder.append("JOIN horario.espaciosFisicos espacioFisico ");
+			queryBuilder.append("WHERE espacioFisico.idEspacioFisico IN (:listaIdEspacioFisico) ");
+
+			parametros = new HashMap<>();
+			parametros.put("listaIdEspacioFisico", listaIdEspacioFisico);
+
+			// Crea la consulta
+			TypedQuery<FranjaHorariaBasicaDTO> typedQuery2 = entityManager.createQuery(queryBuilder.toString(),
+					FranjaHorariaBasicaDTO.class);
+
+			// Asigna los parámetros a la consulta
+			for (Map.Entry<String, Object> entry : parametros.entrySet()) {
+				typedQuery2.setParameter(entry.getKey(), entry.getValue());
+			}
+
+			List<FranjaHorariaBasicaDTO> listaFranjaHorariaBasicaDTO = typedQuery2.getResultList();
+			
+			Map<Long, List<FranjaHorariaBasicaDTO>> mapaFranjasHorariasPorEspacioFisico = listaFranjaHorariaBasicaDTO
+					.stream().collect(Collectors.groupingBy(FranjaHorariaBasicaDTO::getIdEspacioFisico));
+
+			for (Long idEspacioFisico : listaIdEspacioFisico) {
+				if (!mapaFranjasHorariasPorEspacioFisico.containsKey(idEspacioFisico)) {
+					mapaFranjasHorariasPorEspacioFisico.put(idEspacioFisico, new ArrayList<>());
+				}
+			}
+			return mapaFranjasHorariasPorEspacioFisico;
+		} else {
+			return new HashMap<>();
+		}
 	}
 
 	/**
@@ -542,12 +566,12 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		return typedQuery.getResultList();
 	}
 
-	/** 
+	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(java.lang.Long)
 	 */
 	@Override
 	public Object consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(Long idCurso) {
-		return this.planificacionManualRepositoryInt.consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(idCurso);		
+		return this.planificacionManualRepositoryInt.consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(idCurso);
 	}
 
 }

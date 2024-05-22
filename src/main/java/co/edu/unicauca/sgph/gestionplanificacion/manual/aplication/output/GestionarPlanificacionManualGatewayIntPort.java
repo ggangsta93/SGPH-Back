@@ -2,6 +2,7 @@ package co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 
@@ -143,7 +144,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @param salon
 	 * @return
 	 */
-	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(Long idCurso,
+	public Map<Long, List<FranjaHorariaBasicaDTO>> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(Long idCurso,
 			List<String> listaUbicaciones, List<Long> listaIdTipoEspacioFisico,
 			List<Long> listaIdAgrupadorEspacioFisico, String salon);
 

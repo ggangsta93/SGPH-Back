@@ -435,8 +435,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 						filtroFranjaHorariaDisponibleCursoDTO.getListaUbicaciones(),
 						filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico(),
 						filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico(),
-						filtroFranjaHorariaDisponibleCursoDTO.getSalon())
-				.stream().collect(Collectors.groupingBy(FranjaHorariaBasicaDTO::getIdEspacioFisico));
+						filtroFranjaHorariaDisponibleCursoDTO.getSalon());
 
 		// Se consultan las franjas horarias de cursos del semestre
 		List<FranjaHorariaBasicaDTO> lstFranjasHorariasCursosSemestre = this.gestionarPlanificacionManualGatewayIntPort
