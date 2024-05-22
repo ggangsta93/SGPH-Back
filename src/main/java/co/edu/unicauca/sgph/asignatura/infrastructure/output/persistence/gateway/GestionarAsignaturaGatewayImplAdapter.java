@@ -185,6 +185,9 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		asignaturaOutDTO.setSemestre(entidad.getSemestre());
 		asignaturaOutDTO.setAgrupadores(entidad.getAgrupadores().stream().map(this::mapAgrupador).collect(Collectors.toList()));
 		asignaturaOutDTO.setIdFacultad(entidad.getPrograma().getFacultad().getIdFacultad());
+		if (entidad.getEstado() != null) {
+			asignaturaOutDTO.setEstado(entidad.getEstado().getDescripcionEstado());
+		}
 		return asignaturaOutDTO;
 	}
 	private AgrupadorEspacioFisicoDTO mapAgrupador(AgrupadorEspacioFisicoEntity entidad) {

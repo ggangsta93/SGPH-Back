@@ -4,7 +4,11 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AgrupadorEspacioFisicoInDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import lombok.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -234,5 +238,13 @@ public class EspacioFisicoController {
 	@GetMapping("/obtenerEspaciosFisicosSinAsignarAAgrupadorId/{idAgrupador}")
 	public List<EspacioFisicoDTO> obtenerEspaciosFisicosSinAsignarAAgrupadorId(@PathVariable Long idAgrupador) {
 		return this.gestionarEspacioFisicoCUIntPort.obtenerEspaciosFisicosSinAsignarAAgrupadorId(idAgrupador);
+	}
+	@PostMapping("/consultarEspacioFisicoConFiltro")
+	public List<EspacioFisicoDTO> consultarEspaciosFisicosConFiltro(@RequestBody FiltroEspacioFisicoAgrupadorDTO filtro) {
+		return this.gestionarEspacioFisicoCUIntPort.consultarEspaciosFisicosConFiltro(filtro);
+	}
+	@PostMapping("/guardarAsignacion")
+	public MensajeOutDTO guardarAsignacion(@RequestBody AsignacionEspacioFisicoDTO asignacion) {
+		return this.gestionarEspacioFisicoCUIntPort.guardarAsignacion(asignacion);
 	}
 }

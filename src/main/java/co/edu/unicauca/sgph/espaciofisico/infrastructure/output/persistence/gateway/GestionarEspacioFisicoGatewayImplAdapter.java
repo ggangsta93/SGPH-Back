@@ -5,12 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
@@ -266,6 +272,56 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 				.filter(espacio -> espacio.getAgrupadores().isEmpty())
 				.collect(Collectors.toList());
 		return espaciosFisicosSinAsignar.stream().map(this::mapEspacioFisico).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<EspacioFisicoDTO> consultarEspaciosFisicosConFiltro(FiltroEspacioFisicoAgrupadorDTO filtro) {
+		List<EspacioFisicoEntity> lista = this.espacioFisicoRepositoryInt.obtenerEspacioFisicoPorFiltro(filtro.getNombre(), filtro.getUbicacion(), filtro.getTipo());
+		if (lista != null) {
+			lista = filtrarEspaciosFisicosAgrupadosADiferenteAgrupadorId(lista, filtro.getIdAgrupador());
+			return lista.stream().map(this::mapEspacioFisico).collect(Collectors.toList());
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion) {
+		this.eliminarAgrupadoresEspacioFisico(asignacion.getQuitados(), asignacion.getIdGrupo());
+		this.agregarAgrupadosEspacioFisico(asignacion.getAgregados(), asignacion.getIdGrupo());
+		MensajeOutDTO resultado = new MensajeOutDTO();
+		resultado.setError(false);
+		resultado.setDescripcion("Asignación guardada correctamente");
+		return resultado;
+	}
+	private void eliminarAgrupadoresEspacioFisico(List<EspacioFisicoDTO> quitados, Long idGrupo) {
+		quitados.forEach(q -> {
+			Optional<EspacioFisicoEntity> qEntidad= this.espacioFisicoRepositoryInt.findById(q.getIdEspacioFisico());
+			List<AgrupadorEspacioFisicoEntity> agrupadores = qEntidad.get().getAgrupadores();
+			agrupadores = agrupadores.stream().filter(a -> !a.getIdAgrupadorEspacioFisico().equals(idGrupo)).collect(Collectors.toList());
+			EspacioFisicoEntity espacioFisicoEntity = qEntidad.get();
+			espacioFisicoEntity.setAgrupadores(agrupadores);
+			this.espacioFisicoRepositoryInt.save(espacioFisicoEntity);
+		});
+	}
+	private void agregarAgrupadosEspacioFisico(List<EspacioFisicoDTO> agregados, Long idGrupo) {
+		agregados.forEach(q -> {
+			Optional<EspacioFisicoEntity> qEntidad= this.espacioFisicoRepositoryInt.findById(q.getIdEspacioFisico());
+			List<AgrupadorEspacioFisicoEntity> agrupadores = qEntidad.get().getAgrupadores();
+			AgrupadorEspacioFisicoEntity nuevo = new AgrupadorEspacioFisicoEntity();
+			nuevo.setIdAgrupadorEspacioFisico(idGrupo);
+			agrupadores.add(nuevo);
+			EspacioFisicoEntity espacioFisicoEntity = qEntidad.get();
+			espacioFisicoEntity.setAgrupadores(agrupadores);
+			this.espacioFisicoRepositoryInt.save(espacioFisicoEntity);
+		});
+	}
+
+	private List<EspacioFisicoEntity> filtrarEspaciosFisicosAgrupadosADiferenteAgrupadorId(List<EspacioFisicoEntity> lista,Long idAgrupador) {
+		return lista.stream().filter(a -> a.getAgrupadores().stream().filter(b ->
+				b.getIdAgrupadorEspacioFisico() == idAgrupador)
+				.collect(Collectors.toList()).isEmpty()
+		).collect(Collectors.toList());
 	}
 
 	private EspacioFisicoDTO mapEspacioFisico(EspacioFisicoEntity entidad) {

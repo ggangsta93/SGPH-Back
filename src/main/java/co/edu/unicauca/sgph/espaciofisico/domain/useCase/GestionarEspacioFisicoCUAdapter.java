@@ -2,6 +2,9 @@ package co.edu.unicauca.sgph.espaciofisico.domain.useCase;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort;
@@ -92,5 +95,15 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	@Override
 	public List<EspacioFisicoDTO> obtenerEspaciosFisicosSinAsignarAAgrupadorId(Long idAgrupador) {
 		return this.gestionarEspacioFisicoGatewayIntPort.obtenerEspaciosFisicosSinAsignarAAgrupadorId(idAgrupador);
+	}
+
+	@Override
+	public List<EspacioFisicoDTO> consultarEspaciosFisicosConFiltro(FiltroEspacioFisicoAgrupadorDTO filtro) {
+		return this.gestionarEspacioFisicoGatewayIntPort.consultarEspaciosFisicosConFiltro(filtro);
+	}
+
+	@Override
+	public MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion) {
+		return this.gestionarEspacioFisicoGatewayIntPort.guardarAsignacion(asignacion);
 	}
 }
