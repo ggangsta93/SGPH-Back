@@ -17,12 +17,16 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.TipoE
 public interface EspacioFisicoRestMapper {
 
 	@Mapping(target = "idTipoEspacioFisico", expression = "java(espacioFisico.getTipoEspacioFisico().getIdTipoEspacioFisico())")
+	@Mapping(target = "idEdificio", expression = "java(espacioFisico.getEdificio() != null ? espacioFisico.getEdificio().getIdEdificio() : null)")
+	@Mapping(target = "idUbicacion", expression = "java(espacioFisico.getUbicacion().getIdUbicacion())")
 	@Mapping(target = "lstIdAgrupadorEspacioFisico", source = "espacioFisico.agrupadores")
 	EspacioFisicoOutDTO toEspacioFisicoOutDTO(EspacioFisico espacioFisico);
 
 	@Mapping(target = "horarios", ignore = true)
 	@Mapping(target = "recursosEspacioFisico", ignore = true)
 	@Mapping(target = "tipoEspacioFisico", expression = "java(new TipoEspacioFisico(espacioFisicoInDTO.getIdTipoEspacioFisico()))")
+	@Mapping(target = "edificio", expression = "java(espacioFisicoInDTO.getIdEdificio() != null ? new Edificio(espacioFisicoInDTO.getIdEdificio()) : null)")
+	@Mapping(target = "ubicacion", expression = "java(new Ubicacion(espacioFisicoInDTO.getIdUbicacion()))")
 	@Mapping(target = "agrupadores", source = "espacioFisicoInDTO.lstIdAgrupadorEspacioFisico")
 	EspacioFisico toEspacioFisico(EspacioFisicoInDTO espacioFisicoInDTO);
 

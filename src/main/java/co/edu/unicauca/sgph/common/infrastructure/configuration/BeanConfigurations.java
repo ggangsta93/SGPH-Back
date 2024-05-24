@@ -15,12 +15,16 @@ import co.edu.unicauca.sgph.docente.domain.useCase.GestionarDocenteCUAdapter;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.AgrupadorEspacioFisicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.EspacioFisicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
+import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEdificioGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarTipoEspacioFisicoGatewayIntPort;
+import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarUbicacionGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.TipoEspacioFisicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarAgrupadorEspacioFisicoCUAdapter;
+import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarEdificioCUAdapter;
 import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarEspacioFisicoCUAdapter;
 import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarTipoEspacioFisicoCUAdapter;
+import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarUbicacionCUAdapter;
 import co.edu.unicauca.sgph.facultad.aplication.output.FacultadFormatterResultsIntPort;
 import co.edu.unicauca.sgph.facultad.aplication.output.GestionarFacultadGatewayIntPort;
 import co.edu.unicauca.sgph.facultad.domain.useCase.GestionarFacultadCUAdapter;
@@ -97,6 +101,18 @@ public class BeanConfigurations {
 			TipoEspacioFisicoFormatterResultsIntPort tipoEspacioFisicoFormatterResultsIntPort) {
 		return new GestionarTipoEspacioFisicoCUAdapter(gestionarTipoEspacioFisicoGatewayIntPort,
 				tipoEspacioFisicoFormatterResultsIntPort);
+	}
+	
+	@Bean
+	GestionarEdificioCUAdapter crearGestionarEdificioCUInt(
+			GestionarEdificioGatewayIntPort gestionarEdificioGatewayIntPort) {
+		return new GestionarEdificioCUAdapter(gestionarEdificioGatewayIntPort);
+	}
+	
+	@Bean
+	GestionarUbicacionCUAdapter crearGestionarUbicacionCUInt(
+			GestionarUbicacionGatewayIntPort gestionarUbicacionGatewayIntPort) {
+		return new GestionarUbicacionCUAdapter(gestionarUbicacionGatewayIntPort);
 	}
 
 	@Bean

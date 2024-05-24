@@ -9,9 +9,9 @@ public class FiltroEspacioFisicoDTO implements Serializable {
 
 	private static final long serialVersionUID = -147848070840420608L;
 
-	private List<String> listaUbicacion;
+	private List<Long> listaIdUbicacion;
 
-	private List<String> listaEdificio;
+	private List<Long> listaIdEdificio;
 
 	private List<Long> listaIdTipoEspacioFisico;
 
@@ -29,20 +29,20 @@ public class FiltroEspacioFisicoDTO implements Serializable {
 		super();
 	}
 
-	public List<String> getListaUbicacion() {
-		return listaUbicacion;
+	public List<Long> getListaIdUbicacion() {
+		return listaIdUbicacion;
 	}
 
-	public void setListaUbicacion(List<String> listaUbicacion) {
-		this.listaUbicacion = listaUbicacion;
+	public void setListaIdUbicacion(List<Long> listaIdUbicacion) {
+		this.listaIdUbicacion = listaIdUbicacion;
 	}
 
-	public List<String> getListaEdificio() {
-		return listaEdificio;
+	public List<Long> getListaIdEdificio() {
+		return listaIdEdificio;
 	}
 
-	public void setListaEdificio(List<String> listaEdificio) {
-		this.listaEdificio = listaEdificio;
+	public void setListaIdEdificio(List<Long> listaIdEdificio) {
+		this.listaIdEdificio = listaIdEdificio;
 	}
 
 	public EstadoEspacioFisicoEnum getEstado() {

@@ -16,15 +16,13 @@ public class EspacioFisicoOutDTO {
 
 	private String salon;
 
-	private String edificio;
+	private Long idEdificio;
 
-	private String ubicacion;
+	private Long idUbicacion;
 
 	private Long idTipoEspacioFisico;
 
 	private List<Long> lstIdAgrupadorEspacioFisico;
-
-	private String municipio;
 
 	public Long getIdEspacioFisico() {
 		return idEspacioFisico;
@@ -66,22 +64,6 @@ public class EspacioFisicoOutDTO {
 		this.estado = estado;
 	}
 
-	public String getEdificio() {
-		return edificio;
-	}
-
-	public void setEdificio(String edificio) {
-		this.edificio = edificio;
-	}
-
-	public String getUbicacion() {
-		return ubicacion;
-	}
-
-	public void setUbicacion(String ubicacion) {
-		this.ubicacion = ubicacion;
-	}
-
 	public List<Long> getLstIdAgrupadorEspacioFisico() {
 		return lstIdAgrupadorEspacioFisico;
 	}
@@ -98,11 +80,20 @@ public class EspacioFisicoOutDTO {
 		OID = oID;
 	}
 
-	public String getMunicipio() {
-		return municipio;
+	public Long getIdEdificio() {
+		return idEdificio;
 	}
 
-	public void setMunicipio(String municipio) {
-		this.municipio = municipio;
+	public void setIdEdificio(Long idEdificio) {
+		this.idEdificio = idEdificio;
 	}
+
+	public Long getIdUbicacion() {
+		return idUbicacion;
+	}
+
+	public void setIdUbicacion(Long idUbicacion) {
+		this.idUbicacion = idUbicacion;
+	}
+
 }

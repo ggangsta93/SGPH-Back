@@ -1,6 +1,5 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.gateway;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,16 +37,16 @@ public class GestionarTipoEspacioFisicoGatewayImplAdapter implements GestionarTi
 	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarTipoEspacioFisicoGatewayIntPort#consultarTiposEspaciosFisicosPorUbicaciones(java.util.List)
 	 */
 	@Override
-	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorUbicaciones(List<String> lstUbicaciones) {
+	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorUbicaciones(List<Long> lstIdUbicacion) {
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(
 				"SELECT DISTINCT tipoEspacioFisico FROM EspacioFisicoEntity espacioFisico JOIN espacioFisico.tipoEspacioFisico tipoEspacioFisico WHERE 1=1 ");
 
 		Map<String, Object> parametros = new HashMap<>();
 
-		if (Objects.nonNull(lstUbicaciones) && !lstUbicaciones.isEmpty()) {
-			queryBuilder.append(" AND espacioFisico.ubicacion IN (:lstUbicaciones) ");
-			parametros.put("lstUbicaciones", lstUbicaciones);
+		if (Objects.nonNull(lstIdUbicacion) && !lstIdUbicacion.isEmpty()) {
+			queryBuilder.append(" AND espacioFisico.ubicacion.idUbicacion IN (:lstIdUbicacion) ");
+			parametros.put("lstIdUbicacion", lstIdUbicacion);
 		}
 
 		TypedQuery<TipoEspacioFisicoEntity> typedQuery = entityManager.createQuery(queryBuilder.toString(),

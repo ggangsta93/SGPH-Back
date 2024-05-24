@@ -138,14 +138,14 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idCurso
-	 * @param listaUbicaciones
+	 * @param listaIdUbicacion
 	 * @param listaIdAgrupadorEspacioFisico
 	 * @param listaIdTipoEspacioFisico
 	 * @param salon
 	 * @return
 	 */
 	public Map<Long, List<FranjaHorariaBasicaDTO>> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(Long idCurso,
-			List<String> listaUbicaciones, List<Long> listaIdTipoEspacioFisico,
+			List<Long> listaIdUbicacion, List<Long> listaIdTipoEspacioFisico,
 			List<Long> listaIdAgrupadorEspacioFisico, String salon);
 
 	/**

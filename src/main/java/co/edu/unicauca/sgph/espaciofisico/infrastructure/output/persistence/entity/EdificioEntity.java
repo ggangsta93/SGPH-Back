@@ -22,6 +22,10 @@ public class EdificioEntity {
 	@Column(name = "DESCRIPCION", nullable = true)
 	private String descripcion;
 
+	public EdificioEntity() {
+		// Constructor sin parámetros
+	}
+
 	public Long getIdEdificio() {
 		return idEdificio;
 	}

@@ -59,8 +59,8 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort#consultarTiposEspaciosFisicosPorEdificio(java.util.List)
 	 */
 	@Override
-	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorEdificio(List<String> lstEdificio) {
-		return this.gestionarEspacioFisicoGatewayIntPort.consultarTiposEspaciosFisicosPorEdificio(lstEdificio);
+	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorEdificio(List<Long> lstIdEdificio) {
+		return this.gestionarEspacioFisicoGatewayIntPort.consultarTiposEspaciosFisicosPorEdificio(lstIdEdificio);
 	}
 
 	/**
@@ -83,8 +83,8 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort#consultarEdificiosPorUbicacion(java.util.List)
 	 */
 	@Override
-	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion) {
-		return this.gestionarEspacioFisicoGatewayIntPort.consultarEdificiosPorUbicacion(lstUbicacion);
+	public List<Long> consultarEdificiosPorUbicacion(List<Long> lstIdUbicacion) {
+		return this.gestionarEspacioFisicoGatewayIntPort.consultarEdificiosPorUbicacion(lstIdUbicacion);
 	}
 
 	@Override

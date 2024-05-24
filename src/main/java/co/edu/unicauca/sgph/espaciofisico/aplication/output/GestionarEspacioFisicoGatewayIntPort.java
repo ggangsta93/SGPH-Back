@@ -57,10 +57,10 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param lstEdificio
+	 * @param lstIdEdificio
 	 * @return
 	 */
-	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorEdificio(List<String> lstEdificio);
+	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorEdificio(List<Long> lstIdEdificio);
 
 	/**
 	 * Método encargado de consultar todos los edificios de los espacios físicos
@@ -88,9 +88,9 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @return Nombres de los edificios
+	 * @return Identificadores de edificios
 	 */
-	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion);
+	public List<Long> consultarEdificiosPorUbicacion(List<Long> lstUbicacion);
 
 	/**
 	 * Método encargado de consultar la capacidad, estado y salon de espacios

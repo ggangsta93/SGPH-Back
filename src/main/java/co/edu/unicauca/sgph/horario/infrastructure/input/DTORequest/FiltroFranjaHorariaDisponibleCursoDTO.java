@@ -10,7 +10,7 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 	private static final long serialVersionUID = -1067303712899236108L;
 
 	private Long idCurso;
-	
+
 	private Long idAsignatura;
 
 	private String horaInicio;
@@ -18,8 +18,8 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 	private String horaFin;
 
 	private Long duracion;
-	
-	private List<String> listaUbicaciones;
+
+	private List<Long> listaIdUbicacion;
 
 	private List<DiaSemanaEnum> listaDiaSemanaEnum;
 
@@ -93,12 +93,12 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 		this.salon = salon;
 	}
 
-	public List<String> getListaUbicaciones() {
-		return listaUbicaciones;
+	public List<Long> getListaIdUbicacion() {
+		return listaIdUbicacion;
 	}
 
-	public void setListaUbicaciones(List<String> listaUbicaciones) {
-		this.listaUbicaciones = listaUbicaciones;
+	public void setListaIdUbicacion(List<Long> listaIdUbicacion) {
+		this.listaIdUbicacion = listaIdUbicacion;
 	}
 
 	public Long getIdAsignatura() {

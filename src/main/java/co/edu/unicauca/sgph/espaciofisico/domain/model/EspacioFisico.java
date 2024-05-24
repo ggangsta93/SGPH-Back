@@ -9,7 +9,7 @@ import co.edu.unicauca.sgph.horario.domain.model.Horario;
 public class EspacioFisico {
 
 	private Long idEspacioFisico;
-	
+
 	private String OID;
 
 	private Long capacidad;
@@ -18,9 +18,9 @@ public class EspacioFisico {
 
 	private String salon;
 
-	private String edificio;
+	private Edificio edificio;
 
-	private String ubicacion;
+	private Ubicacion ubicacion;
 
 	private TipoEspacioFisico tipoEspacioFisico;
 
@@ -29,8 +29,6 @@ public class EspacioFisico {
 	private List<RecursoEspacioFisico> recursosEspacioFisico;
 
 	private List<AgrupadorEspacioFisico> agrupadores;
-	
-	private String municipio;
 
 	public EspacioFisico() {
 		agrupadores = new ArrayList<>();
@@ -96,22 +94,6 @@ public class EspacioFisico {
 		this.horarios = horarios;
 	}
 
-	public String getEdificio() {
-		return edificio;
-	}
-
-	public void setEdificio(String edificio) {
-		this.edificio = edificio;
-	}
-
-	public String getUbicacion() {
-		return ubicacion;
-	}
-
-	public void setUbicacion(String ubicacion) {
-		this.ubicacion = ubicacion;
-	}
-
 	public List<AgrupadorEspacioFisico> getAgrupadores() {
 		return agrupadores;
 	}
@@ -128,11 +110,20 @@ public class EspacioFisico {
 		OID = oID;
 	}
 
-	public String getMunicipio() {
-		return municipio;
+	public Edificio getEdificio() {
+		return edificio;
 	}
 
-	public void setMunicipio(String municipio) {
-		this.municipio = municipio;
+	public void setEdificio(Edificio edificio) {
+		this.edificio = edificio;
 	}
+
+	public Ubicacion getUbicacion() {
+		return ubicacion;
+	}
+
+	public void setUbicacion(Ubicacion ubicacion) {
+		this.ubicacion = ubicacion;
+	}
+
 }

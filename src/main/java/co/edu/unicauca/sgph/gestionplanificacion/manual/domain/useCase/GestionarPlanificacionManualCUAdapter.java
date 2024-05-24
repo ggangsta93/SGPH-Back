@@ -432,7 +432,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		Map<Long, List<FranjaHorariaBasicaDTO>> mapaFranjasHorariasPorEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
 				.consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(
 						filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
-						filtroFranjaHorariaDisponibleCursoDTO.getListaUbicaciones(),
+						filtroFranjaHorariaDisponibleCursoDTO.getListaIdUbicacion(),
 						filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico(),
 						filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico(),
 						filtroFranjaHorariaDisponibleCursoDTO.getSalon());

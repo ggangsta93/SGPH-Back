@@ -72,10 +72,10 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @return Nombres de los edificios
+	 * @return Identificadores de edificios
 	 */
-	@Query("SELECT DISTINCT e.edificio FROM EspacioFisicoEntity e WHERE e.ubicacion IN (:lstUbicacion)")
-	public List<String> consultarEdificiosPorUbicacion(List<String> lstUbicacion);
+	@Query("SELECT DISTINCT e.edificio.idEdificio FROM EspacioFisicoEntity e WHERE e.ubicacion.idUbicacion IN (:lstIdUbicacion)")
+	public List<Long> consultarEdificiosPorUbicacion(List<Long> lstIdUbicacion);
 	
 		
 	/**

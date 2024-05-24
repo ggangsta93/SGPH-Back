@@ -4,7 +4,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -354,7 +353,7 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	 */
 	@Override
 	public Map<Long, List<FranjaHorariaBasicaDTO>> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(
-			Long idCurso, List<String> listaUbicaciones, List<Long> listaIdTipoEspacioFisico,
+			Long idCurso, List<Long> listaIdUbicacion, List<Long> listaIdTipoEspacioFisico,
 			List<Long> listaIdAgrupadorEspacioFisico, String salon) {
 
 		StringBuilder queryBuilder = new StringBuilder();
@@ -367,9 +366,9 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 				.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso);
 		Map<String, Object> parametros = new HashMap<>();
 
-		if (Objects.nonNull(listaUbicaciones) && !listaUbicaciones.isEmpty()) {
-			queryBuilder.append("AND espacioFisico.ubicacion IN (:listaUbicaciones) ");
-			parametros.put("listaUbicaciones", listaUbicaciones);
+		if (Objects.nonNull(listaIdUbicacion) && !listaIdUbicacion.isEmpty()) {
+			queryBuilder.append("AND espacioFisico.ubicacion.idUbicacion IN (:listaIdUbicacion) ");
+			parametros.put("listaIdUbicacion", listaIdUbicacion);
 		}
 		if (Objects.nonNull(listaIdTipoEspacioFisico) && !listaIdTipoEspacioFisico.isEmpty()) {
 			queryBuilder
