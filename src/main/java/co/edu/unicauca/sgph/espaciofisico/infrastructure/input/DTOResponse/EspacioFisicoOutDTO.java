@@ -2,6 +2,7 @@ package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
 
 public class EspacioFisicoOutDTO {
@@ -22,7 +23,7 @@ public class EspacioFisicoOutDTO {
 
 	private Long idTipoEspacioFisico;
 
-	private List<Long> lstIdAgrupadorEspacioFisico;
+	private List<AgrupadorEspacioFisicoDTO> lstIdAgrupadorEspacioFisico;
 
 	public Long getIdEspacioFisico() {
 		return idEspacioFisico;
@@ -64,11 +65,27 @@ public class EspacioFisicoOutDTO {
 		this.estado = estado;
 	}
 
-	public List<Long> getLstIdAgrupadorEspacioFisico() {
+	public String getEdificio() {
+		return edificio;
+	}
+
+	public void setEdificio(String edificio) {
+		this.edificio = edificio;
+	}
+
+	public String getUbicacion() {
+		return ubicacion;
+	}
+
+	public void setUbicacion(String ubicacion) {
+		this.ubicacion = ubicacion;
+	}
+
+	public List<AgrupadorEspacioFisicoDTO> getLstIdAgrupadorEspacioFisico() {
 		return lstIdAgrupadorEspacioFisico;
 	}
 
-	public void setLstIdAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
+	public void setLstIdAgrupadorEspacioFisico(List<AgrupadorEspacioFisicoDTO> lstIdAgrupadorEspacioFisico) {
 		this.lstIdAgrupadorEspacioFisico = lstIdAgrupadorEspacioFisico;
 	}
 

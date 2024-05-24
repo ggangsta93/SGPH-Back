@@ -13,7 +13,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.Espaci
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.TipoEspacioFisicoOutDTO;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = AgrupadorEspacioFisicoRestMapper.class)
 public interface EspacioFisicoRestMapper {
 
 	@Mapping(target = "idTipoEspacioFisico", expression = "java(espacioFisico.getTipoEspacioFisico().getIdTipoEspacioFisico())")

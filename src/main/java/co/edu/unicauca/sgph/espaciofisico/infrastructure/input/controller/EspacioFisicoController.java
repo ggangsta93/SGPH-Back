@@ -81,7 +81,6 @@ public class EspacioFisicoController {
 	public EspacioFisicoOutDTO guardarEspacioFisico(@RequestBody EspacioFisicoInDTO espacioFisicoInDTO) {
 		EspacioFisico espacioFisico = this.gestionarEspacioFisicoCUIntPort
 				.guardarEspacioFisico(this.espacioFisicoRestMapper.toEspacioFisico(espacioFisicoInDTO));
-
 		return this.espacioFisicoRestMapper.toEspacioFisicoOutDTO(espacioFisico);
 	}
 
