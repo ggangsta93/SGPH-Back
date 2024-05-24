@@ -41,13 +41,7 @@ public class EspacioFisicoEntity {
 
 	@Column(name = "SALON")
 	private String salon;
-	
-	@Column(name = "EDIFICIO")
-	private String edificio;
-	
-	@Column(name = "UBICACION")
-	private String ubicacion;	
-	
+			
 	@ManyToOne
 	@JoinColumn(name = "ID_TIPO_ESPACIO_FISICO")
 	private TipoEspacioFisicoEntity tipoEspacioFisico;
@@ -61,10 +55,14 @@ public class EspacioFisicoEntity {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "ESPACIOFISICO_AGRUPADOR_ESP_FIS", joinColumns = @JoinColumn(name = "ID_ESPACIO_FISICO"), inverseJoinColumns = @JoinColumn(name = "ID_AGRUPADOR_ESPACIO_FISICO"))
 	private List<AgrupadorEspacioFisicoEntity> agrupadores;
+		
+	@ManyToOne
+	@JoinColumn(name = "ID_UBICACION")
+	private UbicacionEntity ubicacion;
 	
-	@Column(name = "MUNICIPIO")
-	private String municipio;
-
+	@ManyToOne
+	@JoinColumn(name = "ID_EDIFICIO")
+	private EdificioEntity edificio;	
 	
 	/**
 	 * Constructor de la clase para el método:
@@ -145,20 +143,20 @@ public class EspacioFisicoEntity {
 		this.recursosEspacioFisico = recursosEspacioFisico;
 	}
 
-	public String getEdificio() {
-		return edificio;
-	}
-
-	public void setEdificio(String edificio) {
-		this.edificio = edificio;
-	}
-
-	public String getUbicacion() {
+	public UbicacionEntity getUbicacion() {
 		return ubicacion;
 	}
 
-	public void setUbicacion(String ubicacion) {
+	public void setUbicacion(UbicacionEntity ubicacion) {
 		this.ubicacion = ubicacion;
+	}
+
+	public EdificioEntity getEdificio() {
+		return edificio;
+	}
+
+	public void setEdificio(EdificioEntity edificio) {
+		this.edificio = edificio;
 	}
 
 	public List<AgrupadorEspacioFisicoEntity> getAgrupadores() {
@@ -175,13 +173,5 @@ public class EspacioFisicoEntity {
 
 	public void setOID(String oID) {
 		OID = oID;
-	}
-
-	public String getMunicipio() {
-		return municipio;
-	}
-
-	public void setMunicipio(String municipio) {
-		this.municipio = municipio;
 	}
 }
