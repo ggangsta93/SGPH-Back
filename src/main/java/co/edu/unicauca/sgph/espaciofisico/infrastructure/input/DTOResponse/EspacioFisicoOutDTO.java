@@ -65,22 +65,6 @@ public class EspacioFisicoOutDTO {
 		this.estado = estado;
 	}
 
-	public String getEdificio() {
-		return edificio;
-	}
-
-	public void setEdificio(String edificio) {
-		this.edificio = edificio;
-	}
-
-	public String getUbicacion() {
-		return ubicacion;
-	}
-
-	public void setUbicacion(String ubicacion) {
-		this.ubicacion = ubicacion;
-	}
-
 	public List<AgrupadorEspacioFisicoDTO> getLstIdAgrupadorEspacioFisico() {
 		return lstIdAgrupadorEspacioFisico;
 	}

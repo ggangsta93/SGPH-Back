@@ -182,9 +182,9 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 			queryBuilder.append(" AND tipoEspacioFisico.idTipoEspacioFisico IN (:listaIdTipoEspacioFisico)");
 			parametros.put("listaIdTipoEspacioFisico", filtroEspacioFisicoDTO.getListaIdTipoEspacioFisico());
 		}
-		if (Objects.nonNull(filtroEspacioFisicoDTO.getSalon())) {
-			queryBuilder.append(" AND espacioFisico.salon =:salon");
-			parametros.put("salon", filtroEspacioFisicoDTO.getSalon());
+		if (Objects.nonNull(filtroEspacioFisicoDTO.getSalon()) && !filtroEspacioFisicoDTO.getSalon().isEmpty()) {
+			queryBuilder.append("AND espacioFisico.salon LIKE :salon ");
+			parametros.put("salon", "%" + filtroEspacioFisicoDTO.getSalon().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroEspacioFisicoDTO.getEstado())) {
 			queryBuilder.append(" AND espacioFisico.estado =:estado");
