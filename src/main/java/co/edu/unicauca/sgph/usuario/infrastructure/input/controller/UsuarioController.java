@@ -10,7 +10,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +20,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.common.domain.model.Persona;
 import co.edu.unicauca.sgph.usuario.aplication.input.GestionarUsuarioCUIntPort;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.UsuarioInDTO;
@@ -102,9 +103,6 @@ public class UsuarioController {
 	@PostMapping("/consultarUsuariosPorFiltro")
 	public Page<UsuarioOutDTO> consultarUsuariosPorFiltro(@RequestBody FiltroUsuarioDTO filtroUsuarioDTO) {
 		Page<UsuarioOutDTO>  respuesta = this.gestionarUsuarioCUIntPort.consultarUsuariosPorFiltro(filtroUsuarioDTO);
-		
-		String mensajito = messageSource.getMessage("correo.de.prueba", null, LocaleContextHolder.getLocale());
-		respuesta.getContent().get(0).setEmail(mensajito);
 		return respuesta;
 	}
 
@@ -144,6 +142,20 @@ public class UsuarioController {
 	@GetMapping("/consultarEstadosUsuario")
 	public List<String> consultarEstadosUsuario() {
 		return this.gestionarUsuarioCUIntPort.consultarEstadosUsuario();
+	}
+	
+	
+	/**
+	 * Método encargado de consultar una persona con el tipo y número de identificación<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return
+	 */
+	@GetMapping("/consultarPersonaPorIdentificacion")
+	public UsuarioOutDTO consultarPersonaPorIdentificacion(@RequestParam Long idTipoIdentificacion, @RequestParam String numeroIdentificacion) {		
+		Persona persona = this.gestionarUsuarioCUIntPort.consultarPersonaPorIdentificacion(idTipoIdentificacion, numeroIdentificacion);		
+		return this.usuarioRestMapper.toUsuarioOutDTO(persona);
 	}
 
 }

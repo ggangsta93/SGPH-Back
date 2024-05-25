@@ -18,7 +18,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import co.edu.unicauca.sgph.common.domain.model.Persona;
 import co.edu.unicauca.sgph.common.domain.model.TipoIdentificacion;
+import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.PersonaEntity;
+import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.TipoIdentificacionEntity;
 import co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
@@ -26,6 +29,7 @@ import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuari
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
+import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.repository.PersonaRepositoryInt;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.repository.UsuarioRepositoryInt;
 
 @Service
@@ -35,11 +39,13 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	private EntityManager entityManager;
 
 	private UsuarioRepositoryInt usuarioRepositoryInt;
+	private PersonaRepositoryInt personaRepositoryInt;
 	private ModelMapper modelMapper;
 
-	public GestionarUsuarioGatewayImplAdapter(UsuarioRepositoryInt usuarioRepositoryInt, ModelMapper modelMapper) {
+	public GestionarUsuarioGatewayImplAdapter(UsuarioRepositoryInt usuarioRepositoryInt, ModelMapper modelMapper,  PersonaRepositoryInt personaRepositoryInt) {
 		this.usuarioRepositoryInt = usuarioRepositoryInt;
 		this.modelMapper = modelMapper;
+		this.personaRepositoryInt = personaRepositoryInt;
 	}
 
 	/**
@@ -79,8 +85,8 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 			parametros.put("nombre", "%" + filtroUsuarioDTO.getNombre().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroUsuarioDTO.getNumeroIdentificacion())) {
-			queryBuilder.append(" AND usu.numeroIdentificacion = :numeroIdentificacion");
-			parametros.put("numeroIdentificacion", filtroUsuarioDTO.getNumeroIdentificacion().trim());
+			queryBuilder.append(" AND usu.numeroIdentificacion LIKE (:numeroIdentificacion) ");
+			parametros.put("numeroIdentificacion", "%" + filtroUsuarioDTO.getNumeroIdentificacion().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroUsuarioDTO.getEstado())) {
 			queryBuilder.append(" AND usu.estado = :estado");
@@ -145,8 +151,8 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 			parametros.put("nombre", "%" + filtroUsuarioDTO.getNombre().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroUsuarioDTO.getNumeroIdentificacion())) {
-			queryBuilder.append(" AND usu.numeroIdentificacion = :numeroIdentificacion");
-			parametros.put("numeroIdentificacion", filtroUsuarioDTO.getNumeroIdentificacion().trim());
+			queryBuilder.append(" AND usu.numeroIdentificacion LIKE (:numeroIdentificacion) ");
+			parametros.put("numeroIdentificacion", "%" + filtroUsuarioDTO.getNumeroIdentificacion().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroUsuarioDTO.getEstado())) {
 			queryBuilder.append(" AND usu.estado = :estado");
@@ -226,5 +232,21 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	@Override
 	public List<String> consultarEstadosUsuario() {
 		return Arrays.stream(EstadoUsuarioEnum.values()).map(Enum::name).collect(Collectors.toList());
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort#consultarPersonaPorIdentificacion(java.lang.Long, java.lang.String)
+	 */
+	@Override
+	public Persona consultarPersonaPorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion) {
+		TipoIdentificacionEntity tipoIdentificacionEntity = new TipoIdentificacionEntity();
+		tipoIdentificacionEntity.setIdTipoIdentificacion(idTipoIdentificacion);
+		PersonaEntity personaEntity = this.personaRepositoryInt
+				.findByTipoIdentificacionAndNumeroIdentificacion(tipoIdentificacionEntity, numeroIdentificacion);
+		
+		if(Objects.isNull(personaEntity)) {
+			return null;
+		}
+		return this.modelMapper.map(personaEntity, Persona.class);
 	}
 }

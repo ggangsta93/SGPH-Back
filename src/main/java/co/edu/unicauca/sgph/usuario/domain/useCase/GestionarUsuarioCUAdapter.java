@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import co.edu.unicauca.sgph.common.domain.model.Persona;
 import co.edu.unicauca.sgph.common.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.usuario.aplication.input.GestionarUsuarioCUIntPort;
 import co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
@@ -56,6 +57,16 @@ public class GestionarUsuarioCUAdapter implements GestionarUsuarioCUIntPort {
 	@Override
 	public List<String> consultarEstadosUsuario() {
 		return this.gestionarUsuarioGatewayIntPort.consultarEstadosUsuario();
+	}
+
+	/**
+	 * @see co.edu.unicauca.sgph.usuario.aplication.input.GestionarUsuarioCUIntPort#consultarPersonaPorIdentificacion(java.lang.Long,
+	 *      java.lang.String)
+	 */
+	@Override
+	public Persona consultarPersonaPorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion) {
+		return this.gestionarUsuarioGatewayIntPort.consultarPersonaPorIdentificacion(idTipoIdentificacion,
+				numeroIdentificacion);
 	}
 
 }

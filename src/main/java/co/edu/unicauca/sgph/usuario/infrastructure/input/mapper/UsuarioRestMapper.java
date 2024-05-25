@@ -8,6 +8,7 @@ import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import co.edu.unicauca.sgph.common.domain.model.Persona;
 import co.edu.unicauca.sgph.common.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
@@ -27,6 +28,15 @@ public interface UsuarioRestMapper {
 	TipoIdentificacionOutDTO toTipoIdentificacionOutDTO(TipoIdentificacion tipoIdentificacion);
 	
 	List<TipoIdentificacionOutDTO> toLstTipoIdentificacionOutDTO(List<TipoIdentificacion> lstTipoIdentificacion);
+	
+	@Mapping(target = "idTipoIdentificacion", expression = "java(persona.getTipoIdentificacion().getIdTipoIdentificacion())")
+	@Mapping(target = "codigoTipoIdentificacion", expression = "java(persona.getTipoIdentificacion().getCodigoTipoIdentificacion())")
+	@Mapping(target = "estado", ignore = true)
+    @Mapping(target = "lstIdPrograma", ignore = true)
+    @Mapping(target = "lstIdRol", ignore = true)
+    @Mapping(target = "nombreUsuario", ignore = true)
+    @Mapping(target = "password", ignore = true)
+	UsuarioOutDTO toUsuarioOutDTO(Persona persona);
 
 	@Mapping(target = "idTipoIdentificacion", expression = "java(usuario.getTipoIdentificacion().getIdTipoIdentificacion())")
 	@Mapping(target = "codigoTipoIdentificacion", expression = "java(usuario.getTipoIdentificacion().getCodigoTipoIdentificacion())")
