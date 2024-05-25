@@ -136,7 +136,7 @@ public class PlanificacionManualController {
 	 */
 	@PostMapping("/consultarFranjasHorariasDisponiblesPorCurso")
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariasDisponiblesPorCurso(
-			@RequestBody FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {	
+			@RequestBody FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
 		return this.gestionarPlanificacionManualCUIntPort
 				.consultarFranjasHorariasDisponiblesPorCurso(filtroFranjaHorariaDisponibleCursoDTO);
 	}
@@ -156,8 +156,15 @@ public class PlanificacionManualController {
 	}
 
 	/**
-	 * Método encargado de obtener los nombres completos de cada espacio físico. Ejemplo del
-	 * formato: 'Salón 204-Edificio nuevo'
+	 * Método encargado de obtener los nombres completos de cada espacio físico.
+	 * Necesario para la funcionalidad de asociar espacios físicos (Asignar los
+	 * horarios al curso) de la pantalla Planificación Manual. Este servicio es útil
+	 * para mapear los nombres de los espacios físicos mediante su identificador
+	 * único. 
+	 * 
+	 * Nota: Actualmente como se encuentra los datos de espacios físicos sólo se
+	 * está obteniendo el identificador único del espacio físico y el salon (Incluye
+	 * el formato que se necesario, ya no es necesrio armarlo)
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
