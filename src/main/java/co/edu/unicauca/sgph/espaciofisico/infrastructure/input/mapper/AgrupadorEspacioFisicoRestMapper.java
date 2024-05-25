@@ -2,6 +2,7 @@ package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -20,4 +21,7 @@ public interface AgrupadorEspacioFisicoRestMapper {
 
 	List<AgrupadorEspacioFisicoOutDTO> toLstAgrupadorEspacioFisicoOutDTO(
 			List<AgrupadorEspacioFisico> lstAgrupadorEspacioFisico);
+	@Mapping(source = "facultad.nombre", target = "nombreFacultad")
+	@Mapping(source = "facultad.idFacultad", target = "idFacultad")
+	AgrupadorEspacioFisicoDTO toAgrupadorEspacioFisicoDTO(AgrupadorEspacioFisico agrupadorEspacioFisico);
 }

@@ -107,6 +107,9 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 			predicateProgramas = criteriaBuilder.or(expressions.toArray(new Predicate[0]));
 			predicate = criteriaBuilder.and(predicateProgramas, predicate);
 		}
+		if (filtro.getEstado() != null) {
+			predicate = criteriaBuilder.and(criteriaBuilder.equal(root.get("estado"), filtro.getEstado()), predicate);
+		}
 		if (filtro.getSemestre() != null) {
 			predicate = criteriaBuilder.and(criteriaBuilder.equal(root.get("semestre"), filtro.getSemestre()), predicate);
 		}
@@ -127,7 +130,11 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		Optional<AsignaturaEntity> asignatura = this.asignaturaRepositoryInt.findById(idAsignatura);
 		if (asignatura.isPresent()) {
 			AsignaturaEntity asignaturaEntity = asignatura.get();
-			asignaturaEntity.setEstado(EstadoAsignaturaEnum.INACTIVO);
+			if (asignaturaEntity.getEstado() != null && asignaturaEntity.getEstado().equals(EstadoAsignaturaEnum.ACTIVO)) {
+				asignaturaEntity.setEstado(EstadoAsignaturaEnum.INACTIVO);
+			} else {
+				asignaturaEntity.setEstado(EstadoAsignaturaEnum.ACTIVO);
+			}
 			return this.asignaturaMapper.map(this.asignaturaRepositoryInt.save(asignaturaEntity), Asignatura.class);
 		}
 		return null;
@@ -153,6 +160,9 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		}
 		if (filtro.getSemestre() != null) {
 			predicate2 = criteriaBuilder.and(criteriaBuilder.equal(root2.get("semestre"), filtro.getSemestre()), predicate2);
+		}
+		if (filtro.getEstado() != null) {
+			predicate2 = criteriaBuilder.and(criteriaBuilder.equal(root2.get("estado"), filtro.getSemestre()), predicate2);
 		}
 		if (filtro.getIdProgramas() != null) {
 			List<Expression<Boolean>> expressions = new ArrayList<>();

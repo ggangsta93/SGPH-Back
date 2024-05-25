@@ -64,8 +64,7 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 	 */
 	@Override
 	public EspacioFisico consultarEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico) {
-		return this.modelMapper.map(this.espacioFisicoRepositoryInt.findByIdEspacioFisico(idEspacioFisico),
-				EspacioFisico.class);
+		return this.modelMapper.map(this.espacioFisicoRepositoryInt.findByIdEspacioFisico(idEspacioFisico), EspacioFisico.class);
 	}
 
 	/**

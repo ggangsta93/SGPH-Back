@@ -1,5 +1,6 @@
 package co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest;
 
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class FiltroAsignaturaInDTO {
     private Integer pageSize;
     private List<Long> idFacultades;
     private List<Long> idProgramas;
+    private EstadoAsignaturaEnum estado;
     public Integer getSemestre() {
         return semestre;
     }
@@ -55,6 +57,14 @@ public class FiltroAsignaturaInDTO {
 
     public void setIdProgramas(List<Long> idProgramas) {
         this.idProgramas = idProgramas;
+    }
+
+    public EstadoAsignaturaEnum getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoAsignaturaEnum estado) {
+        this.estado = estado;
     }
 }
 
