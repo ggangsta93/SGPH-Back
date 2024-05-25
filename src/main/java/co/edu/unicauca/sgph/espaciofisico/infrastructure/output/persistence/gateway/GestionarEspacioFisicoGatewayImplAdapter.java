@@ -95,9 +95,12 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 				" SELECT NEW co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO(");
 		queryBuilder.append(" espacioFisico.ubicacion.idUbicacion, espacioFisico.edificio.idEdificio, ");
 		queryBuilder.append(" tipoEspacioFisico.tipo, espacioFisico.salon,");
-		queryBuilder.append(" espacioFisico.capacidad, espacioFisico.estado, espacioFisico.idEspacioFisico)");
+		queryBuilder.append(" espacioFisico.capacidad, espacioFisico.estado, espacioFisico.idEspacioFisico, ");
+		queryBuilder.append(" ubicacion.nombre, edificio.nombre )");
 		queryBuilder.append(" FROM EspacioFisicoEntity espacioFisico");
 		queryBuilder.append(" LEFT JOIN espacioFisico.tipoEspacioFisico tipoEspacioFisico");
+		queryBuilder.append(" LEFT JOIN espacioFisico.ubicacion ubicacion");
+		queryBuilder.append(" LEFT JOIN espacioFisico.edificio edificio");
 		queryBuilder.append(" WHERE 1=1");
 
 		Map<String, Object> parametros = new HashMap<>();
@@ -117,9 +120,9 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 			queryBuilder.append(" AND tipoEspacioFisico.idTipoEspacioFisico IN (:listaIdTipoEspacioFisico)");
 			parametros.put("listaIdTipoEspacioFisico", filtroEspacioFisicoDTO.getListaIdTipoEspacioFisico());
 		}
-		if (Objects.nonNull(filtroEspacioFisicoDTO.getSalon())) {
-			queryBuilder.append(" AND espacioFisico.salon =:salon");
-			parametros.put("salon", filtroEspacioFisicoDTO.getSalon());
+		if (Objects.nonNull(filtroEspacioFisicoDTO.getSalon()) && !filtroEspacioFisicoDTO.getSalon().isEmpty()) {
+			queryBuilder.append("AND espacioFisico.salon LIKE :salon ");
+			parametros.put("salon", "%" + filtroEspacioFisicoDTO.getSalon().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroEspacioFisicoDTO.getEstado())) {
 			queryBuilder.append(" AND espacioFisico.estado =:estado");

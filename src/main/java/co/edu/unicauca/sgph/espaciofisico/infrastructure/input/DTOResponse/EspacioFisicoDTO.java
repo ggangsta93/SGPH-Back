@@ -9,7 +9,9 @@ public class EspacioFisicoDTO {
 	private EstadoEspacioFisicoEnum estado;
 	private String salon;
 	private Long idEdificio;
+	private String nombreEdificio;
 	private Long idUbicacion;
+	private String nombreUbicacion;
 	private String tipoEspacioFisico;
 
 	public EspacioFisicoDTO() {
@@ -17,7 +19,7 @@ public class EspacioFisicoDTO {
 	}
 
 	public EspacioFisicoDTO(Long idUbicacion, Long idEdificio, String tipoEspacioFisico, String salon, Long capacidad,
-			EstadoEspacioFisicoEnum estado, Long idEspacioFisico) {
+			EstadoEspacioFisicoEnum estado, Long idEspacioFisico, String nombreUbicacion, String nombreEdificio) {
 		this.idEspacioFisico = idEspacioFisico;
 		this.capacidad = capacidad;
 		this.estado = estado;
@@ -25,6 +27,8 @@ public class EspacioFisicoDTO {
 		this.idEdificio = idEdificio;
 		this.idUbicacion = idUbicacion;
 		this.tipoEspacioFisico = tipoEspacioFisico;
+		this.nombreEdificio=nombreEdificio;
+		this.nombreUbicacion=nombreUbicacion;
 	}
 
 	public Long getIdEdificio() {
@@ -81,5 +85,21 @@ public class EspacioFisicoDTO {
 
 	public void setIdEspacioFisico(Long idEspacioFisico) {
 		this.idEspacioFisico = idEspacioFisico;
+	}
+
+	public String getNombreEdificio() {
+		return nombreEdificio;
+	}
+
+	public void setNombreEdificio(String nombreEdificio) {
+		this.nombreEdificio = nombreEdificio;
+	}
+
+	public String getNombreUbicacion() {
+		return nombreUbicacion;
+	}
+
+	public void setNombreUbicacion(String nombreUbicacion) {
+		this.nombreUbicacion = nombreUbicacion;
 	}
 }
