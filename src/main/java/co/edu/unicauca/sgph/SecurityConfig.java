@@ -9,17 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	 @Override
-    protected void configure(HttpSecurity http) throws Exception {
-		 http
-         .authorizeRequests()
-             .antMatchers("/**").permitAll()
-             .anyRequest().authenticated()
-             .and()
-         .formLogin().permitAll()
-             .and()
-         .logout().permitAll();
-		 
-		 http.csrf().disable(); //Esto me permite hacer peticiones post utilizando DTO
- 	}
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.cors().and().csrf().disable();
+		// Otras configuraciones de seguridad
+	}
 }
