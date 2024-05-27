@@ -13,10 +13,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EdificioOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.RecursoFisicoRepositoryInt;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
@@ -42,13 +46,15 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 
 	private EspacioFisicoRepositoryInt espacioFisicoRepositoryInt;
 	private TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt;
+	private RecursoFisicoRepositoryInt recursoFisicoRepositoryInt;
 	private ModelMapper modelMapper;
 
 	public GestionarEspacioFisicoGatewayImplAdapter(EspacioFisicoRepositoryInt espacioFisicoRepositoryInt,
-			TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt, ModelMapper modelMapper) {
+			TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt, ModelMapper modelMapper, RecursoFisicoRepositoryInt recursoFisicoRepositoryInt) {
 		this.espacioFisicoRepositoryInt = espacioFisicoRepositoryInt;
 		this.tipoEspacioFisicoRepositoryInt = tipoEspacioFisicoRepositoryInt;
 		this.modelMapper = modelMapper;
+		this.recursoFisicoRepositoryInt = recursoFisicoRepositoryInt;
 	}
 
 	@Override
@@ -241,9 +247,10 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarEdificiosPorUbicacion(java.util.List)
 	 */
 	@Override
-	public List<Long> consultarEdificiosPorUbicacion(List<Long> lstIdUbicacion) {
+	public List<Edificio> consultarEdificiosPorUbicacion(List<Long> lstIdUbicacion) {
 		if (!lstIdUbicacion.isEmpty()) {
-			return this.espacioFisicoRepositoryInt.consultarEdificiosPorUbicacion(lstIdUbicacion);
+			return this.modelMapper.map(this.espacioFisicoRepositoryInt.consultarEdificiosPorUbicacion(lstIdUbicacion), new TypeToken<List<EspacioFisico>>() {
+			}.getType());
 		} else {
 			return new ArrayList<>();
 		}
@@ -299,6 +306,11 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		resultado.setError(false);
 		resultado.setDescripcion("Asignación guardada correctamente");
 		return resultado;
+	}
+
+	@Override
+	public List<RecursoOutDTO> obtenerListaRecursos() {
+		return this.recursoFisicoRepositoryInt.findAll().stream().map(e -> new RecursoOutDTO(e.getIdRecursoFisico(), e.getNombre(), e.getDescripcion())).collect(Collectors.toList());
 	}
 
 	private void eliminarAgrupadoresEspacioFisico(List<EspacioFisicoDTO> quitados, Long idGrupo) {

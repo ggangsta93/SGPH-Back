@@ -2,9 +2,12 @@ package co.edu.unicauca.sgph.espaciofisico.aplication.output;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EdificioOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -90,7 +93,7 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	 * 
 	 * @return Identificadores de edificios
 	 */
-	public List<Long> consultarEdificiosPorUbicacion(List<Long> lstUbicacion);
+	public List<Edificio> consultarEdificiosPorUbicacion(List<Long> lstUbicacion);
 
 	/**
 	 * Método encargado de consultar la capacidad, estado y salon de espacios
@@ -110,4 +113,6 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	List<EspacioFisicoDTO> consultarEspaciosFisicosConFiltro(FiltroEspacioFisicoAgrupadorDTO filtro);
 
 	MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion);
+
+	List<RecursoOutDTO> obtenerListaRecursos();
 }

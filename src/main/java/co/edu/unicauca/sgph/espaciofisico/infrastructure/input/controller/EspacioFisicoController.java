@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -179,8 +180,8 @@ public class EspacioFisicoController {
 	 * @return Nombres de los edificios
 	 */
 	@GetMapping("/consultarEdificiosPorUbicacion")
-	public List<Long> consultarEdificiosPorUbicacion(@RequestParam List<Long> lstIdUbicacion) {
-		return this.gestionarEspacioFisicoCUIntPort.consultarEdificiosPorUbicacion(lstIdUbicacion);
+	public List<EdificioOutDTO> consultarEdificiosPorUbicacion(@RequestParam List<Long> lstIdUbicacion) {
+		return this.edificioRestMapper.toLstEdificioOutDTO(this.gestionarEspacioFisicoCUIntPort.consultarEdificiosPorUbicacion(lstIdUbicacion));
 	}
 
 	/**
@@ -263,5 +264,9 @@ public class EspacioFisicoController {
 	@PostMapping("/guardarAsignacion")
 	public MensajeOutDTO guardarAsignacion(@RequestBody AsignacionEspacioFisicoDTO asignacion) {
 		return this.gestionarEspacioFisicoCUIntPort.guardarAsignacion(asignacion);
+	}
+	@GetMapping("/obtenerListaRecursos")
+	public List<RecursoOutDTO> obtenerListaRecursos() {
+		return this.gestionarEspacioFisicoCUIntPort.obtenerListaRecursos();
 	}
 }

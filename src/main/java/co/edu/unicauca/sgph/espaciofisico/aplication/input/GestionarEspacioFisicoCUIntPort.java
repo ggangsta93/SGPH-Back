@@ -2,9 +2,12 @@ package co.edu.unicauca.sgph.espaciofisico.aplication.input;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EdificioOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -85,12 +88,12 @@ public interface GestionarEspacioFisicoCUIntPort {
 	/**
 	 * Método encargado de consultar los edificios de los espacios físicos por
 	 * ubicación <br>
-	 * 
+	 *
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
+	 *
 	 * @return Identificadores de los edificios
 	 */
-	public List<Long> consultarEdificiosPorUbicacion(List<Long> lstIdUbicacion);
+	public List<Edificio> consultarEdificiosPorUbicacion(List<Long> lstIdUbicacion);
 
 	List<EspacioFisicoDTO> obtenerEspaciosFisicosPorAgrupadorId(Long idAgrupador);
 
@@ -99,4 +102,6 @@ public interface GestionarEspacioFisicoCUIntPort {
 	List<EspacioFisicoDTO> consultarEspaciosFisicosConFiltro(FiltroEspacioFisicoAgrupadorDTO filtro);
 
 	MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion);
+
+	List<RecursoOutDTO> obtenerListaRecursos();
 }
