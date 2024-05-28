@@ -16,7 +16,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.TipoE
 @Mapper(componentModel = "spring", uses = AgrupadorEspacioFisicoRestMapper.class)
 public interface EspacioFisicoRestMapper {
 
-	@Mapping(target = "idTipoEspacioFisico", expression = "java(espacioFisico.getTipoEspacioFisico().getIdTipoEspacioFisico())")
+	//@Mapping(target = "idTipoEspacioFisico", expression = "java(espacioFisico.getTipoEspacioFisico().getIdTipoEspacioFisico())")
 	//@Mapping(target = "idEdificio", expression = "java(espacioFisico.getEdificio() != null ? espacioFisico.getEdificio().getIdEdificio() : null)")
 	//@Mapping(target = "idUbicacion", expression = "java(espacioFisico.getUbicacion().getIdUbicacion())")
 	@Mapping(target = "lstIdAgrupadorEspacioFisico", source = "espacioFisico.agrupadores")

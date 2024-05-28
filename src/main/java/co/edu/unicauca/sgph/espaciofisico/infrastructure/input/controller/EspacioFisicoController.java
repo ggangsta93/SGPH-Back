@@ -81,8 +81,12 @@ public class EspacioFisicoController {
 	@Transactional
 	public EspacioFisicoOutDTO guardarEspacioFisico(@RequestBody EspacioFisicoInDTO espacioFisicoInDTO) {
 		EspacioFisico espacioFisico = this.gestionarEspacioFisicoCUIntPort
-				.guardarEspacioFisico(this.espacioFisicoRestMapper.toEspacioFisico(espacioFisicoInDTO));
+				.guardarEspacioFisico(espacioFisicoInDTO);
 		return this.espacioFisicoRestMapper.toEspacioFisicoOutDTO(espacioFisico);
+	}
+	@GetMapping("activarInactivarEspacioFisicio/{id}")
+	public void activarInactivarEspacioFisico(@PathVariable Long id) {
+		this.gestionarEspacioFisicoCUIntPort.activarInactivarEspacioFisico(id);
 	}
 
 	/**
