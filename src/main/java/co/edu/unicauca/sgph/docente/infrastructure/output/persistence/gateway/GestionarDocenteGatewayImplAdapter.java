@@ -107,19 +107,21 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 			queryBuilder.append(" LIKE UPPER(:nombre)");
 			parametros.put("nombre", "%"+filtroDocenteDTO.getNombre().replaceAll("\\s+", " ").trim()+"%");
 		}		
-		if (Objects.nonNull(filtroDocenteDTO.getNumeroIdentificacion())) {
-			queryBuilder.append(" AND doc.numeroIdentificacion = :numeroIdentificacion");
-			parametros.put("numeroIdentificacion", filtroDocenteDTO.getNumeroIdentificacion().trim());
+		if (Objects.nonNull(filtroDocenteDTO.getNumeroIdentificacion())
+				&& !filtroDocenteDTO.getNumeroIdentificacion().isEmpty()) {
+			queryBuilder.append(" AND doc.numeroIdentificacion LIKE :numeroIdentificacion");
+			parametros.put("numeroIdentificacion",
+					"%" + filtroDocenteDTO.getNumeroIdentificacion().replaceAll("\\s+", " ").trim() + "%");
 		}
-		if (Objects.nonNull(filtroDocenteDTO.getCodigo())) {
-			queryBuilder.append(" AND doc.codigo = :codigo");
-			parametros.put("codigo", filtroDocenteDTO.getCodigo().trim());
+		if (Objects.nonNull(filtroDocenteDTO.getCodigo()) && !filtroDocenteDTO.getCodigo().isEmpty()) {
+			queryBuilder.append(" AND doc.codigo LIKE :codigo");
+			parametros.put("codigo", "%" + filtroDocenteDTO.getCodigo().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroDocenteDTO.getEstado())) {
 			queryBuilder.append(" AND doc.estado = :estado");
 			parametros.put("estado", filtroDocenteDTO.getEstado());
 		}
-		
+
 		queryBuilder.append(" ORDER BY doc.primerNombre asc");
 
 		// Realiza la consulta paginada
@@ -171,19 +173,21 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 			queryBuilder.append(" LIKE UPPER(:nombre)");
 			parametros.put("nombre", "%"+filtroDocenteDTO.getNombre().replaceAll("\\s+", " ").trim()+"%");
 		}
-		if (Objects.nonNull(filtroDocenteDTO.getNumeroIdentificacion())) {
-			queryBuilder.append(" AND doc.numeroIdentificacion = :numeroIdentificacion");
-			parametros.put("numeroIdentificacion", filtroDocenteDTO.getNumeroIdentificacion().trim());
+		if (Objects.nonNull(filtroDocenteDTO.getNumeroIdentificacion())
+				&& !filtroDocenteDTO.getNumeroIdentificacion().isEmpty()) {
+			queryBuilder.append(" AND doc.numeroIdentificacion LIKE :numeroIdentificacion");
+			parametros.put("numeroIdentificacion",
+					"%" + filtroDocenteDTO.getNumeroIdentificacion().replaceAll("\\s+", " ").trim() + "%");
 		}
-		if (Objects.nonNull(filtroDocenteDTO.getCodigo())) {
-			queryBuilder.append(" AND doc.codigo = :codigo");
-			parametros.put("codigo", filtroDocenteDTO.getCodigo().trim());
+		if (Objects.nonNull(filtroDocenteDTO.getCodigo()) && !filtroDocenteDTO.getCodigo().isEmpty()) {
+			queryBuilder.append(" AND doc.codigo LIKE :codigo");
+			parametros.put("codigo", "%" + filtroDocenteDTO.getCodigo().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroDocenteDTO.getEstado())) {
 			queryBuilder.append(" AND doc.estado = :estado");
 			parametros.put("estado", filtroDocenteDTO.getEstado());
 		}
-		
+
 		queryBuilder.append(" ORDER BY doc.primerNombre asc");
 
 		// Realiza la consulta para contar
