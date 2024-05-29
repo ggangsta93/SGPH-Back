@@ -2,12 +2,11 @@ package co.edu.unicauca.sgph.espaciofisico.aplication.input;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
-import org.springframework.data.domain.Page;
 
 public interface GestionarAgrupadorEspacioFisicoCUIntPort {
 

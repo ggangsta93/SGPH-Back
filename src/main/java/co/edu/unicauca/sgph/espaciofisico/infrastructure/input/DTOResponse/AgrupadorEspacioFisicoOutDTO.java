@@ -9,7 +9,10 @@ public class AgrupadorEspacioFisicoOutDTO {
 	private String observacion;
 
 	private Long idFacultad;
+	
 	private String nombreFacultad;
+	
+	private Long cantidadEspaciosFisicosAsignados;
 
 	public AgrupadorEspacioFisicoOutDTO() {
 	}
@@ -56,5 +59,13 @@ public class AgrupadorEspacioFisicoOutDTO {
 
 	public void setNombreFacultad(String nombreFacultad) {
 		this.nombreFacultad = nombreFacultad;
+	}
+
+	public Long getCantidadEspaciosFisicosAsignados() {
+		return cantidadEspaciosFisicosAsignados;
+	}
+
+	public void setCantidadEspaciosFisicosAsignados(Long cantidadEspaciosFisicosAsignados) {
+		this.cantidadEspaciosFisicosAsignados = cantidadEspaciosFisicosAsignados;
 	}
 }

@@ -1,38 +1,26 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.gateway;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
-import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
-import co.edu.unicauca.sgph.facultad.domain.model.Facultad;
-import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
-import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.AgrupadorEspacioFisicoRepositoryInt;
+import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 
 @Service
 public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
@@ -87,8 +75,23 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 	@Override
 	public Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(FiltroGrupoDTO filtro) {
 		Pageable pageable = PageRequest.of(filtro.getPageNumber(), filtro.getPageSize());
-		Page<AgrupadorEspacioFisicoEntity> resultado = this.agrupadorEspacioFisicoRepositoryInt.findByFacultadIdFacultadIn(filtro.getListaIdFacultades(), pageable);
-		return resultado.map(this::mapGrupo);
+		Page<AgrupadorEspacioFisicoEntity> resultado = this.agrupadorEspacioFisicoRepositoryInt
+				.findByFacultadIdFacultadIn(filtro.getListaIdFacultades(), pageable);
+		Page<AgrupadorEspacioFisicoOutDTO> pageAgrupadorEspacioFisicoOutDTO = resultado.map(this::mapGrupo);
+
+		// Se contabilizan los espacio físicos por grupo
+		List<Object[]> lstContEspaciosPorGrupo = this.agrupadorEspacioFisicoRepositoryInt
+				.contarEspaciosFisicosPorAgrupador();
+
+		Map<Long, Long> mapaContEspaciosPorGrupo = lstContEspaciosPorGrupo.stream()
+				.collect(Collectors.toMap(obj -> (Long) obj[0], obj -> (Long) obj[1]));
+
+		for (AgrupadorEspacioFisicoOutDTO agrupadorEspacioFisicoOutDTO : pageAgrupadorEspacioFisicoOutDTO
+				.getContent()) {
+			agrupadorEspacioFisicoOutDTO.setCantidadEspaciosFisicosAsignados(
+					mapaContEspaciosPorGrupo.get(agrupadorEspacioFisicoOutDTO.getIdAgrupadorEspacioFisico()));
+		}
+		return pageAgrupadorEspacioFisicoOutDTO;
 	}
 
 	@Override

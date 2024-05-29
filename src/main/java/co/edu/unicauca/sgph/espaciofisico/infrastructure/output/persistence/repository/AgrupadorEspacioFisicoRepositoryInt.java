@@ -20,13 +20,11 @@ public interface AgrupadorEspacioFisicoRepositoryInt extends JpaRepository<Agrup
 	 * @param idAgrupadorEspacioFisico
 	 * @return Lista de instancias de AgrupadorEspacioFisico
 	 */
-	@Query("SELECT agrupador" 
-			+ " FROM AgrupadorEspacioFisicoEntity agrupador "
+	@Query("SELECT agrupador" + " FROM AgrupadorEspacioFisicoEntity agrupador "
 			+ " WHERE agrupador.idAgrupadorEspacioFisico IN (:idAgrupadorEspacioFisico)")
 	public List<AgrupadorEspacioFisicoEntity> consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico(
 			List<Long> idAgrupadorEspacioFisico);
-	
-	
+
 	/**
 	 * Método encargado de consultar los agrupadores de espacios físicos dado una
 	 * lista de identificadores únicos de facultades<br>
@@ -36,12 +34,9 @@ public interface AgrupadorEspacioFisicoRepositoryInt extends JpaRepository<Agrup
 	 * @param idFacultad
 	 * @return Lista de instancias de AgrupadorEspacioFisico
 	 */
-	@Query("SELECT agrupador" 
-			+ " FROM AgrupadorEspacioFisicoEntity agrupador "
+	@Query("SELECT agrupador" + " FROM AgrupadorEspacioFisicoEntity agrupador "
 			+ " WHERE agrupador.facultad.idFacultad IN (:idFacultad)")
 	public List<AgrupadorEspacioFisicoEntity> consultarAgrupadoresEspaciosFisicosPorIdFacultad(List<Long> idFacultad);
-	
-	
 
 	/**
 	 * Método encargado de consultar los agrupadores de espacios físicos asociados a
@@ -52,12 +47,21 @@ public interface AgrupadorEspacioFisicoRepositoryInt extends JpaRepository<Agrup
 	 * @param idCurso
 	 * @return Lista de instancias de AgrupadorEspacioFisico
 	 */
-	@Query("SELECT agrupadores" 
-			+ " FROM CursoEntity curso "
-			+ " JOIN curso.asignatura asignatura"
-			+ " JOIN asignatura.agrupadores agrupadores"
-			+ " WHERE curso.idCurso =:idCurso")
-	public List<AgrupadorEspacioFisicoEntity> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(Long idCurso);
+	@Query("SELECT agrupadores" + " FROM CursoEntity curso " + " JOIN curso.asignatura asignatura"
+			+ " JOIN asignatura.agrupadores agrupadores" + " WHERE curso.idCurso =:idCurso")
+	public List<AgrupadorEspacioFisicoEntity> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(
+			Long idCurso);
+
+	/**
+	 * Método encargado de contar los espacios físicos por grupo<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return Lista de Object[]
+	 */
+	@Query("SELECT a.idAgrupadorEspacioFisico, COUNT(e) FROM AgrupadorEspacioFisicoEntity a LEFT JOIN a.espaciosFisicos e GROUP BY a.idAgrupadorEspacioFisico")
+	public List<Object[]> contarEspaciosFisicosPorAgrupador();
 
 	Page<AgrupadorEspacioFisicoEntity> findByFacultadIdFacultadIn(List<Long> idFacultad, Pageable page);
+
 }
