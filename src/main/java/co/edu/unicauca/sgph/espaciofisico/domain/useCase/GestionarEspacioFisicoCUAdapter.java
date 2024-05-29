@@ -4,6 +4,7 @@ import java.util.List;
 
 import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EdificioOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
@@ -113,5 +114,15 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	@Override
 	public List<RecursoOutDTO> obtenerListaRecursos() {
 		return this.gestionarEspacioFisicoGatewayIntPort.obtenerListaRecursos();
+	}
+
+	@Override
+	public EspacioFisico guardarEspacioFisico(EspacioFisicoInDTO espacioFisicoInDTO) {
+		return this.gestionarEspacioFisicoGatewayIntPort.guardarEspacioFisico(espacioFisicoInDTO);
+	}
+
+	@Override
+	public void activarInactivarEspacioFisico(Long id) {
+		this.gestionarEspacioFisicoGatewayIntPort.activarInactivarEspacioFisico(id);
 	}
 }

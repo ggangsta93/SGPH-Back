@@ -15,14 +15,22 @@ import javax.persistence.TypedQuery;
 
 import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EdificioOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.RecursoEspacioFisicoEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.RecursoFisicoEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.UbicacionEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.AgrupadorEspacioFisicoRepositoryInt;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.RecursoEspacioFisicoRepositoryInt;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.RecursoFisicoRepositoryInt;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -48,9 +56,13 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 	private TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt;
 	private RecursoFisicoRepositoryInt recursoFisicoRepositoryInt;
 	private ModelMapper modelMapper;
+	@Autowired
+	private RecursoEspacioFisicoRepositoryInt recursoEspacioFisicoRepositoryInt;
+	@Autowired
+	private AgrupadorEspacioFisicoRepositoryInt agrupadorEspacioFisicoRepositoryInt;
 
 	public GestionarEspacioFisicoGatewayImplAdapter(EspacioFisicoRepositoryInt espacioFisicoRepositoryInt,
-			TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt, ModelMapper modelMapper, RecursoFisicoRepositoryInt recursoFisicoRepositoryInt) {
+													TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt, ModelMapper modelMapper, RecursoFisicoRepositoryInt recursoFisicoRepositoryInt) {
 		this.espacioFisicoRepositoryInt = espacioFisicoRepositoryInt;
 		this.tipoEspacioFisicoRepositoryInt = tipoEspacioFisicoRepositoryInt;
 		this.modelMapper = modelMapper;
@@ -313,6 +325,58 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		return this.recursoFisicoRepositoryInt.findAll().stream().map(e -> new RecursoOutDTO(e.getIdRecursoFisico(), e.getNombre(), e.getDescripcion())).collect(Collectors.toList());
 	}
 
+	@Override
+	public EspacioFisico guardarEspacioFisico(EspacioFisicoInDTO espacioFisicoInDTO) {
+		EspacioFisicoEntity entidad = new EspacioFisicoEntity();
+		if (espacioFisicoInDTO.getIdEspacioFisico() != null) {
+			entidad.setIdEspacioFisico(espacioFisicoInDTO.getIdEspacioFisico());
+		}
+		entidad.setCapacidad(espacioFisicoInDTO.getCapacidad());
+		entidad.setEstado(espacioFisicoInDTO.getEstado());
+		entidad.setSalon(espacioFisicoInDTO.getSalon());
+		UbicacionEntity ubicacion = new UbicacionEntity();
+		ubicacion.setIdUbicacion(espacioFisicoInDTO.getIdUbicacion());
+		entidad.setUbicacion(ubicacion);
+		entidad.setIdEspacioFisico(espacioFisicoInDTO.getIdTipoEspacioFisico());
+		entidad = this.espacioFisicoRepositoryInt.save(entidad);
+		entidad.setAgrupadores(
+				espacioFisicoInDTO.getSaveIdAgrupadores().stream().map(g -> {
+					AgrupadorEspacioFisicoEntity entidadG = new AgrupadorEspacioFisicoEntity();
+					entidadG.setIdAgrupadorEspacioFisico(g);
+					return entidadG;
+				}).collect(Collectors.toList())
+		);
+		this.agregarRecursosAEspacioFisico(espacioFisicoInDTO.getRecursos(), entidad);
+		return this.modelMapper.map(entidad, EspacioFisico.class);
+	}
+
+	@Override
+	public void activarInactivarEspacioFisico(Long id) {
+		Optional<EspacioFisicoEntity> espacioFisicio = this.espacioFisicoRepositoryInt.findById(id);
+		if (espacioFisicio.isPresent()) {
+			EspacioFisicoEntity entidad = espacioFisicio.get();
+			if (entidad.getEstado().equals(EstadoEspacioFisicoEnum.ACTIVO)) {
+				entidad.setEstado(EstadoEspacioFisicoEnum.INACTIVO);
+			} else {
+				entidad.setEstado(EstadoEspacioFisicoEnum.ACTIVO);
+			}
+			this.espacioFisicoRepositoryInt.save(entidad);
+		}
+	}
+
+	public void agregarRecursosAEspacioFisico(List<Long> recursos, EspacioFisicoEntity espacioFisico) {
+		recursos.forEach(
+				r -> {
+					RecursoFisicoEntity recursoFisicoEntity = new RecursoFisicoEntity();
+					recursoFisicoEntity.setIdRecursoFisico(r);
+					RecursoEspacioFisicoEntity recursoEspacioFisicoEntity = new RecursoEspacioFisicoEntity();
+					recursoEspacioFisicoEntity.setEspacioFisico(espacioFisico);
+					recursoEspacioFisicoEntity.setRecursoFisico(recursoFisicoEntity);
+					this.recursoEspacioFisicoRepositoryInt.save(recursoEspacioFisicoEntity);
+				}
+		);
+	}
+
 	private void eliminarAgrupadoresEspacioFisico(List<EspacioFisicoDTO> quitados, Long idGrupo) {
 		quitados.forEach(q -> {
 			Optional<EspacioFisicoEntity> qEntidad = this.espacioFisicoRepositoryInt.findById(q.getIdEspacioFisico());
@@ -341,7 +405,7 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 	private List<EspacioFisicoEntity> filtrarEspaciosFisicosAgrupadosADiferenteAgrupadorId(
 			List<EspacioFisicoEntity> lista, Long idAgrupador) {
 		return lista.stream().filter(a -> a.getAgrupadores().stream()
-				.filter(b -> b.getIdAgrupadorEspacioFisico() == idAgrupador).collect(Collectors.toList()).isEmpty())
+						.filter(b -> b.getIdAgrupadorEspacioFisico() == idAgrupador).collect(Collectors.toList()).isEmpty())
 				.collect(Collectors.toList());
 	}
 

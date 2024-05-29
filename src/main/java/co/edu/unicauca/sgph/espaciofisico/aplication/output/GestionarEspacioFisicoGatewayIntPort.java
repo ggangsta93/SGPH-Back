@@ -4,6 +4,7 @@ import java.util.List;
 
 import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EdificioOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
@@ -115,4 +116,7 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion);
 
 	List<RecursoOutDTO> obtenerListaRecursos();
+	EspacioFisico guardarEspacioFisico(EspacioFisicoInDTO espacioFisicoInDTO);
+
+	void activarInactivarEspacioFisico(Long id);
 }

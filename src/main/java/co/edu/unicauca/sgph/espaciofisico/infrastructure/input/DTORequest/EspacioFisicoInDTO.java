@@ -23,7 +23,9 @@ public class EspacioFisicoInDTO {
 	private Long idTipoEspacioFisico;
 
 	private List<Long> lstIdAgrupadorEspacioFisico;
+	private List<Long> recursos;
 
+	private List<Long> saveIdAgrupadores;
 
 	public Long getIdEspacioFisico() {
 		return idEspacioFisico;
@@ -95,5 +97,21 @@ public class EspacioFisicoInDTO {
 
 	public void setIdUbicacion(Long idUbicacion) {
 		this.idUbicacion = idUbicacion;
+	}
+
+	public List<Long> getRecursos() {
+		return recursos;
+	}
+
+	public void setRecursos(List<Long> recursos) {
+		this.recursos = recursos;
+	}
+
+	public List<Long> getSaveIdAgrupadores() {
+		return saveIdAgrupadores;
+	}
+
+	public void setSaveIdAgrupadores(List<Long> saveIdAgrupadores) {
+		this.saveIdAgrupadores = saveIdAgrupadores;
 	}
 }
