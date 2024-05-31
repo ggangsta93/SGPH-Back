@@ -56,9 +56,23 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 	 */
 	@Override
 	public Asignatura guardarAsignatura(Asignatura asignatura) {
+		Optional<AsignaturaEntity> entidad = this.asignaturaRepositoryInt.findById(asignatura.getIdAsignatura());
+		AsignaturaEntity entidadGuardar = entidad.get();
+		if (entidad.isPresent()) {
+			AsignaturaEntity entidadGuardarMaper = this.asignaturaMapper.map(asignatura, AsignaturaEntity.class);
+			entidadGuardarMaper.setIdAsignatura(entidadGuardar.getIdAsignatura());
+			entidadGuardarMaper.setEstado(entidadGuardar.getEstado());
+			entidadGuardar = entidadGuardarMaper;
+		} else {
+			entidadGuardar = this.asignaturaMapper.map(asignatura, AsignaturaEntity.class);
+			entidadGuardar.setEstado(EstadoAsignaturaEnum.ACTIVO);
+		}
 		return this.asignaturaMapper.map(
-				this.asignaturaRepositoryInt.save(this.asignaturaMapper.map(asignatura, AsignaturaEntity.class)),
+				this.asignaturaRepositoryInt.save(
+						entidadGuardar
+				),
 				Asignatura.class);
+
 	}
 
 	/**

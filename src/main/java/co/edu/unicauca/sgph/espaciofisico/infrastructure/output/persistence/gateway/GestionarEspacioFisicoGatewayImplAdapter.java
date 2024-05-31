@@ -335,7 +335,9 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		UbicacionEntity ubicacion = new UbicacionEntity();
 		ubicacion.setIdUbicacion(espacioFisicoInDTO.getIdUbicacion());
 		entidad.setUbicacion(ubicacion);
-		entidad.setIdEspacioFisico(espacioFisicoInDTO.getIdTipoEspacioFisico());
+		TipoEspacioFisicoEntity tipoEspacioFisico = new TipoEspacioFisicoEntity();
+		tipoEspacioFisico.setIdTipoEspacioFisico(espacioFisicoInDTO.getIdTipoEspacioFisico());
+		entidad.setTipoEspacioFisico(tipoEspacioFisico);
 		entidad = this.espacioFisicoRepositoryInt.save(entidad);
 		if (espacioFisicoInDTO.getSaveIdAgrupadores() != null) {
 			entidad.setAgrupadores(
