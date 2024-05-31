@@ -59,4 +59,15 @@ public class GestionarTipoEspacioFisicoGatewayImplAdapter implements GestionarTi
 		return this.modelMapper.map(typedQuery.getResultList(), new TypeToken<List<TipoEspacioFisico>>() {
 		}.getType());
 	}
+
+	@Override
+	public List<TipoEspacioFisico> consultarTiposEspaciosFisicos() {
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append(
+				"SELECT DISTINCT tipoEspacioFisico FROM EspacioFisicoEntity espacioFisico JOIN espacioFisico.tipoEspacioFisico tipoEspacioFisico WHERE 1=1 ");
+		TypedQuery<TipoEspacioFisicoEntity> typedQuery = entityManager.createQuery(queryBuilder.toString(),
+				TipoEspacioFisicoEntity.class);
+		return this.modelMapper.map(typedQuery.getResultList(), new TypeToken<List<TipoEspacioFisico>>() {
+		}.getType());
+	}
 }

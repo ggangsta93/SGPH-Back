@@ -273,4 +273,9 @@ public class EspacioFisicoController {
 	public List<RecursoOutDTO> obtenerListaRecursos() {
 		return this.gestionarEspacioFisicoCUIntPort.obtenerListaRecursos();
 	}
+	@GetMapping("/consultarTiposEspaciosFisicos")
+	public List<TipoEspacioFisicoOutDTO> consultarTiposEspaciosFisicos() {
+		return this.tipoEspacioFisicoRestMapper.toLstTipoEspacioFisicoOutDTO(
+				this.gestionarTipoEspacioFisicoCUIntPort.consultarTiposEspaciosFisicos());
+	}
 }

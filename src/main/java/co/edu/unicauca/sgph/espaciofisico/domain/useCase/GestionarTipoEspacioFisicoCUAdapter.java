@@ -26,4 +26,9 @@ public class GestionarTipoEspacioFisicoCUAdapter implements GestionarTipoEspacio
 		return this.gestionarTipoEspacioFisicoGatewayIntPort.consultarTiposEspaciosFisicosPorUbicaciones(lstIdUbicacion);
 	}
 
+	@Override
+	public List<TipoEspacioFisico> consultarTiposEspaciosFisicos() {
+		return this.gestionarTipoEspacioFisicoGatewayIntPort.consultarTiposEspaciosFisicos();
+	}
+
 }

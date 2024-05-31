@@ -337,13 +337,14 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		entidad.setUbicacion(ubicacion);
 		entidad.setIdEspacioFisico(espacioFisicoInDTO.getIdTipoEspacioFisico());
 		entidad = this.espacioFisicoRepositoryInt.save(entidad);
-		entidad.setAgrupadores(
-				espacioFisicoInDTO.getSaveIdAgrupadores().stream().map(g -> {
-					AgrupadorEspacioFisicoEntity entidadG = new AgrupadorEspacioFisicoEntity();
-					entidadG.setIdAgrupadorEspacioFisico(g);
-					return entidadG;
-				}).collect(Collectors.toList())
-		);
+		if (espacioFisicoInDTO.getSaveIdAgrupadores() != null) {
+			entidad.setAgrupadores(
+					espacioFisicoInDTO.getSaveIdAgrupadores().stream().map(g -> {
+						AgrupadorEspacioFisicoEntity entidadG = new AgrupadorEspacioFisicoEntity();
+						entidadG.setIdAgrupadorEspacioFisico(g);
+						return entidadG;
+					}).collect(Collectors.toList()));
+		}
 		this.agregarRecursosAEspacioFisico(espacioFisicoInDTO.getRecursos(), entidad);
 		return this.modelMapper.map(entidad, EspacioFisico.class);
 	}

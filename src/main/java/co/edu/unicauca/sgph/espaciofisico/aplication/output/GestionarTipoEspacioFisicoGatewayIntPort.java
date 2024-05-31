@@ -16,4 +16,6 @@ public interface GestionarTipoEspacioFisicoGatewayIntPort {
 	 * @return
 	 */
 	public List<TipoEspacioFisico> consultarTiposEspaciosFisicosPorUbicaciones(List<Long> lstIdUbicacion);
+
+	List<TipoEspacioFisico> consultarTiposEspaciosFisicos();
 }
