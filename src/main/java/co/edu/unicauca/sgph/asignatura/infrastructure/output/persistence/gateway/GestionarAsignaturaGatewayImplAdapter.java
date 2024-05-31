@@ -116,7 +116,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		criteriaQuery.where(predicate);
 
 		List<AsignaturaEntity> resultList = em.createQuery(criteriaQuery)
-				.setFirstResult(filtro.getPageNumber())
+				.setFirstResult(filtro.getPageNumber() * filtro.getPageSize())
 				.setMaxResults(filtro.getPageSize())
 				.getResultList();
 		Pageable pageable = PageRequest.of(filtro.getPageNumber(), filtro.getPageSize());
