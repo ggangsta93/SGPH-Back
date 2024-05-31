@@ -1,6 +1,7 @@
 package co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.repository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,4 +21,7 @@ public interface PeriodoAcademicoRepositoryInt extends JpaRepository<PeriodoAcad
 
 	@Query("SELECT p FROM PeriodoAcademicoEntity p WHERE p.anio = :anio AND p.periodo = :periodo")
 	public PeriodoAcademicoEntity existsByAnioAndPeriodo(@Param("anio") Long anio, @Param("periodo") Long periodo);
+	
+    @Query("SELECT p FROM PeriodoAcademicoEntity p ORDER BY p.fechaInicioPeriodo DESC, p.fechaFinPeriodo DESC")
+	public List<PeriodoAcademicoEntity> consultarPeriodosAcademicos();
 }

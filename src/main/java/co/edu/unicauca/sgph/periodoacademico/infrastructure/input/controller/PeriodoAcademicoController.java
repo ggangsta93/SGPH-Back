@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
 import co.edu.unicauca.sgph.periodoacademico.aplication.input.GestionarPeriodoAcademicoCUIntPort;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.FiltroPeriodoAcademicoDTO;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.PeriodoAcademicoInDTO;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTOResponse.PeriodoAcademicoOutDTO;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.mapper.PeriodoAcademicoRestMapper;
@@ -56,25 +60,39 @@ public class PeriodoAcademicoController {
 		Set<String> validaciones = new HashSet<String>();
 		validaciones.add("ExistsByAnioAndPeriodo");
 		validaciones.add("FechaFinPeriodoGreaterThanFechaInicioPeriodo");
-		
+
 		if (result.hasErrors()) {
 			return validacion(result, validaciones);
 		}
-		
-		if(Boolean.FALSE.equals(periodoAcademicoInDTO.getEsValidar())) {
+
+		if (Boolean.FALSE.equals(periodoAcademicoInDTO.getEsValidar())) {
 			PeriodoAcademicoOutDTO periodoAcademicoOutDTO = this.periodoAcademicoRestMapper
 					.toPeriodoAcademicoOutDTO(this.gestionarPeriodoAcademicoCUIntPort.guardarPeriodoAcademico(
 							this.periodoAcademicoRestMapper.toPeriodoAcademico(periodoAcademicoInDTO)));
-			
+
 			if (Objects.equals(periodoAcademicoInDTO.getIdPeriodoAcademico(),
 					periodoAcademicoOutDTO.getIdPeriodoAcademico())) {
 				return new ResponseEntity<PeriodoAcademicoOutDTO>(periodoAcademicoOutDTO, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<PeriodoAcademicoOutDTO>(periodoAcademicoOutDTO, HttpStatus.CREATED);
-			}			
-		}else {
+			}
+		} else {
 			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
 		}
+	}
+
+	/**
+	 * Método encargado de consultar los periodos académicos <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param filtroPeriodoAcademicoDTO
+	 * @return Page de instancias PeriodoAcademico
+	 */
+	@PostMapping("/consultarPeriodosAcademicos")
+	public Page<PeriodoAcademicoOutDTO> consultarPeriodosAcademicos(
+			@RequestBody FiltroPeriodoAcademicoDTO filtroPeriodoAcademicoDTO) {
+		return this.gestionarPeriodoAcademicoCUIntPort.consultarPeriodosAcademicos(filtroPeriodoAcademicoDTO);
 	}
 
 	/**
@@ -101,7 +119,7 @@ public class PeriodoAcademicoController {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 */
-	@Scheduled(cron = "0 0 0 * * *") // Se ejecuta todos los días a la medianoche
+	//@Scheduled(cron = "0 0 0 * * *") // Se ejecuta todos los días a la medianoche
 	// @Scheduled(fixedRate = 30000) // Se ejecuta cada hora
 	private void actualizarEstadoPeriodoAcademico() {
 		LocalDate localDate = LocalDate.now();
@@ -121,13 +139,13 @@ public class PeriodoAcademicoController {
 	 */
 	private ResponseEntity<?> validacion(BindingResult result, Set<String> codes) {
 		Map<String, String> errores = new HashMap<>();
-		//Se validan restricciones de campos
+		// Se validan restricciones de campos
 		result.getAllErrors().forEach(error -> {
 			if (codes.contains(error.getCode())) {
 				errores.put(error.getCode(), error.getDefaultMessage());
 			}
 		});
-		//Se validan restricciones de campos
+		// Se validan restricciones de campos
 		result.getFieldErrors().forEach(error -> {
 			errores.put(error.getField(), "El campo " + error.getField() + " " + error.getDefaultMessage());
 		});

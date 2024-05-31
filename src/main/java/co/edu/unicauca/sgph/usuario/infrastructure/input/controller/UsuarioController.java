@@ -68,6 +68,11 @@ public class UsuarioController {
 			respuestas.put("errors", listaErrores);
 			return new ResponseEntity<Map<String, Object>>(respuestas, HttpStatus.BAD_REQUEST);
 		}
+		
+		if(usuarioInDTO.getLstIdPrograma()==null) {
+			usuarioInDTO.setLstIdPrograma(new ArrayList<>());
+		}
+		
 
 		/*if (result.hasErrors()) {
 			return validacion(result);

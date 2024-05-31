@@ -2,7 +2,11 @@ package co.edu.unicauca.sgph.periodoacademico.aplication.output;
 
 import java.util.Date;
 
+import org.springframework.data.domain.Page;
+
 import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.FiltroPeriodoAcademicoDTO;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTOResponse.PeriodoAcademicoOutDTO;
 
 public interface GestionarPeriodoAcademicoGatewayIntPort {
 
@@ -47,4 +51,14 @@ public interface GestionarPeriodoAcademicoGatewayIntPort {
 	 * @return
 	 */
 	public PeriodoAcademico existsByAnioAndPeriodo(Long anio, Long periodo);
+	
+	/**
+	 * Método encargado de consultar los periodos académicos <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param filtroPeriodoAcademicoDTO
+	 * @return Page de instancias PeriodoAcademicoOutDTO
+	 */
+	public Page<PeriodoAcademicoOutDTO> consultarPeriodosAcademicos(FiltroPeriodoAcademicoDTO filtroPeriodoAcademicoDTO);
 }

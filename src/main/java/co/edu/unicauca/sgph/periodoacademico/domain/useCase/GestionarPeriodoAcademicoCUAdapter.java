@@ -1,12 +1,15 @@
 package co.edu.unicauca.sgph.periodoacademico.domain.useCase;
 
-import java.time.LocalDate;
 import java.util.Date;
+
+import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.periodoacademico.aplication.input.GestionarPeriodoAcademicoCUIntPort;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.PeriodoAcademicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.FiltroPeriodoAcademicoDTO;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTOResponse.PeriodoAcademicoOutDTO;
 
 /**
  * <b>Descripción:<b> Clase que determina <br>
@@ -50,5 +53,13 @@ public class GestionarPeriodoAcademicoCUAdapter implements GestionarPeriodoAcade
 	@Override
 	public PeriodoAcademico consultarPeriodoAcademicoVigente() {
 		return this.gestionarPeriodoAcademicoGatewayIntPort.consultarPeriodoAcademicoVigente();
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.periodoacademico.aplication.input.GestionarPeriodoAcademicoCUIntPort#consultarPeriodosAcademicos(co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.FiltroPeriodoAcademicoDTO)
+	 */
+	@Override
+	public Page<PeriodoAcademicoOutDTO> consultarPeriodosAcademicos(FiltroPeriodoAcademicoDTO filtroPeriodoAcademicoDTO) {
+		return this.gestionarPeriodoAcademicoGatewayIntPort.consultarPeriodosAcademicos(filtroPeriodoAcademicoDTO);
 	}
 }
