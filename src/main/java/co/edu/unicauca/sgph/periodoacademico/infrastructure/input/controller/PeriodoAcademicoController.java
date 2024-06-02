@@ -3,12 +3,11 @@ package co.edu.unicauca.sgph.periodoacademico.infrastructure.input.controller;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
 import co.edu.unicauca.sgph.periodoacademico.aplication.input.GestionarPeriodoAcademicoCUIntPort;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.FiltroPeriodoAcademicoDTO;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.PeriodoAcademicoInDTO;
@@ -59,7 +57,8 @@ public class PeriodoAcademicoController {
 
 		Set<String> validaciones = new HashSet<String>();
 		validaciones.add("ExistsByAnioAndPeriodo");
-		validaciones.add("FechaFinPeriodoGreaterThanFechaInicioPeriodo");
+		validaciones.add("FechaFinGreaterThanFechaInicio");
+		validaciones.add("FechaInicioGreaterThanUltimaFechaFin");
 
 		if (result.hasErrors()) {
 			return validacion(result, validaciones);
@@ -119,7 +118,7 @@ public class PeriodoAcademicoController {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 */
-	//@Scheduled(cron = "0 0 0 * * *") // Se ejecuta todos los días a la medianoche
+	@Scheduled(cron = "0 0 0 * * *") // Se ejecuta todos los días a la medianoche
 	// @Scheduled(fixedRate = 30000) // Se ejecuta cada hora
 	private void actualizarEstadoPeriodoAcademico() {
 		LocalDate localDate = LocalDate.now();

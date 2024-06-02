@@ -37,7 +37,6 @@ import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTO
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.output.persistence.repository.PlanificacionManualRepositoryInt;
 import co.edu.unicauca.sgph.horario.domain.model.Horario;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
-import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 
 @Service
 public class GestionarPlanificacionManualGatewayImplAdapter implements GestionarPlanificacionManualGatewayIntPort {
@@ -61,11 +60,12 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCursosPlanificacionPorFiltro(co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO)
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCursosPlanificacionPorFiltro(co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO,
+	 *      java.lang.Long)
 	 */
 	@Override
 	public Page<CursoPlanificacionOutDTO> consultarCursosPlanificacionPorFiltro(
-			FiltroCursoPlanificacionDTO filtroCursoPlanificacionDTO) {
+			FiltroCursoPlanificacionDTO filtroCursoPlanificacionDTO, Long idPeriodoAcademicoVigente) {
 		// Configuración de la paginación
 		PageRequest pageable = PageRequest.of(filtroCursoPlanificacionDTO.getPagina(),
 				filtroCursoPlanificacionDTO.getRegistrosPorPagina());
@@ -90,12 +90,9 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 
 		Map<String, Object> parametros = new HashMap<>();
 
-		// Se consulta el periodo académico que está 'ABIERTO'
-		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
-				.consultarPeriodoAcademicoVigente();
-		if (Objects.nonNull(periodoAcademicoVigente)) {
+		if (Objects.nonNull(idPeriodoAcademicoVigente)) {
 			queryBuilder.append(" AND c.periodoAcademico.idPeriodoAcademico =:idPeriodoAcademico");
-			parametros.put("idPeriodoAcademico", periodoAcademicoVigente.getIdPeriodoAcademico());
+			parametros.put("idPeriodoAcademico", idPeriodoAcademicoVigente);
 		} else {
 			queryBuilder.append(" AND c.periodoAcademico.idPeriodoAcademico IS NULL");
 		}
@@ -166,12 +163,12 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 						filtroCursoPlanificacionDTO.getListaIdPrograma(),
 						filtroCursoPlanificacionDTO.getListaIdAsignatura(), filtroCursoPlanificacionDTO.getSemestre(),
 						filtroCursoPlanificacionDTO.getEstadoCursoHorario(),
-						filtroCursoPlanificacionDTO.getCantidadDocentes(), periodoAcademicoVigente));
+						filtroCursoPlanificacionDTO.getCantidadDocentes(), idPeriodoAcademicoVigente));
 	}
 
 	private Long contarCursosConsultados(List<Long> listaIdFacultad, List<Long> listaIdPograma,
 			List<Long> listaIdAsignatura, Integer semestre, EstadoCursoHorarioEnum estadoCursoHorario,
-			Integer cantidadDocentes, PeriodoAcademico periodoAcademicoVigente) {
+			Integer cantidadDocentes, Long idPeriodoAcademicoVigente) {
 
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(" SELECT COUNT(c)");
@@ -182,9 +179,9 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 
 		Map<String, Object> parametros = new HashMap<>();
 
-		if (Objects.nonNull(periodoAcademicoVigente)) {
+		if (Objects.nonNull(idPeriodoAcademicoVigente)) {
 			queryBuilder.append(" AND c.periodoAcademico.idPeriodoAcademico =:idPeriodoAcademico");
-			parametros.put("idPeriodoAcademico", periodoAcademicoVigente.getIdPeriodoAcademico());
+			parametros.put("idPeriodoAcademico", idPeriodoAcademicoVigente);
 		} else {
 			queryBuilder.append(" AND c.periodoAcademico.idPeriodoAcademico IS NULL");
 		}
@@ -251,61 +248,59 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarInfoGeneralCursosPorPrograma(java.lang.Long)
 	 */
 	@Override
-	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma) {
-		// Se consulta el periodo académico que está 'ABIERTO'
-		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
-				.consultarPeriodoAcademicoVigente();
-
+	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma, Long idPeriodoAcademicoVigente) {
 		InfoGeneralCursosPorProgramaDTO infoGeneralCursosPorProgramaDTO = new InfoGeneralCursosPorProgramaDTO();
 		infoGeneralCursosPorProgramaDTO
 				.setCantidadCursosHorarioParcial(this.contarCursosConsultados(null, Arrays.asList(idPrograma), null,
-						null, EstadoCursoHorarioEnum.PARCIALMENTE, null, periodoAcademicoVigente));
+						null, EstadoCursoHorarioEnum.PARCIALMENTE, null, idPeriodoAcademicoVigente));
 		infoGeneralCursosPorProgramaDTO
 				.setCantidadCursosSinHorario(this.contarCursosConsultados(null, Arrays.asList(idPrograma), null, null,
-						EstadoCursoHorarioEnum.SIN_ASIGNAR, null, periodoAcademicoVigente));
+						EstadoCursoHorarioEnum.SIN_ASIGNAR, null, idPeriodoAcademicoVigente));
 		infoGeneralCursosPorProgramaDTO.setCantidadCursosConHorario(this.contarCursosConsultados(null,
-				Arrays.asList(idPrograma), null, null, EstadoCursoHorarioEnum.ASIGNADO, null, periodoAcademicoVigente));
+				Arrays.asList(idPrograma), null, null, EstadoCursoHorarioEnum.ASIGNADO, null, idPeriodoAcademicoVigente));
 		infoGeneralCursosPorProgramaDTO.setTotalCursos(this.contarCursosConsultados(null, Arrays.asList(idPrograma),
-				null, null, null, null, periodoAcademicoVigente));
+				null, null, null, null, idPeriodoAcademicoVigente));
 		infoGeneralCursosPorProgramaDTO.setCantidadCursosSinDocente(this.contarCursosConsultados(null,
-				Arrays.asList(idPrograma), null, null, null, 0, periodoAcademicoVigente));
+				Arrays.asList(idPrograma), null, null, null, 0, idPeriodoAcademicoVigente));
 		return infoGeneralCursosPorProgramaDTO;
 	}
 
 	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCruceHorarioDocente(java.lang.Long,
 	 *      co.edu.unicauca.sgph.common.enums.DiaSemanaEnum, java.time.LocalTime,
-	 *      java.time.LocalTime)
+	 *      java.time.LocalTime, java.lang.Long)
 	 */
 	@Override
 	public List<Object[]> consultarCruceHorarioDocente(Long idCurso, DiaSemanaEnum dia, LocalTime horaInicio,
-			LocalTime horaFin) {
-		return this.planificacionManualRepositoryInt.consultarCruceHorarioDocente(idCurso, dia, horaInicio, horaFin);
+			LocalTime horaFin, Long idPeriodoAcademicoVigente) {
+		return this.planificacionManualRepositoryInt.consultarCruceHorarioDocente(idCurso, dia, horaInicio, horaFin,
+				idPeriodoAcademicoVigente);
 	}
 
 	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCruceHorarioEspacioFisico(java.util.List,
 	 *      co.edu.unicauca.sgph.common.enums.DiaSemanaEnum, java.time.LocalTime,
-	 *      java.time.LocalTime)
+	 *      java.time.LocalTime, java.lang.Long)
 	 */
 	@Override
 	public List<Horario> consultarCruceHorarioEspacioFisico(List<Long> lstIdEspacioFisico, DiaSemanaEnum dia,
-			LocalTime horaInicio, LocalTime horaFin) {
-		return this.modelMapper.map(this.planificacionManualRepositoryInt.consultarCruceHorarioEspacioFisico(
-				lstIdEspacioFisico, dia, horaInicio, horaFin), new TypeToken<List<Horario>>() {
-				}.getType());
+			LocalTime horaInicio, LocalTime horaFin, Long idPeriodoAcademicoVigente) {
+		return this.modelMapper
+				.map(this.planificacionManualRepositoryInt.consultarCruceHorarioEspacioFisico(lstIdEspacioFisico, dia,
+						horaInicio, horaFin, idPeriodoAcademicoVigente), new TypeToken<List<Horario>>() {
+						}.getType());
 	}
 
 	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCruceHorarioDocentePorIdPersona(java.lang.Long,
 	 *      co.edu.unicauca.sgph.common.enums.DiaSemanaEnum, java.time.LocalTime,
-	 *      java.time.LocalTime)
+	 *      java.time.LocalTime, java.lang.Long)
 	 */
 	@Override
 	public List<Object[]> consultarCruceHorarioDocentePorIdPersona(Long idPersona, DiaSemanaEnum dia,
-			LocalTime horaInicio, LocalTime horaFin) {
+			LocalTime horaInicio, LocalTime horaFin, Long idPeriodoAcademicoVigente) {
 		return this.planificacionManualRepositoryInt.consultarCruceHorarioDocentePorIdPersona(idPersona, dia,
-				horaInicio, horaFin);
+				horaInicio, horaFin, idPeriodoAcademicoVigente);
 	}
 
 	/**
@@ -320,52 +315,57 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso) {
 		return this.planificacionManualRepositoryInt.consultarFranjasHorariaCursoPorIdCurso(idCurso);
 	}
-
+	
 	/**
-	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasDocentePorIdPersona(java.lang.Long)
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasDocentePorIdPersona(java.lang.Long,
+	 *      java.lang.Long)
 	 */
 	@Override
-	public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona) {
-		// Se consulta el periodo académico que está 'ABIERTO'
-		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
-				.consultarPeriodoAcademicoVigente();
-
+	public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona,
+			Long idPeriodoAcademicoVigente) {
 		return this.planificacionManualRepositoryInt.consultarFranjasDocentePorIdPersona(idPersona,
-				Objects.isNull(periodoAcademicoVigente) ? null : periodoAcademicoVigente.getIdPeriodoAcademico());
+				idPeriodoAcademicoVigente);
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasEspacioFisicoPorIdEspacioFisico(java.lang.Long)
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasEspacioFisicoPorIdEspacioFisico(java.lang.Long,
+	 *      java.lang.Long)
 	 */
 	@Override
-	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico) {
-		// Se consulta el periodo académico que está 'ABIERTO'
-		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
-				.consultarPeriodoAcademicoVigente();
-
+	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico,
+			Long idPeriodoAcademicoVigente) {
 		return this.planificacionManualRepositoryInt.consultarFranjasEspacioFisicoPorIdEspacioFisico(idEspacioFisico,
-				Objects.isNull(periodoAcademicoVigente) ? null : periodoAcademicoVigente.getIdPeriodoAcademico());
+				idPeriodoAcademicoVigente);
 	}
 
 	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(java.lang.Long,
-	 *      java.util.List, java.util.List, java.lang.String)
+	 *      java.util.List, java.util.List, java.util.List, java.lang.String,
+	 *      java.lang.Long)
 	 */
 	@Override
 	public Map<Long, List<FranjaHorariaBasicaDTO>> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(
 			Long idCurso, List<Long> listaIdUbicacion, List<Long> listaIdTipoEspacioFisico,
-			List<Long> listaIdAgrupadorEspacioFisico, String salon) {
+			List<Long> listaIdAgrupadorEspacioFisico, String salon, Long idPeriodoAcademicoVigente) {
 
+		/*
+		 * Se consulta los espacios físicos adecuados para el curso.
+		 */
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append("SELECT DISTINCT espacioFisico.idEspacioFisico ");
 		queryBuilder.append("FROM EspacioFisicoEntity espacioFisico ");
 		queryBuilder.append("LEFT JOIN espacioFisico.agrupadores agrupadores ");
 		queryBuilder.append("WHERE 1=1 ");
 
+		// Se consulta los grupos del curso
 		List<AgrupadorEspacioFisico> listaAgrupadoresCurso = this.gestionarAgrupadorEspacioFisicoGatewayIntPort
 				.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso);
+
 		Map<String, Object> parametros = new HashMap<>();
 
+		/*
+		 * Filtros opcionales ingresados por el usuario
+		 */
 		if (Objects.nonNull(listaIdUbicacion) && !listaIdUbicacion.isEmpty()) {
 			queryBuilder.append("AND espacioFisico.ubicacion.idUbicacion IN (:listaIdUbicacion) ");
 			parametros.put("listaIdUbicacion", listaIdUbicacion);
@@ -383,17 +383,24 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 			queryBuilder.append("AND espacioFisico.salon LIKE :salon ");
 			parametros.put("salon", "%" + salon.replaceAll("\\s+", " ").trim() + "%");
 		}
+
+		/*
+		 * Filtros obligatorios para todos los curso
+		 */
+
 		// La capacidad del espacio físico debe ser mayor o igual al cupo del curso
 		queryBuilder.append(
 				"AND espacioFisico.capacidad >= (SELECT curso.cupo FROM CursoEntity curso WHERE curso.idCurso = :idCurso) ");
 		parametros.put("idCurso", idCurso);
-		// El estado del espacio físico debe ser ACTIVO
+		// Solo espacios físicos en estado ACTIVO
 		queryBuilder.append("AND espacioFisico.estado = 'ACTIVO' ");
+
 		if (!listaAgrupadoresCurso.isEmpty()) {
 			/*
 			 * Se filtra grupos del curso si tiene. Esta opción es requerida para cuando un
-			 * curso que tiene grupos asociados y el usuario no selecciona ningún grupo,
-			 * entonces por defecto debe cargar todos los espacios físicos de esos grupos
+			 * curso que tiene grupos asociados y el usuario no ha filtrado por ningún
+			 * grupo, entonces por defecto debe cargar todos y sólo los espacios físicos de
+			 * esos grupos
 			 */
 			queryBuilder.append("AND agrupadores.idAgrupadorEspacioFisico IN (:listaIdAgrupadorEspacioFisicoDefault) ");
 			parametros.put("listaIdAgrupadorEspacioFisicoDefault", listaAgrupadoresCurso.stream()
@@ -401,15 +408,17 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		}
 
 		// Crea la consulta
-		TypedQuery<Long> typedQuery = entityManager.createQuery(queryBuilder.toString(), Long.class);
+		TypedQuery<Long> typedQueryEspaciosFisicos = entityManager.createQuery(queryBuilder.toString(), Long.class);
 
 		// Asigna los parámetros a la consulta
 		for (Map.Entry<String, Object> entry : parametros.entrySet()) {
-			typedQuery.setParameter(entry.getKey(), entry.getValue());
+			typedQueryEspaciosFisicos.setParameter(entry.getKey(), entry.getValue());
 		}
 
-		List<Long> listaIdEspacioFisico = typedQuery.getResultList();
+		// Lista de espacios físicos permitidos para el curso
+		List<Long> listaIdEspacioFisico = typedQueryEspaciosFisicos.getResultList();
 
+		// Se consulta los horarios los espacios físicos y se agrupan por espacio físico
 		if (!listaIdEspacioFisico.isEmpty()) {
 			queryBuilder = new StringBuilder();
 			queryBuilder.append(
@@ -417,28 +426,33 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 			queryBuilder.append("horario.idHorario, espacioFisico.idEspacioFisico, ");
 			queryBuilder.append("horario.dia, horario.horaInicio, horario.horaFin ) ");
 			queryBuilder.append("FROM HorarioEntity horario ");
+			queryBuilder.append("JOIN horario.curso curso ");
 			queryBuilder.append("JOIN horario.espaciosFisicos espacioFisico ");
 			queryBuilder.append("WHERE espacioFisico.idEspacioFisico IN (:listaIdEspacioFisico) ");
+			queryBuilder.append("AND curso.periodoAcademico.idPeriodoAcademico = :idPeriodoAcademicoVigente ");
 
 			parametros = new HashMap<>();
 			parametros.put("listaIdEspacioFisico", listaIdEspacioFisico);
+			parametros.put("idPeriodoAcademicoVigente", idPeriodoAcademicoVigente);
 
 			// Crea la consulta
-			TypedQuery<FranjaHorariaBasicaDTO> typedQuery2 = entityManager.createQuery(queryBuilder.toString(),
+			TypedQuery<FranjaHorariaBasicaDTO> typedQueryHorarios = entityManager.createQuery(queryBuilder.toString(),
 					FranjaHorariaBasicaDTO.class);
 
 			// Asigna los parámetros a la consulta
 			for (Map.Entry<String, Object> entry : parametros.entrySet()) {
-				typedQuery2.setParameter(entry.getKey(), entry.getValue());
+				typedQueryHorarios.setParameter(entry.getKey(), entry.getValue());
 			}
 
-			List<FranjaHorariaBasicaDTO> listaFranjaHorariaBasicaDTO = typedQuery2.getResultList();
-			
+			List<FranjaHorariaBasicaDTO> listaFranjaHorariaBasicaDTO = typedQueryHorarios.getResultList();
+
+			// Se agrupa los horarios por espacio físico
 			Map<Long, List<FranjaHorariaBasicaDTO>> mapaFranjasHorariasPorEspacioFisico = listaFranjaHorariaBasicaDTO
 					.stream().collect(Collectors.groupingBy(FranjaHorariaBasicaDTO::getIdEspacioFisico));
 
 			for (Long idEspacioFisico : listaIdEspacioFisico) {
 				if (!mapaFranjasHorariasPorEspacioFisico.containsKey(idEspacioFisico)) {
+					// Para los espacios físicos que no tienen horario se les establece lista vacía
 					mapaFranjasHorariasPorEspacioFisico.put(idEspacioFisico, new ArrayList<>());
 				}
 			}
@@ -449,10 +463,12 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasHorariasDeDocentesAsociadosACurso(java.lang.Long)
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasHorariasDeDocentesAsociadosACurso(java.lang.Long,
+	 *      java.lang.Long)
 	 */
 	@Override
-	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeDocentesAsociadosACurso(Long idCurso) {
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeDocentesAsociadosACurso(Long idCurso,
+			Long idPeriodoAcademicoVigente) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append(
@@ -465,10 +481,12 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		queryBuilder.append(
 				"SELECT docente.idPersona FROM DocenteEntity docente JOIN docente.cursos cursos WHERE cursos.idCurso = :idCurso ");
 		queryBuilder.append(") ");
+		queryBuilder.append("AND curso.periodoAcademico.idPeriodoAcademico = :idPeriodoAcademicoVigente ");
 
 		Map<String, Object> parametros = new HashMap<>();
 
 		parametros.put("idCurso", idCurso);
+		parametros.put("idPeriodoAcademicoVigente", idPeriodoAcademicoVigente);
 
 		// Crea la consulta
 		TypedQuery<FranjaHorariaBasicaDTO> typedQuery = entityManager.createQuery(queryBuilder.toString(),
@@ -484,10 +502,11 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 
 	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasHorariasDeSemestrePorCurso(java.lang.Long,
-	 *      java.lang.Long)
+	 *      java.lang.Long, java.lang.Long)
 	 */
 	@Override
-	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeSemestrePorCurso(Long idCurso, Long idAsignatura) {
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeSemestrePorCurso(Long idCurso, Long idAsignatura,
+			Long idPeriodoAcademicoVigente) {
 		StringBuilder queryBuilder = new StringBuilder();
 
 		queryBuilder.append(
@@ -500,10 +519,12 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 				"WHERE asignatura.semestre = (SELECT asig.semestre FROM CursoEntity cur JOIN cur.asignatura asig WHERE cur.idCurso = :idCurso) ");
 		queryBuilder.append(
 				"AND asignatura.programa.idPrograma = (SELECT asig.programa.idPrograma FROM CursoEntity cur JOIN cur.asignatura asig WHERE cur.idCurso = :idCurso) ");
+		queryBuilder.append("AND curso.periodoAcademico.idPeriodoAcademico = :idPeriodoAcademicoVigente ");
 
 		Map<String, Object> parametros = new HashMap<>();
 
 		parametros.put("idCurso", idCurso);
+		parametros.put("idPeriodoAcademicoVigente", idPeriodoAcademicoVigente);
 
 		// Crea la consulta
 		TypedQuery<FranjaHorariaBasicaDTO> typedQuery = entityManager.createQuery(queryBuilder.toString(),

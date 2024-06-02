@@ -10,8 +10,8 @@ import javax.validation.Payload;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = FechaFinPeriodoGreaterThanFechaInicioPeriodoValidation.class)
-public @interface FechaFinPeriodoGreaterThanFechaInicioPeriodo {
+@Constraint(validatedBy = FechaFinGreaterThanFechaInicioValidation.class)
+public @interface FechaFinGreaterThanFechaInicio {
 
 	String message() default "{periodo.academico.periodo.final.greater.than.periodo.inicial}";
 	String messageKey() default "periodo.academico.periodo.final.greater.than.periodo.inicial ";

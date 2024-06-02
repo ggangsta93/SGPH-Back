@@ -54,7 +54,15 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 	 */
 	@Override
 	public Curso consultarCursoPorIdCurso(Long idCurso) {
-		return this.modelMapper.map(this.cursoRepositoryInt.findByIdCurso(idCurso), Curso.class);
+		try {
+			return this.modelMapper.map(this.cursoRepositoryInt.findByIdCurso(idCurso), Curso.class);			
+		} catch (Exception e) {
+			/*
+			 * Retorna nulo si no existe el curso (Genera excepción al intentar mapear algo nulo)
+			 */
+			return null;
+		}
+		
 	}
 
 	/** 
