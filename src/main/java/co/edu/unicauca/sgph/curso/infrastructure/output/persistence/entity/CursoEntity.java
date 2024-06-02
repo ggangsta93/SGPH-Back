@@ -100,6 +100,14 @@ public class CursoEntity {
 		return periodoAcademico;
 	}
 
+	public List<HorarioEntity> getHorarios() {
+		return horarios;
+	}
+
+	public void setHorarios(List<HorarioEntity> horarios) {
+		this.horarios = horarios;
+	}
+
 	public void setPeriodoAcademico(PeriodoAcademicoEntity periodoAcademico) {
 		this.periodoAcademico = periodoAcademico;
 	}
