@@ -29,12 +29,13 @@ public interface GestionarCursoGatewayIntPort {
 	public Curso guardarCurso(Curso curso);
 
 	/**
-	 * Método encargado de obtener el curso por su identificador
+	 * Método encargado de obtener el curso por su identificador, si no existe
+	 * retorna nulo.
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
 	 * 
 	 * @param idCurso
-	 * @return
+	 * @return Retorna el curso si existe, caso contrario retorna nulo
 	 */
 	public Curso consultarCursoPorIdCurso(Long idCurso);
 

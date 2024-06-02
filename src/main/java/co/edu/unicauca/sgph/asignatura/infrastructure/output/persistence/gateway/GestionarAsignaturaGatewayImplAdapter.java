@@ -2,6 +2,7 @@ package co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.gatewa
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -56,8 +57,12 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 	 */
 	@Override
 	public Asignatura guardarAsignatura(Asignatura asignatura) {
-		Optional<AsignaturaEntity> entidad = this.asignaturaRepositoryInt.findById(asignatura.getIdAsignatura());
-		AsignaturaEntity entidadGuardar = entidad.get();
+		Optional<AsignaturaEntity> entidad=Optional.empty();
+		AsignaturaEntity entidadGuardar=null;
+		if(Objects.nonNull(asignatura.getIdAsignatura())) {
+			entidad = this.asignaturaRepositoryInt.findById(asignatura.getIdAsignatura());
+			entidadGuardar = entidad.get();			
+		}
 		if (entidad.isPresent()) {
 			AsignaturaEntity entidadGuardarMaper = this.asignaturaMapper.map(asignatura, AsignaturaEntity.class);
 			entidadGuardarMaper.setIdAsignatura(entidadGuardar.getIdAsignatura());

@@ -26,10 +26,11 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
 	 * 
 	 * @param filtroCursoPlanificacionDTO
+ 	 * @param idPeriodoAcademicoVigente Periodo académico vigente
 	 * @return
 	 */
 	public Page<CursoPlanificacionOutDTO> consultarCursosPlanificacionPorFiltro(
-			FiltroCursoPlanificacionDTO filtroCursoPlanificacionDTO);
+			FiltroCursoPlanificacionDTO filtroCursoPlanificacionDTO, Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de consultar la información gneral de los cursos de un
@@ -38,9 +39,10 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
 	 * 
 	 * @param idPrograma DTO Identificador del programa
+ 	 * @param idPeriodoAcademicoVigente Periodo académico vigente
 	 * @return
 	 */
-	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma);
+	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma, Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de validar si existe cruces con horarios de docentes de un
@@ -53,10 +55,11 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @param dia
 	 * @param horaInicio
 	 * @param horaFin
+	 * @param idPeriodoAcademicoVigente Periodo académico vigente
 	 * @return
 	 */
 	public List<Object[]> consultarCruceHorarioDocente(Long idCurso, DiaSemanaEnum dia, LocalTime horaInicio,
-			LocalTime horaFin);
+			LocalTime horaFin, Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de validar si existe cruces en espacios físicos dado una
@@ -69,10 +72,12 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @param dia
 	 * @param horaInicio
 	 * @param horaFin
+	 * @param idPeriodoAcademicoVigente Periodo académico vigente
+	 * 
 	 * @return
 	 */
 	public List<Horario> consultarCruceHorarioEspacioFisico(List<Long> lstIdEspacioFisico, DiaSemanaEnum dia,
-			LocalTime horaInicio, LocalTime horaFin);
+			LocalTime horaInicio, LocalTime horaFin, Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de validar si existe cruces con el horario del docente dado
@@ -84,10 +89,11 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @param dia
 	 * @param horaInicio
 	 * @param horaFin
+	 * @param idPeriodoAcademicoVigente Periodo académico vigente
 	 * @return
 	 */
 	public List<Object[]> consultarCruceHorarioDocentePorIdPersona(Long idPersona, DiaSemanaEnum dia,
-			LocalTime horaInicio, LocalTime horaFin);
+			LocalTime horaInicio, LocalTime horaFin, Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de obtener los nombres completos de cada espacio físico.
@@ -116,9 +122,10 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idPersona
+ 	 * @param idPeriodoAcademicoVigente     Periodo académico vigente
 	 * @return
 	 */
-	public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona);
+	public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona, Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un espacio físico
@@ -126,9 +133,10 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idEspacioFisico
+	 * @param idPeriodoAcademicoVigente     Periodo académico vigente
 	 * @return
 	 */
-	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico);
+	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico, Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de consultar las franjas horarias de los espacios físicos.
@@ -142,11 +150,12 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @param listaIdAgrupadorEspacioFisico
 	 * @param listaIdTipoEspacioFisico
 	 * @param salon
+	 * @param idPeriodoAcademicoVigente     Periodo académico vigente
 	 * @return
 	 */
-	public Map<Long, List<FranjaHorariaBasicaDTO>> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(Long idCurso,
-			List<Long> listaIdUbicacion, List<Long> listaIdTipoEspacioFisico,
-			List<Long> listaIdAgrupadorEspacioFisico, String salon);
+	public Map<Long, List<FranjaHorariaBasicaDTO>> consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(
+			Long idCurso, List<Long> listaIdUbicacion, List<Long> listaIdTipoEspacioFisico,
+			List<Long> listaIdAgrupadorEspacioFisico, String salon, Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de consultar todas las franjas horarias del docente o
@@ -155,9 +164,11 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idCurso
+	 * @param idPeriodoAcademicoVigente Periodo académico vigente
 	 * @return
 	 */
-	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeDocentesAsociadosACurso(Long idCurso);
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeDocentesAsociadosACurso(Long idCurso,
+			Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de consultar todas las franjas horarias de los cursos de un
@@ -167,9 +178,11 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * 
 	 * @param idCurso
 	 * @param idAsignatura
+	 * @param idPeriodoAcademicoVigente Periodo académico vigente
 	 * @return
 	 */
-	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeSemestrePorCurso(Long idCurso, Long idAsignatura);
+	public List<FranjaHorariaBasicaDTO> consultarFranjasHorariasDeSemestrePorCurso(Long idCurso, Long idAsignatura,
+			Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de consultar las franajas horarias del curso<br>
@@ -191,6 +204,5 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @return
 	 */
 	public Object consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(Long idCurso);
-	
 
 }

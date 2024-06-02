@@ -51,7 +51,7 @@ public interface GestionarPeriodoAcademicoGatewayIntPort {
 	 * @return
 	 */
 	public PeriodoAcademico existsByAnioAndPeriodo(Long anio, Long periodo);
-	
+
 	/**
 	 * Método encargado de consultar los periodos académicos <br>
 	 * 
@@ -60,5 +60,19 @@ public interface GestionarPeriodoAcademicoGatewayIntPort {
 	 * @param filtroPeriodoAcademicoDTO
 	 * @return Page de instancias PeriodoAcademicoOutDTO
 	 */
-	public Page<PeriodoAcademicoOutDTO> consultarPeriodosAcademicos(FiltroPeriodoAcademicoDTO filtroPeriodoAcademicoDTO);
+	public Page<PeriodoAcademicoOutDTO> consultarPeriodosAcademicos(
+			FiltroPeriodoAcademicoDTO filtroPeriodoAcademicoDTO);
+
+	/**
+	 * Método encargado de validar si existe una fecha fin mayor a la fecha de
+	 * inicio del periodo que se quiere guardar o actualizar.Este es utilizado por la anotación
+	 * FechaInicioGreaterThanUltimaFechaFin<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param anio    Año del periodo académico
+	 * @return
+	 */
+	public Boolean esFechaInicioGreaterThanUltimaFechaFin(Date fechaInicio);
+
 }

@@ -68,7 +68,13 @@ public class GestionarPeriodoAcademicoGatewayImplAdapter implements GestionarPer
 		try {
 			return this.modelMapper.map(this.periodoAcademicoRepositoryInt.consultarPeriodoAcademicoVigente(),
 					PeriodoAcademico.class);
+			
 		} catch (Exception e) {
+			/*
+			 * razones para que retorne nulo:
+			 * -Existe más de un ABIERTO
+			 * -No existe un periodo ABIERTO (Lanza excepción porque intenta mapear algo nulo)
+			 */
 			return null;
 		}
 	}
@@ -138,5 +144,13 @@ public class GestionarPeriodoAcademicoGatewayImplAdapter implements GestionarPer
 
 		Pageable pageable = PageRequest.of(pagina, registrosPorPagina);
 		return new PageImpl<>(dtoList, pageable, count);
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort#fechaInicioGreaterThanUltimaFechaFin(java.util.Date)
+	 */
+	@Override
+	public Boolean esFechaInicioGreaterThanUltimaFechaFin(Date fechaInicio) {
+		return this.periodoAcademicoRepositoryInt.fechaInicioGreaterThanUltimaFechaFin(fechaInicio);
 	}
 }

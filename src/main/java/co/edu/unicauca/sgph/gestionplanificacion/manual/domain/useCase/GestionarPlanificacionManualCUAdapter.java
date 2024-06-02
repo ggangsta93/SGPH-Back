@@ -22,6 +22,7 @@ import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
+import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
@@ -43,6 +44,8 @@ import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.FiltroFranja
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.FranjaHorariaCursoAsociarInDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.CrearActualizarDocentesCursoOutDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.CrearActualizarHorarioCursoOutDTO;
+import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
+import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 
 public class GestionarPlanificacionManualCUAdapter implements GestionarPlanificacionManualCUIntPort {
 
@@ -52,6 +55,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	private GestionarEspacioFisicoGatewayIntPort gestionarEspacioFisicoGatewayIntPort;
 	private GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort;
 	private GestionarHorarioGatewayIntPort gestionarHorarioGatewayIntPort;
+	private GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort;
 
 	@Autowired
 	@Lazy
@@ -66,13 +70,15 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort,
 			GestionarEspacioFisicoGatewayIntPort gestionarEspacioFisicoGatewayIntPort,
 			GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort,
-			GestionarHorarioGatewayIntPort gestionarHorarioGatewayIntPort) {
+			GestionarHorarioGatewayIntPort gestionarHorarioGatewayIntPort,
+			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort) {
 		this.gestionarPlanificacionManualGatewayIntPort = gestionarPlanificacionManualGatewayIntPort;
 		this.cursoFormatterResultsIntPort = cursoFormatterResultsIntPort;
 		this.gestionarDocenteGatewayIntPort = gestionarDocenteGatewayIntPort;
 		this.gestionarEspacioFisicoGatewayIntPort = gestionarEspacioFisicoGatewayIntPort;
 		this.gestionarCursoGatewayIntPort = gestionarCursoGatewayIntPort;
 		this.gestionarHorarioGatewayIntPort = gestionarHorarioGatewayIntPort;
+		this.gestionarPeriodoAcademicoGatewayIntPort = gestionarPeriodoAcademicoGatewayIntPort;
 	}
 
 	/**
@@ -81,15 +87,30 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	@Override
 	public Page<CursoPlanificacionOutDTO> consultarCursosPlanificacionPorFiltro(
 			FiltroCursoPlanificacionDTO filtroCursoPlanificacionDTO) {
-		Page<CursoPlanificacionOutDTO> listaCursosDTO = this.gestionarPlanificacionManualGatewayIntPort
-				.consultarCursosPlanificacionPorFiltro(filtroCursoPlanificacionDTO);
-		for (CursoPlanificacionOutDTO cursoDTO : listaCursosDTO) {
-			cursoDTO.setDocentes(
-					this.gestionarDocenteGatewayIntPort.consultarNombresDocentesPorIdCurso(cursoDTO.getIdCurso()));
-			cursoDTO.setHorarios(gestionarEspacioFisicoGatewayIntPort
-					.consultarEspacioFisicoHorarioPorIdCurso(cursoDTO.getIdCurso()));
+
+		// Se consulta el periodo académico que está 'ABIERTO'
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
+
+		/*
+		 * Se valida que exista periodo académico vigente
+		 */
+		if (Objects.nonNull(periodoAcademicoVigente)) {
+			Page<CursoPlanificacionOutDTO> listaCursosDTO = this.gestionarPlanificacionManualGatewayIntPort
+					.consultarCursosPlanificacionPorFiltro(filtroCursoPlanificacionDTO,
+							periodoAcademicoVigente.getIdPeriodoAcademico());
+
+			for (CursoPlanificacionOutDTO cursoDTO : listaCursosDTO) {
+				cursoDTO.setDocentes(
+						this.gestionarDocenteGatewayIntPort.consultarNombresDocentesPorIdCurso(cursoDTO.getIdCurso()));
+				cursoDTO.setHorarios(gestionarEspacioFisicoGatewayIntPort
+						.consultarEspacioFisicoHorarioPorIdCurso(cursoDTO.getIdCurso()));
+			}
+			return listaCursosDTO;
+		} else {
+			throw new RuntimeException("No existe periodo académico vigente");
 		}
-		return listaCursosDTO;
+
 	}
 
 	/**
@@ -97,7 +118,18 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 */
 	@Override
 	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma) {
-		return this.gestionarPlanificacionManualGatewayIntPort.consultarInfoGeneralCursosPorPrograma(idPrograma);
+		// Se consulta el periodo académico que está 'ABIERTO'
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
+		/*
+		 * Se valida que exista periodo académico vigente
+		 */
+		if (Objects.nonNull(periodoAcademicoVigente)) {
+			return this.gestionarPlanificacionManualGatewayIntPort.consultarInfoGeneralCursosPorPrograma(idPrograma,
+					periodoAcademicoVigente.getIdPeriodoAcademico());
+		} else {
+			throw new RuntimeException("No existe periodo académico vigente");
+		}
 	}
 
 	/**
@@ -112,63 +144,109 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		crearActualizarDocentesCursoOutDTO.setEsExitoso(Boolean.FALSE);
 		crearActualizarDocentesCursoOutDTO.setLstMensajesSolapamientos(mensajesCruces);
 
-		// Se consulta el curso
-		Curso curso = this.gestionarCursoGatewayIntPort
-				.consultarCursoPorIdCurso(crearActualizarDocentesCursoInDTO.getIdCurso());
+		// Se consulta periodo académico vigente
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
 
-		List<Docente> docentesEliminar = curso.getDocentes().stream()
-				.filter(doc -> !crearActualizarDocentesCursoInDTO.getListaIdPersona().contains(doc.getIdPersona()))
-				.collect(Collectors.toList());
+		/*
+		 * Se valida que exista periodo académico vigente y que el curso a vincular
+		 * pertenezca al mismo
+		 */
+		if (Objects.nonNull(periodoAcademicoVigente)) {
 
-		List<Docente> docentesActualizar = new ArrayList<Docente>();
+			if (this.cursoPerteneceAlPeriodoAcademicoVigente(crearActualizarDocentesCursoInDTO.getIdCurso(),
+					periodoAcademicoVigente.getIdPeriodoAcademico())) {
 
-		// Se consulta los horarios del curso
-		List<Horario> listaHorarioCurso = this.gestionarHorarioGatewayIntPort
-				.consultarHorarioPorCurso(new Curso(crearActualizarDocentesCursoInDTO.getIdCurso()));
+				// Se validan que los docentes existan y estén en estado ACTIVO
+				this.validarExistenciaYEstadoActivoDocentes(crearActualizarDocentesCursoInDTO);
 
-		for (Long idPersona : crearActualizarDocentesCursoInDTO.getListaIdPersona()) {
-			Docente docente = curso.getDocentes().stream().filter(doc -> doc.getIdPersona().equals(idPersona))
-					.findFirst().orElse(null);
+				// Se consulta el curso
+				Curso curso = this.gestionarCursoGatewayIntPort
+						.consultarCursoPorIdCurso(crearActualizarDocentesCursoInDTO.getIdCurso());
 
-			if (Objects.isNull(docente)) {
-				docente = this.gestionarDocenteGatewayIntPort.consultarDocentePorIdPersona(idPersona);
-				docente.getCursos().add(curso);
-
-				for (Horario horario : listaHorarioCurso) {
-					List<Object[]> lstCruces = this.gestionarPlanificacionManualGatewayIntPort
-							.consultarCruceHorarioDocentePorIdPersona(idPersona, horario.getDia(),
-									horario.getHoraInicio(), horario.getHoraFin());
-					if (!lstCruces.isEmpty()) {
-						mensajesCruces.add(String.format(
-								"El docente con identificación %s%s se solapa con la franja %s del curso %s",
-								docente.getTipoIdentificacion().getCodigoTipoIdentificacion(),
-								docente.getNumeroIdentificacion(),
-								horario.getDia().toString() + " " + horario.getHoraInicio().toString() + "-"
-										+ horario.getHoraFin().toString(),
-								curso.getAsignatura().getNombre() + " " + curso.getGrupo()));
-					}
-				}
-			}
-			docentesActualizar.add(docente);
-		}
-
-		if (mensajesCruces.isEmpty()) {
-			for (Docente docente : docentesActualizar) {
-				this.gestionarDocenteGatewayIntPort.guardarDocente(docente);
-			}
-			for (Docente docente : docentesEliminar) {
-				List<Curso> lstCursos = docente.getCursos().stream()
-						.filter(cur -> !cur.getIdCurso().equals(crearActualizarDocentesCursoInDTO.getIdCurso()))
+				List<Docente> docentesEliminar = curso.getDocentes().stream().filter(
+						doc -> !crearActualizarDocentesCursoInDTO.getListaIdPersona().contains(doc.getIdPersona()))
 						.collect(Collectors.toList());
-				docente.setCursos(lstCursos);
-				docente = this.gestionarDocenteGatewayIntPort.guardarDocente(docente);
+
+				List<Docente> docentesActualizar = new ArrayList<Docente>();
+
+				// Se consulta los horarios del curso
+				List<Horario> listaHorarioCurso = this.gestionarHorarioGatewayIntPort
+						.consultarHorarioPorCurso(new Curso(crearActualizarDocentesCursoInDTO.getIdCurso()));
+
+				for (Long idPersona : crearActualizarDocentesCursoInDTO.getListaIdPersona()) {
+					Docente docente = curso.getDocentes().stream().filter(doc -> doc.getIdPersona().equals(idPersona))
+							.findFirst().orElse(null);
+
+					if (Objects.isNull(docente)) {
+						docente = this.gestionarDocenteGatewayIntPort.consultarDocentePorIdPersona(idPersona);
+						docente.getCursos().add(curso);
+
+						for (Horario horario : listaHorarioCurso) {
+							List<Object[]> lstCruces = this.gestionarPlanificacionManualGatewayIntPort
+									.consultarCruceHorarioDocentePorIdPersona(idPersona, horario.getDia(),
+											horario.getHoraInicio(), horario.getHoraFin(),
+											periodoAcademicoVigente.getIdPeriodoAcademico());
+							if (!lstCruces.isEmpty()) {
+								mensajesCruces.add(String.format(
+										"El docente con identificación %s%s se solapa con la franja %s del curso %s",
+										docente.getTipoIdentificacion().getCodigoTipoIdentificacion(),
+										docente.getNumeroIdentificacion(),
+										horario.getDia().toString() + " " + horario.getHoraInicio().toString() + "-"
+												+ horario.getHoraFin().toString(),
+										curso.getAsignatura().getNombre() + " " + curso.getGrupo()));
+							}
+						}
+					}
+					docentesActualizar.add(docente);
+				}
+
+				if (mensajesCruces.isEmpty()) {
+					for (Docente docente : docentesActualizar) {
+						this.gestionarDocenteGatewayIntPort.guardarDocente(docente);
+					}
+					for (Docente docente : docentesEliminar) {
+						List<Curso> lstCursos = docente.getCursos().stream()
+								.filter(cur -> !cur.getIdCurso().equals(crearActualizarDocentesCursoInDTO.getIdCurso()))
+								.collect(Collectors.toList());
+						docente.setCursos(lstCursos);
+						docente = this.gestionarDocenteGatewayIntPort.guardarDocente(docente);
+					}
+					curso.setDocentes(docentesActualizar);
+					curso = this.gestionarCursoGatewayIntPort.guardarCurso(curso);
+					crearActualizarDocentesCursoOutDTO.setEsExitoso(Boolean.TRUE);
+				}
+
+			} else {
+				throw new RuntimeException("El curso no pertenece al periodo académico vigente");
 			}
-			curso.setDocentes(docentesActualizar);
-			curso = this.gestionarCursoGatewayIntPort.guardarCurso(curso);
-			crearActualizarDocentesCursoOutDTO.setEsExitoso(Boolean.TRUE);
+
+		} else {
+			throw new RuntimeException("No existe periodo académico vigente");
 		}
 
 		return crearActualizarDocentesCursoOutDTO;
+	}
+
+	private void validarExistenciaYEstadoActivoDocentes(
+			CrearActualizarDocentesCursoInDTO crearActualizarDocentesCursoInDTO) {
+		List<String> docentesDiferenteDeActivo = new ArrayList<>();
+
+		for (Long idPersona : crearActualizarDocentesCursoInDTO.getListaIdPersona()) {
+			Docente docente = this.gestionarDocenteGatewayIntPort.consultarDocentePorIdPersona(idPersona);
+			if (Objects.isNull(docente)) {
+				throw new RuntimeException("No existe docente con idPersona: " + idPersona.toString());
+			} else {
+				if (!docente.getEstado().equals(EstadoDocenteEnum.ACTIVO)) {
+					docentesDiferenteDeActivo.add(idPersona.toString());
+				}
+			}
+
+		}
+		if (!docentesDiferenteDeActivo.isEmpty()) {
+			throw new RuntimeException("Estado no permitido para los docentes con idPersona: "
+					+ String.join(", ", docentesDiferenteDeActivo));
+		}
 	}
 
 	/**
@@ -196,81 +274,105 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			throws RuntimeException {
 		Long idCurso = crearActualizarHorarioCursoInDTO.getIdCurso();
 
-		// Se consulta información inicial: idAsignatura, cupo, cantidad horas semana
-		Object[] infoCurso = (Object[]) this.gestionarPlanificacionManualGatewayIntPort
-				.consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(idCurso);
+		// Se consulta periodo académico vigente
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
 
-		// Se valida la cantidad de horas de las franjas a actualizar
-		this.validarCantidadHorasPermitidasParaCurso(crearActualizarHorarioCursoInDTO, (Integer) infoCurso[2]);
-
-		// Se validan que las franjas a actualizar no se solapen entre elllas
-		this.validarSolapamientoEntreFranjasAActualizar(crearActualizarHorarioCursoInDTO);
-
-		// Se validan que las franjas a actualizar no se encuentren repetidas
-		this.validarFranjasHorariasAActualizarNoSeanRepetidas(crearActualizarHorarioCursoInDTO);
 		/*
-		 * Se elimina de la base de datos las franjas horarias del curso que no están en
-		 * las franjas a actualizar
+		 * Se valida que exista periodo académico vigente y que el curso a consultar
+		 * pertenezca al mismo
 		 */
-		this.eliminarFranjasDelCurso(crearActualizarHorarioCursoInDTO);
-		/*
-		 * Se hace flush para reflejar los cambios cuando se invoca
-		 * consultarFranjasHorariasDeSemestrePorCurso
-		 */
-		entityManager.flush();
-		/*
-		 * Se validan que las franjas a actualizar no se solapen con las franjas de los
-		 * cursos del mismo semestre
-		 */
-		this.validarSolapamientoFranjasAActualizarConCursosDelMismoSemestre(crearActualizarHorarioCursoInDTO,
-				(Long) infoCurso[0]);
+		if (Objects.nonNull(periodoAcademicoVigente)) {
 
-		List<EspacioFisico> lstEspacioFisicoAActualizar = this.gestionarEspacioFisicoGatewayIntPort
-				.consultarCapacidadEstadoYSalonPorListaIdEspacioFisico(
-						crearActualizarHorarioCursoInDTO.getListaFranjaHorariaCursoAsociarInDTO().stream()
+			if (this.cursoPerteneceAlPeriodoAcademicoVigente(idCurso,
+					periodoAcademicoVigente.getIdPeriodoAcademico())) {
+
+				// Se consulta información inicial: idAsignatura, cupo, cantidad horas semana
+				Object[] infoCurso = (Object[]) this.gestionarPlanificacionManualGatewayIntPort
+						.consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(idCurso);
+
+				// Se valida la cantidad de horas de las franjas a actualizar
+				this.validarCantidadHorasPermitidasParaCurso(crearActualizarHorarioCursoInDTO, (Integer) infoCurso[2]);
+
+				// Se validan que las franjas a actualizar no se solapen entre elllas
+				this.validarSolapamientoEntreFranjasAActualizar(crearActualizarHorarioCursoInDTO);
+
+				// Se validan que las franjas a actualizar no se encuentren repetidas
+				this.validarFranjasHorariasAActualizarNoSeanRepetidas(crearActualizarHorarioCursoInDTO);
+				/*
+				 * Se elimina de la base de datos las franjas horarias del curso que no están en
+				 * las franjas a actualizar
+				 */
+				this.eliminarFranjasDelCurso(crearActualizarHorarioCursoInDTO);
+				/*
+				 * Se hace flush para reflejar los cambios cuando se invoca
+				 * consultarFranjasHorariasDeSemestrePorCurso
+				 */
+				entityManager.flush();
+				/*
+				 * Se validan que las franjas a actualizar no se solapen con las franjas de los
+				 * cursos del mismo semestre
+				 */
+				this.validarSolapamientoFranjasAActualizarConCursosDelMismoSemestre(crearActualizarHorarioCursoInDTO,
+						(Long) infoCurso[0], periodoAcademicoVigente.getIdPeriodoAcademico());
+
+				List<EspacioFisico> lstEspacioFisicoAActualizar = this.gestionarEspacioFisicoGatewayIntPort
+						.consultarCapacidadEstadoYSalonPorListaIdEspacioFisico(crearActualizarHorarioCursoInDTO
+								.getListaFranjaHorariaCursoAsociarInDTO().stream()
 								.map(FranjaHorariaCursoAsociarInDTO::getIdEspacioFisico).collect(Collectors.toList()));
 
-		// Se valida capacidad de espacios físicos contra cupo del curso
-		this.validarCapacidadEspaciosFisicosContraCupoDelCurso(crearActualizarHorarioCursoInDTO, (Integer) infoCurso[1],
-				lstEspacioFisicoAActualizar);
+				// Se valida capacidad de espacios físicos contra cupo del curso
+				this.validarCapacidadEspaciosFisicosContraCupoDelCurso(crearActualizarHorarioCursoInDTO,
+						(Integer) infoCurso[1], lstEspacioFisicoAActualizar);
 
-		// Se valida que el estado sea ACTIVO de los espacios físicos
-		this.validarEstadoActivoEspaciosFisicos(crearActualizarHorarioCursoInDTO, lstEspacioFisicoAActualizar);
+				// Se valida que el estado sea ACTIVO de los espacios físicos
+				this.validarEstadoActivoEspaciosFisicos(crearActualizarHorarioCursoInDTO, lstEspacioFisicoAActualizar);
 
-		// Se validan cruces
-		for (FranjaHorariaCursoAsociarInDTO franjaHorariaCursoAsociarInDTO : crearActualizarHorarioCursoInDTO
-				.getListaFranjaHorariaCursoAsociarInDTO()) {
+				// Se validan cruces
+				for (FranjaHorariaCursoAsociarInDTO franjaHorariaCursoAsociarInDTO : crearActualizarHorarioCursoInDTO
+						.getListaFranjaHorariaCursoAsociarInDTO()) {
 
-			if (Objects.isNull(franjaHorariaCursoAsociarInDTO.getIdHorario())) {
-				Long idEspacioFisico = franjaHorariaCursoAsociarInDTO.getIdEspacioFisico();
+					if (Objects.isNull(franjaHorariaCursoAsociarInDTO.getIdHorario())) {
+						Long idEspacioFisico = franjaHorariaCursoAsociarInDTO.getIdEspacioFisico();
 
-				DiaSemanaEnum dia = franjaHorariaCursoAsociarInDTO.getDia();
-				LocalTime horaInicio = this.convertirToLocalTime(franjaHorariaCursoAsociarInDTO.getHoraInicio());
-				LocalTime horaFin = this.convertirToLocalTime(franjaHorariaCursoAsociarInDTO.getHoraFin());
+						DiaSemanaEnum dia = franjaHorariaCursoAsociarInDTO.getDia();
+						LocalTime horaInicio = this
+								.convertirToLocalTime(franjaHorariaCursoAsociarInDTO.getHoraInicio());
+						LocalTime horaFin = this.convertirToLocalTime(franjaHorariaCursoAsociarInDTO.getHoraFin());
 
-				List<Horario> listaCruceHorarioEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
-						.consultarCruceHorarioEspacioFisico(Arrays.asList(idEspacioFisico), dia, horaInicio, horaFin);
-				List<Object[]> listaCruceHorarioDocente = this.gestionarPlanificacionManualGatewayIntPort
-						.consultarCruceHorarioDocente(idCurso, dia, horaInicio, horaFin);
+						List<Horario> listaCruceHorarioEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
+								.consultarCruceHorarioEspacioFisico(Arrays.asList(idEspacioFisico), dia, horaInicio,
+										horaFin, periodoAcademicoVigente.getIdPeriodoAcademico());
+						List<Object[]> listaCruceHorarioDocente = this.gestionarPlanificacionManualGatewayIntPort
+								.consultarCruceHorarioDocente(idCurso, dia, horaInicio, horaFin,
+										periodoAcademicoVigente.getIdPeriodoAcademico());
 
-				if (!listaCruceHorarioEspacioFisico.isEmpty()) {
-					throw new RuntimeException("Existe cruce de espacio físico");
+						if (!listaCruceHorarioEspacioFisico.isEmpty()) {
+							throw new RuntimeException("Existe cruce de espacio físico");
 
-				}
+						}
 
-				if (!listaCruceHorarioDocente.isEmpty()) {
-					throw new RuntimeException("Existe cruce con docentes");
-				}
+						if (!listaCruceHorarioDocente.isEmpty()) {
+							throw new RuntimeException("Existe cruce con docentes");
+						}
 
-				Horario horario = new Horario();
-				horario.setDia(dia);
-				horario.setHoraInicio(horaInicio);
-				horario.setHoraFin(horaFin);
-				horario.setCurso(new Curso(idCurso));
-				horario.setEspaciosFisicos(Arrays.asList(new EspacioFisico(idEspacioFisico)));
+						Horario horario = new Horario();
+						horario.setDia(dia);
+						horario.setHoraInicio(horaInicio);
+						horario.setHoraFin(horaFin);
+						horario.setCurso(new Curso(idCurso));
+						horario.setEspaciosFisicos(Arrays.asList(new EspacioFisico(idEspacioFisico)));
 
-				this.gestionarHorarioGatewayIntPort.guardarHorario(horario);
+						this.gestionarHorarioGatewayIntPort.guardarHorario(horario);
+					}
+				} // Cierre del for
+
+			} else {
+				throw new RuntimeException("El curso no pertenece al periodo académico vigente");
 			}
+
+		} else {
+			throw new RuntimeException("No existe periodo académico vigente");
 		}
 	}
 
@@ -327,11 +429,12 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	}
 
 	private void validarSolapamientoFranjasAActualizarConCursosDelMismoSemestre(
-			CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO, Long idAsignatura) {
+			CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO, Long idAsignatura,
+			Long idPeriodoAcademicoVigente) {
 		// Se consultan las franjas horarias de cursos del semestre
 		List<FranjaHorariaBasicaDTO> lstFranjasHorariasCursosSemestre = this.gestionarPlanificacionManualGatewayIntPort
-				.consultarFranjasHorariasDeSemestrePorCurso(crearActualizarHorarioCursoInDTO.getIdCurso(),
-						idAsignatura);
+				.consultarFranjasHorariasDeSemestrePorCurso(crearActualizarHorarioCursoInDTO.getIdCurso(), idAsignatura,
+						idPeriodoAcademicoVigente);
 
 		List<String> franjasQueSolapan = new ArrayList<>();
 		for (FranjaHorariaCursoAsociarInDTO franjaActualizar : crearActualizarHorarioCursoInDTO
@@ -424,57 +527,75 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariasDisponiblesPorCurso(
 			FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
 
-		// Se consulta lass franjas horarias actuales del curso
-		List<FranjaHorariaBasicaDTO> lstFranjasHorariasCurso = this.gestionarPlanificacionManualGatewayIntPort
-				.consultarFranjasHorariasDeCursoPorCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso());
+		// Se consulta periodo académico vigente
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
 
-		// Se consultan las franjas horarias de los espacios físicos
-		Map<Long, List<FranjaHorariaBasicaDTO>> mapaFranjasHorariasPorEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
-				.consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(
-						filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
-						filtroFranjaHorariaDisponibleCursoDTO.getListaIdUbicacion(),
-						filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico(),
-						filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico(),
-						filtroFranjaHorariaDisponibleCursoDTO.getSalon());
-
-		// Se consultan las franjas horarias de cursos del semestre
-		List<FranjaHorariaBasicaDTO> lstFranjasHorariasCursosSemestre = this.gestionarPlanificacionManualGatewayIntPort
-				.consultarFranjasHorariasDeSemestrePorCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
-						filtroFranjaHorariaDisponibleCursoDTO.getIdAsignatura());
-
-		// Se consultan las franjas horarias de los docentes asociados al curso
-		List<FranjaHorariaBasicaDTO> lstFranjasHorariasDocentes = this.gestionarPlanificacionManualGatewayIntPort
-				.consultarFranjasHorariasDeDocentesAsociadosACurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso());
-
-		// Se consultan las franjas candidatas por filtro
-		List<FranjaHorariaBasicaDTO> listaFranjasCandidatas = this
-				.consultarFranjasCandidatas(filtroFranjaHorariaDisponibleCursoDTO);
-
-		// Resultado de las franjas disponibles
+		// Lista de las franjas disponibles para el curso
 		List<FranjaHorariaCursoDTO> listaDeFranjasDisponibles = new ArrayList<>();
 
-		// Se recorre cada espacio físico para evaluarle las franjas candidatas
-		for (Map.Entry<Long, List<FranjaHorariaBasicaDTO>> entry : mapaFranjasHorariasPorEspacioFisico.entrySet()) {
+		/*
+		 * Se valida que exista periodo académico vigente y que el curso a consultar
+		 * pertenezca al mismo
+		 */
+		if (Objects.nonNull(periodoAcademicoVigente) && this.cursoPerteneceAlPeriodoAcademicoVigente(
+				filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(), periodoAcademicoVigente.getIdPeriodoAcademico())) {
 
-			// Se recorre cada franja candidata para validarla contra las restricciones
-			for (FranjaHorariaBasicaDTO franjaCandidata : listaFranjasCandidatas) {
+			// Se consulta las franjas horarias actuales del curso
+			List<FranjaHorariaBasicaDTO> lstFranjasHorariasCurso = this.gestionarPlanificacionManualGatewayIntPort
+					.consultarFranjasHorariasDeCursoPorCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso());
 
-				// Restricciones
-				Boolean noseSuperponeConFranjasEspaciosFisicos = !seSuperponeConFranjasEspaciosFisicos(franjaCandidata,
-						entry.getValue());
-				Boolean noseSuperponeConFranjasDocentes = !seSuperponeConFranjasDocentes(franjaCandidata,
-						lstFranjasHorariasDocentes);
-				Boolean noseSuperponeConFranjasCursosSemestre = !seSuperponeConFranjasCursosSemestre(franjaCandidata,
-						lstFranjasHorariasCursosSemestre, filtroFranjaHorariaDisponibleCursoDTO.getIdAsignatura());
-				Boolean noseSuperponeConFranjasDelMismoCurso = !seSuperponeConFranjasCurso(franjaCandidata,
-						lstFranjasHorariasCurso);
+			// Se consultan las franjas horarias de los espacios físicos
+			Map<Long, List<FranjaHorariaBasicaDTO>> mapaFranjasHorariasPorEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
+					.consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(
+							filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
+							filtroFranjaHorariaDisponibleCursoDTO.getListaIdUbicacion(),
+							filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico(),
+							filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico(),
+							filtroFranjaHorariaDisponibleCursoDTO.getSalon(),
+							periodoAcademicoVigente.getIdPeriodoAcademico());
 
-				// Se validan las restricciones
-				if (noseSuperponeConFranjasEspaciosFisicos && noseSuperponeConFranjasDocentes
-						&& noseSuperponeConFranjasCursosSemestre && noseSuperponeConFranjasDelMismoCurso) {
-					// Se adiciona la franja candidata como franja posible
-					listaDeFranjasDisponibles.add(new FranjaHorariaCursoDTO(entry.getKey(), franjaCandidata.getDia(),
-							franjaCandidata.getHoraInicio(), franjaCandidata.getHoraFin()));
+			// Se consultan las franjas horarias de cursos del semestre
+			List<FranjaHorariaBasicaDTO> lstFranjasHorariasCursosSemestre = this.gestionarPlanificacionManualGatewayIntPort
+					.consultarFranjasHorariasDeSemestrePorCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
+							filtroFranjaHorariaDisponibleCursoDTO.getIdAsignatura(),
+							periodoAcademicoVigente.getIdPeriodoAcademico());
+
+			// Se consultan las franjas horarias de los docentes asociados al curso
+			List<FranjaHorariaBasicaDTO> lstFranjasHorariasDocentes = this.gestionarPlanificacionManualGatewayIntPort
+					.consultarFranjasHorariasDeDocentesAsociadosACurso(
+							filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
+							periodoAcademicoVigente.getIdPeriodoAcademico());
+
+			// Se consultan las franjas candidatas por filtro
+			List<FranjaHorariaBasicaDTO> listaFranjasCandidatas = this
+					.consultarFranjasCandidatas(filtroFranjaHorariaDisponibleCursoDTO);
+
+			// Se recorre cada espacio físico para evaluarle las franjas candidatas
+			for (Map.Entry<Long, List<FranjaHorariaBasicaDTO>> entry : mapaFranjasHorariasPorEspacioFisico.entrySet()) {
+
+				// Se recorre cada franja candidata para validarla contra las restricciones
+				for (FranjaHorariaBasicaDTO franjaCandidata : listaFranjasCandidatas) {
+
+					// Restricciones
+					Boolean noseSuperponeConFranjasEspaciosFisicos = !seSuperponeConFranjasEspaciosFisicos(
+							franjaCandidata, entry.getValue());
+					Boolean noseSuperponeConFranjasDocentes = !seSuperponeConFranjasDocentes(franjaCandidata,
+							lstFranjasHorariasDocentes);
+					Boolean noseSuperponeConFranjasCursosSemestre = !seSuperponeConFranjasCursosSemestre(
+							franjaCandidata, lstFranjasHorariasCursosSemestre,
+							filtroFranjaHorariaDisponibleCursoDTO.getIdAsignatura());
+					Boolean noseSuperponeConFranjasDelMismoCurso = !seSuperponeConFranjasCurso(franjaCandidata,
+							lstFranjasHorariasCurso);
+
+					// Se validan las restricciones
+					if (noseSuperponeConFranjasEspaciosFisicos && noseSuperponeConFranjasDocentes
+							&& noseSuperponeConFranjasCursosSemestre && noseSuperponeConFranjasDelMismoCurso) {
+						// Se adiciona la franja candidata como franja posible
+						listaDeFranjasDisponibles
+								.add(new FranjaHorariaCursoDTO(entry.getKey(), franjaCandidata.getDia(),
+										franjaCandidata.getHoraInicio(), franjaCandidata.getHoraFin()));
+					}
 				}
 			}
 		}
@@ -482,9 +603,21 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		return listaDeFranjasDisponibles;
 	}
 
+	private Boolean cursoPerteneceAlPeriodoAcademicoVigente(Long idCurso, Long idPeriodoAcademicoVigente) {
+		// Se consulta el curso
+		Curso curso = this.gestionarCursoGatewayIntPort.consultarCursoPorIdCurso(idCurso);
+		if (Objects.nonNull(curso)
+				&& curso.getPeriodoAcademico().getIdPeriodoAcademico().equals(idPeriodoAcademicoVigente)) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
+	}
+
 	/**
 	 * Método encargado de generar las franjas horarias candidatas teniendo en
-	 * cuenta las franjas restrictivas y los criterios de busqueda ingresados por el
+	 * cuenta las franjas restrictivas (Tiempo de descanso o almuerzo de los
+	 * docentes y estudiantes) y los criterios de busqueda ingresados por el
 	 * usuario. Los criterios de busqueda del usuario pueden ser: Filtrar por días
 	 * de la semana (Opcional), cantidad de horas por franja (Obligatorio), y por
 	 * hora de inicio(Opcional).<br>
@@ -681,7 +814,18 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 */
 	@Override
 	public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona) {
-		return this.gestionarPlanificacionManualGatewayIntPort.consultarFranjasDocentePorIdPersona(idPersona);
+		// Se consulta periodo académico vigente
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
+		/*
+		 * Se valida que exista periodo académico vigente
+		 */
+		if (Objects.nonNull(periodoAcademicoVigente)) {
+			return this.gestionarPlanificacionManualGatewayIntPort.consultarFranjasDocentePorIdPersona(idPersona,
+					periodoAcademicoVigente.getIdPeriodoAcademico());
+		} else {
+			throw new RuntimeException("No existe periodo académico vigente");		
+		}
 	}
 
 	/**
@@ -689,8 +833,18 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 */
 	@Override
 	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico) {
-		return this.gestionarPlanificacionManualGatewayIntPort
-				.consultarFranjasEspacioFisicoPorIdEspacioFisico(idEspacioFisico);
+		// Se consulta periodo académico vigente
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
+		/*
+		 * Se valida que exista periodo académico vigente
+		 */
+		if (Objects.nonNull(periodoAcademicoVigente)) {
+			return this.gestionarPlanificacionManualGatewayIntPort.consultarFranjasEspacioFisicoPorIdEspacioFisico(
+					idEspacioFisico, periodoAcademicoVigente.getIdPeriodoAcademico());
+		} else {
+			throw new RuntimeException("No existe periodo académico vigente");
+		}
 	}
 
 	@Override
