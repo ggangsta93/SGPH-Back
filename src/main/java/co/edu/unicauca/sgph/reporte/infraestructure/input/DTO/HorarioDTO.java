@@ -10,6 +10,7 @@ public class HorarioDTO {
     private DiaSemanaEnum dia;
     private LocalTime horarioInicio;
     private LocalTime horaFin;
+    private String salon;
 
     public DiaSemanaEnum getDia() {
         return dia;
@@ -33,5 +34,13 @@ public class HorarioDTO {
 
     public void setHoraFin(LocalTime horaFin) {
         this.horaFin = horaFin;
+    }
+
+    public String getSalon() {
+        return salon;
+    }
+
+    public void setSalon(String salon) {
+        this.salon = salon;
     }
 }

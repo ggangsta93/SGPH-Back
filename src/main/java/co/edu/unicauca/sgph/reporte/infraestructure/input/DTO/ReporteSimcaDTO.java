@@ -7,7 +7,7 @@ import java.util.List;
 public class ReporteSimcaDTO {
     private String periodo;
     private String abreviaturaPrograma;
-    private Integer semestre;
+    private String semestre;
     private String OIDAsignatura;
     private String CodigoAsignatura;
     private String nombreAsignatura;
@@ -17,6 +17,7 @@ public class ReporteSimcaDTO {
     private List<HorarioDTO> horarios;
     private String archivoBase64;
     private String nombreDocente;
+
     private Long idPeriodo;
     private Long idPrograma;
     private Long idFacultad;
@@ -94,11 +95,11 @@ public class ReporteSimcaDTO {
         this.horarios = horarios;
     }
 
-    public Integer getSemestre() {
+    public String getSemestre() {
         return semestre;
     }
 
-    public void setSemestre(Integer semestre) {
+    public void setSemestre(String semestre) {
         this.semestre = semestre;
     }
 
@@ -141,4 +142,6 @@ public class ReporteSimcaDTO {
     public void setNombreDocente(String nombreDocente) {
         this.nombreDocente = nombreDocente;
     }
+
+
 }

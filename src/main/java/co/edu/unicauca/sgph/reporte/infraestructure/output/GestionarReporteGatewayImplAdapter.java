@@ -5,6 +5,7 @@ import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
@@ -57,12 +58,13 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<CursoEntity> criteriaQuery = cb.createQuery(CursoEntity.class);
 		Root<CursoEntity> root = criteriaQuery.from(CursoEntity.class);
-		Join<CursoEntity,AsignaturaEntity> joinCurso = root.join("asignatura");
-		Join<AsignaturaEntity, ProgramaEntity> joinPrograma = joinCurso.join("programa");
-		Join<ProgramaEntity, FacultadEntity> joinFacultad = joinPrograma.join("facultad");
-		Join<CursoEntity, HorarioEntity> joinHorario = root.join("horarios");
-		Join<CursoEntity, PeriodoAcademicoEntity> joinPeriodo = root.join("periodoAcademico");
-		Join<CursoEntity, DocenteEntity> joinDocente =  root.join("docentes");
+		Join<CursoEntity,AsignaturaEntity> joinCurso = root.join("asignatura", JoinType.LEFT);
+		Join<AsignaturaEntity, ProgramaEntity> joinPrograma = joinCurso.join("programa", JoinType.LEFT);
+		Join<ProgramaEntity, FacultadEntity> joinFacultad = joinPrograma.join("facultad", JoinType.LEFT);
+		Join<CursoEntity, HorarioEntity> joinHorario = root.join("horarios", JoinType.LEFT);
+		Join<CursoEntity, PeriodoAcademicoEntity> joinPeriodo = root.join("periodoAcademico", JoinType.LEFT);
+		Join<CursoEntity, DocenteEntity> joinDocente =  root.join("docentes", JoinType.LEFT);
+		Join<HorarioEntity, EspacioFisicoEntity> joinEspacio = joinHorario.join("espaciosFisicos", JoinType.LEFT);
 
 		Predicate predicate = cb.conjunction();
 		if (reporteSimcaDTO.getIdPeriodo() != null) {
@@ -79,7 +81,7 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 		}
 
 		criteriaQuery.where(predicate);
-
+		criteriaQuery.distinct(true);
 		List<CursoEntity> resultList = entityManager.createQuery(criteriaQuery).getResultList();
 		List<ReporteSimcaDTO> datos = resultList.stream().map(this::mapCursoEntityReporteDTO).collect(Collectors.toList());
 		try {
@@ -91,12 +93,12 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 	private ReporteSimcaDTO mapCursoEntityReporteDTO(CursoEntity curso) {
 		ReporteSimcaDTO dto = new ReporteSimcaDTO();
 		dto.setCupo(curso.getCupo());
-		dto.setMatriculados(1L); // TODO MATRICULADOS;
+		dto.setMatriculados(curso.getCupo().longValue());
 		dto.setAbreviaturaPrograma(curso.getAsignatura().getPrograma().getAbreviatura());
 		dto.setCodigoAsignatura(curso.getAsignatura().getCodigoAsignatura());
 		dto.setNombreAsignatura(curso.getAsignatura().getNombre());
 		dto.setNombreGrupo(curso.getGrupo());
-		dto.setSemestre(curso.getAsignatura().getSemestre());
+		dto.setSemestre(String.valueOf(curso.getAsignatura().getSemestre()));
 		dto.setOIDAsignatura(curso.getAsignatura().getOid());
 		dto.setPeriodo(curso.getPeriodoAcademico().getAnio().toString() + "-" + curso.getPeriodoAcademico().getPeriodo().toString());
 		dto.setNombreDocente(this.nombreDocentes(curso.getDocentes()));
@@ -119,7 +121,11 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 		dto.setDia(entidad.getDia());
 		dto.setHorarioInicio(entidad.getHoraInicio());
 		dto.setHoraFin(entidad.getHoraFin());
+		dto.setSalon(this.obtenerNombreSalon(entidad.getEspaciosFisicos().get(0)));
 		return dto;
+	}
+	private String obtenerNombreSalon(EspacioFisicoEntity espacioFisico) {
+		return espacioFisico != null ? espacioFisico.getSalon() : "";
 	}
 	public ReporteSimcaDTO crearExcel(List<ReporteSimcaDTO> reporteSimcaList) throws IOException {
 		Workbook workbook = new XSSFWorkbook();
@@ -133,8 +139,8 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 		headerCellStyle.setBorderLeft(BorderStyle.THIN);
 		headerCellStyle.setBorderRight(BorderStyle.THIN);
 		String[] columnHeaders = {
-				"Periodo", "Abreviatura Programa", "Semestre", "OID Asignatura", "Codigo Asignatura",
-				"Nombre Asignatura", "Nombre Grupo", "Cupo", "Matriculados", "Lunes", "Martes",
+				"Periodo", "Programa", "Sem", "OID Asignatura", "Codigo Asignatura",
+				"Asignatura", "Grupo", "Cupo", "Matriculados", "Lunes", "Martes",
 				"Miércoles", "Jueves", "Viernes", "Sábado", "Docente"
 		};
 		Row headerRow = sheet.createRow(0);
@@ -149,7 +155,7 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 			Row dataRow = sheet.createRow(rowNum++);
 			dataRow.createCell(0).setCellValue(reporteSimca.getPeriodo() != null ? reporteSimca.getPeriodo() : "");
 			dataRow.createCell(1).setCellValue(reporteSimca.getAbreviaturaPrograma() != null ? reporteSimca.getAbreviaturaPrograma() : "");
-			dataRow.createCell(2).setCellValue(reporteSimca.getSemestre() != null ? reporteSimca.getSemestre() : 0);
+			dataRow.createCell(2).setCellValue(reporteSimca.getSemestre() != null ? reporteSimca.getSemestre() : "");
 			dataRow.createCell(3).setCellValue(reporteSimca.getOIDAsignatura() != null ? reporteSimca.getOIDAsignatura() : "");
 			dataRow.createCell(4).setCellValue(reporteSimca.getCodigoAsignatura() != null ? reporteSimca.getCodigoAsignatura() : "");
 			dataRow.createCell(5).setCellValue(reporteSimca.getNombreAsignatura() != null ? reporteSimca.getNombreAsignatura() : "");
@@ -164,7 +170,7 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 			if (horarios != null) {
 				for (HorarioDTO horario : horarios) {
 					DiaSemanaEnum dia = horario.getDia();
-					String horarioStr = horario.getHorarioInicio().format(timeFormatter) + "-" + horario.getHoraFin().format(timeFormatter);
+					String horarioStr = horario.getHorarioInicio().format(timeFormatter) + "-" + horario.getHoraFin().format(timeFormatter)  + " " + horario.getSalon();
 					horariosPorDia.get(dia).append(horarioStr).append(", ");
 				}
 			}
