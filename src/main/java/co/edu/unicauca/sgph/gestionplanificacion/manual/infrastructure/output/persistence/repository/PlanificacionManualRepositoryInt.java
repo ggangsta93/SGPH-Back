@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
@@ -14,6 +15,7 @@ import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTO
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
 
 public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioEntity, Long> {
+	
 	
 	@Query("SELECT d.idPersona, c.idCurso "
 			 + "FROM HorarioEntity h JOIN h.curso c JOIN c.docentes d "
@@ -138,4 +140,28 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 				+ " JOIN curso.asignatura asignatura "	
 				+ " WHERE curso.idCurso = :idCurso ")
 		public Object consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(Long idCurso);
+		
+		@Modifying
+		@Query("DELETE FROM HorarioEspacioEntity he "
+				+ "WHERE he.horario.idHorario IN ( SELECT h.idHorario "
+				+ "								   FROM HorarioEntity h "
+				+ "								   WHERE h.curso.idCurso IN (SELECT c.idCurso "
+				+ " 														 FROM CursoEntity c "
+				+ " 														 WHERE c.asignatura.idAsignatura IN (SELECT a.idAsignatura  "
+				+ "                                     						 								 FROM AsignaturaEntity a "
+				+ "                                    															 WHERE a.programa.idPrograma = :idPrograma) "
+				+ "                         								 AND c.periodoAcademico.idPeriodoAcademico = :idPeriodoAcademicoVigente) "
+				+ ")")
+		public void eliminarRegistrosHorarioEspacioEntityPorProgramaYPeriodoAcademico(Long idPrograma, Long idPeriodoAcademicoVigente);
+		
+		@Modifying
+		@Query("DELETE FROM HorarioEntity h "
+				+ "WHERE h.curso.idCurso IN (SELECT c.idCurso "
+				+ " 						 FROM CursoEntity c "
+				+ " 						 WHERE c.asignatura.idAsignatura IN (SELECT a.idAsignatura  "
+				+ "                                     						 FROM AsignaturaEntity a "
+				+ "                                  						     WHERE a.programa.idPrograma = :idPrograma) "
+				+ " 						 AND c.periodoAcademico.idPeriodoAcademico = :idPeriodoAcademicoVigente)")
+		public void eliminarRegistrosHorarioEntityPorProgramaYPeriodoAcademico(Long idPrograma, Long idPeriodoAcademicoVigente);
+		
 }

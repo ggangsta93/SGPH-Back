@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
@@ -175,9 +176,27 @@ public class PlanificacionManualController {
 		return this.gestionarPlanificacionManualCUIntPort.consultarFormatoPresentacionFranjaHorariaCurso();
 	}
 
-	/****************
-	 * Consultar horarios para gestionadores, Espacio físico, Docente, y Grupo
-	 ******************/
+	/*************************************************
+	 * Eliminar horario por programa
+	 *************************************************/
+	
+	/**
+	 * Método encargado de eliminar todo el horario de un programa</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param eliminarHorarioDTO Información necesaria para eliminar el horario de
+	 *                           un programa
+	 * @return Booleano que indica si se eliminó con exito el horario
+	 */
+	@PostMapping("/eliminarHorarioPrograma")
+	public Boolean eliminarHorarioPrograma(@RequestBody EliminarHorarioDTO eliminarHorarioDTO) {
+		return this.gestionarPlanificacionManualCUIntPort.eliminarHorarioPrograma(eliminarHorarioDTO);
+	}
+	
+	/*************************************************
+	 * Consultar horarios de Espacio físico y Docente
+	 *************************************************/
 
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un docente

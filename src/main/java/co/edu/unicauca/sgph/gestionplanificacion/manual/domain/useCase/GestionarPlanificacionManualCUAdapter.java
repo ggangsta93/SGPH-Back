@@ -29,6 +29,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.enti
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
@@ -49,14 +50,16 @@ import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 
 public class GestionarPlanificacionManualCUAdapter implements GestionarPlanificacionManualCUIntPort {
 
+	private static final String NO_EXISTE_PERIODO_ACADEMICO_VIGENTE="No existe periodo académico vigente";
+
 	private GestionarPlanificacionManualGatewayIntPort gestionarPlanificacionManualGatewayIntPort;
 	private CursoFormatterResultsIntPort cursoFormatterResultsIntPort;
 	private GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort;
 	private GestionarEspacioFisicoGatewayIntPort gestionarEspacioFisicoGatewayIntPort;
 	private GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort;
 	private GestionarHorarioGatewayIntPort gestionarHorarioGatewayIntPort;
-	private GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort;
-
+	private GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort;	
+	
 	@Autowired
 	@Lazy
 	private GestionarPlanificacionManualCUAdapter gestionarPlanificacionManualCUAdapter;
@@ -108,7 +111,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			}
 			return listaCursosDTO;
 		} else {
-			throw new RuntimeException("No existe periodo académico vigente");
+			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
 		}
 
 	}
@@ -128,7 +131,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			return this.gestionarPlanificacionManualGatewayIntPort.consultarInfoGeneralCursosPorPrograma(idPrograma,
 					periodoAcademicoVigente.getIdPeriodoAcademico());
 		} else {
-			throw new RuntimeException("No existe periodo académico vigente");
+			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
 		}
 	}
 
@@ -222,7 +225,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			}
 
 		} else {
-			throw new RuntimeException("No existe periodo académico vigente");
+			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
 		}
 
 		return crearActualizarDocentesCursoOutDTO;
@@ -372,7 +375,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			}
 
 		} else {
-			throw new RuntimeException("No existe periodo académico vigente");
+			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
 		}
 	}
 
@@ -824,7 +827,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			return this.gestionarPlanificacionManualGatewayIntPort.consultarFranjasDocentePorIdPersona(idPersona,
 					periodoAcademicoVigente.getIdPeriodoAcademico());
 		} else {
-			throw new RuntimeException("No existe periodo académico vigente");		
+			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);		
 		}
 	}
 
@@ -843,13 +846,37 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			return this.gestionarPlanificacionManualGatewayIntPort.consultarFranjasEspacioFisicoPorIdEspacioFisico(
 					idEspacioFisico, periodoAcademicoVigente.getIdPeriodoAcademico());
 		} else {
-			throw new RuntimeException("No existe periodo académico vigente");
+			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
 		}
 	}
 
 	@Override
 	public List<FormatoPresentacionFranjaHorariaCursoDTO> consultarFormatoPresentacionFranjaHorariaCurso() {
 		return this.gestionarPlanificacionManualGatewayIntPort.consultarFormatoPresentacionFranjaHorariaCurso();
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort#eliminarHorarioPrograma(co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioDTO)
+	 */
+	@Override
+	@Transactional(rollbackFor = RuntimeException.class)
+	public Boolean eliminarHorarioPrograma(EliminarHorarioDTO eliminarHorarioDTO) {
+		// Se consulta periodo académico vigente
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
+		/*
+		 * Se valida que exista periodo académico vigente
+		 */
+		if (Objects.nonNull(periodoAcademicoVigente)) {
+
+			// Se eliminan registros de HorarioEspacioEntity y HorarioEntity
+			this.gestionarPlanificacionManualGatewayIntPort.eliminarHorarioPrograma(eliminarHorarioDTO,
+					periodoAcademicoVigente.getIdPeriodoAcademico());
+
+			return Boolean.TRUE;
+		} else {
+			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
+		}
 	}
 
 }

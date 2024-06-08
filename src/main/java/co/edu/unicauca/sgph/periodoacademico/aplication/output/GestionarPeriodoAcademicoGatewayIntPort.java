@@ -65,14 +65,14 @@ public interface GestionarPeriodoAcademicoGatewayIntPort {
 
 	/**
 	 * Método encargado de validar si existe una fecha fin mayor a la fecha de
-	 * inicio del periodo que se quiere guardar o actualizar.Este es utilizado por la anotación
-	 * FechaInicioGreaterThanUltimaFechaFin<br>
+	 * inicio del periodo que se quiere guardar o actualizar.Este es utilizado por
+	 * la anotación FechaInicioGreaterThanUltimaFechaFin<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param anio    Año del periodo académico
+	 * @param fechaInicio Fecha de inicio
 	 * @return
 	 */
-	public Boolean esFechaInicioGreaterThanUltimaFechaFin(Date fechaInicio);
+	public Date esFechaInicioGreaterThanUltimaFechaFin(Date fechaInicio);
 
 }

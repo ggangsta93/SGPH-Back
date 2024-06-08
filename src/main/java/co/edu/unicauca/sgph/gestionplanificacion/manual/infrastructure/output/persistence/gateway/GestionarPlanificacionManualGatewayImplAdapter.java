@@ -27,6 +27,7 @@ import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEs
 import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
@@ -592,6 +593,24 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	@Override
 	public Object consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(Long idCurso) {
 		return this.planificacionManualRepositoryInt.consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(idCurso);
+	}
+
+	
+	/**
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#eliminarHorarioPrograma(co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioDTO,
+	 *      java.lang.Long)
+	 */
+	@Override
+	public void eliminarHorarioPrograma(EliminarHorarioDTO eliminarHorarioDTO, Long idPeriodoAcademicoVigente) {
+		//Se elimina asociaciones entre horarios y espacios físicos
+		this.planificacionManualRepositoryInt.eliminarRegistrosHorarioEspacioEntityPorProgramaYPeriodoAcademico(
+				eliminarHorarioDTO.getIdPrograma(), idPeriodoAcademicoVigente);
+		/*if(eliminarHorarioDTO.getIdPrograma().equals(602L)) {
+			throw new RuntimeException("Exceptión de tipo RuntimeException generada para pruebas fallida :]");
+		}*/
+		//Se elimina horarios
+		this.planificacionManualRepositoryInt.eliminarRegistrosHorarioEntityPorProgramaYPeriodoAcademico(
+				eliminarHorarioDTO.getIdPrograma(), idPeriodoAcademicoVigente);
 	}
 
 }

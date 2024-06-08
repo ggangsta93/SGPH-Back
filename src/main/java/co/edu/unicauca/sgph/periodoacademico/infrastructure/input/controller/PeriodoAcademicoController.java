@@ -148,6 +148,6 @@ public class PeriodoAcademicoController {
 		result.getFieldErrors().forEach(error -> {
 			errores.put(error.getField(), "El campo " + error.getField() + " " + error.getDefaultMessage());
 		});
-		return ResponseEntity.badRequest().body(errores);
+		return ResponseEntity.accepted().body(errores);
 	}
 }

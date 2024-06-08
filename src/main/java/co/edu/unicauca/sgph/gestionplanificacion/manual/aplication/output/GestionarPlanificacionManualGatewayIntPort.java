@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
@@ -26,7 +27,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
 	 * 
 	 * @param filtroCursoPlanificacionDTO
- 	 * @param idPeriodoAcademicoVigente Periodo académico vigente
+	 * @param idPeriodoAcademicoVigente   Periodo académico vigente
 	 * @return
 	 */
 	public Page<CursoPlanificacionOutDTO> consultarCursosPlanificacionPorFiltro(
@@ -38,11 +39,12 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
 	 * 
-	 * @param idPrograma DTO Identificador del programa
- 	 * @param idPeriodoAcademicoVigente Periodo académico vigente
+	 * @param idPrograma                DTO Identificador del programa
+	 * @param idPeriodoAcademicoVigente Periodo académico vigente
 	 * @return
 	 */
-	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma, Long idPeriodoAcademicoVigente);
+	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma,
+			Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de validar si existe cruces con horarios de docentes de un
@@ -122,10 +124,11 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idPersona
- 	 * @param idPeriodoAcademicoVigente     Periodo académico vigente
+	 * @param idPeriodoAcademicoVigente Periodo académico vigente
 	 * @return
 	 */
-	public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona, Long idPeriodoAcademicoVigente);
+	public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona,
+			Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un espacio físico
@@ -133,10 +136,11 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idEspacioFisico
-	 * @param idPeriodoAcademicoVigente     Periodo académico vigente
+	 * @param idPeriodoAcademicoVigente Periodo académico vigente
 	 * @return
 	 */
-	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico, Long idPeriodoAcademicoVigente);
+	public List<FranjaHorariaEspacioFisicoDTO> consultarFranjasEspacioFisicoPorIdEspacioFisico(Long idEspacioFisico,
+			Long idPeriodoAcademicoVigente);
 
 	/**
 	 * Método encargado de consultar las franjas horarias de los espacios físicos.
@@ -204,5 +208,17 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @return
 	 */
 	public Object consultarIdAsignaturaCupoYCantidadHorasDeCusoPorCurso(Long idCurso);
+
+	/**
+	 * Método encargado de eliminar todo el horario de un programa</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param eliminarHorarioDTO        Información necesaria para eliminar el
+	 *                                  horario de un programa
+	 * @param idPeriodoAcademicoVigente Periodo académico vigente
+	 * 
+	 */
+	public void eliminarHorarioPrograma(EliminarHorarioDTO eliminarHorarioDTO, Long idPeriodoAcademicoVigente);
 
 }

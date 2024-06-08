@@ -144,13 +144,15 @@ public class GestionarPeriodoAcademicoGatewayImplAdapter implements GestionarPer
 
 		Pageable pageable = PageRequest.of(pagina, registrosPorPagina);
 		return new PageImpl<>(dtoList, pageable, count);
-	}
-
+	}	
+	
 	/** 
-	 * @see co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort#fechaInicioGreaterThanUltimaFechaFin(java.util.Date)
+	 * @see co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort#esFechaInicioGreaterThanUltimaFechaFin(java.util.Date)
 	 */
 	@Override
-	public Boolean esFechaInicioGreaterThanUltimaFechaFin(Date fechaInicio) {
-		return this.periodoAcademicoRepositoryInt.fechaInicioGreaterThanUltimaFechaFin(fechaInicio);
+	public Date esFechaInicioGreaterThanUltimaFechaFin(Date fechaInicio) {
+		List<Date> lstFechaFinPeriodo = this.periodoAcademicoRepositoryInt
+				.fechaInicioGreaterThanUltimaFechaFin(fechaInicio);
+		return lstFechaFinPeriodo.isEmpty() ? null : lstFechaFinPeriodo.get(0);
 	}
 }

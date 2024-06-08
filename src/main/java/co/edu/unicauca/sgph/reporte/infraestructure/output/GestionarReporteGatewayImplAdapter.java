@@ -1,32 +1,13 @@
 package co.edu.unicauca.sgph.reporte.infraestructure.output;
 
-import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
-import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
-import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
-import co.edu.unicauca.sgph.docente.domain.model.Docente;
-import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
-import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
-import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
-import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
-import co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort;
-import co.edu.unicauca.sgph.programa.domain.model.Programa;
-import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
-import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.repository.ProgramaRepositoryInt;
-import co.edu.unicauca.sgph.reporte.aplication.output.GestionarReporteGatewayIntPort;
-import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.HorarioDTO;
-import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteSimcaDTO;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
-import org.springframework.stereotype.Service;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.Base64;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -36,16 +17,29 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.time.format.DateTimeFormatter;
-import java.util.Base64;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Service;
+
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
+import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
+import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
+import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
+import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
+import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
+import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
+import co.edu.unicauca.sgph.reporte.aplication.output.GestionarReporteGatewayIntPort;
+import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.HorarioDTO;
+import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteSimcaDTO;
 
 @Service
 public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatewayIntPort {
@@ -139,9 +133,9 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 		headerCellStyle.setBorderLeft(BorderStyle.THIN);
 		headerCellStyle.setBorderRight(BorderStyle.THIN);
 		String[] columnHeaders = {
-				"Periodo", "Programa", "Sem", "OID Asignatura", "Codigo Asignatura",
-				"Asignatura", "Grupo", "Cupo", "Matriculados", "Lunes", "Martes",
-				"Miércoles", "Jueves", "Viernes", "Sábado", "Docente"
+				"PER", "PROGRAMA", "SEM", "OID_MATERIA", "CODIGO_MATERIA",
+				"MATERIA", "GRUPO", "CUPO", "MATRICULADOS", "LUNES", "MARTES",
+				"MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOCENTES"
 		};
 		Row headerRow = sheet.createRow(0);
 		for (int i = 0; i < columnHeaders.length; i++) {
