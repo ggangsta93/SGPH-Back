@@ -12,14 +12,22 @@ import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.TipoEspacioFisicoOutDTO;
+import org.mapstruct.Mappings;
 
-@Mapper(componentModel = "spring", uses = AgrupadorEspacioFisicoRestMapper.class)
+@Mapper(componentModel = "spring", uses = { AgrupadorEspacioFisicoRestMapper.class, RecursoMapper.class })
 public interface EspacioFisicoRestMapper {
 
-	//@Mapping(target = "idTipoEspacioFisico", expression = "java(espacioFisico.getTipoEspacioFisico().getIdTipoEspacioFisico())")
-	//@Mapping(target = "idEdificio", expression = "java(espacioFisico.getEdificio() != null ? espacioFisico.getEdificio().getIdEdificio() : null)")
-	//@Mapping(target = "idUbicacion", expression = "java(espacioFisico.getUbicacion().getIdUbicacion())")
-	@Mapping(target = "lstIdAgrupadorEspacioFisico", source = "espacioFisico.agrupadores")
+	@Mappings({
+			@Mapping(target = "idTipoEspacioFisico", expression = "java(espacioFisico.getTipoEspacioFisico() != null ?  espacioFisico.getTipoEspacioFisico().getIdTipoEspacioFisico(): null)"),
+			@Mapping(target = "nombreTipoEspacioFisico", expression = "java(espacioFisico.getTipoEspacioFisico() != null ?  espacioFisico.getTipoEspacioFisico().getTipo(): null)"),
+			@Mapping(target = "idEdificio", expression = "java(espacioFisico.getEdificio() != null ? espacioFisico.getEdificio().getIdEdificio() : null)"),
+			@Mapping(target = "nombreEdificio", expression = "java(espacioFisico.getEdificio() != null ? espacioFisico.getEdificio().getNombre() : null)"),
+			@Mapping(target = "idUbicacion", expression = "java(espacioFisico.getUbicacion().getIdUbicacion())"),
+			@Mapping(target = "nombreUbicacion", expression = "java(espacioFisico.getUbicacion().getNombre())"),
+			@Mapping(target = "lstIdAgrupadorEspacioFisico", source = "agrupadores"),
+			@Mapping(target = "recursos", source = "recursosEspacioFisico"),
+			@Mapping(target = "OID", source = "OID")
+	})
 	EspacioFisicoOutDTO toEspacioFisicoOutDTO(EspacioFisico espacioFisico);
 
 	@Mapping(target = "horarios", ignore = true)

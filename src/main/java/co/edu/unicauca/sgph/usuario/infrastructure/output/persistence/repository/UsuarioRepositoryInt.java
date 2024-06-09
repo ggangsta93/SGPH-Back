@@ -1,6 +1,7 @@
 package co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -51,4 +52,6 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 	 */
 	@Query("SELECT rol FROM RolEntity rol")
 	public List<RolEntity> consultarRoles();
+
+	Optional<UsuarioEntity> findByNombreUsuario(String nombreUsuario);
 }

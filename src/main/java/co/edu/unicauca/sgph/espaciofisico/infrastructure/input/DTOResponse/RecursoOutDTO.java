@@ -6,6 +6,7 @@ public class RecursoOutDTO {
 	private Long idRecurso;
 	private String nombre;
 	private String descripcion;
+	private Long cantidad;
 
 	public RecursoOutDTO(Long idRecurso, String nombre, String descripcion) {
 		this.idRecurso = idRecurso;
@@ -35,5 +36,13 @@ public class RecursoOutDTO {
 
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+
+	public Long getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(Long cantidad) {
+		this.cantidad = cantidad;
 	}
 }
