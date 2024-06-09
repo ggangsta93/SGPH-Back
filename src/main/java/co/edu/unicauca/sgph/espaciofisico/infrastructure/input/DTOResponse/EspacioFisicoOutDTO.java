@@ -9,6 +9,7 @@ public class EspacioFisicoOutDTO {
 
 	private Long idEspacioFisico;
 
+	private String nombreTipoEspacioFisico;
 	private String OID;
 
 	private Long capacidad;
@@ -18,12 +19,15 @@ public class EspacioFisicoOutDTO {
 	private String salon;
 
 	private Long idEdificio;
+	private String nombreEdificio;
 
 	private Long idUbicacion;
+	private String nombreUbicacion;
 
 	private Long idTipoEspacioFisico;
 
 	private List<AgrupadorEspacioFisicoDTO> lstIdAgrupadorEspacioFisico;
+	private List<RecursoOutDTO> recursos;
 
 	public Long getIdEspacioFisico() {
 		return idEspacioFisico;
@@ -97,4 +101,35 @@ public class EspacioFisicoOutDTO {
 		this.idUbicacion = idUbicacion;
 	}
 
+	public String getNombreEdificio() {
+		return nombreEdificio;
+	}
+
+	public void setNombreEdificio(String nombreEdificio) {
+		this.nombreEdificio = nombreEdificio;
+	}
+
+	public String getNombreUbicacion() {
+		return nombreUbicacion;
+	}
+
+	public void setNombreUbicacion(String nombreUbicacion) {
+		this.nombreUbicacion = nombreUbicacion;
+	}
+
+	public String getNombreTipoEspacioFisico() {
+		return nombreTipoEspacioFisico;
+	}
+
+	public void setNombreTipoEspacioFisico(String nombreTipoEspacioFisico) {
+		this.nombreTipoEspacioFisico = nombreTipoEspacioFisico;
+	}
+
+	public List<RecursoOutDTO> getRecursos() {
+		return recursos;
+	}
+
+	public void setRecursos(List<RecursoOutDTO> recursos) {
+		this.recursos = recursos;
+	}
 }

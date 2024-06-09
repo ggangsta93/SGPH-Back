@@ -13,9 +13,12 @@ import javax.persistence.TypedQuery;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.common.domain.model.Persona;
@@ -37,15 +40,17 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	private PasswordEncoder passwordEncoder;
 
 	private UsuarioRepositoryInt usuarioRepositoryInt;
 	private PersonaRepositoryInt personaRepositoryInt;
 	private ModelMapper modelMapper;
 
-	public GestionarUsuarioGatewayImplAdapter(UsuarioRepositoryInt usuarioRepositoryInt, ModelMapper modelMapper,  PersonaRepositoryInt personaRepositoryInt) {
+	public GestionarUsuarioGatewayImplAdapter(UsuarioRepositoryInt usuarioRepositoryInt, ModelMapper modelMapper,  PersonaRepositoryInt personaRepositoryInt, PasswordEncoder passwordEncoder) {
 		this.usuarioRepositoryInt = usuarioRepositoryInt;
 		this.modelMapper = modelMapper;
 		this.personaRepositoryInt = personaRepositoryInt;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	/**
@@ -177,6 +182,7 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	 */
 	@Override
 	public Usuario guardarUsuario(Usuario usuario) {
+		usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
 		return this.modelMapper.map(this.usuarioRepositoryInt.save(this.modelMapper.map(usuario, UsuarioEntity.class)),
 				Usuario.class);
 	}

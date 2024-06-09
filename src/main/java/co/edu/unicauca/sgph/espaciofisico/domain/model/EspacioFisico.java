@@ -125,5 +125,4 @@ public class EspacioFisico {
 	public void setUbicacion(Ubicacion ubicacion) {
 		this.ubicacion = ubicacion;
 	}
-
 }
