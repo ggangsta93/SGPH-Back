@@ -3,8 +3,6 @@ package co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioInDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
@@ -146,5 +144,8 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 */
 	public GenerarHorarioBaseOutDTO generarHorarioBasadoEnSemestreAnteriorPorPrograma(
 			GenerarHorarioBaseInDTO generarHorarioBaseInDTO);
+	
+	//Método de prueba(temporal), meramente para simular la carga labor
+	public void simularCargueLabor(Long idPrograma);
 
 }

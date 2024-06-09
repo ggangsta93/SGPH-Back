@@ -204,6 +204,13 @@ public class PlanificacionManualController {
 		return this.gestionarPlanificacionManualCUIntPort
 				.generarHorarioBasadoEnSemestreAnteriorPorPrograma(generarHorarioBaseInDTO);
 	}
+	
+	// Método temporal
+	@GetMapping("/simularCargueLabor")
+	public void simularCargueLabor(@RequestParam Long idPrograma) {
+		this.gestionarPlanificacionManualCUIntPort.simularCargueLabor(idPrograma);
+	}
+	
 
 	/*************************************************
 	 * Eliminar horario por programa
@@ -254,5 +261,7 @@ public class PlanificacionManualController {
 		return this.gestionarPlanificacionManualCUIntPort
 				.consultarFranjasEspacioFisicoPorIdEspacioFisico(idEspacioFisico);
 	}
+	
+	
 
 }

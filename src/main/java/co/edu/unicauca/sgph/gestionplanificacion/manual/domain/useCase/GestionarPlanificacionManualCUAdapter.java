@@ -50,10 +50,12 @@ import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.CrearActual
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.CrearActualizarHorarioCursoOutDTO;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
 import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
+import co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort;
+import co.edu.unicauca.sgph.programa.domain.model.Programa;
 
 public class GestionarPlanificacionManualCUAdapter implements GestionarPlanificacionManualCUIntPort {
 
-	private static final String NO_EXISTE_PERIODO_ACADEMICO_VIGENTE="No existe periodo académico vigente";
+	private static final String NO_EXISTE_PERIODO_ACADEMICO_VIGENTE = "No existe periodo académico vigente";
 
 	private GestionarPlanificacionManualGatewayIntPort gestionarPlanificacionManualGatewayIntPort;
 	private CursoFormatterResultsIntPort cursoFormatterResultsIntPort;
@@ -61,11 +63,12 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	private GestionarEspacioFisicoGatewayIntPort gestionarEspacioFisicoGatewayIntPort;
 	private GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort;
 	private GestionarHorarioGatewayIntPort gestionarHorarioGatewayIntPort;
-	private GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort;	
-	
+	private GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort;
+	private GestionarProgramaGatewayIntPort gestionarProgramaGatewayIntPort;
+
 	@Autowired
 	@Lazy
-	private GestionarPlanificacionManualCUAdapter gestionarPlanificacionManualCUAdapter;
+	private GestionarPlanificacionManualCUAdapter gestionarPlanificacionManualCUAdapterEJB;
 
 	@PersistenceContext
 	EntityManager entityManager;
@@ -77,7 +80,8 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			GestionarEspacioFisicoGatewayIntPort gestionarEspacioFisicoGatewayIntPort,
 			GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort,
 			GestionarHorarioGatewayIntPort gestionarHorarioGatewayIntPort,
-			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort) {
+			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort,
+			GestionarProgramaGatewayIntPort gestionarProgramaGatewayIntPort) {
 		this.gestionarPlanificacionManualGatewayIntPort = gestionarPlanificacionManualGatewayIntPort;
 		this.cursoFormatterResultsIntPort = cursoFormatterResultsIntPort;
 		this.gestionarDocenteGatewayIntPort = gestionarDocenteGatewayIntPort;
@@ -85,6 +89,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		this.gestionarCursoGatewayIntPort = gestionarCursoGatewayIntPort;
 		this.gestionarHorarioGatewayIntPort = gestionarHorarioGatewayIntPort;
 		this.gestionarPeriodoAcademicoGatewayIntPort = gestionarPeriodoAcademicoGatewayIntPort;
+		this.gestionarProgramaGatewayIntPort = gestionarProgramaGatewayIntPort;
 	}
 
 	/**
@@ -329,11 +334,10 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 
 				// Se valida que el estado sea ACTIVO de los espacios físicos
 				this.validarEstadoActivoEspaciosFisicos(crearActualizarHorarioCursoInDTO, lstEspacioFisicoAActualizar);
-				
+
 				// Se valida capacidad de espacios físicos contra cupo del curso
 				this.validarCapacidadEspaciosFisicosContraCupoDelCurso(crearActualizarHorarioCursoInDTO,
 						(Integer) infoCurso[1], lstEspacioFisicoAActualizar);
-
 
 				// Se validan cruces
 				for (FranjaHorariaCursoAsociarInDTO franjaHorariaCursoAsociarInDTO : crearActualizarHorarioCursoInDTO
@@ -831,7 +835,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			return this.gestionarPlanificacionManualGatewayIntPort.consultarFranjasDocentePorIdPersona(idPersona,
 					periodoAcademicoVigente.getIdPeriodoAcademico());
 		} else {
-			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);		
+			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
 		}
 	}
 
@@ -859,7 +863,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		return this.gestionarPlanificacionManualGatewayIntPort.consultarFormatoPresentacionFranjaHorariaCurso();
 	}
 
-	/** 
+	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort#eliminarHorarioPrograma(co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioInDTO)
 	 */
 	@Override
@@ -882,8 +886,8 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
 		}
 	}
-	
-	/** 
+
+	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort#generarHorarioBasadoEnSemestreAnteriorPorPrograma(co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.GenerarHorarioBaseInDTO)
 	 */
 	@Override
@@ -905,6 +909,14 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			List<Curso> lstCursosActuales = this.gestionarCursoGatewayIntPort
 					.consultarCursosPorProgramaYPeriodoAcademico(generarHorarioBaseInDTO.getIdPrograma(),
 							periodoAcademicoVigente.getIdPeriodoAcademico());
+			// Se valida que existan cursos para el periodo vigente
+			if (lstCursosActuales.isEmpty()) {
+				Programa programa = this.gestionarProgramaGatewayIntPort
+						.consultarProgramaPorId(generarHorarioBaseInDTO.getIdPrograma());
+				throw new RuntimeException("No existen cursos del periodo " + periodoAcademicoVigente.getAnio() + "-"
+						+ periodoAcademicoVigente.getPeriodo() + " para el programa " + programa.getNombre());
+			}
+
 			// Se filtran asignaturas a excluir, si aplica.
 			if (Objects.nonNull(generarHorarioBaseInDTO.getLstIdAsignaturaExcluir())
 					&& !generarHorarioBaseInDTO.getLstIdAsignaturaExcluir().isEmpty()) {
@@ -916,7 +928,15 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			// Se consulta los cursos del periodo base
 			List<Curso> lstCursosBase = this.gestionarCursoGatewayIntPort.consultarCursosPorProgramaYPeriodoAcademico(
 					generarHorarioBaseInDTO.getIdPrograma(), generarHorarioBaseInDTO.getIdPeriodoAcademicoBase());
-
+			// Se valida que existan cursos para el periodo vigente
+			if (lstCursosBase.isEmpty()) {
+				PeriodoAcademico periodoAcademicoBase = this.gestionarPeriodoAcademicoGatewayIntPort
+						.consultarPeriodoAcademicoPorId(generarHorarioBaseInDTO.getIdPeriodoAcademicoBase());
+				Programa programa = this.gestionarProgramaGatewayIntPort
+						.consultarProgramaPorId(generarHorarioBaseInDTO.getIdPrograma());
+				throw new RuntimeException("No existen cursos del periodo " + periodoAcademicoBase.getAnio() + "-"
+						+ periodoAcademicoBase.getPeriodo() + " para el programa " + programa.getNombre());
+			}
 			Map<String, Curso> mapaCursosBase = lstCursosBase.stream().collect(Collectors
 					.toMap(curso -> curso.getAsignatura().getIdAsignatura() + "-" + curso.getGrupo(), curso -> curso));
 
@@ -927,7 +947,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			int cantidadCursosNoCorrelacionados = 0;
 
 			for (Curso cursoActual : lstCursosActuales) {
-				
+
 				// Se valida que exista el mismo curso y grupo
 				if (mapaCursosBase
 						.containsKey(cursoActual.getAsignatura().getIdAsignatura() + "-" + cursoActual.getGrupo())) {
@@ -956,13 +976,13 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 								.setListaFranjaHorariaCursoAsociarInDTO(Arrays.asList(franjaHorariaCursoAsociarInDTO));
 
 						try {
-							this.validarYCrearActualizarHorarioCurso(crearActualizarHorarioCursoInDTO);
+							this.gestionarPlanificacionManualCUAdapterEJB.validarYCrearActualizarHorarioCurso(crearActualizarHorarioCursoInDTO);
 							esCursoActualizado = Boolean.TRUE;
-						} catch (Exception e) {				
-							String[] registro=new String[3];
-							registro[0]=cursoActual.getAsignatura().getNombre() + " " + cursoActual.getGrupo();
-							registro[1]=horario.getDia() + " " + horaInicio + "-" + horaFin;
-							registro[2]=e.getMessage();
+						} catch (Exception e) {
+							String[] registro = new String[3];
+							registro[0] = cursoActual.getAsignatura().getNombre() + " " + cursoActual.getGrupo();
+							registro[1] = horario.getDia() + " " + horaInicio + "-" + horaFin;
+							registro[2] = e.getMessage();
 							// Si se produce algún error técnico o salta alguna restricción
 							generarHorarioBaseOutDTO.getLstMensajesDelProceso().add(registro);
 						}
@@ -974,16 +994,67 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 				} else {
 					// Cursos que no mapearon con ningún curso del semestre base
 					cantidadCursosNoCorrelacionados++;
-					String[] registro=new String[3];
-					registro[0]=cursoActual.getAsignatura().getNombre() + " " + cursoActual.getGrupo();
-					registro[1]="";
-					registro[2]="Curso nuevo";
+					String[] registro = new String[3];
+					registro[0] = cursoActual.getAsignatura().getNombre() + " " + cursoActual.getGrupo();
+					registro[1] = "";
+					registro[2] = "Curso nuevo";
 					generarHorarioBaseOutDTO.getLstMensajesDelProceso().add(registro);
 				}
 			}
 			generarHorarioBaseOutDTO.setCantidadCursosActualizados(Long.valueOf(cantidadCursosActualizados));
 			generarHorarioBaseOutDTO.setCantidadCursosNoCorrelacionados(Long.valueOf(cantidadCursosNoCorrelacionados));
 			return generarHorarioBaseOutDTO;
+		} else {
+			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
+		}
+	}
+
+	/**
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort#simularCargueLabor(java.lang.Long)
+	 */
+	@Override
+	@Transactional
+	public void simularCargueLabor(Long idPrograma) {
+		// Se consulta periodo académico vigente
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
+		/*
+		 * Se valida que exista periodo académico vigente
+		 */
+		if (Objects.nonNull(periodoAcademicoVigente)) {
+
+			// Se consulta todos los cursos del periodo 2023-1 con identificador 1
+			List<Curso> lstCursosBase = this.gestionarCursoGatewayIntPort
+					.consultarCursosPorProgramaYPeriodoAcademico(idPrograma, 1L);
+			Map<String, Curso> mapaCursosBase = lstCursosBase.stream().collect(Collectors
+					.toMap(curso -> curso.getAsignatura().getIdAsignatura() + "-" + curso.getGrupo(), curso -> curso));
+
+			List<Curso> lstCursosVigente = this.gestionarCursoGatewayIntPort
+					.consultarCursosPorProgramaYPeriodoAcademico(idPrograma,
+							periodoAcademicoVigente.getIdPeriodoAcademico());
+			if (lstCursosVigente.isEmpty()) {
+				for (Curso curso : lstCursosBase) {
+					curso.setIdCurso(null);
+					curso.setPeriodoAcademico(periodoAcademicoVigente);
+					curso.setHorarios(null);
+					this.gestionarCursoGatewayIntPort.guardarCurso(curso);
+				}
+			} else {
+				for (Curso curso : lstCursosVigente) {
+					// Se obtiene el curso
+					Curso cursoBase = mapaCursosBase
+							.get(curso.getAsignatura().getIdAsignatura() + "-" + curso.getGrupo());
+
+					for (Docente docente : cursoBase.getDocentes()) {
+						docente.getCursos().add(curso);
+						this.gestionarDocenteGatewayIntPort.guardarDocente(docente);
+					}
+
+					curso.setDocentes(cursoBase.getDocentes());
+					this.gestionarCursoGatewayIntPort.guardarCurso(curso);
+				}
+			}
+
 		} else {
 			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
 		}

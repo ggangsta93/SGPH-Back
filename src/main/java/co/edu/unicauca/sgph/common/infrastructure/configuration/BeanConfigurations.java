@@ -137,10 +137,12 @@ public class BeanConfigurations {
 			GestionarEspacioFisicoGatewayIntPort gestionarEspacioFisicoGatewayIntPort,
 			GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort,
 			GestionarHorarioGatewayIntPort gestionarHorarioGatewayIntPort,
-			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort) {
+			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort,
+			GestionarProgramaGatewayIntPort gestionarProgramaGatewayIntPort) {
 		return new GestionarPlanificacionManualCUAdapter(gestionarPlanificacionManualGatewayIntPort,
 				cursoFormatterResultsIntPort, gestionarDocenteGatewayIntPort, gestionarEspacioFisicoGatewayIntPort,
-				gestionarCursoGatewayIntPort, gestionarHorarioGatewayIntPort,gestionarPeriodoAcademicoGatewayIntPort);
+				gestionarCursoGatewayIntPort, gestionarHorarioGatewayIntPort, gestionarPeriodoAcademicoGatewayIntPort,
+				gestionarProgramaGatewayIntPort);
 	}
 
 	@Bean

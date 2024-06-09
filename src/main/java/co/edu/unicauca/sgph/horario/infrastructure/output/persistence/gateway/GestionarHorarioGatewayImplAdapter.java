@@ -8,6 +8,8 @@ import javax.persistence.PersistenceContext;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
@@ -34,7 +36,10 @@ public class GestionarHorarioGatewayImplAdapter implements GestionarHorarioGatew
 	 * @see co.edu.unicauca.sgph.horario.aplication.output.GestionarHorarioGatewayIntPort#guardarHorario(co.edu.unicauca.sgph.horario.domain.model.Horario)
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Horario guardarHorario(Horario horario) {
+		System.out.println(
+				"Se crea horario: " + horario.getDia() + " " + horario.getHoraInicio() + "-" + horario.getHoraFin());
 		HorarioEntity horarioEntity = this.horarioRepositoryInt
 				.save(this.modelMapper.map(horario, HorarioEntity.class));
 		return this.modelMapper.map(horarioEntity, Horario.class);

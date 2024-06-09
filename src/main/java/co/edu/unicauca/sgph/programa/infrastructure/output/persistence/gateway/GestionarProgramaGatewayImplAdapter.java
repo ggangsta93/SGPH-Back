@@ -54,4 +54,13 @@ public class GestionarProgramaGatewayImplAdapter implements GestionarProgramaGat
 		return this.modelMapper.map(this.programaRepositoryInt.findAll(), new TypeToken<List<Programa>>() {
 		}.getType());
 	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort#consultarProgramaPorId(java.lang.Long)
+	 */
+	@Override
+	public Programa consultarProgramaPorId(Long idPrograma) {
+		ProgramaEntity programaEntity = this.programaRepositoryInt.consultarProgramaPorId(idPrograma);
+		return this.modelMapper.map(programaEntity, Programa.class);
+	}
 }

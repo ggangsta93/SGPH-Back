@@ -27,4 +27,7 @@ public interface PeriodoAcademicoRepositoryInt extends JpaRepository<PeriodoAcad
     
     @Query("SELECT p.fechaFinPeriodo FROM PeriodoAcademicoEntity p WHERE p.fechaFinPeriodo >= :fechaInicio AND p.estado='CERRADO'")
 	public List<Date> fechaInicioGreaterThanUltimaFechaFin(Date fechaInicio);
+    
+	@Query("SELECT p FROM PeriodoAcademicoEntity p WHERE p.idPeriodoAcademico = :idPeriodoAcademico")
+	public PeriodoAcademicoEntity consultarPeriodoAcademicoPorId(Long idPeriodoAcademico);    
 }

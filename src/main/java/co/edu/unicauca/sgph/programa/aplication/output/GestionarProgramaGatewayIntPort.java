@@ -29,5 +29,15 @@ public interface GestionarProgramaGatewayIntPort {
 	 * @return
 	 */
 	public List<Programa> consultarProgramas();
+	
+	/**
+	 * Método encargado de consultar un programa dado el identificador único </br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idPrograma Identificador único del programa
+	 * @return
+	 */
+	public Programa consultarProgramaPorId(Long idPrograma);
 
 }

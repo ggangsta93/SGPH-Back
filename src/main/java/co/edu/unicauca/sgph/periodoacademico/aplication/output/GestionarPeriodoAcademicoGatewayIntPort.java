@@ -74,5 +74,17 @@ public interface GestionarPeriodoAcademicoGatewayIntPort {
 	 * @return
 	 */
 	public Date esFechaInicioGreaterThanUltimaFechaFin(Date fechaInicio);
+	
+	
+	/**
+	 * Método encargado de consultar la información del periodo académico dado su
+	 * identificador único </br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idPeriodoAcademico Identificador único del periodo académico
+	 * @return
+	 */
+	public PeriodoAcademico consultarPeriodoAcademicoPorId(Long idPeriodoAcademico);
 
 }
