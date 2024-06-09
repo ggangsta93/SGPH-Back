@@ -58,10 +58,10 @@ public class AsignaturaController {
 	 */
 	@GetMapping("/consultarAsignaturasPorIdPrograma")
 	public List<AsignaturaOutDTO> consultarAsignaturasPorIdPrograma(@RequestParam Long idPrograma) {
-		List<Asignatura> aisgnaturas = this.gestionarAsignaturaCUIntPort.consultarAsignaturasPorIdPrograma(idPrograma);
-		return this.asignaturaRestMapper.toLstAsignaturaOutDTO(aisgnaturas);
+		List<Asignatura> asignaturas = this.gestionarAsignaturaCUIntPort.consultarAsignaturasPorIdPrograma(idPrograma);
+		return this.asignaturaRestMapper.toLstAsignaturaOutDTO(asignaturas);
 	}
-
+	
 	@GetMapping("/consultarAsignaturaPorId")
 	public AsignaturaOutDTO obtenerAsignaturaPorId(@RequestParam Long idAsignatura) {
 		return this.gestionarAsignaturaCUIntPort.obtenerAsignaturaPorId(idAsignatura);

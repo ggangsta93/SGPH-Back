@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioInDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
@@ -214,11 +214,11 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
-	 * @param eliminarHorarioDTO        Información necesaria para eliminar el
+	 * @param eliminarHorarioInDTO      Información necesaria para eliminar el
 	 *                                  horario de un programa
 	 * @param idPeriodoAcademicoVigente Periodo académico vigente
 	 * 
 	 */
-	public void eliminarHorarioPrograma(EliminarHorarioDTO eliminarHorarioDTO, Long idPeriodoAcademicoVigente);
+	public void eliminarHorarioPrograma(EliminarHorarioInDTO eliminarHorarioInDTO, Long idPeriodoAcademicoVigente);
 
 }

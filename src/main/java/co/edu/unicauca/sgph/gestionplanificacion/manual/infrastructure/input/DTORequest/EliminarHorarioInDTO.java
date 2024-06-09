@@ -2,7 +2,7 @@ package co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DT
 
 import java.io.Serializable;
 
-public class EliminarHorarioDTO implements Serializable {
+public class EliminarHorarioInDTO implements Serializable {
 
 	/**
 	 * Atributo que determina 
@@ -11,7 +11,7 @@ public class EliminarHorarioDTO implements Serializable {
 
 	private Long idPrograma;	
 		
-	public EliminarHorarioDTO() {
+	public EliminarHorarioInDTO() {
 	}
 	
 	public Long getIdPrograma() {

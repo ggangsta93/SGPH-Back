@@ -12,13 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioInDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.GenerarHorarioBaseInDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.GenerarHorarioBaseOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.InfoGeneralCursosPorProgramaDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.mapper.PlanificacionManualRestMapper;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.CrearActualizarDocentesCursoInDTO;
@@ -67,10 +69,15 @@ public class PlanificacionManualController {
 	 * .consultarCruceHorarioAula(lstIdAula, dia, horaInicio, horaFin)); }
 	 */
 
+	/*************************************************
+	 * Planificación manual
+	 *************************************************/
+	
 	/**
 	 * Método encargado de consultar los cursos por diferentes criterios de busqueda
 	 * y retornarlos de manera paginada
 	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
 	 * 
 	 * @param filtroCursoPlanificacionDTO DTO con los filtros de busqueda
 	 * @return
@@ -175,6 +182,28 @@ public class PlanificacionManualController {
 	public List<FormatoPresentacionFranjaHorariaCursoDTO> consultarFormatoPresentacionFranjaHorariaCurso() {
 		return this.gestionarPlanificacionManualCUIntPort.consultarFormatoPresentacionFranjaHorariaCurso();
 	}
+	
+	
+	/*************************************************
+	 * Generación basada en semestre anterior por programa
+	 *************************************************/
+	
+	/**
+	 * Método encargado de generar un horario base para un programa partiendo del
+	 * horario del semestre anterior del mismo</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param generarHorarioBaseInDTO Información requerida para generar el horario
+	 *                                base
+	 * @return
+	 */
+	@PostMapping("/generarHorarioBasadoEnSemestreAnteriorPorPrograma")
+	public GenerarHorarioBaseOutDTO generarHorarioBasadoEnSemestreAnteriorPorPrograma(
+			@RequestBody GenerarHorarioBaseInDTO generarHorarioBaseInDTO) {
+		return this.gestionarPlanificacionManualCUIntPort
+				.generarHorarioBasadoEnSemestreAnteriorPorPrograma(generarHorarioBaseInDTO);
+	}
 
 	/*************************************************
 	 * Eliminar horario por programa
@@ -190,7 +219,7 @@ public class PlanificacionManualController {
 	 * @return Booleano que indica si se eliminó con exito el horario
 	 */
 	@PostMapping("/eliminarHorarioPrograma")
-	public Boolean eliminarHorarioPrograma(@RequestBody EliminarHorarioDTO eliminarHorarioDTO) {
+	public Boolean eliminarHorarioPrograma(@RequestBody EliminarHorarioInDTO eliminarHorarioDTO) {
 		return this.gestionarPlanificacionManualCUIntPort.eliminarHorarioPrograma(eliminarHorarioDTO);
 	}
 	

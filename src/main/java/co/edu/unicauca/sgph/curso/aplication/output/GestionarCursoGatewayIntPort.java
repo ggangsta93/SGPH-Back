@@ -49,5 +49,16 @@ public interface GestionarCursoGatewayIntPort {
 	 * @return Lista de idAgrupadorEspacioFisico
 	 */
 	public List<Long> consultarAgrupadoresEspaciosFisicosPorCurso(Long idCurso);
-
+	
+	/**
+	 * Método encargado de consultar todos los cursos de un programa dado el
+	 * programa y periodo académico </br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idPrograma         Identificador único del programa
+	 * @param idPeriodoAcademico Identificador único del periodo académico
+	 * @return
+	 */
+	public List<Curso> consultarCursosPorProgramaYPeriodoAcademico(Long idPrograma, Long idPeriodoAcademico);
 }

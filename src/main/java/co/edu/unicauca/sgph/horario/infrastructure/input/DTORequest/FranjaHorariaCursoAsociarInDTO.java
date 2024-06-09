@@ -13,6 +13,17 @@ public class FranjaHorariaCursoAsociarInDTO {
 	private String horaInicio;
 
 	private String horaFin;
+	
+	
+	public FranjaHorariaCursoAsociarInDTO() {
+	}
+
+	public FranjaHorariaCursoAsociarInDTO(DiaSemanaEnum dia, String horaInicio, String horaFin,Long idEspacioFisico) {
+		this.idEspacioFisico = idEspacioFisico;
+		this.dia = dia;
+		this.horaInicio = horaInicio;
+		this.horaFin = horaFin;
+	}
 
 	public Long getIdHorario() {
 		return idHorario;

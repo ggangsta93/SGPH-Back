@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
@@ -13,6 +14,8 @@ import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.repository.CursoRepositoryInt;
+import co.edu.unicauca.sgph.docente.domain.model.Docente;
+import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
 
 @Service
 public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIntPort {
@@ -71,6 +74,17 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 	@Override
 	public List<Long> consultarAgrupadoresEspaciosFisicosPorCurso(Long idCurso) {
 		return this.cursoRepositoryInt.consultarAgrupadoresEspaciosFisicosPorCurso(idCurso);
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort#consultarCursosPorProgramaYPeriodoAcademico(java.lang.Long, java.lang.Long)
+	 */
+	@Override
+	public List<Curso> consultarCursosPorProgramaYPeriodoAcademico(Long idPrograma, Long idPeriodoAcademico) {
+		List<CursoEntity> lstCursoEntity = this.cursoRepositoryInt
+				.consultarCursosPorProgramaYPeriodoAcademico(idPrograma, idPeriodoAcademico);
+		return this.modelMapper.map(lstCursoEntity, new TypeToken<List<Curso>>() {
+		}.getType());
 	}
 
 }

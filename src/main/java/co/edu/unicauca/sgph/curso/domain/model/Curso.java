@@ -4,6 +4,7 @@ import java.util.List;
 
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
+import co.edu.unicauca.sgph.horario.domain.model.Horario;
 import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 
 public class Curso {
@@ -17,11 +18,13 @@ public class Curso {
 	private Asignatura asignatura;
 
 	private List<Docente> docentes;
-	
+
 	private PeriodoAcademico periodoAcademico;
-			
+
+	private List<Horario> horarios;
+
 	public Curso() {
-		//Constructor sin argumentos
+		// Constructor sin argumentos
 	}
 
 	public Curso(Long idCurso) {
@@ -74,5 +77,13 @@ public class Curso {
 
 	public void setPeriodoAcademico(PeriodoAcademico periodoAcademico) {
 		this.periodoAcademico = periodoAcademico;
+	}
+
+	public List<Horario> getHorarios() {
+		return horarios;
+	}
+
+	public void setHorarios(List<Horario> horarios) {
+		this.horarios = horarios;
 	}
 }

@@ -19,6 +19,7 @@ public interface CursoRestMapper {
 	@Mapping(target = "asignatura", expression = "java(new Asignatura(cursoInDTO.getIdAsignatura()))")
 	@Mapping(target = "periodoAcademico", expression = "java(new PeriodoAcademico(cursoInDTO.getIdPeriodoAcademico()))")
 	@Mapping(target = "docentes", ignore = true)
+	@Mapping(target = "horarios", ignore = true)
 	Curso toCurso(CursoInDTO cursoInDTO);
 
 	List<CursoOutDTO> toLstCursoOutDTO(List<Curso> lstCurso);

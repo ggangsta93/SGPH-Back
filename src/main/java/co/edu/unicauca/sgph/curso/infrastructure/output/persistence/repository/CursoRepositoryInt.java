@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
+import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 
 public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
@@ -48,4 +49,21 @@ public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
 			+ " JOIN asignatura.agrupadores agrupadores "
 			+ " WHERE curso.idCurso =:idCurso")
 	public List<Long> consultarAgrupadoresEspaciosFisicosPorCurso(Long idCurso);
+
+	/**
+	 * Método encargado de consultar todos los cursos de un programa dado el
+	 * programa y periodo académico </br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idPrograma
+	 * @param idPeriodoAcademico
+	 * @return
+	 */
+	@Query("SELECT curso " 
+			+ " FROM CursoEntity curso "
+			+ " JOIN curso.asignatura asignatura "
+			+ " WHERE asignatura.programa.idPrograma = :idPrograma"
+			+ " AND curso.periodoAcademico.idPeriodoAcademico = :idPeriodoAcademico")
+	public List<CursoEntity> consultarCursosPorProgramaYPeriodoAcademico(Long idPrograma, Long idPeriodoAcademico);
 }

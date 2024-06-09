@@ -1,6 +1,7 @@
 package co.edu.unicauca.sgph.gestionplanificacion.manual.domain.useCase;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,13 +30,15 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.enti
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO;
-import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioInDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.GenerarHorarioBaseInDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.CursoPlanificacionOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FormatoPresentacionFranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO;
+import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.GenerarHorarioBaseOutDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.InfoGeneralCursosPorProgramaDTO;
 import co.edu.unicauca.sgph.horario.aplication.output.GestionarHorarioGatewayIntPort;
 import co.edu.unicauca.sgph.horario.domain.model.Horario;
@@ -324,12 +327,13 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 								.getListaFranjaHorariaCursoAsociarInDTO().stream()
 								.map(FranjaHorariaCursoAsociarInDTO::getIdEspacioFisico).collect(Collectors.toList()));
 
+				// Se valida que el estado sea ACTIVO de los espacios físicos
+				this.validarEstadoActivoEspaciosFisicos(crearActualizarHorarioCursoInDTO, lstEspacioFisicoAActualizar);
+				
 				// Se valida capacidad de espacios físicos contra cupo del curso
 				this.validarCapacidadEspaciosFisicosContraCupoDelCurso(crearActualizarHorarioCursoInDTO,
 						(Integer) infoCurso[1], lstEspacioFisicoAActualizar);
 
-				// Se valida que el estado sea ACTIVO de los espacios físicos
-				this.validarEstadoActivoEspaciosFisicos(crearActualizarHorarioCursoInDTO, lstEspacioFisicoAActualizar);
 
 				// Se validan cruces
 				for (FranjaHorariaCursoAsociarInDTO franjaHorariaCursoAsociarInDTO : crearActualizarHorarioCursoInDTO
@@ -856,11 +860,11 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	}
 
 	/** 
-	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort#eliminarHorarioPrograma(co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioDTO)
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort#eliminarHorarioPrograma(co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioInDTO)
 	 */
 	@Override
 	@Transactional(rollbackFor = RuntimeException.class)
-	public Boolean eliminarHorarioPrograma(EliminarHorarioDTO eliminarHorarioDTO) {
+	public Boolean eliminarHorarioPrograma(EliminarHorarioInDTO eliminarHorarioInDTO) {
 		// Se consulta periodo académico vigente
 		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
 				.consultarPeriodoAcademicoVigente();
@@ -870,10 +874,116 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		if (Objects.nonNull(periodoAcademicoVigente)) {
 
 			// Se eliminan registros de HorarioEspacioEntity y HorarioEntity
-			this.gestionarPlanificacionManualGatewayIntPort.eliminarHorarioPrograma(eliminarHorarioDTO,
+			this.gestionarPlanificacionManualGatewayIntPort.eliminarHorarioPrograma(eliminarHorarioInDTO,
 					periodoAcademicoVigente.getIdPeriodoAcademico());
 
 			return Boolean.TRUE;
+		} else {
+			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
+		}
+	}
+	
+	/** 
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort#generarHorarioBasadoEnSemestreAnteriorPorPrograma(co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.GenerarHorarioBaseInDTO)
+	 */
+	@Override
+	@Transactional
+	public GenerarHorarioBaseOutDTO generarHorarioBasadoEnSemestreAnteriorPorPrograma(
+			GenerarHorarioBaseInDTO generarHorarioBaseInDTO) {
+		// Se consulta periodo académico vigente
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
+		/*
+		 * Se valida que exista periodo académico vigente
+		 */
+		if (Objects.nonNull(periodoAcademicoVigente)) {
+			GenerarHorarioBaseOutDTO generarHorarioBaseOutDTO = new GenerarHorarioBaseOutDTO();
+			generarHorarioBaseOutDTO.setIdPrograma(generarHorarioBaseInDTO.getIdPrograma());
+			generarHorarioBaseOutDTO.setLstMensajesDelProceso(new ArrayList<>());
+
+			// Se consulta todos los cursos del periodo vigente
+			List<Curso> lstCursosActuales = this.gestionarCursoGatewayIntPort
+					.consultarCursosPorProgramaYPeriodoAcademico(generarHorarioBaseInDTO.getIdPrograma(),
+							periodoAcademicoVigente.getIdPeriodoAcademico());
+			// Se filtran asignaturas a excluir, si aplica.
+			if (Objects.nonNull(generarHorarioBaseInDTO.getLstIdAsignaturaExcluir())
+					&& !generarHorarioBaseInDTO.getLstIdAsignaturaExcluir().isEmpty()) {
+				lstCursosActuales = lstCursosActuales.stream().filter(curso -> !generarHorarioBaseInDTO
+						.getLstIdAsignaturaExcluir().contains(curso.getAsignatura().getIdAsignatura()))
+						.collect(Collectors.toList());
+			}
+
+			// Se consulta los cursos del periodo base
+			List<Curso> lstCursosBase = this.gestionarCursoGatewayIntPort.consultarCursosPorProgramaYPeriodoAcademico(
+					generarHorarioBaseInDTO.getIdPrograma(), generarHorarioBaseInDTO.getIdPeriodoAcademicoBase());
+
+			Map<String, Curso> mapaCursosBase = lstCursosBase.stream().collect(Collectors
+					.toMap(curso -> curso.getAsignatura().getIdAsignatura() + "-" + curso.getGrupo(), curso -> curso));
+
+			// Contador de cursos actualizados
+			int cantidadCursosActualizados = 0;
+
+			// Contador de cursos que no mapearon con ningún curso
+			int cantidadCursosNoCorrelacionados = 0;
+
+			for (Curso cursoActual : lstCursosActuales) {
+				
+				// Se valida que exista el mismo curso y grupo
+				if (mapaCursosBase
+						.containsKey(cursoActual.getAsignatura().getIdAsignatura() + "-" + cursoActual.getGrupo())) {
+
+					// Se obtiene el curso
+					Curso cursoBase = mapaCursosBase
+							.get(cursoActual.getAsignatura().getIdAsignatura() + "-" + cursoActual.getGrupo());
+
+					// Se constuye el DTO de entrada
+					CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO = new CrearActualizarHorarioCursoInDTO();
+					crearActualizarHorarioCursoInDTO.setIdCurso(cursoActual.getIdCurso());
+
+					Boolean esCursoActualizado = Boolean.FALSE;
+					// Por cada franja horaria del curso se realiza la actualización
+					for (Horario horario : cursoBase.getHorarios()) {
+						// Se construye franja horaria
+
+						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+						String horaInicio = horario.getHoraInicio().format(formatter);
+						String horaFin = horario.getHoraFin().format(formatter);
+
+						FranjaHorariaCursoAsociarInDTO franjaHorariaCursoAsociarInDTO = new FranjaHorariaCursoAsociarInDTO(
+								horario.getDia(), horaInicio, horaFin,
+								horario.getEspaciosFisicos().get(0).getIdEspacioFisico());
+						crearActualizarHorarioCursoInDTO
+								.setListaFranjaHorariaCursoAsociarInDTO(Arrays.asList(franjaHorariaCursoAsociarInDTO));
+
+						try {
+							this.validarYCrearActualizarHorarioCurso(crearActualizarHorarioCursoInDTO);
+							esCursoActualizado = Boolean.TRUE;
+						} catch (Exception e) {				
+							String[] registro=new String[3];
+							registro[0]=cursoActual.getAsignatura().getNombre() + " " + cursoActual.getGrupo();
+							registro[1]=horario.getDia() + " " + horaInicio + "-" + horaFin;
+							registro[2]=e.getMessage();
+							// Si se produce algún error técnico o salta alguna restricción
+							generarHorarioBaseOutDTO.getLstMensajesDelProceso().add(registro);
+						}
+					}
+					// Se considera un curso actualizado si registró al menos una franja
+					if (esCursoActualizado) {
+						cantidadCursosActualizados++;
+					}
+				} else {
+					// Cursos que no mapearon con ningún curso del semestre base
+					cantidadCursosNoCorrelacionados++;
+					String[] registro=new String[3];
+					registro[0]=cursoActual.getAsignatura().getNombre() + " " + cursoActual.getGrupo();
+					registro[1]="";
+					registro[2]="Curso nuevo";
+					generarHorarioBaseOutDTO.getLstMensajesDelProceso().add(registro);
+				}
+			}
+			generarHorarioBaseOutDTO.setCantidadCursosActualizados(Long.valueOf(cantidadCursosActualizados));
+			generarHorarioBaseOutDTO.setCantidadCursosNoCorrelacionados(Long.valueOf(cantidadCursosNoCorrelacionados));
+			return generarHorarioBaseOutDTO;
 		} else {
 			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
 		}
