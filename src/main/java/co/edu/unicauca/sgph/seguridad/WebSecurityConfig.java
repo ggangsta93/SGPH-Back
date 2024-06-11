@@ -17,8 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class WebSecurityConfig {
-        /*
-    @Override
+        
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .cors().and()
@@ -28,7 +27,7 @@ public class WebSecurityConfig {
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
-*/
+/*
     private final UserDetailsService userDetailsService;
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
 
@@ -67,7 +66,7 @@ public class WebSecurityConfig {
                 .passwordEncoder(passwordEncoder())
                 .and()
                 .build();
-    }
+    }*/
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
