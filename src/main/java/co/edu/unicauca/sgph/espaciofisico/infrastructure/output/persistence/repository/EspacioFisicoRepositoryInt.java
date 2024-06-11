@@ -92,6 +92,21 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 			+ "WHERE e.idEspacioFisico IN (:lstIdEspacioFisico)")
 	public List<EspacioFisicoEntity> consultarCapacidadEstadoYSalonPorListaIdEspacioFisico(List<Long> lstIdEspacioFisico);
 
+	/**
+	 * Método encargado de obtener todos los espacios físicos asociados a una franja
+	 * dado el identificador único de horario <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idHorario
+	 * @return
+	 */
+	@Query("SELECT e"
+			+ " FROM EspacioFisicoEntity e "
+			+ " JOIN e.horarios horarios "
+			+ " WHERE horarios.idHorario = :idHorario")
+	public List<EspacioFisicoEntity> consultarEspaciosFisicosCursoPorIdHorario(Long idHorario);	
+	
 	@Query("SELECT e FROM EspacioFisicoEntity e WHERE " +
 			"(:salon IS NULL OR LOWER(e.salon) LIKE LOWER(CONCAT('%', :salon, '%'))) AND " +
 			"(:ubicacion IS NULL OR LOWER(e.ubicacion) LIKE LOWER(CONCAT('%', :ubicacion, '%'))) AND " +

@@ -36,13 +36,31 @@ public class GestionarHorarioGatewayImplAdapter implements GestionarHorarioGatew
 	 * @see co.edu.unicauca.sgph.horario.aplication.output.GestionarHorarioGatewayIntPort#guardarHorario(co.edu.unicauca.sgph.horario.domain.model.Horario)
 	 */
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Horario guardarHorario(Horario horario) {
-		System.out.println(
-				"Se crea horario: " + horario.getDia() + " " + horario.getHoraInicio() + "-" + horario.getHoraFin());
+		return this.saveHorario(horario);
+	}
+	
+	/**
+	 * Método encargado de guardar o actualizar un horario
+
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param horario
+	 * @return
+	 */
+	private Horario saveHorario(Horario horario) {
 		HorarioEntity horarioEntity = this.horarioRepositoryInt
 				.save(this.modelMapper.map(horario, HorarioEntity.class));
 		return this.modelMapper.map(horarioEntity, Horario.class);
+	}
+	
+	/** 
+	 * @see co.edu.unicauca.sgph.horario.aplication.output.GestionarHorarioGatewayIntPort#guardarHorarioConNuevaTransaccion(co.edu.unicauca.sgph.horario.domain.model.Horario)
+	 */
+	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public Horario guardarHorarioConNuevaTransaccion(Horario horario) {
+		return this.saveHorario(horario) ;
 	}
 	
 	/** 
@@ -64,5 +82,4 @@ public class GestionarHorarioGatewayImplAdapter implements GestionarHorarioGatew
 				new TypeToken<List<Horario>>() {
 				}.getType());
 	}
-
 }

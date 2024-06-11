@@ -106,6 +106,17 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	 * @return
 	 */
 	public List<EspacioFisico> consultarCapacidadEstadoYSalonPorListaIdEspacioFisico(List<Long> lstIdEspacioFisico);
+	
+	/**
+	 * Método encargado de consultar el espacio físico principal de una franja
+	 * horaria dado el identificador único de horario<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idHorario
+	 * @return
+	 */
+	public EspacioFisico consultarEspacioFisicoPrincipalFranjaPorIdHorario(Long idHorario);	
 
 	List<EspacioFisicoDTO> obtenerEspaciosFisicosPorAgrupadorId(Long idAgrupador);
 

@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
@@ -52,6 +53,7 @@ import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoA
 import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 import co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
+
 
 public class GestionarPlanificacionManualCUAdapter implements GestionarPlanificacionManualCUIntPort {
 
@@ -269,8 +271,8 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		CrearActualizarHorarioCursoOutDTO crearActualizarHorarioCursoOutDTO = new CrearActualizarHorarioCursoOutDTO();
 
 		try {
-			this.gestionarPlanificacionManualCUAdapter
-					.validarYCrearActualizarHorarioCurso(crearActualizarHorarioCursoInDTO);
+			this.gestionarPlanificacionManualCUAdapterEJB
+					.validarYCrearActualizarHorarioCurso(crearActualizarHorarioCursoInDTO, false);
 			crearActualizarHorarioCursoOutDTO.setEsExitoso(Boolean.TRUE);
 		} catch (RuntimeException e) {
 			crearActualizarHorarioCursoOutDTO.setLstMensajesSolapamientos(Arrays.asList(e.getMessage()));
@@ -280,8 +282,8 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		return crearActualizarHorarioCursoOutDTO;
 	}
 
-	@Transactional(rollbackFor = RuntimeException.class)
-	public void validarYCrearActualizarHorarioCurso(CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO)
+	@Transactional(rollbackFor = RuntimeException.class, propagation = Propagation.REQUIRES_NEW)
+	public void validarYCrearActualizarHorarioCurso(CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO, Boolean conNuevaTransaccion)
 			throws RuntimeException {
 		Long idCurso = crearActualizarHorarioCursoInDTO.getIdCurso();
 
@@ -309,7 +311,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 				this.validarSolapamientoEntreFranjasAActualizar(crearActualizarHorarioCursoInDTO);
 
 				// Se validan que las franjas a actualizar no se encuentren repetidas
-				this.validarFranjasHorariasAActualizarNoSeanRepetidas(crearActualizarHorarioCursoInDTO);
+				//this.validarFranjasHorariasAActualizarNoSeanRepetidas(crearActualizarHorarioCursoInDTO);
 				/*
 				 * Se elimina de la base de datos las franjas horarias del curso que no están en
 				 * las franjas a actualizar
@@ -374,7 +376,11 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 						horario.setCurso(new Curso(idCurso));
 						horario.setEspaciosFisicos(Arrays.asList(new EspacioFisico(idEspacioFisico)));
 
-						this.gestionarHorarioGatewayIntPort.guardarHorario(horario);
+						if(Boolean.TRUE.equals(conNuevaTransaccion)) {
+							this.gestionarHorarioGatewayIntPort.guardarHorarioConNuevaTransaccion(horario);
+						}else {
+							this.gestionarHorarioGatewayIntPort.guardarHorario(horario);				
+						}
 					}
 				} // Cierre del for
 
@@ -832,8 +838,14 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		 * Se valida que exista periodo académico vigente
 		 */
 		if (Objects.nonNull(periodoAcademicoVigente)) {
-			return this.gestionarPlanificacionManualGatewayIntPort.consultarFranjasDocentePorIdPersona(idPersona,
-					periodoAcademicoVigente.getIdPeriodoAcademico());
+			List<FranjaHorariaDocenteDTO> lstHorarioDocente = this.gestionarPlanificacionManualGatewayIntPort
+					.consultarFranjasDocentePorIdPersona(idPersona, periodoAcademicoVigente.getIdPeriodoAcademico());
+
+			// Se consulta el nombre del salón principal de la franja
+			lstHorarioDocente.forEach(franja -> franja.setSalon(this.gestionarEspacioFisicoGatewayIntPort
+					.consultarEspacioFisicoPrincipalFranjaPorIdHorario(franja.getIdHorario()).getSalon()));
+
+			return lstHorarioDocente;
 		} else {
 			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
 		}
@@ -891,7 +903,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort#generarHorarioBasadoEnSemestreAnteriorPorPrograma(co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.GenerarHorarioBaseInDTO)
 	 */
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.NOT_SUPPORTED)
 	public GenerarHorarioBaseOutDTO generarHorarioBasadoEnSemestreAnteriorPorPrograma(
 			GenerarHorarioBaseInDTO generarHorarioBaseInDTO) {
 		// Se consulta periodo académico vigente
@@ -976,7 +988,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 								.setListaFranjaHorariaCursoAsociarInDTO(Arrays.asList(franjaHorariaCursoAsociarInDTO));
 
 						try {
-							this.gestionarPlanificacionManualCUAdapterEJB.validarYCrearActualizarHorarioCurso(crearActualizarHorarioCursoInDTO);
+							this.gestionarPlanificacionManualCUAdapterEJB.validarYCrearActualizarHorarioCurso(crearActualizarHorarioCursoInDTO, true);
 							esCursoActualizado = Boolean.TRUE;
 						} catch (Exception e) {
 							String[] registro = new String[3];

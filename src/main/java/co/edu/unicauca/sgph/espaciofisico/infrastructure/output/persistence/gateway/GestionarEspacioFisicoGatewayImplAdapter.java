@@ -277,6 +277,23 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		return this.modelMapper.map(lstEspacioFisicoEntity, new TypeToken<List<EspacioFisico>>() {
 		}.getType());
 	}
+		
+	/**
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarEspacioFisicoPrincipalFranjaPorIdHorario(java.lang.Long)
+	 */
+	@Override
+	public EspacioFisico consultarEspacioFisicoPrincipalFranjaPorIdHorario(Long idHorario) {
+		List<EspacioFisicoEntity> lstEspacioFisicoEntity = this.espacioFisicoRepositoryInt
+				.consultarEspaciosFisicosCursoPorIdHorario(idHorario);
+		/*
+		 * TODO: Se filtrará aquel espacio físico que sea principal, por ahora se toma
+		 * el primero (Está pendiente implementar el campo principal en la entidad
+		 * HorarioEspacioEntity)
+		 */
+		EspacioFisicoEntity espacioFisicoEntity = lstEspacioFisicoEntity.get(0);
+
+		return this.modelMapper.map(espacioFisicoEntity, EspacioFisico.class);
+	}
 
 	@Override
 	public List<EspacioFisicoDTO> obtenerEspaciosFisicosPorAgrupadorId(Long idAgrupador) {

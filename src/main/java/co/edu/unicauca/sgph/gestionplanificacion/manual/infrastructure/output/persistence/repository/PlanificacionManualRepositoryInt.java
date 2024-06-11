@@ -101,7 +101,7 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		 * @return
 		 */
 		@Query("SELECT new co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaDocenteDTO("
-				+ "hor.dia, hor.horaInicio, hor.horaFin, CONCAT(pro.abreviatura,'-',asi.nombre,' ',cur.grupo)"
+				+ "hor.idHorario, hor.dia, hor.horaInicio, hor.horaFin, CONCAT(pro.abreviatura,'-',asi.nombre,' ',cur.grupo)"
 				+ ")"
 				+ "FROM HorarioEntity hor "
 				+ "JOIN hor.curso cur "
