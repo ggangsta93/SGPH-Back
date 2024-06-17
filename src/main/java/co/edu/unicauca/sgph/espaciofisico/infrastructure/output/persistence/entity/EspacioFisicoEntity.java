@@ -173,5 +173,5 @@ public class EspacioFisicoEntity {
 
 	public void setOID(String oID) {
 		OID = oID;
-	}
+	}	
 }

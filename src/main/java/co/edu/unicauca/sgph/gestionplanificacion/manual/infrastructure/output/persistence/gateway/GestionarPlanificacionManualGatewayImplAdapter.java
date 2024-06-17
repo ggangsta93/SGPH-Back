@@ -311,12 +311,16 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	public List<FormatoPresentacionFranjaHorariaCursoDTO> consultarFormatoPresentacionFranjaHorariaCurso() {
 		return this.planificacionManualRepositoryInt.consultarFormatoPresentacionFranjaHorariaCurso();
 	}
-
-	@Override
-	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso) {
-		return this.planificacionManualRepositoryInt.consultarFranjasHorariaCursoPorIdCurso(idCurso);
-	}
 	
+	/**
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasHorariaCursoPorIdCurso(java.lang.Long,
+	 *      java.lang.Boolean)
+	 */
+	@Override
+	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso, Boolean esPrincipal) {
+		return this.planificacionManualRepositoryInt.consultarFranjasHorariaCursoPorIdCurso(idCurso, esPrincipal);
+	}
+
 	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasDocentePorIdPersona(java.lang.Long,
 	 *      java.lang.Long)
@@ -541,7 +545,7 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		/*
 		 * Este paso es necesario para poder admitir el solapamiento de franjas horarias
 		 * de cursos que pertenecen a una misma asignatura. Por ejemplo. Cálculo 1 B se
-		 * puede impartir en la misma franja horaria que Calculo 1 A
+		 * puede impartir en la misma franja horaria que Cálculo 1 A
 		 */
 		Map<String, FranjaHorariaBasicaDTO> mapaFiltrado = lstFranjaHorariaBasicaDTO.stream()
 				.collect(Collectors.toMap(obj -> obj.getDia() + "-" + obj.getHoraInicio() + "-" + obj.getHoraFin(),
@@ -610,4 +614,13 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 				eliminarHorarioInDTO.getIdPrograma(), idPeriodoAcademicoVigente);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarFranjasHorariaPrincipalProgramaPoridProgramaYPeriodoAcademico(java.lang.Long,
+	 *      java.lang.Long)
+	 */
+	@Override
+	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaPrincipalProgramaPoridProgramaYPeriodoAcademico(
+			Long idPrograma, Long idPeriodoAcademico) {
+		return this.planificacionManualRepositoryInt.consultarFranjasHorariaPrincipalProgramaPoridProgramaYPeriodoAcademico(idPrograma, idPeriodoAcademico);
+	}
 }

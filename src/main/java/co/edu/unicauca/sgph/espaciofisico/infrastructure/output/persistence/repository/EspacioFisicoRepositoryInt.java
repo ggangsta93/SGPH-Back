@@ -40,8 +40,13 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 			+ " FROM HorarioEntity h "
 			+ " JOIN h.espaciosFisicos ef "
 			+ " LEFT JOIN ef.tipoEspacioFisico tef"
-			+ " WHERE h.curso.idCurso = :idCurso")
-	public List<String> consultarEspacioFisicoHorarioPorIdCurso(Long idCurso);	
+			+ " WHERE h.curso.idCurso = :idCurso"
+			+ " AND ef.idEspacioFisico IN (SELECT horEsp.espacioFisico.idEspacioFisico "
+			+ "						  	   FROM HorarioEspacioEntity horEsp "
+			+ "	    		               WHERE horEsp.horario.idHorario = h.idHorario "
+			+ "						       AND horEsp.esPrincipal = :esPrincipal ) "
+			+ "")
+	public List<String> consultarEspacioFisicoHorarioPorIdCurso(Long idCurso, Boolean esPrincipal);	
 
 	/**
 	 * Método encargado de consultar todos los edificios de los espacios físicos

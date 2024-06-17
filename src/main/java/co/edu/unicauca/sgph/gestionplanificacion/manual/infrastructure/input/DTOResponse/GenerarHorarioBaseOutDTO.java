@@ -12,7 +12,11 @@ public class GenerarHorarioBaseOutDTO implements Serializable {
 
 	private Long idPrograma;
 
-	private Long cantidadCursosActualizados;
+	private Long cantidadCursosHorarioCompleto;
+	
+	private Long cantidadCursosHorarioParcial;
+	
+	private Long cantidadCursosSinHorario;
 
 	private Long cantidadCursosNoCorrelacionados;
 	
@@ -29,12 +33,28 @@ public class GenerarHorarioBaseOutDTO implements Serializable {
 		this.idPrograma = idPrograma;
 	}
 
-	public Long getCantidadCursosActualizados() {
-		return cantidadCursosActualizados;
+	public Long getCantidadCursosHorarioCompleto() {
+		return cantidadCursosHorarioCompleto;
 	}
 
-	public void setCantidadCursosActualizados(Long cantidadCursosActualizados) {
-		this.cantidadCursosActualizados = cantidadCursosActualizados;
+	public void setCantidadCursosHorarioCompleto(Long cantidadCursosHorarioCompleto) {
+		this.cantidadCursosHorarioCompleto = cantidadCursosHorarioCompleto;
+	}
+
+	public Long getCantidadCursosHorarioParcial() {
+		return cantidadCursosHorarioParcial;
+	}
+
+	public void setCantidadCursosHorarioParcial(Long cantidadCursosHorarioParcial) {
+		this.cantidadCursosHorarioParcial = cantidadCursosHorarioParcial;
+	}
+
+	public Long getCantidadCursosSinHorario() {
+		return cantidadCursosSinHorario;
+	}
+
+	public void setCantidadCursosSinHorario(Long cantidadCursosSinHorario) {
+		this.cantidadCursosSinHorario = cantidadCursosSinHorario;
 	}
 
 	public Long getCantidadCursosNoCorrelacionados() {
@@ -51,5 +71,5 @@ public class GenerarHorarioBaseOutDTO implements Serializable {
 
 	public void setLstMensajesDelProceso(List<String[]> lstMensajesDelProceso) {
 		this.lstMensajesDelProceso = lstMensajesDelProceso;
-	}
+	}	
 }

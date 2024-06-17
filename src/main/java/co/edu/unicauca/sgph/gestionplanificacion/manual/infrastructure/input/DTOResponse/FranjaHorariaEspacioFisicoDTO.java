@@ -18,6 +18,8 @@ public class FranjaHorariaEspacioFisicoDTO implements Serializable {
 	private LocalTime horaFin;
 
 	private String nombreCurso;
+	
+	private Boolean esPrincipal;
 
 	/**
 	 * Constructor para obtener las franjas horarias de un espacio físico
@@ -27,13 +29,15 @@ public class FranjaHorariaEspacioFisicoDTO implements Serializable {
 	 * @param horaInicio
 	 * @param horaFin
 	 * @param nombreCurso
+	 * @param esPrincipal
 	 */
-	public FranjaHorariaEspacioFisicoDTO(Long idEspacioFisico, DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin, String nombreCurso) {
+	public FranjaHorariaEspacioFisicoDTO(Long idEspacioFisico, DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin, String nombreCurso, Boolean esPrincipal) {
 		this.idEspacioFisico = idEspacioFisico;
 		this.dia = dia;
 		this.horaInicio = horaInicio;
 		this.horaFin = horaFin;
 		this.nombreCurso = nombreCurso;
+		this.esPrincipal=esPrincipal;
 	}
 
 	public Long getIdEspacioFisico() {
@@ -74,5 +78,13 @@ public class FranjaHorariaEspacioFisicoDTO implements Serializable {
 
 	public void setNombreCurso(String nombreCurso) {
 		this.nombreCurso = nombreCurso;
+	}
+
+	public Boolean getEsPrincipal() {
+		return esPrincipal;
+	}
+
+	public void setEsPrincipal(Boolean esPrincipal) {
+		this.esPrincipal = esPrincipal;
 	}
 }

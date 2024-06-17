@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -52,7 +51,7 @@ public class HorarioEntity {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "HORARIO_ESPACIOFISICO", joinColumns = @JoinColumn(name = "ID_HORARIO"), inverseJoinColumns = @JoinColumn(name = "ID_ESPACIO_FISICO"))
 	private List<EspacioFisicoEntity> espaciosFisicos;
-
+	
 	public HorarioEntity() {
 		espaciosFisicos= new ArrayList<>();
 	}

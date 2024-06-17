@@ -55,6 +55,18 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 */
 	public CrearActualizarHorarioCursoOutDTO crearActualizarHorarioCurso(
 			CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO);
+	
+	/**
+	 * Método encargado de crear y/o actualizar los horarios secundarios de un
+	 * curso.
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param crearActualizarHorarioCursoInDTO
+	 * @return
+	 */
+	public CrearActualizarHorarioCursoOutDTO crearActualizarHorarioSecundarioCurso(
+			CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO);
 
 	/**
 	 * Método encargado de crear y/o actualizar los docentes de un curso.
@@ -97,9 +109,10 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idCurso
+	 * @param esPrincipal
 	 * @return
 	 */
-	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso);
+	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso, Boolean esPrincipal);
 
 	/**
 	 * Método encargado de eliminar todo el horario de un programa</br>

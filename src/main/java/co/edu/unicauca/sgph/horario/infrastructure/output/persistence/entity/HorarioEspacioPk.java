@@ -5,35 +5,41 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
-
 @Embeddable
 public class HorarioEspacioPk implements Serializable {
 
 	/**
-	 * Atributo que determina 
+	 * Atributo que determina
 	 */
 	private static final long serialVersionUID = -6657025402219941644L;
 
 	@Column(name = "ID_HORARIO")
-	private HorarioEntity horarioId;
+	private Long idHorario;
 
 	@Column(name = "ID_ESPACIO_FISICO")
-	private EspacioFisicoEntity espaciosFisicoId;
+	private Long idEspacioFisico;
 
-	public HorarioEntity getHorarioId() {
-		return horarioId;
+	public HorarioEspacioPk() {
 	}
 
-	public void setHorarioId(HorarioEntity horarioId) {
-		this.horarioId = horarioId;
+	public HorarioEspacioPk(Long idHorario, Long idEspacioFisico) {
+		this.idHorario = idHorario;
+		this.idEspacioFisico = idEspacioFisico;
 	}
 
-	public EspacioFisicoEntity getEspaciosFisicoId() {
-		return espaciosFisicoId;
+	public Long getIdHorario() {
+		return idHorario;
 	}
 
-	public void setEspaciosFisicoId(EspacioFisicoEntity espaciosFisicoId) {
-		this.espaciosFisicoId = espaciosFisicoId;
+	public void setIdHorario(Long idHorario) {
+		this.idHorario = idHorario;
+	}
+
+	public Long getIdEspacioFisico() {
+		return idEspacioFisico;
+	}
+
+	public void setIdEspacioFisico(Long idEspacioFisico) {
+		this.idEspacioFisico = idEspacioFisico;
 	}
 }

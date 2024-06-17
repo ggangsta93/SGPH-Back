@@ -17,7 +17,7 @@ import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.Hor
 public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioEntity, Long> {
 	
 	
-	@Query("SELECT d.idPersona, c.idCurso "
+	@Query("SELECT d.idPersona, c.idCurso, TRIM(CONCAT(d.primerNombre,' ', COALESCE(d.segundoNombre,''),' ', d.primerApellido,' ', COALESCE(d.segundoApellido,'')))"
 			 + "FROM HorarioEntity h JOIN h.curso c JOIN c.docentes d "
 			 + "WHERE c.idCurso IN (SELECT c.idCurso "
 			 + "					   FROM DocenteEntity d "
@@ -88,8 +88,13 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 				+ " ) "
 				+ " FROM HorarioEntity hor "
 				+ " JOIN hor.espaciosFisicos espaciosFisicos "
-				+ " WHERE hor.curso.idCurso = :idCurso")
-		public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso);
+				+ " WHERE hor.curso.idCurso = :idCurso "
+				+ " AND espaciosFisicos.idEspacioFisico IN ( SELECT horEsp.espacioFisico.idEspacioFisico "
+				+ "											 FROM HorarioEspacioEntity horEsp "
+				+ "									         WHERE horEsp.horario.idHorario = hor.idHorario "
+				+ "											 AND horEsp.esPrincipal = :esPrincipal )"
+				+ "")
+		public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso, Boolean esPrincipal);
 		
 		/**
 		 * Método encargado de obtener todas las franjas horarias de un docente
@@ -123,7 +128,10 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		 */
 		@Query("SELECT new co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaEspacioFisicoDTO( "
 				+ " espaciosFisicos.idEspacioFisico, hor.dia, hor.horaInicio, hor.horaFin, "
-				+ " CONCAT(pro.abreviatura,'-',asi.nombre,' ',cur.grupo) "
+				+ " CONCAT(pro.abreviatura,'-',asi.nombre,' ',cur.grupo), ( SELECT horEsp.esPrincipal "
+				+ "															FROM HorarioEspacioEntity horEsp "
+				+ "												            WHERE horEsp.horario.idHorario = hor.idHorario "
+				+ "															AND horEsp.espacioFisico.idEspacioFisico = :idEspacioFisico )"
 				+ " ) "
 				+ " FROM HorarioEntity hor "
 				+ " JOIN hor.curso cur "
@@ -163,5 +171,30 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 				+ "                                  						     WHERE a.programa.idPrograma = :idPrograma) "
 				+ " 						 AND c.periodoAcademico.idPeriodoAcademico = :idPeriodoAcademicoVigente)")
 		public void eliminarRegistrosHorarioEntityPorProgramaYPeriodoAcademico(Long idPrograma, Long idPeriodoAcademicoVigente);
-		
+
+		/**
+		 * Método encargado de obtener las franjas horarias principales de un programa
+		 * dados el identificador del programa y el periodo académico
+		 * 
+		 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+		 * 
+		 * @param idPrograma
+		 * @param idPeriodoAcademico
+		 * @return
+		 */
+		@Query("SELECT new co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTOResponse.FranjaHorariaCursoDTO( "
+				+ " horarios.idHorario, espaciosFisicos.idEspacioFisico, horarios.dia, horarios.horaInicio, horarios.horaFin "
+				+ " ) "
+				+ " FROM CursoEntity curso "
+				+ " JOIN curso.asignatura asignatura "
+				+ " JOIN curso.horarios horarios "
+				+ " JOIN horarios.espaciosFisicos espaciosFisicos "
+				+ " WHERE curso.periodoAcademico.idPeriodoAcademico = :idPeriodoAcademico "
+				+ " AND asignatura.programa.idPrograma = :idPrograma "
+				+ " AND espaciosFisicos.idEspacioFisico IN ( SELECT horEsp.espacioFisico.idEspacioFisico "
+				+ "											 FROM HorarioEspacioEntity horEsp "
+				+ "									         WHERE horEsp.horario.idHorario = horarios.idHorario "
+				+ "											 AND horEsp.esPrincipal = true )"
+				+ "")
+		public List<FranjaHorariaCursoDTO> consultarFranjasHorariaPrincipalProgramaPoridProgramaYPeriodoAcademico(Long idPrograma, Long idPeriodoAcademico);
 }
