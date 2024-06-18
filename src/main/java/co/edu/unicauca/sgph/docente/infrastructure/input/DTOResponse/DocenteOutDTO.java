@@ -23,8 +23,10 @@ public class DocenteOutDTO {
 	private String email;
 
 	private String codigo;
-	
+
 	private EstadoDocenteEnum estado;
+
+	private Long idDepartamento;
 
 	public DocenteOutDTO() {
 		// Constructor sin parámetros
@@ -32,7 +34,7 @@ public class DocenteOutDTO {
 
 	public DocenteOutDTO(Long idPersona, Long idTipoIdentificacion, String numeroIdentificacion,
 			String codigoTipoIdentificacion, String primerNombre, String segundoNombre, String primerApellido,
-			String segundoApellido, String email, String codigo, EstadoDocenteEnum estado) {
+			String segundoApellido, String email, String codigo, EstadoDocenteEnum estado, Long idDepartamento) {
 		this.idPersona = idPersona;
 		this.idTipoIdentificacion = idTipoIdentificacion;
 		this.numeroIdentificacion = numeroIdentificacion;
@@ -43,7 +45,8 @@ public class DocenteOutDTO {
 		this.segundoApellido = segundoApellido;
 		this.email = email;
 		this.codigo = codigo;
-		this.estado=estado;
+		this.estado = estado;
+		this.idDepartamento=idDepartamento;
 	}
 
 	public Long getIdPersona() {
@@ -132,5 +135,13 @@ public class DocenteOutDTO {
 
 	public void setEstado(EstadoDocenteEnum estado) {
 		this.estado = estado;
+	}
+
+	public Long getIdDepartamento() {
+		return idDepartamento;
+	}
+
+	public void setIdDepartamento(Long idDepartamento) {
+		this.idDepartamento = idDepartamento;
 	}
 }

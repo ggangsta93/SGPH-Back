@@ -61,6 +61,9 @@ public class AsignaturaEntity {
 
 	@Column(name = "ESTADO")
 	private EstadoAsignaturaEnum estado;
+	
+	@Column(name = "APLICA_ESP_SEC")
+	private Boolean aplicaEspacioSecundario;
 
 	public AsignaturaEntity() {
 		this.cursos=new ArrayList<>();
@@ -164,5 +167,13 @@ public class AsignaturaEntity {
 
 	public void setEstado(EstadoAsignaturaEnum estado) {
 		this.estado = estado;
+	}
+
+	public Boolean getAplicaEspacioSecundario() {
+		return aplicaEspacioSecundario;
+	}
+
+	public void setAplicaEspacioSecundario(Boolean aplicaEspacioSecundario) {
+		this.aplicaEspacioSecundario = aplicaEspacioSecundario;
 	}
 }

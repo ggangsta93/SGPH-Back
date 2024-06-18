@@ -38,8 +38,10 @@ import co.edu.unicauca.sgph.horario.domain.useCase.GestionarHorarioCUAdapter;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.PeriodoAcademicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.periodoacademico.domain.useCase.GestionarPeriodoAcademicoCUAdapter;
+import co.edu.unicauca.sgph.programa.aplication.output.GestionarDepartamentoGatewayIntPort;
 import co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort;
 import co.edu.unicauca.sgph.programa.aplication.output.ProgramaFormatterResultsIntPort;
+import co.edu.unicauca.sgph.programa.domain.useCase.GestionarDepartamentoCUAdapter;
 import co.edu.unicauca.sgph.programa.domain.useCase.GestionarProgramaCUAdapter;
 import co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
 import co.edu.unicauca.sgph.usuario.aplication.output.UsuarioFormatterResultsIntPort;
@@ -53,6 +55,12 @@ public class BeanConfigurations {
 			GestionarFacultadGatewayIntPort gestionarFacultadGatewayIntPort,
 			FacultadFormatterResultsIntPort facultadFormatterResultsIntPort) {
 		return new GestionarFacultadCUAdapter(gestionarFacultadGatewayIntPort, facultadFormatterResultsIntPort);
+	}
+	
+	@Bean
+	GestionarDepartamentoCUAdapter crearGestionarDepartamentoCUInt(
+			GestionarDepartamentoGatewayIntPort gestionarDepartamentoGatewayIntPort) {
+		return new GestionarDepartamentoCUAdapter(gestionarDepartamentoGatewayIntPort);
 	}
 
 	@Bean

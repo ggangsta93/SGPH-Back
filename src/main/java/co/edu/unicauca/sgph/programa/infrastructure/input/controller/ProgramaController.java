@@ -4,13 +4,19 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.programa.aplication.input.GestionarDepartamentoCUIntPort;
 import co.edu.unicauca.sgph.programa.aplication.input.GestionarProgramaCUIntPort;
+import co.edu.unicauca.sgph.programa.infrastructure.input.DTORequest.DepartamentoInDTO;
 import co.edu.unicauca.sgph.programa.infrastructure.input.DTORequest.ProgramaInDTO;
+import co.edu.unicauca.sgph.programa.infrastructure.input.DTOResponse.DepartamentoOutDTO;
 import co.edu.unicauca.sgph.programa.infrastructure.input.DTOResponse.ProgramaOutDTO;
+import co.edu.unicauca.sgph.programa.infrastructure.input.mapper.DepartamentoRestMapper;
 import co.edu.unicauca.sgph.programa.infrastructure.input.mapper.ProgramaRestMapper;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
@@ -18,13 +24,20 @@ import co.edu.unicauca.sgph.programa.infrastructure.input.mapper.ProgramaRestMap
 @RequestMapping("/AdministrarPrograma")
 public class ProgramaController {
 
+	// Gestionadores
 	private GestionarProgramaCUIntPort gestionarProgramaCUIntPort;
+	private GestionarDepartamentoCUIntPort gestionarDepartamentoCUIntPort;
+	// Mapers
 	private ProgramaRestMapper programaRestMapper;
+	private DepartamentoRestMapper departamentoRestMapper;
 
 	public ProgramaController(GestionarProgramaCUIntPort gestionarProgramaCUIntPort,
-			ProgramaRestMapper programaRestMapper) {
+			ProgramaRestMapper programaRestMapper, GestionarDepartamentoCUIntPort gestionarDepartamentoCUIntPort,
+			DepartamentoRestMapper departamentoRestMapper) {
 		this.gestionarProgramaCUIntPort = gestionarProgramaCUIntPort;
 		this.programaRestMapper = programaRestMapper;
+		this.gestionarDepartamentoCUIntPort = gestionarDepartamentoCUIntPort;
+		this.departamentoRestMapper = departamentoRestMapper;
 	}
 
 	public ProgramaOutDTO consultarProgramaPorNombre(String nombre) {
@@ -62,5 +75,31 @@ public class ProgramaController {
 	@GetMapping("/consultarProgramas")
 	public List<ProgramaOutDTO> consultarProgramas() {
 		return this.programaRestMapper.toLstProgramaOutDTO(this.gestionarProgramaCUIntPort.consultarProgramas());
+	}
+
+	/**
+	 * Método encargado de consultar guardar y/o actualizar un departamento<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return
+	 */
+	@PostMapping("/guardarDepartamento")
+	public DepartamentoOutDTO guardarDepartamento(@RequestBody DepartamentoInDTO departamentoInDTO) {
+		return this.departamentoRestMapper.toDepartamentoOutDTO(this.gestionarDepartamentoCUIntPort
+				.guardarDepartamento(this.departamentoRestMapper.toDepartamento(departamentoInDTO)));
+	}
+
+	/**
+	 * Método encargado de consultar todos los departamentos<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return
+	 */
+	@GetMapping("/consultarDepartamentos")
+	public List<DepartamentoOutDTO> consultarDepartamentos() {
+		return this.departamentoRestMapper
+				.toLstDepartamentoOutDTO(this.gestionarDepartamentoCUIntPort.consultarDepartamentos());
 	}
 }

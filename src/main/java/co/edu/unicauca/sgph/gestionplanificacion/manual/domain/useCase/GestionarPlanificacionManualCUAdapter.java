@@ -1005,7 +1005,11 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 
 			// Se consulta el nombre del salón principal de la franja
 			lstHorarioDocente.forEach(franja -> franja.setSalon(this.gestionarEspacioFisicoGatewayIntPort
-					.consultarEspacioFisicoPrincipalFranjaPorIdHorario(franja.getIdHorario()).getSalon()));
+					.consultarEspacioFisicoCursoPorIdHorario(franja.getIdHorario(), Boolean.TRUE).getSalon()));
+
+			// Se consulta el nombre del salón secundario de la franja
+			lstHorarioDocente.forEach(franja -> franja.setSalonSecundario(this.gestionarEspacioFisicoGatewayIntPort
+					.consultarEspacioFisicoCursoPorIdHorario(franja.getIdHorario(), Boolean.FALSE).getSalon()));
 
 			return lstHorarioDocente;
 		} else {

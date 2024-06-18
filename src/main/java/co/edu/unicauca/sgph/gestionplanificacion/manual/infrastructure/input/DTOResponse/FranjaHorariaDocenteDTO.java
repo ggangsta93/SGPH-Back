@@ -20,6 +20,8 @@ public class FranjaHorariaDocenteDTO implements Serializable {
 	private String nombreCurso;
 	
 	private String salon;
+	
+	private String salonSecundario;
 
 	/**
 	 * Constructor para obtener las franjas horarias de un docente
@@ -98,5 +100,13 @@ public class FranjaHorariaDocenteDTO implements Serializable {
 
 	public void setSalon(String salon) {
 		this.salon = salon;
+	}
+
+	public String getSalonSecundario() {
+		return salonSecundario;
+	}
+
+	public void setSalonSecundario(String salonSecundario) {
+		this.salonSecundario = salonSecundario;
 	}	
 }

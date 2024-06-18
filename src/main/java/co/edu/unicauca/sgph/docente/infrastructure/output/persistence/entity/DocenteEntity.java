@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.PersonaEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
+import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.DepartamentoEntity;
 
 @Entity
 @Table(name = "DOCENTE")
@@ -39,6 +41,10 @@ public class DocenteEntity extends PersonaEntity {
 			inverseJoinColumns = @JoinColumn(name = "ID_CURSO")
 	)
 	private List<CursoEntity> cursos;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_DEPARTAMENTO")
+	private DepartamentoEntity departamento;
 
 	public DocenteEntity() {
 		this.cursos = new ArrayList<>();
@@ -66,5 +72,13 @@ public class DocenteEntity extends PersonaEntity {
 
 	public void setEstado(EstadoDocenteEnum estado) {
 		this.estado = estado;
+	}
+
+	public DepartamentoEntity getDepartamento() {
+		return departamento;
+	}
+
+	public void setDepartamento(DepartamentoEntity departamento) {
+		this.departamento = departamento;
 	}
 }

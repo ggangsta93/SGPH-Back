@@ -91,7 +91,7 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 		queryBuilder.append(" SELECT NEW co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO(");
 		queryBuilder.append(" doc.idPersona, ti.idTipoIdentificacion, doc.numeroIdentificacion, ");
 		queryBuilder.append(" ti.codigoTipoIdentificacion, doc.primerNombre, doc.segundoNombre, doc.primerApellido, ");
-		queryBuilder.append(" doc.segundoApellido, doc.email, doc.codigo, doc.estado)");
+		queryBuilder.append(" doc.segundoApellido, doc.email, doc.codigo, doc.estado, doc.departamento.idDepartamento)");
 		queryBuilder.append(" FROM DocenteEntity doc ");
 		queryBuilder.append(" JOIN doc.tipoIdentificacion ti ");
 		queryBuilder.append(" WHERE 1=1");

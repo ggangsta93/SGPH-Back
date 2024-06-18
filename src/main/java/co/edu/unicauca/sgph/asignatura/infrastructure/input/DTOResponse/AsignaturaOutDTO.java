@@ -29,6 +29,8 @@ public class AsignaturaOutDTO {
 	private Boolean error;
 	private String mensaje;
 	private String estado;
+	
+	private Boolean aplicaEspacioSecundario;
 
 	public Long getIdAsignatura() {
 		return idAsignatura;
@@ -156,5 +158,13 @@ public class AsignaturaOutDTO {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+
+	public Boolean getAplicaEspacioSecundario() {
+		return aplicaEspacioSecundario;
+	}
+
+	public void setAplicaEspacioSecundario(Boolean aplicaEspacioSecundario) {
+		this.aplicaEspacioSecundario = aplicaEspacioSecundario;
 	}
 }

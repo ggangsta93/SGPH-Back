@@ -1,7 +1,5 @@
 package co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest;
 
-import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
-
 import java.util.List;
 
 public class AsignaturaInDTO {
@@ -23,6 +21,9 @@ public class AsignaturaInDTO {
 	private Long idPrograma;
 		
 	private List<Long> lstIdAgrupadorEspacioFisico;
+	
+	private Boolean aplicaEspacioSecundario;
+	
 	public Long getIdAsignatura() {
 		return idAsignatura;
 	}
@@ -93,5 +94,13 @@ public class AsignaturaInDTO {
 
 	public void setLstIdAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
 		this.lstIdAgrupadorEspacioFisico = lstIdAgrupadorEspacioFisico;
+	}
+
+	public Boolean getAplicaEspacioSecundario() {
+		return aplicaEspacioSecundario;
+	}
+
+	public void setAplicaEspacioSecundario(Boolean aplicaEspacioSecundario) {
+		this.aplicaEspacioSecundario = aplicaEspacioSecundario;
 	}
 }

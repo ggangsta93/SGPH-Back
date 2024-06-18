@@ -5,7 +5,7 @@ import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.Est
 public class DocenteInDTO {
 	private Long idPersona;
 
-	private Long  idTipoIdentificacion;
+	private Long idTipoIdentificacion;
 
 	private String numeroIdentificacion;
 
@@ -18,11 +18,13 @@ public class DocenteInDTO {
 	private String segundoApellido;
 
 	private String email;
-	
+
 	private String codigo;
-	
+
 	private EstadoDocenteEnum estado;
-	
+
+	private Long idDepartamento;
+
 	public Long getIdPersona() {
 		return idPersona;
 	}
@@ -101,5 +103,13 @@ public class DocenteInDTO {
 
 	public void setEstado(EstadoDocenteEnum estado) {
 		this.estado = estado;
+	}
+
+	public Long getIdDepartamento() {
+		return idDepartamento;
+	}
+
+	public void setIdDepartamento(Long idDepartamento) {
+		this.idDepartamento = idDepartamento;
 	}
 }
