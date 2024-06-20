@@ -3,9 +3,9 @@ package co.edu.unicauca.sgph.horario.domain.model;
 import java.time.LocalTime;
 import java.util.List;
 
-import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 
 public class Horario {
 
@@ -20,6 +20,22 @@ public class Horario {
 	private Curso curso;
 	
 	private List<EspacioFisico> espaciosFisicos;
+	
+	public Horario() {
+	}
+	
+	public Horario(Long idHorario) {
+		this.idHorario = idHorario;
+	}
+	
+	public Horario(DiaSemanaEnum dia, LocalTime horaInicio, LocalTime horaFin, Curso curso,
+			List<EspacioFisico> espaciosFisicos) {
+		this.dia = dia;
+		this.horaInicio = horaInicio;
+		this.horaFin = horaFin;
+		this.curso = curso;
+		this.espaciosFisicos = espaciosFisicos;
+	}
 
 	public Long getIdHorario() {
 		return idHorario;

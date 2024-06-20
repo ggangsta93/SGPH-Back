@@ -87,7 +87,7 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 	private ReporteSimcaDTO mapCursoEntityReporteDTO(CursoEntity curso) {
 		ReporteSimcaDTO dto = new ReporteSimcaDTO();
 		dto.setCupo(curso.getCupo());
-		dto.setMatriculados(curso.getCupo().longValue());
+		//dto.setMatriculados(curso.getCupo().longValue());
 		dto.setAbreviaturaPrograma(curso.getAsignatura().getPrograma().getAbreviatura());
 		dto.setCodigoAsignatura(curso.getAsignatura().getCodigoAsignatura());
 		dto.setNombreAsignatura(curso.getAsignatura().getNombre());
@@ -134,7 +134,7 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 		headerCellStyle.setBorderRight(BorderStyle.THIN);
 		String[] columnHeaders = {
 				"PER", "PROGRAMA", "SEM", "OID_MATERIA", "CODIGO_MATERIA",
-				"MATERIA", "GRUPO", "CUPO", "MATRICULADOS", "LUNES", "MARTES",
+				"MATERIA", "GRUPO", "CUPO", "LUNES", "MARTES",
 				"MIERCOLES", "JUEVES", "VIERNES", "SABADO", "DOCENTES"
 		};
 		Row headerRow = sheet.createRow(0);
@@ -155,7 +155,7 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 			dataRow.createCell(5).setCellValue(reporteSimca.getNombreAsignatura() != null ? reporteSimca.getNombreAsignatura() : "");
 			dataRow.createCell(6).setCellValue(reporteSimca.getNombreGrupo() != null ? reporteSimca.getNombreGrupo() : "");
 			dataRow.createCell(7).setCellValue(reporteSimca.getCupo() != null ? reporteSimca.getCupo() : 0);
-			dataRow.createCell(8).setCellValue(reporteSimca.getMatriculados() != null ? reporteSimca.getMatriculados() : 0L);
+			//dataRow.createCell(8).setCellValue(reporteSimca.getMatriculados() != null ? reporteSimca.getMatriculados() : 0L);
 			Map<DiaSemanaEnum, StringBuilder> horariosPorDia = new EnumMap<>(DiaSemanaEnum.class);
 			for (DiaSemanaEnum dia : DiaSemanaEnum.values()) {
 				horariosPorDia.put(dia, new StringBuilder());
@@ -168,7 +168,7 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 					horariosPorDia.get(dia).append(horarioStr).append(", ");
 				}
 			}
-			int colIndex = 9;
+			int colIndex = 8;
 			for (DiaSemanaEnum dia : DiaSemanaEnum.values()) {
 				StringBuilder horariosStr = horariosPorDia.get(dia);
 				if (horariosStr.length() > 0) {
@@ -176,7 +176,7 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 				}
 				dataRow.createCell(colIndex++).setCellValue(horariosStr.toString());
 			}
-			dataRow.createCell(15).setCellValue(reporteSimca.getNombreDocente() != null ? reporteSimca.getNombreDocente() : "");
+			dataRow.createCell(14).setCellValue(reporteSimca.getNombreDocente() != null ? reporteSimca.getNombreDocente() : "");
 		}
 
 		for (int i = 0; i < columnHeaders.length; i++) {

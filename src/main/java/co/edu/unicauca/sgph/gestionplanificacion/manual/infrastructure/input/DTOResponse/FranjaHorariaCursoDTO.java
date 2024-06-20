@@ -18,6 +18,7 @@ public class FranjaHorariaCursoDTO implements Serializable {
 	private String horaInicio;
 
 	private String horaFin;
+	
 
 	public FranjaHorariaCursoDTO() {
 	}
@@ -76,4 +77,5 @@ public class FranjaHorariaCursoDTO implements Serializable {
 	public void setIdHorario(Long idHorario) {
 		this.idHorario = idHorario;
 	}
+
 }

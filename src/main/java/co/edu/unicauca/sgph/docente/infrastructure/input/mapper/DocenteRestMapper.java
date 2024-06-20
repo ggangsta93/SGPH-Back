@@ -14,9 +14,11 @@ public interface DocenteRestMapper {
 
 	@Mapping(target = "idTipoIdentificacion", source = "docente.tipoIdentificacion.idTipoIdentificacion")
 	@Mapping(target = "codigoTipoIdentificacion", source = "docente.tipoIdentificacion.codigoTipoIdentificacion")
+	@Mapping(target = "idDepartamento", source = "docente.departamento.idDepartamento")
 	DocenteOutDTO toDocenteOutDTO(Docente docente);
 
 	@Mapping(target = "tipoIdentificacion", expression = "java(new TipoIdentificacion(docenteInDTO.getIdTipoIdentificacion()))")
+	@Mapping(target = "departamento", expression = "java(new Departamento(docenteInDTO.getIdDepartamento()))")
 	Docente toDocente(DocenteInDTO docenteInDTO);
 
 	List<DocenteOutDTO> toLstDocenteOutDTO(List<Docente> lstDocente);

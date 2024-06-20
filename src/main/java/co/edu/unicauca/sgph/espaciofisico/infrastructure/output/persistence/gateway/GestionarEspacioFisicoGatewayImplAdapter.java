@@ -83,12 +83,12 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		return this.modelMapper.map(this.espacioFisicoRepositoryInt.findByIdEspacioFisico(idEspacioFisico), EspacioFisico.class);
 	}
 
-	/**
-	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarEspacioFisicoHorarioPorIdCurso(java.lang.Long)
+	/** 
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarEspacioFisicoHorarioPorIdCurso(java.lang.Long, java.lang.Boolean)
 	 */
 	@Override
-	public List<String> consultarEspacioFisicoHorarioPorIdCurso(Long idCurso) {
-		return this.espacioFisicoRepositoryInt.consultarEspacioFisicoHorarioPorIdCurso(idCurso);
+	public List<String> consultarEspacioFisicoHorarioPorIdCurso(Long idCurso, Boolean esPrincipal) {
+		return this.espacioFisicoRepositoryInt.consultarEspacioFisicoHorarioPorIdCurso(idCurso, esPrincipal);
 	}
 
 	/**
@@ -276,6 +276,19 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 
 		return this.modelMapper.map(lstEspacioFisicoEntity, new TypeToken<List<EspacioFisico>>() {
 		}.getType());
+	}
+			
+	/**
+	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort#consultarEspacioFisicoCursoPorIdHorario(java.lang.Long,
+	 *      java.lang.Boolean)
+	 */
+	@Override
+	public EspacioFisico consultarEspacioFisicoCursoPorIdHorario(Long idHorario, Boolean esPrincipal) {			
+		EspacioFisicoEntity espacioFisicoEntity = this.espacioFisicoRepositoryInt.consultarEspacioFisicoCursoPorIdHorario(idHorario, esPrincipal);
+		if(Objects.isNull(espacioFisicoEntity)) {
+			return new EspacioFisico();
+		}		
+		return this.modelMapper.map(espacioFisicoEntity,EspacioFisico.class);
 	}
 
 	@Override

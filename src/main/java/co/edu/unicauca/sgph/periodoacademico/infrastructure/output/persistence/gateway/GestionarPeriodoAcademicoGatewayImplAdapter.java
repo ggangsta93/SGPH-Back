@@ -155,4 +155,14 @@ public class GestionarPeriodoAcademicoGatewayImplAdapter implements GestionarPer
 				.fechaInicioGreaterThanUltimaFechaFin(fechaInicio);
 		return lstFechaFinPeriodo.isEmpty() ? null : lstFechaFinPeriodo.get(0);
 	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort#consultarPeriodoAcademicoPorId(java.lang.Long)
+	 */
+	@Override
+	public PeriodoAcademico consultarPeriodoAcademicoPorId(Long idPeriodoAcademico) {
+		return this.modelMapper.map(
+				this.periodoAcademicoRepositoryInt.consultarPeriodoAcademicoPorId(idPeriodoAcademico),
+				PeriodoAcademico.class);
+	}
 }

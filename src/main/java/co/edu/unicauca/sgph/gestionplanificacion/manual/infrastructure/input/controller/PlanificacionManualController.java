@@ -118,6 +118,22 @@ public class PlanificacionManualController {
 	}
 
 	/**
+	 * Método encargado de crear y/o actualizar los horarios secundarios de un
+	 * curso.
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param crearActualizarHorarioCursoInDTO
+	 * @return
+	 */
+	@PostMapping("/crearActualizarHorarioSecundarioCurso")
+	public CrearActualizarHorarioCursoOutDTO crearActualizarHorarioSecundarioCurso(
+			@RequestBody CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO) {
+		return this.gestionarPlanificacionManualCUIntPort
+				.crearActualizarHorarioSecundarioCurso(crearActualizarHorarioCursoInDTO);
+	}
+
+	/**
 	 * Método encargado de crear y/o actualizar los docentes de un curso.
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
@@ -156,11 +172,13 @@ public class PlanificacionManualController {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idCurso
+	 * @param esPrincipal
 	 * @return
 	 */
 	@GetMapping("/consultarFranjasHorariaCursoPorIdCurso")
-	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(@RequestParam Long idCurso) {
-		return this.gestionarPlanificacionManualCUIntPort.consultarFranjasHorariaCursoPorIdCurso(idCurso);
+	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(@RequestParam Long idCurso,
+			@RequestParam Boolean esPrincipal) {
+		return this.gestionarPlanificacionManualCUIntPort.consultarFranjasHorariaCursoPorIdCurso(idCurso, esPrincipal);
 	}
 
 	/**
@@ -204,6 +222,13 @@ public class PlanificacionManualController {
 		return this.gestionarPlanificacionManualCUIntPort
 				.generarHorarioBasadoEnSemestreAnteriorPorPrograma(generarHorarioBaseInDTO);
 	}
+	
+	// Método temporal
+	@GetMapping("/simularCargueLabor")
+	public void simularCargueLabor(@RequestParam Long idPrograma) {
+		this.gestionarPlanificacionManualCUIntPort.simularCargueLabor(idPrograma);
+	}
+	
 
 	/*************************************************
 	 * Eliminar horario por programa
@@ -254,5 +279,7 @@ public class PlanificacionManualController {
 		return this.gestionarPlanificacionManualCUIntPort
 				.consultarFranjasEspacioFisicoPorIdEspacioFisico(idEspacioFisico);
 	}
+	
+	
 
 }

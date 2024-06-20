@@ -28,6 +28,12 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 	private List<Long> listaIdTipoEspacioFisico;
 
 	private String salon;
+	
+	/*
+	 * Indicador que define si el horario a consultar es para horario principal o
+	 * secundario
+	 */
+	private Boolean esPrincipal;
 
 	public Long getIdCurso() {
 		return idCurso;
@@ -107,5 +113,13 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 
 	public void setIdAsignatura(Long idAsignatura) {
 		this.idAsignatura = idAsignatura;
+	}
+
+	public Boolean getEsPrincipal() {
+		return esPrincipal;
+	}
+
+	public void setEsPrincipal(Boolean esPrincipal) {
+		this.esPrincipal = esPrincipal;
 	}
 }

@@ -114,9 +114,25 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idCurso
+	 * @param esPrincipal Booleano que indica si se consultan las franjas
+	 *                    principales, si está en 'false' se consultan los espacios
+	 *                    físicos secundarios
 	 * @return
 	 */
-	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso);
+	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso, Boolean esPrincipal);
+
+	/**
+	 * Método encargado de obtener las franjas horarias principales de un programa
+	 * dados el identificador del programa y el periodo académico
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idPrograma
+	 * @param idPeriodoAcademico
+	 * @return
+	 */
+	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaPrincipalProgramaPoridProgramaYPeriodoAcademico(
+			Long idPrograma, Long idPeriodoAcademico);
 
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un docente
@@ -145,7 +161,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	/**
 	 * Método encargado de consultar las franjas horarias de los espacios físicos.
 	 * EL usuario puede filtrar los espacios físicos por: Ubicación, tipo espacio
-	 * (Salón y/o Sala) físico, agrupadores o salón(Coincidencia por nombre) <br>
+	 * físico (Salón y/o Sala), agrupadores o salón(Coincidencia por nombre) <br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 

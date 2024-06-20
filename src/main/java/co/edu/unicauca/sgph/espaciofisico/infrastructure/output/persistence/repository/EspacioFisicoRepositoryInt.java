@@ -40,8 +40,13 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 			+ " FROM HorarioEntity h "
 			+ " JOIN h.espaciosFisicos ef "
 			+ " LEFT JOIN ef.tipoEspacioFisico tef"
-			+ " WHERE h.curso.idCurso = :idCurso")
-	public List<String> consultarEspacioFisicoHorarioPorIdCurso(Long idCurso);	
+			+ " WHERE h.curso.idCurso = :idCurso"
+			+ " AND ef.idEspacioFisico IN (SELECT horEsp.espacioFisico.idEspacioFisico "
+			+ "						  	   FROM HorarioEspacioEntity horEsp "
+			+ "	    		               WHERE horEsp.horario.idHorario = h.idHorario "
+			+ "						       AND horEsp.esPrincipal = :esPrincipal ) "
+			+ "")
+	public List<String> consultarEspacioFisicoHorarioPorIdCurso(Long idCurso, Boolean esPrincipal);	
 
 	/**
 	 * Método encargado de consultar todos los edificios de los espacios físicos
@@ -92,6 +97,26 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 			+ "WHERE e.idEspacioFisico IN (:lstIdEspacioFisico)")
 	public List<EspacioFisicoEntity> consultarCapacidadEstadoYSalonPorListaIdEspacioFisico(List<Long> lstIdEspacioFisico);
 
+	/**
+	 * Método encargado de obtener el espacio físico principal de un curso dado el
+	 * identificador único de horario <br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idHorario
+	 * @param esPrincipal
+	 * @return
+	 */
+	@Query("SELECT e"
+			+ " FROM EspacioFisicoEntity e "
+			+ " JOIN e.horarios horarios "
+			+ " WHERE horarios.idHorario = :idHorario"
+			+ " AND e.idEspacioFisico IN (SELECT horEsp.espacioFisico.idEspacioFisico "
+			+ "						  	   FROM HorarioEspacioEntity horEsp "
+			+ "	    		               WHERE horEsp.horario.idHorario = :idHorario "
+			+ "						       AND horEsp.esPrincipal = :esPrincipal ) ")
+	public EspacioFisicoEntity consultarEspacioFisicoCursoPorIdHorario(Long idHorario, Boolean esPrincipal);	
+	
 	@Query("SELECT e FROM EspacioFisicoEntity e WHERE " +
 			"(:salon IS NULL OR LOWER(e.salon) LIKE LOWER(CONCAT('%', :salon, '%'))) AND " +
 			"(:ubicacion IS NULL OR LOWER(e.ubicacion) LIKE LOWER(CONCAT('%', :ubicacion, '%'))) AND " +

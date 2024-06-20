@@ -3,8 +3,6 @@ package co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioInDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
@@ -57,6 +55,18 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 */
 	public CrearActualizarHorarioCursoOutDTO crearActualizarHorarioCurso(
 			CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO);
+	
+	/**
+	 * Método encargado de crear y/o actualizar los horarios secundarios de un
+	 * curso.
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param crearActualizarHorarioCursoInDTO
+	 * @return
+	 */
+	public CrearActualizarHorarioCursoOutDTO crearActualizarHorarioSecundarioCurso(
+			CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO);
 
 	/**
 	 * Método encargado de crear y/o actualizar los docentes de un curso.
@@ -99,9 +109,10 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idCurso
+	 * @param esPrincipal
 	 * @return
 	 */
-	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso);
+	public List<FranjaHorariaCursoDTO> consultarFranjasHorariaCursoPorIdCurso(Long idCurso, Boolean esPrincipal);
 
 	/**
 	 * Método encargado de eliminar todo el horario de un programa</br>
@@ -146,5 +157,8 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 */
 	public GenerarHorarioBaseOutDTO generarHorarioBasadoEnSemestreAnteriorPorPrograma(
 			GenerarHorarioBaseInDTO generarHorarioBaseInDTO);
+	
+	//Método de prueba(temporal), meramente para simular la carga labor
+	public void simularCargueLabor(Long idPrograma);
 
 }
