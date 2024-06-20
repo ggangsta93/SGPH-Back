@@ -1,6 +1,7 @@
 package co.edu.unicauca.sgph.programa.infrastructure.output.persistence.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,7 @@ import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.Pr
 
 public interface ProgramaRepositoryInt extends JpaRepository<ProgramaEntity, Long> {
 
-	public ProgramaEntity findByNombre(String nombre);
+	Optional<ProgramaEntity> findByNombre(String nombre);
 
 	/**
 	 * Método encargado de consultar los programas asociados a una lista de

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.repository.AsignaturaRepositoryInt;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
@@ -58,17 +59,17 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 	@Override
 	public Curso consultarCursoPorIdCurso(Long idCurso) {
 		try {
-			return this.modelMapper.map(this.cursoRepositoryInt.findByIdCurso(idCurso), Curso.class);			
+			return this.modelMapper.map(this.cursoRepositoryInt.findByIdCurso(idCurso), Curso.class);
 		} catch (Exception e) {
 			/*
 			 * Retorna nulo si no existe el curso (Genera excepción al intentar mapear algo nulo)
 			 */
 			return null;
 		}
-		
+
 	}
 
-	/** 
+	/**
 	 * @see co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort#consultarAgrupadoresEspaciosFisicosPorCurso(java.lang.Long)
 	 */
 	@Override
@@ -76,7 +77,7 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 		return this.cursoRepositoryInt.consultarAgrupadoresEspaciosFisicosPorCurso(idCurso);
 	}
 
-	/** 
+	/**
 	 * @see co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort#consultarCursosPorProgramaYPeriodoAcademico(java.lang.Long, java.lang.Long)
 	 */
 	@Override
@@ -85,6 +86,12 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 				.consultarCursosPorProgramaYPeriodoAcademico(idPrograma, idPeriodoAcademico);
 		return this.modelMapper.map(lstCursoEntity, new TypeToken<List<Curso>>() {
 		}.getType());
+	}
+
+	@Override
+	public Boolean eliminarCurso(Long id) {
+		this.cursoRepositoryInt.deleteById(id);
+		return Boolean.TRUE;
 	}
 
 }

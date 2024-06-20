@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,11 @@ public class CursoController {
 		return this.cursoRestMapper
 				.toCursoOutDTO(this.gestionarCursoCUIntPort.guardarCurso(this.cursoRestMapper.toCurso(cursoInDTO)));
 	}
+	@GetMapping("/obtenerCurso/{id}")
+	public CursoOutDTO obtenerCurso(@PathVariable Long id) {
+		return this.cursoRestMapper
+				.toCursoOutDTO(this.gestionarCursoCUIntPort.obtenerCurso(id));
+	}
 	
 	/**
 	 * Método encargado de consultar los agrupadores de espacios físicos asociados
@@ -69,5 +75,9 @@ public class CursoController {
 	public CursoOutDTO consultarCursoPorGrupoYAsignatura(String grupo, Long idAsignatura) {
 		return this.cursoRestMapper
 				.toCursoOutDTO(this.gestionarCursoCUIntPort.consultarCursoPorGrupoYAsignatura(grupo, idAsignatura));
+	}
+	@GetMapping("/eliminarCurso/{id}")
+	public Boolean eliminarCurso(@PathVariable Long id) {
+		return this.gestionarCursoCUIntPort.eliminarCurso(id);
 	}
 }

@@ -10,6 +10,7 @@ import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface AsignaturaRestMapper {
@@ -19,9 +20,13 @@ public interface AsignaturaRestMapper {
 	AsignaturaOutDTO toAsignaturaOutDTO(Asignatura asignatura);
 
 	@Mapping(target = "programa", expression = "java(new Programa(asignaturaInDTO.getIdPrograma()))")
-	@Mapping(target = "agrupadores", source = "asignaturaInDTO.lstIdAgrupadorEspacioFisico")
+	@Mapping(target = "agrupadores", source = " asignaturaInDTO.lstIdAgrupadorEspacioFisico", qualifiedByName = "handleNullList")
 	Asignatura toAsignatura(AsignaturaInDTO asignaturaInDTO);
 
+	@Named("handleNullList")
+	static List<Long> handleNullList(List<Long> lstIdAgrupadorEspacioFisico) {
+		return lstIdAgrupadorEspacioFisico != null ? lstIdAgrupadorEspacioFisico : new ArrayList<>();
+	}
 	List<AsignaturaOutDTO> toLstAsignaturaOutDTO(List<Asignatura> lstAsignatura);
 
 	default List<AgrupadorEspacioFisico> toAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {

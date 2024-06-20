@@ -52,4 +52,14 @@ public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
 		return this.gestionarCursoGatewayIntPort.consultarAgrupadoresEspaciosFisicosPorCurso(idCurso);
 	}
 
+	@Override
+	public Curso obtenerCurso(Long id) {
+		return this.gestionarCursoGatewayIntPort.consultarCursoPorIdCurso(id);
+	}
+
+	@Override
+	public Boolean eliminarCurso(Long id) {
+		return this.gestionarCursoGatewayIntPort.eliminarCurso(id);
+	}
+
 }

@@ -80,4 +80,8 @@ public class AsignaturaController {
 		asignaturaOutDTO.setError(true);
 		return asignaturaOutDTO;
 	}
+	@PostMapping("cargaMasiva")
+	private Boolean cargaMasivaAsignaturas(@RequestBody AsignaturaInDTO asignatura) {
+		return this.gestionarAsignaturaCUIntPort.cargaMasivaAsignaturas(asignatura);
+	}
 }

@@ -1,19 +1,31 @@
 package co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.gateway;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
-import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
+import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.repository.ProgramaRepositoryInt;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,14 +54,18 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 
 	private final AsignaturaRepositoryInt asignaturaRepositoryInt;
 	private final ModelMapper asignaturaMapper;
+	private final ProgramaRepositoryInt programaRepositoryInt;
+	private AsignaturaRestMapper asignaturaRestMapper;
 
 	@PersistenceContext
 	EntityManager em;
 
 	public GestionarAsignaturaGatewayImplAdapter(AsignaturaRepositoryInt asignaturaRepositoryInt,
-												 @Qualifier("asignaturaMapper") ModelMapper asignaturaMapper) {
+												 @Qualifier("asignaturaMapper") ModelMapper asignaturaMapper, ProgramaRepositoryInt programaRepositoryInt, AsignaturaRestMapper asignaturaRestMapper) {
 		this.asignaturaRepositoryInt = asignaturaRepositoryInt;
 		this.asignaturaMapper = asignaturaMapper;
+		this.programaRepositoryInt = programaRepositoryInt;
+		this.asignaturaRestMapper = asignaturaRestMapper;
 	}
 
 	/**
@@ -157,6 +173,71 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 			return this.asignaturaMapper.map(this.asignaturaRepositoryInt.save(asignaturaEntity), Asignatura.class);
 		}
 		return null;
+	}
+
+	@Override
+	public Boolean cargaMasivaAsignaturas(AsignaturaInDTO dto) {
+		String base64Excel = dto.getBase64();
+		byte[] decodedBytes = Base64.getDecoder().decode(base64Excel);
+		List<AsignaturaInDTO> asignaturas = new ArrayList<>();
+		try {
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(decodedBytes);
+			Workbook workbook = new XSSFWorkbook(inputStream);
+			Sheet sheet = workbook.getSheetAt(0);
+			Iterator<Row> rowIterator = sheet.iterator();
+			rowIterator.next();
+			while (rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+				if (row.getCell(0) == null) {
+					break;
+				}
+				String programa = row.getCell(0).getStringCellValue();
+				int semestre = (int) row.getCell(1).getNumericCellValue();
+				String pensum = getCellValueAsString(row.getCell(2));
+				String oid = getCellValueAsString(row.getCell(3));
+				String codigoAsignatura = getCellValueAsString(row.getCell(4));
+				String nombre = getCellValueAsString(row.getCell(5));
+				int horasSemana = (int) row.getCell(6).getNumericCellValue();
+				String estado = getCellValueAsString(row.getCell(7));
+				int aplicaEspSec = (int) row.getCell(8).getNumericCellValue();
+				Optional<ProgramaEntity> programaEntidad = this.programaRepositoryInt.findByNombre(programa);
+				if (programaEntidad.isPresent()) {
+					AsignaturaInDTO asignatura = new AsignaturaInDTO(nombre, codigoAsignatura, oid, semestre, pensum, horasSemana, programaEntidad.get().getIdPrograma());
+					asignaturas.add(asignatura);
+				}
+			}
+			workbook.close();
+			inputStream.close();
+		} catch (IOException e) {
+			return Boolean.FALSE;
+		}
+		// Guardar
+		for (AsignaturaInDTO asignatura : asignaturas) {
+			this.guardarAsignatura(this.asignaturaRestMapper.toAsignatura(asignatura));
+		}
+		return Boolean.TRUE;
+	}
+	private static String getCellValueAsString(Cell cell) {
+		if (cell == null) {
+			return "";
+		}
+
+		switch (cell.getCellType()) {
+			case STRING:
+				return cell.getStringCellValue();
+			case NUMERIC:
+				if (DateUtil.isCellDateFormatted(cell)) {
+					return cell.getDateCellValue().toString();
+				} else {
+					return String.valueOf((int) cell.getNumericCellValue());
+				}
+			case BOOLEAN:
+				return String.valueOf(cell.getBooleanCellValue());
+			case FORMULA:
+				return cell.getCellFormula();
+			default:
+				return "";
+		}
 	}
 
 	private Long contarAsignaturas(FiltroAsignaturaInDTO filtro, CriteriaBuilder criteriaBuilder) {

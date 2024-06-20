@@ -61,4 +61,6 @@ public interface GestionarCursoGatewayIntPort {
 	 * @return
 	 */
 	public List<Curso> consultarCursosPorProgramaYPeriodoAcademico(Long idPrograma, Long idPeriodoAcademico);
+
+	Boolean eliminarCurso(Long id);
 }

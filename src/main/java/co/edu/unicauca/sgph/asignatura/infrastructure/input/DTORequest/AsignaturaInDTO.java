@@ -21,7 +21,24 @@ public class AsignaturaInDTO {
 	private Integer horasSemana;
 
 	private Long idPrograma;
-		
+	private String base64;
+
+	public AsignaturaInDTO(String nombre,
+						   String codigoAsignatura,
+						   String OID,
+						   Integer semestre,
+						   String pensum,
+						   Integer horasSemana,
+						   Long idPrograma) {
+		this.nombre = nombre;
+		this.codigoAsignatura = codigoAsignatura;
+		this.OID = OID;
+		this.semestre = semestre;
+		this.pensum = pensum;
+		this.horasSemana = horasSemana;
+		this.idPrograma = idPrograma;
+	}
+
 	private List<Long> lstIdAgrupadorEspacioFisico;
 	public Long getIdAsignatura() {
 		return idAsignatura;
@@ -93,5 +110,13 @@ public class AsignaturaInDTO {
 
 	public void setLstIdAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
 		this.lstIdAgrupadorEspacioFisico = lstIdAgrupadorEspacioFisico;
+	}
+
+	public String getBase64() {
+		return base64;
+	}
+
+	public void setBase64(String base64) {
+		this.base64 = base64;
 	}
 }

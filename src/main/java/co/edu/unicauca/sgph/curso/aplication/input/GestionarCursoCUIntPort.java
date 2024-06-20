@@ -48,4 +48,8 @@ public interface GestionarCursoCUIntPort {
 	 * @return Lista de idAgrupadorEspacioFisico
 	 */
 	public List<Long> consultarAgrupadoresEspaciosFisicosPorCurso(Long idCurso);
+
+	Curso obtenerCurso(Long id);
+
+	Boolean eliminarCurso(Long id);
 }
