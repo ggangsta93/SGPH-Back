@@ -197,4 +197,24 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 				+ "											 AND horEsp.esPrincipal = true )"
 				+ "")
 		public List<FranjaHorariaCursoDTO> consultarFranjasHorariaPrincipalProgramaPoridProgramaYPeriodoAcademico(Long idPrograma, Long idPeriodoAcademico);
+		
+		
+		/**
+		 * Método encargado de consultar la cantidad de horas actual de un curso dado su
+		 * identificador </br>
+		 * 
+		 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+		 * 
+		 * @param idCurso
+		 * @return
+		 */		
+		@Query("SELECT SUM(FUNCTION('TIME_TO_SEC', "
+				+ " FUNCTION('TIMEDIFF', "
+				+ " CONCAT(CURRENT_DATE, ' ', h.horaFin), "
+				+ " CONCAT(CURRENT_DATE, ' ', h.horaInicio))) / 3600) "
+				+ " FROM HorarioEntity h "
+				+ "	WHERE h.curso.idCurso = :idCurso"
+				+ "	GROUP BY h.curso.idCurso "
+				+ "")
+		public Long consultarCantidadHorasActualCurso(Long idCurso);
 }

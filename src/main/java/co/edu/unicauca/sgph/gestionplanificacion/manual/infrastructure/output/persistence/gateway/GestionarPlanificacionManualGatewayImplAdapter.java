@@ -59,6 +59,15 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		this.gestionarPeriodoAcademicoGatewayIntPort = gestionarPeriodoAcademicoGatewayIntPort;
 		this.gestionarAgrupadorEspacioFisicoGatewayIntPort = gestionarAgrupadorEspacioFisicoGatewayIntPort;
 	}
+	
+	/** 
+	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCantidadHorasActualCurso(java.lang.Long)
+	 */
+	@Override
+	public Long consultarCantidadHorasActualCurso(Long idCurso) {	
+		Long cantidadHoras = this.planificacionManualRepositoryInt.consultarCantidadHorasActualCurso(idCurso);
+		return Objects.isNull(cantidadHoras)? 0L:cantidadHoras;
+	}	
 
 	/**
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarCursosPlanificacionPorFiltro(co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO,
@@ -82,7 +91,7 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		queryBuilder.append(" CONCAT(CURRENT_DATE, ' ', h.horaInicio))) / 3600) ");
 		queryBuilder.append(" FROM HorarioEntity h ");
 		queryBuilder.append(" WHERE h.curso.idCurso = c.idCurso");
-		queryBuilder.append(" GROUP BY h.curso.idCurso) AS tiempo, a.horasSemana, c.cupo, a.idAsignatura");
+		queryBuilder.append(" GROUP BY h.curso.idCurso) AS tiempo, a.horasSemana, c.cupo, a.idAsignatura, a.aplicaEspacioSecundario");
 		queryBuilder.append(" )");
 		queryBuilder.append(" FROM CursoEntity c");
 		queryBuilder.append(" JOIN c.asignatura a");

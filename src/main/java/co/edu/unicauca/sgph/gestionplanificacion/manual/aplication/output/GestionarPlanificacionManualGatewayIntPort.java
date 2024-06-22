@@ -45,6 +45,17 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 */
 	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma,
 			Long idPeriodoAcademicoVigente);
+	
+	/**
+	 * Método encargado de consultar la cantidad de horas actual de un curso dado su
+	 * identificador </br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idCurso
+	 * @return
+	 */		
+	public Long consultarCantidadHorasActualCurso(Long idCurso);
 
 	/**
 	 * Método encargado de validar si existe cruces con horarios de docentes de un

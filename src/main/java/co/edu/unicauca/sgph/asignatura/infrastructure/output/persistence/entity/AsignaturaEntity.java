@@ -110,7 +110,7 @@ public class AsignaturaEntity {
 	}
 
 	public void setOid(String oid) {
-		oid = oid;
+		this.oid = oid;
 	}
 
 	public Integer getSemestre() {

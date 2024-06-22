@@ -21,6 +21,8 @@ public class CursoPlanificacionOutDTO implements Serializable {
 	private String grupo;
 
 	private List<String> horarios;
+	
+	private List<String> horariosSecundarios;
 
 	private List<String> docentes;
 
@@ -30,13 +32,13 @@ public class CursoPlanificacionOutDTO implements Serializable {
 
 	private Integer cupo;
 
-	private List<Long> lstIdAgrupadorEspacioFisico;
+	private Boolean aplicaEspacioSecundario;
 
 	public CursoPlanificacionOutDTO() {
 	}
 
 	public CursoPlanificacionOutDTO(Long idCurso, String nombrePrograma, Integer semestre, String nombreAsignatura,
-			String grupo, Long horasAsignadas, Integer horasSemana, Integer cupo, Long idAsignatura) {
+			String grupo, Long horasAsignadas, Integer horasSemana, Integer cupo, Long idAsignatura, Boolean aplicaEspacioSecundario) {
 		this.idCurso = idCurso;
 		this.nombrePrograma = nombrePrograma;
 		this.semestre = semestre;
@@ -50,6 +52,7 @@ public class CursoPlanificacionOutDTO implements Serializable {
 		this.horasSemana = horasSemana;
 		this.cupo = cupo;
 		this.idAsignatura = idAsignatura;
+		this.aplicaEspacioSecundario = aplicaEspacioSecundario;
 	}
 
 	public String getNombrePrograma() {
@@ -132,19 +135,27 @@ public class CursoPlanificacionOutDTO implements Serializable {
 		this.cupo = cupo;
 	}
 
-	public List<Long> getLstIdAgrupadorEspacioFisico() {
-		return lstIdAgrupadorEspacioFisico;
-	}
-
-	public void setLstIdAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
-		this.lstIdAgrupadorEspacioFisico = lstIdAgrupadorEspacioFisico;
-	}
-
 	public Long getIdAsignatura() {
 		return idAsignatura;
 	}
 
 	public void setIdAsignatura(Long idAsignatura) {
 		this.idAsignatura = idAsignatura;
+	}
+
+	public List<String> getHorariosSecundarios() {
+		return horariosSecundarios;
+	}
+
+	public void setHorariosSecundarios(List<String> horariosSecundarios) {
+		this.horariosSecundarios = horariosSecundarios;
+	}
+
+	public Boolean getAplicaEspacioSecundario() {
+		return aplicaEspacioSecundario;
+	}
+
+	public void setAplicaEspacioSecundario(Boolean aplicaEspacioSecundario) {
+		this.aplicaEspacioSecundario = aplicaEspacioSecundario;
 	}
 }
