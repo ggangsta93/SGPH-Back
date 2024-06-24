@@ -1,9 +1,8 @@
-package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest;
-
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
+package co.edu.unicauca.sgph.agrupador.infrastructure.input.DTORequest;
 
 import java.util.List;
+
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
 
 public class AsignacionEspacioFisicoDTO {
 

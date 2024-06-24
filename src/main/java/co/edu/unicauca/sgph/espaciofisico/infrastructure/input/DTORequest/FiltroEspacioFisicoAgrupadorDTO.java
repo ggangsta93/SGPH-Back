@@ -1,9 +1,6 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest;
 
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
-
 import java.io.Serializable;
-import java.util.List;
 
 public class FiltroEspacioFisicoAgrupadorDTO implements Serializable {
 
