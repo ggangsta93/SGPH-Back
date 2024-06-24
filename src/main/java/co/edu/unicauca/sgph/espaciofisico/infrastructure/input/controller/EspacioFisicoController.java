@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,25 +14,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEdificioCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarTipoEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarUbicacionCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EdificioOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoOutDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.TipoEspacioFisicoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.UbicacionOutDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.AgrupadorEspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.EdificioRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.EspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.TipoEspacioFisicoRestMapper;
@@ -47,13 +41,11 @@ public class EspacioFisicoController {
 	// Gestionadores
 	private GestionarEspacioFisicoCUIntPort gestionarEspacioFisicoCUIntPort;
 	private GestionarTipoEspacioFisicoCUIntPort gestionarTipoEspacioFisicoCUIntPort;
-	private GestionarAgrupadorEspacioFisicoCUIntPort gestionarAgrupadorEspacioFisicoCUIntPort;
 	private GestionarEdificioCUIntPort gestionarEdificioCUIntPort;
 	private GestionarUbicacionCUIntPort gestionarUbicacionCUIntPort;
 	// Mapers
 	private EspacioFisicoRestMapper espacioFisicoRestMapper;
 	private TipoEspacioFisicoRestMapper tipoEspacioFisicoRestMapper;
-	private AgrupadorEspacioFisicoRestMapper agrupadorEspacioFisicoRestMapper;
 	private EdificioRestMapper edificioRestMapper;
 	private UbicacionRestMapper ubicacionRestMapper;
 
@@ -61,16 +53,12 @@ public class EspacioFisicoController {
 			EspacioFisicoRestMapper espacioFisicoRestMapper,
 			GestionarTipoEspacioFisicoCUIntPort gestionarTipoEspacioFisicoCUIntPort,
 			TipoEspacioFisicoRestMapper tipoEspacioFisicoRestMapper,
-			GestionarAgrupadorEspacioFisicoCUIntPort gestionarAgrupadorEspacioFisicoCUIntPort,
-			AgrupadorEspacioFisicoRestMapper agrupadorEspacioFisicoRestMapper,
 			GestionarEdificioCUIntPort gestionarEdificioCUIntPort, EdificioRestMapper edificioRestMapper,
 			GestionarUbicacionCUIntPort gestionarUbicacionCUIntPort, UbicacionRestMapper ubicacionRestMapper) {
 		this.gestionarEspacioFisicoCUIntPort = gestionarEspacioFisicoCUIntPort;
 		this.espacioFisicoRestMapper = espacioFisicoRestMapper;
 		this.gestionarTipoEspacioFisicoCUIntPort = gestionarTipoEspacioFisicoCUIntPort;
 		this.tipoEspacioFisicoRestMapper = tipoEspacioFisicoRestMapper;
-		this.gestionarAgrupadorEspacioFisicoCUIntPort = gestionarAgrupadorEspacioFisicoCUIntPort;
-		this.agrupadorEspacioFisicoRestMapper = agrupadorEspacioFisicoRestMapper;
 		this.gestionarEdificioCUIntPort = gestionarEdificioCUIntPort;
 		this.edificioRestMapper = edificioRestMapper;
 		this.gestionarUbicacionCUIntPort = gestionarUbicacionCUIntPort;
@@ -188,67 +176,6 @@ public class EspacioFisicoController {
 		return this.edificioRestMapper.toLstEdificioOutDTO(this.gestionarEspacioFisicoCUIntPort.consultarEdificiosPorUbicacion(lstIdUbicacion));
 	}
 
-	/**
-	 * Método encargado de consultar los agrupadores de espacios físicos dado una
-	 * lista de identificadores únicos<br>
-	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
-	 * @param idAgrupadorEspacioFisico
-	 * @return Lista de instancias de AgrupadorEspacioFisico
-	 */
-	@GetMapping("/consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico")
-	public List<AgrupadorEspacioFisicoOutDTO> consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico(
-			@RequestParam List<Long> idAgrupadorEspacioFisico) {
-		return this.agrupadorEspacioFisicoRestMapper
-				.toLstAgrupadorEspacioFisicoOutDTO(this.gestionarAgrupadorEspacioFisicoCUIntPort
-						.consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico(idAgrupadorEspacioFisico));
-	}
-
-	/**
-	 * Método encargado de consultar los agrupadores de espacios físicos dado una
-	 * lista de identificadores únicos de facultades<br>
-	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
-	 * @param idFacultad
-	 * @return Lista de instancias de AgrupadorEspacioFisico
-	 */
-	@GetMapping("/consultarAgrupadoresEspaciosFisicosPorIdFacultad")
-	public List<AgrupadorEspacioFisicoOutDTO> consultarAgrupadoresEspaciosFisicosPorIdFacultad(
-			@RequestParam List<Long> idFacultad) {
-		return this.agrupadorEspacioFisicoRestMapper
-				.toLstAgrupadorEspacioFisicoOutDTO(this.gestionarAgrupadorEspacioFisicoCUIntPort
-						.consultarAgrupadoresEspaciosFisicosPorIdFacultad(idFacultad));
-	}
-
-	/**
-	 * Método encargado de consultar los agrupadores de espacios físicos asociados a
-	 * un curso<br>
-	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
-	 * @param idCurso
-	 * @return Lista de instancias de AgrupadorEspacioFisico
-	 */
-	@GetMapping("/consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso")
-	public List<AgrupadorEspacioFisicoOutDTO> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(
-			@RequestParam Long idCurso) {
-		return this.agrupadorEspacioFisicoRestMapper
-				.toLstAgrupadorEspacioFisicoOutDTO(this.gestionarAgrupadorEspacioFisicoCUIntPort
-						.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso));
-	}
-
-	@PostMapping("/filtrarGrupos")
-	public Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(@RequestBody FiltroGrupoDTO filtro) {
-		return this.gestionarAgrupadorEspacioFisicoCUIntPort.filtrarGrupos(filtro);
-	}
-
-	@PostMapping("/guardarGrupo")
-	public AgrupadorEspacioFisicoOutDTO guardarGrupo(@RequestBody AgrupadorEspacioFisicoOutDTO agrupador) {
-		return this.gestionarAgrupadorEspacioFisicoCUIntPort.guardarGrupo(agrupador);
-	}
-
 	@GetMapping("/obtenerEspaciosFisicosAsignadosAAgrupadorId/{idAgrupador}")
 	public List<EspacioFisicoDTO> obtenerEspaciosFisicosPorAgrupadorId(@PathVariable Long idAgrupador) {
 		return this.gestionarEspacioFisicoCUIntPort.obtenerEspaciosFisicosPorAgrupadorId(idAgrupador);
@@ -265,10 +192,6 @@ public class EspacioFisicoController {
 		return this.gestionarEspacioFisicoCUIntPort.consultarEspaciosFisicosConFiltro(filtro);
 	}
 
-	@PostMapping("/guardarAsignacion")
-	public MensajeOutDTO guardarAsignacion(@RequestBody AsignacionEspacioFisicoDTO asignacion) {
-		return this.gestionarEspacioFisicoCUIntPort.guardarAsignacion(asignacion);
-	}
 	@GetMapping("/obtenerListaRecursos")
 	public List<RecursoOutDTO> obtenerListaRecursos() {
 		return this.gestionarEspacioFisicoCUIntPort.obtenerListaRecursos();

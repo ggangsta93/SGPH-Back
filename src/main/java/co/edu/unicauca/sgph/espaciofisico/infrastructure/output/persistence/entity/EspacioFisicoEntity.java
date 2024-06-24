@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
 
 @Entity

@@ -17,8 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
 
 @Entity

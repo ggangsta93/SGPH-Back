@@ -1,4 +1,4 @@
-package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest;
+package co.edu.unicauca.sgph.agrupador.infrastructure.input.DTORequest;
 
 import java.io.Serializable;
 import java.util.List;

@@ -3,6 +3,7 @@ package co.edu.unicauca.sgph.espaciofisico.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.edu.unicauca.sgph.agrupador.domain.model.AgrupadorEspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
 import co.edu.unicauca.sgph.horario.domain.model.Horario;
 

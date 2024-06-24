@@ -3,7 +3,7 @@ package co.edu.unicauca.sgph.asignatura.domain.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
+import co.edu.unicauca.sgph.agrupador.domain.model.AgrupadorEspacioFisico;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import lombok.Data;
 

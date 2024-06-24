@@ -1,14 +1,16 @@
-package co.edu.unicauca.sgph.espaciofisico.aplication.input;
+package co.edu.unicauca.sgph.agrupador.aplication.output;
 
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
+import co.edu.unicauca.sgph.agrupador.domain.model.AgrupadorEspacioFisico;
+import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTORequest.FiltroGrupoDTO;
+import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 
-public interface GestionarAgrupadorEspacioFisicoCUIntPort {
+public interface GestionarAgrupadorEspacioFisicoGatewayIntPort {
 
 	/**
 	 * Método encargado de consultar los agrupadores de espacios físicos dado una
@@ -46,5 +48,8 @@ public interface GestionarAgrupadorEspacioFisicoCUIntPort {
 
 	Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(FiltroGrupoDTO filtro);
 
-    AgrupadorEspacioFisicoOutDTO guardarGrupo(AgrupadorEspacioFisicoOutDTO agrupador);
+	AgrupadorEspacioFisicoOutDTO guardarGrupo(AgrupadorEspacioFisicoOutDTO agrupador);
+	
+	MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion);
+
 }

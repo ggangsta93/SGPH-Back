@@ -10,12 +10,10 @@ import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisi
 import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 
 public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCUIntPort {
@@ -104,11 +102,6 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	@Override
 	public List<EspacioFisicoDTO> consultarEspaciosFisicosConFiltro(FiltroEspacioFisicoAgrupadorDTO filtro) {
 		return this.gestionarEspacioFisicoGatewayIntPort.consultarEspaciosFisicosConFiltro(filtro);
-	}
-
-	@Override
-	public MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion) {
-		return this.gestionarEspacioFisicoGatewayIntPort.guardarAsignacion(asignacion);
 	}
 
 	@Override

@@ -21,10 +21,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
+import co.edu.unicauca.sgph.agrupador.domain.model.AgrupadorEspacioFisico;
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.common.enums.EstadoCursoHorarioEnum;
-import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
-import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.model.FranjaHorariaBasicaDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioInDTO;

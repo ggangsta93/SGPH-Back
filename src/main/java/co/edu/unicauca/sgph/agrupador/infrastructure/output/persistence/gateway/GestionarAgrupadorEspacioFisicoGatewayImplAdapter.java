@@ -1,7 +1,8 @@
-package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.gateway;
+package co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.gateway;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -9,17 +10,23 @@ import javax.persistence.PersistenceContext;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
-import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.AgrupadorEspacioFisicoRepositoryInt;
+import co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
+import co.edu.unicauca.sgph.agrupador.domain.model.AgrupadorEspacioFisico;
+import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTORequest.FiltroGrupoDTO;
+import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
+import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
+import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.repository.AgrupadorEspacioFisicoRepositoryInt;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.EspacioFisicoRepositoryInt;
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 
 @Service
@@ -28,9 +35,12 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 
 	@PersistenceContext
 	private EntityManager em;
-
+	
 	private AgrupadorEspacioFisicoRepositoryInt agrupadorEspacioFisicoRepositoryInt;
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private EspacioFisicoRepositoryInt espacioFisicoRepositoryInt;
 
 	public GestionarAgrupadorEspacioFisicoGatewayImplAdapter(
 			AgrupadorEspacioFisicoRepositoryInt agrupadorEspacioFisicoRepositoryInt, ModelMapper modelMapper) {
@@ -39,7 +49,7 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort#consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico(java.util.List)
+	 * @see co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort#consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico(java.util.List)
 	 */
 	@Override
 	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico(
@@ -51,7 +61,7 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort#consultarAgrupadoresEspaciosFisicosPorIdFacultad(java.util.List)
+	 * @see co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort#consultarAgrupadoresEspaciosFisicosPorIdFacultad(java.util.List)
 	 */
 	@Override
 	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosPorIdFacultad(List<Long> idFacultad) {
@@ -62,7 +72,7 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 	}
 
 	/** 
-	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort#consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(java.lang.Long)
+	 * @see co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort#consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(java.lang.Long)
 	 */
 	@Override
 	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(Long idCurso) {
@@ -120,4 +130,40 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 		dto.setObservacion(entidad.getObservacion());
 		return dto;
 	}
+	
+	@Override
+	public MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion) {
+		this.eliminarAgrupadoresEspacioFisico(asignacion.getQuitados(), asignacion.getIdGrupo());
+		this.agregarAgrupadosEspacioFisico(asignacion.getAgregados(), asignacion.getIdGrupo());
+		MensajeOutDTO resultado = new MensajeOutDTO();
+		resultado.setError(false);
+		resultado.setDescripcion("Asignación guardada correctamente");
+		return resultado;
+	}	
+	
+	private void eliminarAgrupadoresEspacioFisico(List<EspacioFisicoDTO> quitados, Long idGrupo) {
+		quitados.forEach(q -> {
+			Optional<EspacioFisicoEntity> qEntidad = this.espacioFisicoRepositoryInt.findById(q.getIdEspacioFisico());
+			List<AgrupadorEspacioFisicoEntity> agrupadores = qEntidad.get().getAgrupadores();
+			agrupadores = agrupadores.stream().filter(a -> !a.getIdAgrupadorEspacioFisico().equals(idGrupo))
+					.collect(Collectors.toList());
+			EspacioFisicoEntity espacioFisicoEntity = qEntidad.get();
+			espacioFisicoEntity.setAgrupadores(agrupadores);
+			this.espacioFisicoRepositoryInt.save(espacioFisicoEntity);
+		});
+	}
+
+	private void agregarAgrupadosEspacioFisico(List<EspacioFisicoDTO> agregados, Long idGrupo) {
+		agregados.forEach(q -> {
+			Optional<EspacioFisicoEntity> qEntidad = this.espacioFisicoRepositoryInt.findById(q.getIdEspacioFisico());
+			List<AgrupadorEspacioFisicoEntity> agrupadores = qEntidad.get().getAgrupadores();
+			AgrupadorEspacioFisicoEntity nuevo = new AgrupadorEspacioFisicoEntity();
+			nuevo.setIdAgrupadorEspacioFisico(idGrupo);
+			agrupadores.add(nuevo);
+			EspacioFisicoEntity espacioFisicoEntity = qEntidad.get();
+			espacioFisicoEntity.setAgrupadores(agrupadores);
+			this.espacioFisicoRepositoryInt.save(espacioFisicoEntity);
+		});
+	}	
+	
 }

@@ -1,4 +1,4 @@
-package co.edu.unicauca.sgph.espaciofisico.domain.model;
+package co.edu.unicauca.sgph.agrupador.domain.model;
 
 import co.edu.unicauca.sgph.facultad.domain.model.Facultad;
 

@@ -6,7 +6,8 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
+import co.edu.unicauca.sgph.agrupador.domain.model.AgrupadorEspacioFisico;
+import co.edu.unicauca.sgph.agrupador.infrastructure.input.mapper.AgrupadorEspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;

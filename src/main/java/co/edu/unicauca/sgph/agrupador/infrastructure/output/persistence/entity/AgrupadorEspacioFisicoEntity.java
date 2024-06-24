@@ -1,4 +1,4 @@
-package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity;
+package co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 
 @Entity

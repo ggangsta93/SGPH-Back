@@ -1,17 +1,17 @@
-package co.edu.unicauca.sgph.espaciofisico.domain.useCase;
+package co.edu.unicauca.sgph.agrupador.domain.useCase;
 
 import java.util.List;
 
-import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort;
-import co.edu.unicauca.sgph.espaciofisico.aplication.output.AgrupadorEspacioFisicoFormatterResultsIntPort;
-import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
-import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AgrupadorEspacioFisicoInDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroGrupoDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import org.springframework.data.domain.Page;
+
+import co.edu.unicauca.sgph.agrupador.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort;
+import co.edu.unicauca.sgph.agrupador.aplication.output.AgrupadorEspacioFisicoFormatterResultsIntPort;
+import co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
+import co.edu.unicauca.sgph.agrupador.domain.model.AgrupadorEspacioFisico;
+import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTORequest.FiltroGrupoDTO;
+import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 
 public class GestionarAgrupadorEspacioFisicoCUAdapter implements GestionarAgrupadorEspacioFisicoCUIntPort {
 
@@ -26,7 +26,7 @@ public class GestionarAgrupadorEspacioFisicoCUAdapter implements GestionarAgrupa
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort#consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico(java.util.List)
+	 * @see co.edu.unicauca.sgph.agrupador.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort#consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico(java.util.List)
 	 */
 	@Override
 	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosPorIdAgrupadorEspacioFisico(
@@ -36,7 +36,7 @@ public class GestionarAgrupadorEspacioFisicoCUAdapter implements GestionarAgrupa
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort#consultarAgrupadoresEspaciosFisicosPorIdFacultad(java.util.List)
+	 * @see co.edu.unicauca.sgph.agrupador.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort#consultarAgrupadoresEspaciosFisicosPorIdFacultad(java.util.List)
 	 */
 	@Override
 	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosPorIdFacultad(List<Long> idFacultad) {
@@ -45,7 +45,7 @@ public class GestionarAgrupadorEspacioFisicoCUAdapter implements GestionarAgrupa
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort#consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(java.lang.Long)
+	 * @see co.edu.unicauca.sgph.agrupador.aplication.input.GestionarAgrupadorEspacioFisicoCUIntPort#consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(java.lang.Long)
 	 */
 	@Override
 	public List<AgrupadorEspacioFisico> consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(Long idCurso) {
@@ -61,5 +61,10 @@ public class GestionarAgrupadorEspacioFisicoCUAdapter implements GestionarAgrupa
 	@Override
 	public AgrupadorEspacioFisicoOutDTO guardarGrupo(AgrupadorEspacioFisicoOutDTO agrupador) {
 		return this.gestionarAgrupadorEspacioFisicoGatewayIntPort.guardarGrupo(agrupador);
+	}
+	
+	@Override
+	public MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion) {
+		return this.gestionarAgrupadorEspacioFisicoGatewayIntPort.guardarAsignacion(asignacion);
 	}
 }

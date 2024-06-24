@@ -8,12 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AsignacionEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 
 public interface GestionarEspacioFisicoGatewayIntPort {
@@ -124,8 +122,6 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	List<EspacioFisicoDTO> obtenerEspaciosFisicosSinAsignarAAgrupadorId(Long idAgrupador);
 
 	List<EspacioFisicoDTO> consultarEspaciosFisicosConFiltro(FiltroEspacioFisicoAgrupadorDTO filtro);
-
-	MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion);
 
 	List<RecursoOutDTO> obtenerListaRecursos();
 	EspacioFisico guardarEspacioFisico(EspacioFisicoInDTO espacioFisicoInDTO);

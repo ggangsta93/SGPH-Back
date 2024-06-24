@@ -1,4 +1,4 @@
-package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse;
+package co.edu.unicauca.sgph.agrupador.infrastructure.input.DTOResponse;
 
 public class AgrupadorEspacioFisicoOutDTO {
 

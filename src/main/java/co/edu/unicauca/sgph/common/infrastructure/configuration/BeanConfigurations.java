@@ -3,6 +3,9 @@ package co.edu.unicauca.sgph.common.infrastructure.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import co.edu.unicauca.sgph.agrupador.aplication.output.AgrupadorEspacioFisicoFormatterResultsIntPort;
+import co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
+import co.edu.unicauca.sgph.agrupador.domain.useCase.GestionarAgrupadorEspacioFisicoCUAdapter;
 import co.edu.unicauca.sgph.asignatura.aplication.output.AsignaturaFormatterResultsIntPort;
 import co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.useCase.GestionarAsignaturaCUAdapter;
@@ -14,15 +17,12 @@ import co.edu.unicauca.sgph.departamento.domain.useCase.GestionarDepartamentoCUA
 import co.edu.unicauca.sgph.docente.aplication.output.DocenteFormatterResultsIntPort;
 import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
 import co.edu.unicauca.sgph.docente.domain.useCase.GestionarDocenteCUAdapter;
-import co.edu.unicauca.sgph.espaciofisico.aplication.output.AgrupadorEspacioFisicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.EspacioFisicoFormatterResultsIntPort;
-import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEdificioGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarTipoEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarUbicacionGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.TipoEspacioFisicoFormatterResultsIntPort;
-import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarAgrupadorEspacioFisicoCUAdapter;
 import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarEdificioCUAdapter;
 import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarEspacioFisicoCUAdapter;
 import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarTipoEspacioFisicoCUAdapter;

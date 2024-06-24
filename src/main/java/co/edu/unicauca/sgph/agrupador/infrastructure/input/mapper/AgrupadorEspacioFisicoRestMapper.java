@@ -1,14 +1,13 @@
-package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper;
+package co.edu.unicauca.sgph.agrupador.infrastructure.input.mapper;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.agrupador.domain.model.AgrupadorEspacioFisico;
+import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTORequest.AgrupadorEspacioFisicoInDTO;
+import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import co.edu.unicauca.sgph.espaciofisico.domain.model.AgrupadorEspacioFisico;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.AgrupadorEspacioFisicoInDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
 
 @Mapper(componentModel = "spring")
 public interface AgrupadorEspacioFisicoRestMapper {

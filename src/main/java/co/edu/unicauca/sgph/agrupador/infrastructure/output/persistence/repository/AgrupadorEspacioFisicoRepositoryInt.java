@@ -1,4 +1,4 @@
-package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository;
+package co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.repository;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
+import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 
 public interface AgrupadorEspacioFisicoRepositoryInt extends JpaRepository<AgrupadorEspacioFisicoEntity, Long> {
 
