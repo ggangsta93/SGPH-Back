@@ -1,11 +1,11 @@
-package co.edu.unicauca.sgph.programa.aplication.output;
+package co.edu.unicauca.sgph.departamento.aplication.input;
 
 import java.util.List;
 
-import co.edu.unicauca.sgph.programa.domain.model.Departamento;
+import co.edu.unicauca.sgph.departamento.domain.model.Departamento;
 
-public interface GestionarDepartamentoGatewayIntPort {
-	
+public interface GestionarDepartamentoCUIntPort {
+
 	/**
 	 * Método encargado de consultar guardar y/o actualizar un departamento<br>
 	 * 
@@ -23,5 +23,4 @@ public interface GestionarDepartamentoGatewayIntPort {
 	 * @return
 	 */
 	public List<Departamento> consultarDepartamentos();
-
 }

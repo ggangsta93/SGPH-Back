@@ -774,10 +774,10 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		List<FranjaHorariaCursoDTO> horarioSecundario = this.gestionarPlanificacionManualGatewayIntPort
 				.consultarFranjasHorariaCursoPorIdCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
 						Boolean.FALSE);
-		
+			
 		horarioPrincipalActual = horarioPrincipalActual.stream()
 				.filter(frPr -> horarioSecundario.stream()
-						.anyMatch(frSec -> !(frPr.getDia().equals(frSec.getDia())
+						.noneMatch(frSec -> !(frPr.getDia().equals(frSec.getDia())
 								&& frPr.getHoraInicio().equals(frSec.getHoraInicio())
 								&& frPr.getHoraFin().equals(frSec.getHoraFin()))))
 				.collect(Collectors.toList());
@@ -788,24 +788,27 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 					LocalTime.parse(fr.getHoraFin(), DateTimeFormatter.ofPattern("HH:mm")));
 		}).collect(Collectors.toList());
 
-		// Se recorre cada espacio físico para evaluarle las franjas candidatas
-		for (Map.Entry<Long, List<FranjaHorariaBasicaDTO>> entry : mapaFranjasHorariasPorEspacioFisico.entrySet()) {
-
-			// Se recorre cada franja candidata para validarla contra las restricciones
-			for (FranjaHorariaBasicaDTO franjaCandidata : listaFranjasCandidatas) {
-
-				// Restricciones
-				Boolean noseSuperponeConFranjasEspaciosFisicos = !this
-						.seSuperponeConFranjasEspaciosFisicos(franjaCandidata, entry.getValue());
-
-				// Se validan las restricciones
-				if (noseSuperponeConFranjasEspaciosFisicos) {
-					// Se adiciona la franja candidata como franja posible
-					listaDeFranjasDisponibles.add(new FranjaHorariaCursoDTO(entry.getKey(), franjaCandidata.getDia(),
-							franjaCandidata.getHoraInicio(), franjaCandidata.getHoraFin()));
+		if(!listaFranjasCandidatas.isEmpty()) {
+			// Se recorre cada espacio físico para evaluarle las franjas candidatas
+			for (Map.Entry<Long, List<FranjaHorariaBasicaDTO>> entry : mapaFranjasHorariasPorEspacioFisico.entrySet()) {
+				
+				// Se recorre cada franja candidata para validarla contra las restricciones
+				for (FranjaHorariaBasicaDTO franjaCandidata : listaFranjasCandidatas) {
+					
+					// Restricciones
+					Boolean noseSuperponeConFranjasEspaciosFisicos = !this
+							.seSuperponeConFranjasEspaciosFisicos(franjaCandidata, entry.getValue());
+					
+					// Se validan las restricciones
+					if (noseSuperponeConFranjasEspaciosFisicos) {
+						// Se adiciona la franja candidata como franja posible
+						listaDeFranjasDisponibles.add(new FranjaHorariaCursoDTO(entry.getKey(), franjaCandidata.getDia(),
+								franjaCandidata.getHoraInicio(), franjaCandidata.getHoraFin()));
+					}
 				}
-			}
+			}			
 		}
+	
 
 		return listaDeFranjasDisponibles;
 	}

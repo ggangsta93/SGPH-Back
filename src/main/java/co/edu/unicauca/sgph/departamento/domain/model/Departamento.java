@@ -1,4 +1,4 @@
-package co.edu.unicauca.sgph.programa.domain.model;
+package co.edu.unicauca.sgph.departamento.domain.model;
 
 import co.edu.unicauca.sgph.facultad.domain.model.Facultad;
 import lombok.Data;

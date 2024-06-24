@@ -1,10 +1,10 @@
-package co.edu.unicauca.sgph.programa.domain.useCase;
+package co.edu.unicauca.sgph.departamento.domain.useCase;
 
 import java.util.List;
 
-import co.edu.unicauca.sgph.programa.aplication.input.GestionarDepartamentoCUIntPort;
-import co.edu.unicauca.sgph.programa.aplication.output.GestionarDepartamentoGatewayIntPort;
-import co.edu.unicauca.sgph.programa.domain.model.Departamento;
+import co.edu.unicauca.sgph.departamento.aplication.input.GestionarDepartamentoCUIntPort;
+import co.edu.unicauca.sgph.departamento.aplication.output.GestionarDepartamentoGatewayIntPort;
+import co.edu.unicauca.sgph.departamento.domain.model.Departamento;
 
 public class GestionarDepartamentoCUAdapter implements GestionarDepartamentoCUIntPort {
 
@@ -15,7 +15,7 @@ public class GestionarDepartamentoCUAdapter implements GestionarDepartamentoCUIn
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.programa.aplication.input.GestionarDepartamentoCUIntPort#guardarDepartamento(co.edu.unicauca.sgph.programa.domain.model.Departamento)
+	 * @see co.edu.unicauca.sgph.departamento.aplication.input.GestionarDepartamentoCUIntPort#guardarDepartamento(co.edu.unicauca.sgph.departamento.domain.model.Departamento)
 	 */
 	@Override
 	public Departamento guardarDepartamento(Departamento departamento) {
@@ -23,7 +23,7 @@ public class GestionarDepartamentoCUAdapter implements GestionarDepartamentoCUIn
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.programa.aplication.input.GestionarDepartamentoCUIntPort#consultarDepartamentos()
+	 * @see co.edu.unicauca.sgph.departamento.aplication.input.GestionarDepartamentoCUIntPort#consultarDepartamentos()
 	 */
 	@Override
 	public List<Departamento> consultarDepartamentos() {

@@ -1,4 +1,4 @@
-package co.edu.unicauca.sgph.programa.infrastructure.input.DTOResponse;
+package co.edu.unicauca.sgph.departamento.infrastructure.input.DTOResponse;
 
 public class DepartamentoOutDTO {
 

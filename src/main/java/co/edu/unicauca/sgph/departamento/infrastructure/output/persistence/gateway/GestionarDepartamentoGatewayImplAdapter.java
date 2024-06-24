@@ -1,4 +1,4 @@
-package co.edu.unicauca.sgph.programa.infrastructure.output.persistence.gateway;
+package co.edu.unicauca.sgph.departamento.infrastructure.output.persistence.gateway;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
-import co.edu.unicauca.sgph.programa.aplication.output.GestionarDepartamentoGatewayIntPort;
-import co.edu.unicauca.sgph.programa.domain.model.Departamento;
-import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.DepartamentoEntity;
-import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.repository.DepartamentoRepositoryInt;
+import co.edu.unicauca.sgph.departamento.aplication.output.GestionarDepartamentoGatewayIntPort;
+import co.edu.unicauca.sgph.departamento.domain.model.Departamento;
+import co.edu.unicauca.sgph.departamento.infrastructure.output.persistence.entity.DepartamentoEntity;
+import co.edu.unicauca.sgph.departamento.infrastructure.output.persistence.repository.DepartamentoRepositoryInt;
 
 @Service
 public class GestionarDepartamentoGatewayImplAdapter implements GestionarDepartamentoGatewayIntPort {
@@ -24,7 +24,7 @@ public class GestionarDepartamentoGatewayImplAdapter implements GestionarDeparta
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.programa.aplication.output.GestionarDepartamentoGatewayIntPort#guardarDepartamento(co.edu.unicauca.sgph.programa.domain.model.Departamento)
+	 * @see co.edu.unicauca.sgph.departamento.aplication.output.GestionarDepartamentoGatewayIntPort#guardarDepartamento(co.edu.unicauca.sgph.departamento.domain.model.Departamento)
 	 */
 	@Override
 	public Departamento guardarDepartamento(Departamento departamento) {
@@ -34,7 +34,7 @@ public class GestionarDepartamentoGatewayImplAdapter implements GestionarDeparta
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.programa.aplication.output.GestionarDepartamentoGatewayIntPort#consultarDepartamentos()
+	 * @see co.edu.unicauca.sgph.departamento.aplication.output.GestionarDepartamentoGatewayIntPort#consultarDepartamentos()
 	 */
 	@Override
 	public List<Departamento> consultarDepartamentos() {

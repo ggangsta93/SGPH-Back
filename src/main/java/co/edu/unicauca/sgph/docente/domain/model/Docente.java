@@ -4,8 +4,8 @@ import java.util.List;
 
 import co.edu.unicauca.sgph.common.domain.model.Persona;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
+import co.edu.unicauca.sgph.departamento.domain.model.Departamento;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
-import co.edu.unicauca.sgph.programa.domain.model.Departamento;
 
 public class Docente extends Persona {
 

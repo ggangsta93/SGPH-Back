@@ -1,4 +1,4 @@
-package co.edu.unicauca.sgph.programa.infrastructure.input.DTORequest;
+package co.edu.unicauca.sgph.departamento.infrastructure.input.DTORequest;
 
 public class DepartamentoInDTO {
 

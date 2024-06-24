@@ -30,9 +30,10 @@ public interface GestionarEspacioFisicoCUIntPort {
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idCurso
+	 * @param esPrincipal
 	 * @return
 	 */
-	public List<String> consultarEspacioFisicoHorarioPorIdCurso(Long idCurso);
+	public List<String> consultarEspacioFisicoHorarioPorIdCurso(Long idCurso, Boolean esPrincipal);
 
 	/**
 	 * Método encargado de consultar un espacio físico por su identificador

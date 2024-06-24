@@ -1,4 +1,4 @@
-package co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity;
+package co.edu.unicauca.sgph.departamento.infrastructure.output.persistence.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

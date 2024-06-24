@@ -119,6 +119,8 @@ public class AsignaturaInDTO {
 
 	public void setBase64(String base64) {
 		this.base64 = base64;
+	}
+	
 	public Boolean getAplicaEspacioSecundario() {
 		return aplicaEspacioSecundario;
 	}

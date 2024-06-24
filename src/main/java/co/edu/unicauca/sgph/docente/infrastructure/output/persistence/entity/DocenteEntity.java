@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.PersonaEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
-import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.DepartamentoEntity;
+import co.edu.unicauca.sgph.departamento.infrastructure.output.persistence.entity.DepartamentoEntity;
 
 @Entity
 @Table(name = "DOCENTE")
