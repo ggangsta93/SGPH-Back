@@ -6,6 +6,7 @@ import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import org.springframework.data.domain.Page;
 
 public interface GestionarAsignaturaGatewayIntPort {
@@ -36,5 +37,5 @@ public interface GestionarAsignaturaGatewayIntPort {
 
 	Asignatura inactivarAsignaturaPorId(Long idAsignatura);
 
-	Boolean cargaMasivaAsignaturas(AsignaturaInDTO asignatura);
+	MensajeOutDTO cargaMasivaAsignaturas(AsignaturaInDTO asignatura);
 }

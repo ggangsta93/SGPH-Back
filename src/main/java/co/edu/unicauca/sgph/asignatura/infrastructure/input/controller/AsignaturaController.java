@@ -3,6 +3,7 @@ package co.edu.unicauca.sgph.asignatura.infrastructure.input.controller;
 import java.util.List;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,7 +82,7 @@ public class AsignaturaController {
 		return asignaturaOutDTO;
 	}
 	@PostMapping("cargaMasiva")
-	private Boolean cargaMasivaAsignaturas(@RequestBody AsignaturaInDTO asignatura) {
+	private MensajeOutDTO cargaMasivaAsignaturas(@RequestBody AsignaturaInDTO asignatura) {
 		return this.gestionarAsignaturaCUIntPort.cargaMasivaAsignaturas(asignatura);
 	}
 }
