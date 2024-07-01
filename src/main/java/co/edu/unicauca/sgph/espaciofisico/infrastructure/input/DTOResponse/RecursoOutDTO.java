@@ -3,6 +3,7 @@ package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
 
 public class RecursoOutDTO {
+	private Long idRecursoEspacioFisico;
 	private Long idRecurso;
 	private String nombre;
 	private String descripcion;
@@ -44,5 +45,13 @@ public class RecursoOutDTO {
 
 	public void setCantidad(Long cantidad) {
 		this.cantidad = cantidad;
+	}
+
+	public Long getIdRecursoEspacioFisico() {
+		return idRecursoEspacioFisico;
+	}
+
+	public void setIdRecursoEspacioFisico(Long idRecursoEspacioFisico) {
+		this.idRecursoEspacioFisico = idRecursoEspacioFisico;
 	}
 }

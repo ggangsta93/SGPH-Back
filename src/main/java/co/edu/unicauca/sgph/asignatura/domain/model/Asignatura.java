@@ -29,6 +29,7 @@ public class Asignatura {
 	private List<AgrupadorEspacioFisico> agrupadores;
 	
 	private Boolean aplicaEspacioSecundario;
+	private int aplicaEspSec;
 
 	public Asignatura() {
 		agrupadores = new ArrayList<>();
@@ -116,5 +117,13 @@ public class Asignatura {
 
 	public void setAplicaEspacioSecundario(Boolean aplicaEspacioSecundario) {
 		this.aplicaEspacioSecundario = aplicaEspacioSecundario;
+	}
+
+	public int getAplicaEspSec() {
+		return aplicaEspSec;
+	}
+
+	public void setAplicaEspSec(int aplicaEspSec) {
+		this.aplicaEspSec = aplicaEspSec;
 	}
 }

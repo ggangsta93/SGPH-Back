@@ -12,6 +12,7 @@ public interface RecursoMapper {
     RecursoMapper INSTANCE = Mappers.getMapper(RecursoMapper.class);
 
     @Mapping(target = "idRecurso", source = "recursoFisico.idRecursoFisico")
+    @Mapping(target = "idRecursoEspacioFisico", source = "idRecursoEspacioFisico")
     @Mapping(target = "nombre", source = "recursoFisico.nombre")
     @Mapping(target = "descripcion", source = "recursoFisico.descripcion")
     @Mapping(target = "cantidad", source = "cantidad")

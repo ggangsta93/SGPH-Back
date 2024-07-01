@@ -9,6 +9,7 @@ import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import org.springframework.data.domain.Page;
 
 public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPort {
@@ -54,7 +55,7 @@ public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPor
 	}
 
 	@Override
-	public Boolean cargaMasivaAsignaturas(AsignaturaInDTO asignatura) {
+	public MensajeOutDTO cargaMasivaAsignaturas(AsignaturaInDTO asignatura) {
 		return this.gestionarAsignaturaGatewayIntPort.cargaMasivaAsignaturas(asignatura);
 	}
 }

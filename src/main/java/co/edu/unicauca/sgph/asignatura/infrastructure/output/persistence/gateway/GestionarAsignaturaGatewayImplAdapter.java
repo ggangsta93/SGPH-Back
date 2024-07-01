@@ -4,10 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
@@ -16,6 +18,7 @@ import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.Agrupado
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.repository.ProgramaRepositoryInt;
@@ -77,7 +80,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		AsignaturaEntity entidadGuardar=null;
 		if(Objects.nonNull(asignatura.getIdAsignatura())) {
 			entidad = this.asignaturaRepositoryInt.findById(asignatura.getIdAsignatura());
-			entidadGuardar = entidad.get();			
+			entidadGuardar = entidad.get();
 		}
 		if (entidad.isPresent()) {
 			AsignaturaEntity entidadGuardarMaper = this.asignaturaMapper.map(asignatura, AsignaturaEntity.class);
@@ -176,7 +179,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 	}
 
 	@Override
-	public Boolean cargaMasivaAsignaturas(AsignaturaInDTO dto) {
+	public MensajeOutDTO cargaMasivaAsignaturas(AsignaturaInDTO dto) {
 		String base64Excel = dto.getBase64();
 		byte[] decodedBytes = Base64.getDecoder().decode(base64Excel);
 		List<AsignaturaInDTO> asignaturas = new ArrayList<>();
@@ -202,21 +205,34 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 				int aplicaEspSec = (int) row.getCell(8).getNumericCellValue();
 				Optional<ProgramaEntity> programaEntidad = this.programaRepositoryInt.findByNombre(programa);
 				if (programaEntidad.isPresent()) {
-					AsignaturaInDTO asignatura = new AsignaturaInDTO(nombre, codigoAsignatura, oid, semestre, pensum, horasSemana, programaEntidad.get().getIdPrograma());
+					AsignaturaInDTO asignatura = new AsignaturaInDTO(nombre, codigoAsignatura, oid, semestre, pensum, horasSemana, programaEntidad.get().getIdPrograma(), estado, aplicaEspSec);
+					asignatura.setAplicaEspacioSecundario(asignatura.getAplicaEspSec() == 1 ? true : false);
 					asignaturas.add(asignatura);
+				} else {
+					MensajeOutDTO mensaje = new MensajeOutDTO();
+					mensaje.setError(Boolean.TRUE);
+					mensaje.setDescripcion("No existe el programa académico " + programa);
+					return mensaje;
 				}
 			}
 			workbook.close();
 			inputStream.close();
 		} catch (IOException e) {
-			return Boolean.FALSE;
+			MensajeOutDTO mensaje = new MensajeOutDTO();
+			mensaje.setError(Boolean.TRUE);
+			mensaje.setDescripcion("Error al leer el archivo");
+		}
+		MensajeOutDTO mensaje = this.validarAsignaturas(asignaturas);
+		if (mensaje.getError()) {
+			return mensaje;
 		}
 		// Guardar
 		for (AsignaturaInDTO asignatura : asignaturas) {
 			this.guardarAsignatura(this.asignaturaRestMapper.toAsignatura(asignatura));
 		}
-		return Boolean.TRUE;
+		return mensaje;
 	}
+
 	private static String getCellValueAsString(Cell cell) {
 		if (cell == null) {
 			return "";
@@ -280,7 +296,6 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		return em.createQuery(countQuery).getSingleResult();
 	}
 
-
 	private AsignaturaOutDTO mapearDTO(AsignaturaEntity entidad) {
 		AsignaturaOutDTO asignaturaOutDTO = new AsignaturaOutDTO();
 		asignaturaOutDTO.setIdAsignatura(entidad.getIdAsignatura());
@@ -300,6 +315,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		}
 		return asignaturaOutDTO;
 	}
+
 	private AgrupadorEspacioFisicoDTO mapAgrupador(AgrupadorEspacioFisicoEntity entidad) {
 		AgrupadorEspacioFisicoDTO dto = new AgrupadorEspacioFisicoDTO();
 		dto.setIdFacultad(entidad.getFacultad().getIdFacultad());
@@ -308,4 +324,50 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		dto.setIdAgrupadorEspacioFisico(entidad.getIdAgrupadorEspacioFisico());
 		return dto;
 	}
+
+	public MensajeOutDTO validarAsignaturas(List<AsignaturaInDTO> asignaturas) {
+		Set<String> codigosAsignatura = new HashSet<>();
+		Set<String> OIDs = new HashSet<>();
+		MensajeOutDTO mensaje = new MensajeOutDTO();
+		mensaje.setError(Boolean.FALSE);
+		for (AsignaturaInDTO asignatura : asignaturas) {
+			// Validar que ningún atributo sea vacío
+			if (asignatura.getNombre() == null || asignatura.getNombre().isEmpty() ||
+					asignatura.getCodigoAsignatura() == null || asignatura.getCodigoAsignatura().isEmpty() ||
+					asignatura.getOID() == null || asignatura.getOID().isEmpty() ||
+					asignatura.getSemestre() == null ||
+					asignatura.getPensum() == null || asignatura.getPensum().isEmpty() ||
+					asignatura.getHorasSemana() == null ||
+					asignatura.getIdPrograma() == null
+					|| asignatura.getEstado() == null || asignatura.getEstado().isEmpty()
+					|| asignatura.getAplicaEspSec() == null) {
+				mensaje.setDescripcion("Todos los campos deben estar llenos y no ser nulos");
+				mensaje.setError(Boolean.TRUE);
+				return mensaje;
+			}
+			if (!asignatura.getEstado().equals("ACTIVO")
+					&& !asignatura.getEstado().equals("INACTIVO") ) {
+				mensaje.setDescripcion("El estado permitido debe ser ACTIVO O INACTIVO");
+				mensaje.setError(Boolean.TRUE);
+				return mensaje;
+			}
+			Optional<AsignaturaEntity> asignaturaExistenteCodigo = this.asignaturaRepositoryInt.findByCodigoAsignatura(asignatura.getCodigoAsignatura());
+
+				if (asignaturaExistenteCodigo.isPresent() || !codigosAsignatura.add(asignatura.getCodigoAsignatura())) {
+					mensaje.setDescripcion("El código de asignatura " + asignatura.getCodigoAsignatura() + " está duplicado");
+					mensaje.setError(Boolean.TRUE);
+					return mensaje;
+				}
+				Optional<AsignaturaEntity> asignaturaExistente = this.asignaturaRepositoryInt.findByOid(asignatura.getOID());
+			if (asignaturaExistente.isPresent() || !OIDs.add(asignatura.getOID())) {
+				mensaje.setDescripcion("El OID " + asignatura.getOID() + " está duplicado");
+				mensaje.setError(Boolean.TRUE);
+				return mensaje;
+			}
+		}
+		mensaje.setDescripcion("Asignaturas cargadas correctamente");
+		return mensaje;
+	}
+
+
 }

@@ -43,7 +43,7 @@ public class DocenteEntity extends PersonaEntity {
 	private List<CursoEntity> cursos;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_DEPARTAMENTO")
+	@JoinColumn(name = "ID_DEPARTAMENTO", nullable = true)
 	private DepartamentoEntity departamento;
 
 	public DocenteEntity() {

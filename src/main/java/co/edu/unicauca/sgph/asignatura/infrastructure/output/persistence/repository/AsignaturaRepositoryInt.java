@@ -34,4 +34,7 @@ public interface AsignaturaRepositoryInt extends JpaRepository<AsignaturaEntity,
 																							Integer semestre,
 																							Long idFacultad,
 																							Pageable pageable);
+	Optional<AsignaturaEntity> findByOid(String OID);
+	Optional<AsignaturaEntity> findByCodigoAsignatura(String codigoAsignatura);
+
 }

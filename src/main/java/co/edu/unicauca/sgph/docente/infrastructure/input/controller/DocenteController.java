@@ -2,6 +2,7 @@ package co.edu.unicauca.sgph.docente.infrastructure.input.controller;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.TipoIdentificacionOutDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
