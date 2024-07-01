@@ -2,9 +2,11 @@ package co.edu.unicauca.sgph.usuario.infrastructure.input.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -13,9 +15,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,39 +61,58 @@ public class UsuarioController {
 	public ResponseEntity<?> guardarUsuario(@Valid @RequestBody UsuarioInDTO usuarioInDTO, BindingResult result) {
 		HashMap<String, Object> respuestas = new HashMap<>();
 
+		Set<String> validaciones = new HashSet<String>();
+		validaciones.add("ExistsByEmail");
+		
 		if (result.hasErrors()) {
-			List<String> listaErrores = new ArrayList<>();
-			for (FieldError error : result.getFieldErrors()) {
-				listaErrores.add(error.getField() + ": " + error.getDefaultMessage());
-			}
-			respuestas.put("errors", listaErrores);
-			return new ResponseEntity<Map<String, Object>>(respuestas, HttpStatus.BAD_REQUEST);
+			return validacion(result, validaciones);
 		}
 		
 		if(usuarioInDTO.getLstIdPrograma()==null) {
 			usuarioInDTO.setLstIdPrograma(new ArrayList<>());
 		}
 		
-
 		/*if (result.hasErrors()) {
 			return validacion(result);
 		}*/
+		
+		if (Boolean.FALSE.equals(usuarioInDTO.getEsValidar())) {
+			UsuarioOutDTO usuarioOutDTO = this.usuarioRestMapper.toUsuarioOutDTO(
+					this.gestionarUsuarioCUIntPort.guardarUsuario(this.usuarioRestMapper.toUsuario(usuarioInDTO)));
 
-		UsuarioOutDTO usuarioOutDTO = this.usuarioRestMapper.toUsuarioOutDTO(
-				this.gestionarUsuarioCUIntPort.guardarUsuario(this.usuarioRestMapper.toUsuario(usuarioInDTO)));
-		if (Objects.equals(usuarioInDTO.getIdPersona(), usuarioOutDTO.getIdPersona())) {
-			return new ResponseEntity<UsuarioOutDTO>(usuarioOutDTO, HttpStatus.OK);
+			if (Objects.equals(usuarioInDTO.getIdPersona(), usuarioOutDTO.getIdPersona())) {
+				return new ResponseEntity<UsuarioOutDTO>(usuarioOutDTO, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<UsuarioOutDTO>(usuarioOutDTO, HttpStatus.CREATED);
+			}
 		} else {
-			return new ResponseEntity<UsuarioOutDTO>(usuarioOutDTO, HttpStatus.CREATED);
+			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
 		}
 	}
 
-	private ResponseEntity<?> validacion(BindingResult result) {
+	/**
+	 * Método encargado de manejar la validación de errores en las peticiones.<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param result El resultado de la validación.
+	 * @param codes  Codigos personalizados
+	 * @return ResponseEntity con los errores de validación.
+	 * 
+	 */
+	private ResponseEntity<?> validacion(BindingResult result, Set<String> codes) {
 		Map<String, String> errores = new HashMap<>();
+		// Se validan restricciones de campos
+		result.getAllErrors().forEach(error -> {
+			if (codes.contains(error.getCode())) {
+				errores.put(error.getCode(), error.getDefaultMessage());
+			}
+		});
+		// Se validan restricciones de campos
 		result.getFieldErrors().forEach(error -> {
 			errores.put(error.getField(), "El campo " + error.getField() + " " + error.getDefaultMessage());
 		});
-		return ResponseEntity.badRequest().body(errores);
+		return ResponseEntity.accepted().body(errores);
 	}
 
 	/**

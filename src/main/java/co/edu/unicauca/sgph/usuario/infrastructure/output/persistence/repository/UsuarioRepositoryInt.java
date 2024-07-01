@@ -54,4 +54,13 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 	public List<RolEntity> consultarRoles();
 
 	Optional<UsuarioEntity> findByNombreUsuario(String nombreUsuario);
+	
+
+	@Query("SELECT usu "
+		+ " FROM UsuarioEntity usu "
+		+ " WHERE usu.nombreUsuario = :nombreUsuario "
+		+ " AND (:idPersona IS NULL OR usu.idPersona != :idPersona) "
+		+ "")
+	UsuarioEntity consultarUsuarioPorNombreUsuario(String nombreUsuario, Long idPersona);
 }
+

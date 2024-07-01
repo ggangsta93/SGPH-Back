@@ -63,4 +63,17 @@ public interface GestionarDocenteGatewayIntPort {
 	 * @return
 	 */
 	public List<Docente> consultarDocentePorIdCurso(Long idCurso);
+	
+	/**
+	 * Método encargado de validar si existe un docente por su código. Este es
+	 * utilizado por la anotación @existsByCodigo<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param codigo    Código del docente
+	 * @param idPersona Identificador único persona (Es requerido para
+	 *                  actualización)
+	 * @return
+	 */
+	public Boolean existsDocenteByCodigo(String codigo, Long idPersona);
 }

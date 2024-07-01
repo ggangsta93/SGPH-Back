@@ -210,4 +210,17 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 		return this.modelMapper.map(docenteEntities, new TypeToken<List<Docente>>() {
 		}.getType());
 	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort#existsDocenteByCodigo(java.lang.String, java.lang.Long)
+	 */
+	@Override
+	public Boolean existsDocenteByCodigo(String codigo, Long idPersona) {
+		DocenteEntity docenteEntity = this.docenteRepositoryInt.consultarDocentePorCodigo(codigo, idPersona);
+		if (Objects.nonNull(docenteEntity)) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
+	}
 }

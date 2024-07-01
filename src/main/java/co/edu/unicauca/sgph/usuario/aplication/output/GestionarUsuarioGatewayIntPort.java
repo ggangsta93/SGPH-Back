@@ -68,5 +68,17 @@ public interface GestionarUsuarioGatewayIntPort {
 	 * @return
 	 */
 	public Persona consultarPersonaPorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion);
-
+	
+	/**
+	 * Método encargado de validar si existe un nombre de usuario. Este es utilizado
+	 * por la anotación @existsByNombreUsuario<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param nombreUsuario Nombre de usuario
+	 * @param idPersona     Identificador único persona (Es requerido para
+	 *                      actualización)
+	 * @return
+	 */
+	public Boolean existsByNombreUsuario(String nombreUsuario, Long idPersona);
 }

@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.TipoIdentificacionEntity;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
+import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
 
 
 
@@ -62,4 +63,12 @@ public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long>
 			+ " JOIN doc.cursos cur "
 			+ " WHERE cur.idCurso = :idCurso ")
 	public List<DocenteEntity> consultarDocentePorIdCurso(@Param("idCurso") Long idCurso);
+	
+	
+	@Query("SELECT doc "
+			+ " FROM DocenteEntity doc "
+			+ " WHERE doc.codigo = :codigo "
+			+ " AND (:idPersona IS NULL OR doc.idPersona != :idPersona) "
+			+ "")
+	DocenteEntity consultarDocentePorCodigo(String codigo, Long idPersona);
 }

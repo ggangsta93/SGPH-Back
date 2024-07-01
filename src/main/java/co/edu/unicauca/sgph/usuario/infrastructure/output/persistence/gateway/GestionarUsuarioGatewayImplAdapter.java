@@ -13,11 +13,9 @@ import javax.persistence.TypedQuery;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +23,7 @@ import co.edu.unicauca.sgph.common.domain.model.Persona;
 import co.edu.unicauca.sgph.common.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.PersonaEntity;
 import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.TipoIdentificacionEntity;
+import co.edu.unicauca.sgph.common.infrastructure.output.persistence.repository.PersonaRepositoryInt;
 import co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
@@ -32,7 +31,6 @@ import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuari
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
-import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.repository.PersonaRepositoryInt;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.repository.UsuarioRepositoryInt;
 
 @Service
@@ -254,5 +252,19 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 			return null;
 		}
 		return this.modelMapper.map(personaEntity, Persona.class);
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort#existsByNombreUsuario(java.lang.String, java.lang.Long)
+	 */
+	@Override
+	public Boolean existsByNombreUsuario(String nombreUsuario, Long idPersona) {
+		UsuarioEntity usuarioEntity = this.usuarioRepositoryInt.consultarUsuarioPorNombreUsuario(nombreUsuario,
+				idPersona);
+		if (Objects.nonNull(usuarioEntity)) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
 	}
 }
