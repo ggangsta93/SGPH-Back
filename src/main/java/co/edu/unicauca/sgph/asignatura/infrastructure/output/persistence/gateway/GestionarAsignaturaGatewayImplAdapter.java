@@ -80,7 +80,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		AsignaturaEntity entidadGuardar=null;
 		if(Objects.nonNull(asignatura.getIdAsignatura())) {
 			entidad = this.asignaturaRepositoryInt.findById(asignatura.getIdAsignatura());
-			entidadGuardar = entidad.get();			
+			entidadGuardar = entidad.get();
 		}
 		if (entidad.isPresent()) {
 			AsignaturaEntity entidadGuardarMaper = this.asignaturaMapper.map(asignatura, AsignaturaEntity.class);
@@ -205,12 +205,14 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 				int aplicaEspSec = (int) row.getCell(8).getNumericCellValue();
 				Optional<ProgramaEntity> programaEntidad = this.programaRepositoryInt.findByNombre(programa);
 				if (programaEntidad.isPresent()) {
-					AsignaturaInDTO asignatura = new AsignaturaInDTO(nombre, codigoAsignatura, oid, semestre, pensum, horasSemana, programaEntidad.get().getIdPrograma());
+					AsignaturaInDTO asignatura = new AsignaturaInDTO(nombre, codigoAsignatura, oid, semestre, pensum, horasSemana, programaEntidad.get().getIdPrograma(), estado, aplicaEspSec);
+					asignatura.setAplicaEspacioSecundario(asignatura.getAplicaEspSec() == 1 ? true : false);
 					asignaturas.add(asignatura);
 				} else {
 					MensajeOutDTO mensaje = new MensajeOutDTO();
 					mensaje.setError(Boolean.TRUE);
 					mensaje.setDescripcion("No existe el programa académico " + programa);
+					return mensaje;
 				}
 			}
 			workbook.close();
@@ -230,6 +232,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		}
 		return mensaje;
 	}
+
 	private static String getCellValueAsString(Cell cell) {
 		if (cell == null) {
 			return "";
@@ -312,6 +315,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		}
 		return asignaturaOutDTO;
 	}
+
 	private AgrupadorEspacioFisicoDTO mapAgrupador(AgrupadorEspacioFisicoEntity entidad) {
 		AgrupadorEspacioFisicoDTO dto = new AgrupadorEspacioFisicoDTO();
 		dto.setIdFacultad(entidad.getFacultad().getIdFacultad());
@@ -328,29 +332,34 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		mensaje.setError(Boolean.FALSE);
 		for (AsignaturaInDTO asignatura : asignaturas) {
 			// Validar que ningún atributo sea vacío
-			if (asignatura.getIdAsignatura() == null ||
-					asignatura.getNombre() == null || asignatura.getNombre().isEmpty() ||
+			if (asignatura.getNombre() == null || asignatura.getNombre().isEmpty() ||
 					asignatura.getCodigoAsignatura() == null || asignatura.getCodigoAsignatura().isEmpty() ||
 					asignatura.getOID() == null || asignatura.getOID().isEmpty() ||
 					asignatura.getSemestre() == null ||
 					asignatura.getPensum() == null || asignatura.getPensum().isEmpty() ||
 					asignatura.getHorasSemana() == null ||
-					asignatura.getIdPrograma() == null ||
-					asignatura.getBase64() == null || asignatura.getBase64().isEmpty()) {
+					asignatura.getIdPrograma() == null
+					|| asignatura.getEstado() == null || asignatura.getEstado().isEmpty()
+					|| asignatura.getAplicaEspSec() == null) {
 				mensaje.setDescripcion("Todos los campos deben estar llenos y no ser nulos");
 				mensaje.setError(Boolean.TRUE);
 				return mensaje;
 			}
-
-			// Verificar que codigoAsignatura no se repita
-			if (!codigosAsignatura.add(asignatura.getCodigoAsignatura())) {
-				mensaje.setDescripcion("El código de asignatura " + asignatura.getCodigoAsignatura() + " está duplicado");
+			if (!asignatura.getEstado().equals("ACTIVO")
+					&& !asignatura.getEstado().equals("INACTIVO") ) {
+				mensaje.setDescripcion("El estado permitido debe ser ACTIVO O INACTIVO");
 				mensaje.setError(Boolean.TRUE);
 				return mensaje;
 			}
+			Optional<AsignaturaEntity> asignaturaExistenteCodigo = this.asignaturaRepositoryInt.findByCodigoAsignatura(asignatura.getCodigoAsignatura());
 
-			// Verificar que OID no se repita
-			if (!OIDs.add(asignatura.getOID())) {
+				if (asignaturaExistenteCodigo.isPresent() || !codigosAsignatura.add(asignatura.getCodigoAsignatura())) {
+					mensaje.setDescripcion("El código de asignatura " + asignatura.getCodigoAsignatura() + " está duplicado");
+					mensaje.setError(Boolean.TRUE);
+					return mensaje;
+				}
+				Optional<AsignaturaEntity> asignaturaExistente = this.asignaturaRepositoryInt.findByOid(asignatura.getOID());
+			if (asignaturaExistente.isPresent() || !OIDs.add(asignatura.getOID())) {
 				mensaje.setDescripcion("El OID " + asignatura.getOID() + " está duplicado");
 				mensaje.setError(Boolean.TRUE);
 				return mensaje;

@@ -345,8 +345,17 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 						return entidadG;
 					}).collect(Collectors.toList()));
 		}
+		this.eliminarRecursosActuales(entidad);
 		this.agregarRecursosAEspacioFisico(espacioFisicoInDTO.getRecursos(), entidad);
 		return this.modelMapper.map(entidad, EspacioFisico.class);
+	}
+
+	private void eliminarRecursosActuales(EspacioFisicoEntity entidad) {
+		if (entidad.getIdEspacioFisico() != null) {
+			List<RecursoEspacioFisicoEntity> recursosActuales = recursoEspacioFisicoRepositoryInt.findByEspacioFisicoIdEspacioFisico(entidad.getIdEspacioFisico());
+			recursosActuales.forEach(r -> this.recursoEspacioFisicoRepositoryInt.delete(r));
+		}
+
 	}
 
 	@Override

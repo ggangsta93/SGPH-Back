@@ -19,7 +19,9 @@ public class AsignaturaInDTO {
 	private Integer horasSemana;
 
 	private Long idPrograma;
+	private String estado;
 	private String base64;
+	private Integer aplicaEspSec;
 
 	public AsignaturaInDTO(String nombre,
 						   String codigoAsignatura,
@@ -27,7 +29,9 @@ public class AsignaturaInDTO {
 						   Integer semestre,
 						   String pensum,
 						   Integer horasSemana,
-						   Long idPrograma) {
+						   Long idPrograma,
+						   String estado,
+						   Integer aplicaEspSec) {
 		this.nombre = nombre;
 		this.codigoAsignatura = codigoAsignatura;
 		this.OID = OID;
@@ -35,6 +39,8 @@ public class AsignaturaInDTO {
 		this.pensum = pensum;
 		this.horasSemana = horasSemana;
 		this.idPrograma = idPrograma;
+		this.estado = estado;
+		this.aplicaEspSec = aplicaEspSec;
 	}
 
 	private List<Long> lstIdAgrupadorEspacioFisico;
@@ -127,5 +133,21 @@ public class AsignaturaInDTO {
 
 	public void setAplicaEspacioSecundario(Boolean aplicaEspacioSecundario) {
 		this.aplicaEspacioSecundario = aplicaEspacioSecundario;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public Integer getAplicaEspSec() {
+		return aplicaEspSec;
+	}
+
+	public void setAplicaEspSec(Integer aplicaEspSec) {
+		this.aplicaEspSec = aplicaEspSec;
 	}
 }
