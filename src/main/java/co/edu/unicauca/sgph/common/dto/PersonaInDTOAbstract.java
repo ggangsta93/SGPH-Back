@@ -24,7 +24,7 @@ public class PersonaInDTOAbstract {
 
 	private String segundoApellido;
 
-	@NotEmpty(message = "{usuario.email.not.null}")
+	@NotEmpty
 	private String email;
 	
 	public Long getIdPersona() {

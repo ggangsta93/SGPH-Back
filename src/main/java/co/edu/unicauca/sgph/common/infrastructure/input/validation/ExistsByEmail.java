@@ -12,9 +12,7 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ExistsByEmailValidation.class)
 public @interface ExistsByEmail {
-
 	String message() default "{persona.exists.by.email}";
-	String messageKey() default "persona.exists.by.email";
 	Class<?>[] groups() default {};
 	Class<? extends Payload>[] payload() default {};
 }

@@ -21,14 +21,6 @@ public class FechaInicioGreaterThanUltimaFechaFinValidation
 	@Autowired
 	private GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort;
 
-	
-	/*public boolean isValid(PeriodoAcademicoInDTO periodoAcademicoInDTO, ConstraintValidatorContext context) {
-		if (Objects.nonNull(periodoAcademicoInDTO.getFechaInicioPeriodo())) {
-			return this.gestionarPeriodoAcademicoGatewayIntPort
-					.esFechaInicioGreaterThanUltimaFechaFin(periodoAcademicoInDTO.getFechaInicioPeriodo());
-		}
-		return Boolean.FALSE;
-	}*/
 	@Override
     public boolean isValid(PeriodoAcademicoInDTO periodoAcademicoInDTO, ConstraintValidatorContext context) {
         if (Objects.nonNull(periodoAcademicoInDTO.getFechaInicioPeriodo())) {
@@ -42,7 +34,7 @@ public class FechaInicioGreaterThanUltimaFechaFinValidation
                                 
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate(
-                        "La fecha inicio debe ser mayor que la última fecha fin. "
+                        "{periodo.academico.fecha.inicio.greater.than.ultima.fecha.fin} "
                                 + fechaFinFormateada)
                         .addConstraintViolation();
             }

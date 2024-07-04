@@ -6,10 +6,12 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import co.edu.unicauca.sgph.common.dto.PersonaInDTOAbstract;
+import co.edu.unicauca.sgph.usuario.infrastructure.input.validation.ExistsAtLeastOneProgramForPlanificadorRole;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.validation.ExistsByNombreUsuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 
 @ExistsByNombreUsuario
+@ExistsAtLeastOneProgramForPlanificadorRole
 public class UsuarioInDTO extends PersonaInDTOAbstract{
 		
 	@NotEmpty

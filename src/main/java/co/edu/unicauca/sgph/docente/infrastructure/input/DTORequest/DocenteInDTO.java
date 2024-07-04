@@ -12,6 +12,12 @@ public class DocenteInDTO extends PersonaInDTOAbstract{
 	private EstadoDocenteEnum estado;
 
 	private Long idDepartamento;
+	
+	/**
+	 * Atributo que determina si la invocación es para validar la información o
+	 * persistirla
+	 */
+	private Boolean esValidar;
 
 	public String getCodigo() {
 		return codigo;
@@ -35,5 +41,13 @@ public class DocenteInDTO extends PersonaInDTOAbstract{
 
 	public void setIdDepartamento(Long idDepartamento) {
 		this.idDepartamento = idDepartamento;
+	}
+
+	public Boolean getEsValidar() {
+		return esValidar;
+	}
+
+	public void setEsValidar(Boolean esValidar) {
+		this.esValidar = esValidar;
 	}
 }

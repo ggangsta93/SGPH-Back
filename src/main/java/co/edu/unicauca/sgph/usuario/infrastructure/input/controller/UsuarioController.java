@@ -10,8 +10,6 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +36,6 @@ import co.edu.unicauca.sgph.usuario.infrastructure.input.mapper.UsuarioRestMappe
 @RequestMapping("/AdministrarUsuario")
 public class UsuarioController {
 
-	@Autowired
-    private MessageSource messageSource;
-	
 	private GestionarUsuarioCUIntPort gestionarUsuarioCUIntPort;
 	private UsuarioRestMapper usuarioRestMapper;
 
@@ -59,24 +54,20 @@ public class UsuarioController {
 	 */
 	@PostMapping("/guardarUsuario")
 	public ResponseEntity<?> guardarUsuario(@Valid @RequestBody UsuarioInDTO usuarioInDTO, BindingResult result) {
-		HashMap<String, Object> respuestas = new HashMap<>();
-
 		Set<String> validaciones = new HashSet<String>();
 		validaciones.add("ExistsByEmail");
+		validaciones.add("ExistsByNombreUsuario");
+		validaciones.add("ExistsByTipoAndNumeroIdentificacion");
+		validaciones.add("ExistsAtLeastOneProgramForPlanificadorRole");
 		
 		if (result.hasErrors()) {
 			return validacion(result, validaciones);
 		}
-		
-		if(usuarioInDTO.getLstIdPrograma()==null) {
-			usuarioInDTO.setLstIdPrograma(new ArrayList<>());
-		}
-		
-		/*if (result.hasErrors()) {
-			return validacion(result);
-		}*/
-		
+				
 		if (Boolean.FALSE.equals(usuarioInDTO.getEsValidar())) {
+			if(usuarioInDTO.getLstIdPrograma()==null) {
+				usuarioInDTO.setLstIdPrograma(new ArrayList<>());
+			}
 			UsuarioOutDTO usuarioOutDTO = this.usuarioRestMapper.toUsuarioOutDTO(
 					this.gestionarUsuarioCUIntPort.guardarUsuario(this.usuarioRestMapper.toUsuario(usuarioInDTO)));
 

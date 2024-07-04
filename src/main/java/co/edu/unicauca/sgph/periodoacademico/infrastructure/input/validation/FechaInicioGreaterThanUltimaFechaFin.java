@@ -12,9 +12,7 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = FechaInicioGreaterThanUltimaFechaFinValidation.class)
 public @interface FechaInicioGreaterThanUltimaFechaFin {
-
 	String message() default "{periodo.academico.fecha.inicio.greater.than.ultima.fecha.fin}";
-	String messageKey() default "periodo.academico.fecha.inicio.greater.than.ultima.fecha.fin ";
 	Class<?>[] groups() default {};
 	Class<? extends Payload>[] payload() default {};
 }

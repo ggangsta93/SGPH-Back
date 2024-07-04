@@ -12,9 +12,7 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ExistsByCodigoValidation.class)
 public @interface ExistsByCodigo {
-
-	String message() default "{persona.exists.by.nombreUsuario}";
-	String messageKey() default "persona.exists.by.nombreUsuario";
+	String message() default "{docente.exists.by.codigo}";
 	Class<?>[] groups() default {};
 	Class<? extends Payload>[] payload() default {};
 }

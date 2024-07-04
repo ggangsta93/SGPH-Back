@@ -1,4 +1,4 @@
-package co.edu.unicauca.sgph.periodoacademico.infrastructure.input.validation;
+package co.edu.unicauca.sgph.usuario.infrastructure.input.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,9 +10,10 @@ import javax.validation.Payload;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ExistsByAnioAndPeriodoValidation.class)
-public @interface ExistsByAnioAndPeriodo {
-	String message() default "{periodo.academico.exists.by.anio.and.periodo}";
+@Constraint(validatedBy = ExistsAtLeastOneProgramForPlanificadorRoleValidation.class)
+public @interface ExistsAtLeastOneProgramForPlanificadorRole {
+
+	String message() default "{usuario.exists.at.least.one.programa.for.planificador.rol}";
 	Class<?>[] groups() default {};
 	Class<? extends Payload>[] payload() default {};
 }
