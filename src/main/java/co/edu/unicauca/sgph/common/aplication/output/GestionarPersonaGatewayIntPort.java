@@ -1,5 +1,7 @@
 package co.edu.unicauca.sgph.common.aplication.output;
 
+import co.edu.unicauca.sgph.common.domain.model.Persona;
+
 public interface GestionarPersonaGatewayIntPort {
 
 	/**
@@ -31,4 +33,15 @@ public interface GestionarPersonaGatewayIntPort {
 	public Boolean existsPersonaByTipoAndNumeroIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion,
 			Long idPersona);
 
+	/**
+	 * Método encargado de consultar una persona por su identificación</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idTipoIdentificacion Identificador del tipo de identificación
+	 * @param numeroIdentificacion Número de identificación
+	 * 
+	 * @return
+	 */
+	public Persona consultarPersonaPorTipoYNumeroIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion);
 }

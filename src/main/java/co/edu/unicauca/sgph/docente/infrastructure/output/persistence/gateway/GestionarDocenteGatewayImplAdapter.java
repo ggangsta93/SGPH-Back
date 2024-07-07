@@ -48,9 +48,13 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 	 * @see co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort#consultarDocentePorIdentificacion(java.lang.Long, java.lang.String)
 	 */
 	@Override
-	public Docente consultarDocentePorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion) {
-		return this.modelMapper.map(this.docenteRepositoryInt.findByTipoIdentificacionAndNumeroIdentificacion(
-				new TipoIdentificacionEntity(idTipoIdentificacion), numeroIdentificacion), Docente.class);
+	public Docente consultarDocentePorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion) {		
+		DocenteEntity docenteEntity = this.docenteRepositoryInt.findByTipoIdentificacionAndNumeroIdentificacion(
+				new TipoIdentificacionEntity(idTipoIdentificacion), numeroIdentificacion);		
+		if(Objects.isNull(docenteEntity)) {
+			return null;
+		}		
+		return this.modelMapper.map(docenteEntity, Docente.class);
 	}
 
 	/** 

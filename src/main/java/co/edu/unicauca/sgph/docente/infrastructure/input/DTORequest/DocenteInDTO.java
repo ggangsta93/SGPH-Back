@@ -1,10 +1,14 @@
 package co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest;
 
 import co.edu.unicauca.sgph.common.dto.PersonaInDTOAbstract;
+import co.edu.unicauca.sgph.common.infrastructure.input.validation.ExistsByEmail;
+import co.edu.unicauca.sgph.common.infrastructure.input.validation.ExistsByTipoAndNumeroIdentificacion;
 import co.edu.unicauca.sgph.docente.infrastructure.input.validation.ExistsByCodigo;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
 
 @ExistsByCodigo
+@ExistsByEmail
+@ExistsByTipoAndNumeroIdentificacion
 public class DocenteInDTO extends PersonaInDTOAbstract{
 
 	private String codigo;

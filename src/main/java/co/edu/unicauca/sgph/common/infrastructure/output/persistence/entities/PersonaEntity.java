@@ -1,5 +1,6 @@
 package co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,9 +11,13 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "PERSONA")
+@Table(name = "PERSONA", uniqueConstraints = {
+	    @UniqueConstraint(columnNames = {"ID_TIPO_IDENTIFICACION", "NUMERO_IDENTIFICACION"})
+	})
 @Inheritance(strategy = InheritanceType.JOINED)
 public class PersonaEntity {
 
@@ -42,6 +47,9 @@ public class PersonaEntity {
 
 	@Column(name = "EMAIL")
 	private String email;
+	
+	@Transient
+	private Boolean esDocente;
 
 	public PersonaEntity() {
 		super();
@@ -109,5 +117,13 @@ public class PersonaEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Boolean getEsDocente() {
+		return esDocente;
+	}
+
+	public void setEsDocente(Boolean esDocente) {
+		this.esDocente = esDocente;
 	}	
 }

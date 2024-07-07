@@ -3,11 +3,6 @@ package co.edu.unicauca.sgph.common.dto;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import co.edu.unicauca.sgph.common.infrastructure.input.validation.ExistsByEmail;
-import co.edu.unicauca.sgph.common.infrastructure.input.validation.ExistsByTipoAndNumeroIdentificacion;
-
-@ExistsByEmail
-@ExistsByTipoAndNumeroIdentificacion
 public class PersonaInDTOAbstract {
 
 	private Long idPersona;

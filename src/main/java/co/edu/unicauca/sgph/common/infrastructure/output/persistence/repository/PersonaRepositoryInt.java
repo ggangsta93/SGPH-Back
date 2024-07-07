@@ -4,11 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.PersonaEntity;
-import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.TipoIdentificacionEntity;
 
 public interface PersonaRepositoryInt extends JpaRepository<PersonaEntity, Long> {
-
-    PersonaEntity findByTipoIdentificacionAndNumeroIdentificacion(TipoIdentificacionEntity tipoIdentificacion, String numeroIdentificacion);
         
 	@Query("SELECT per "
 			+ " FROM PersonaEntity per "

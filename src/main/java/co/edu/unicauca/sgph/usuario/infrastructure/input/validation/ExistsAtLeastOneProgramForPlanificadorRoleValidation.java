@@ -1,5 +1,7 @@
 package co.edu.unicauca.sgph.usuario.infrastructure.input.validation;
 
+import java.util.Objects;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -16,20 +18,20 @@ public class ExistsAtLeastOneProgramForPlanificadorRoleValidation implements Con
 		Long ROLE_PLANIFICADOR = 2L;
 		boolean isValid = true;
 
-		if (usuarioInDTO.getLstIdRol().contains(ROLE_PLANIFICADOR) && usuarioInDTO.getLstIdPrograma().isEmpty()) {
+		if (usuarioInDTO.getLstIdRol().contains(ROLE_PLANIFICADOR)
+				&& (Objects.isNull(usuarioInDTO.getLstIdPrograma()) || usuarioInDTO.getLstIdPrograma().isEmpty())) {
 			context.disableDefaultConstraintViolation();
-			context.buildConstraintViolationWithTemplate(
-					"{usuario.exists.at.least.one.programa.for.planificador.role}")
+			context.buildConstraintViolationWithTemplate("{usuario.exists.at.least.one.programa.for.planificador.role}")
 					.addConstraintViolation();
 			isValid = false;
-		} else if (!usuarioInDTO.getLstIdRol().contains(ROLE_PLANIFICADOR) && !usuarioInDTO.getLstIdPrograma().isEmpty()) {
+		} else if (!usuarioInDTO.getLstIdRol().contains(ROLE_PLANIFICADOR)
+				&& Objects.nonNull(usuarioInDTO.getLstIdPrograma()) && !usuarioInDTO.getLstIdPrograma().isEmpty()) {
 			context.disableDefaultConstraintViolation();
-			context.buildConstraintViolationWithTemplate(
-					"{usuario.exists.no.program.for.non.planificador.role}").addConstraintViolation();
+			context.buildConstraintViolationWithTemplate("{usuario.exists.no.program.for.non.planificador.role}")
+					.addConstraintViolation();
 			isValid = false;
 		}
 
 		return isValid;
-
 	}
 }

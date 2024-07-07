@@ -17,6 +17,8 @@ public class Persona {
 	private String segundoApellido;
 
 	private String email;
+	
+	private Boolean esDocente;
 		
 	public Persona() {
 		//Constructor sin parámetros
@@ -88,5 +90,13 @@ public class Persona {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Boolean getEsDocente() {
+		return esDocente;
+	}
+
+	public void setEsDocente(Boolean esDocente) {
+		this.esDocente = esDocente;
 	}
 }

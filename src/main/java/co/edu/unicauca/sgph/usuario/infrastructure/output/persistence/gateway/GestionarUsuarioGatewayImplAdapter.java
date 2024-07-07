@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -19,11 +20,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import co.edu.unicauca.sgph.common.aplication.output.GestionarPersonaGatewayIntPort;
 import co.edu.unicauca.sgph.common.domain.model.Persona;
 import co.edu.unicauca.sgph.common.domain.model.TipoIdentificacion;
-import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.PersonaEntity;
-import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.TipoIdentificacionEntity;
-import co.edu.unicauca.sgph.common.infrastructure.output.persistence.repository.PersonaRepositoryInt;
 import co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
@@ -40,14 +39,16 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	private EntityManager entityManager;
 	private PasswordEncoder passwordEncoder;
 
+	private GestionarPersonaGatewayIntPort gestionarPersonaGatewayIntPort;
+	
 	private UsuarioRepositoryInt usuarioRepositoryInt;
-	private PersonaRepositoryInt personaRepositoryInt;
 	private ModelMapper modelMapper;
 
-	public GestionarUsuarioGatewayImplAdapter(UsuarioRepositoryInt usuarioRepositoryInt, ModelMapper modelMapper,  PersonaRepositoryInt personaRepositoryInt, PasswordEncoder passwordEncoder) {
+	public GestionarUsuarioGatewayImplAdapter(UsuarioRepositoryInt usuarioRepositoryInt, ModelMapper modelMapper,
+			GestionarPersonaGatewayIntPort gestionarPersonaGatewayIntPort, PasswordEncoder passwordEncoder) {
 		this.usuarioRepositoryInt = usuarioRepositoryInt;
 		this.modelMapper = modelMapper;
-		this.personaRepositoryInt = personaRepositoryInt;
+		this.gestionarPersonaGatewayIntPort = gestionarPersonaGatewayIntPort;
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -69,7 +70,13 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 				" SELECT NEW co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO(");
 		queryBuilder.append(" usu.idPersona, ti.idTipoIdentificacion, usu.numeroIdentificacion, ");
 		queryBuilder.append(" ti.codigoTipoIdentificacion, usu.primerNombre, usu.segundoNombre, usu.primerApellido, ");
-		queryBuilder.append(" usu.segundoApellido, usu.email, usu.nombreUsuario, usu.password, usu.estado)");
+		queryBuilder.append(" usu.segundoApellido, usu.email, usu.nombreUsuario, usu.password, usu.estado, ");
+		queryBuilder.append(" (CASE WHEN EXISTS (");
+		queryBuilder.append("     SELECT 1");
+		queryBuilder.append("     FROM DocenteEntity docenteEntity");
+		queryBuilder.append("     WHERE docenteEntity.idPersona = usu.idPersona");
+		queryBuilder.append(" ) THEN true ELSE false END)");
+		queryBuilder.append(" )");
 		queryBuilder.append(" FROM UsuarioEntity usu ");
 		queryBuilder.append(" JOIN usu.tipoIdentificacion ti ");
 		queryBuilder.append(" WHERE 1=1");
@@ -179,10 +186,35 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	 * @see co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort#guardarUsuario(co.edu.unicauca.sgph.usuario.domain.model.Usuario)
 	 */
 	@Override
+	@Transactional
 	public Usuario guardarUsuario(Usuario usuario) {
 		usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-		return this.modelMapper.map(this.usuarioRepositoryInt.save(this.modelMapper.map(usuario, UsuarioEntity.class)),
-				Usuario.class);
+
+		Persona persona = this.gestionarPersonaGatewayIntPort.consultarPersonaPorTipoYNumeroIdentificacion(
+				usuario.getTipoIdentificacion().getIdTipoIdentificacion(), usuario.getNumeroIdentificacion());
+
+		if (Objects.isNull(persona)) {
+			return this.modelMapper.map(
+					this.usuarioRepositoryInt.save(this.modelMapper.map(usuario, UsuarioEntity.class)), Usuario.class);
+		} else {					
+			UsuarioEntity usuarioEntity= this.entityManager.find(UsuarioEntity.class, persona.getIdPersona());
+		   
+			if(Objects.isNull(usuarioEntity)) {
+				String sql = "INSERT INTO USUARIO (ID_PERSONA, NOMBRE_USUARIO, PASSWORD, ESTADO) VALUES (?, ?, ?, ?)";
+				entityManager.createNativeQuery(sql)
+				.setParameter(1, persona.getIdPersona())  
+				.setParameter(2, usuario.getNombreUsuario())
+				.setParameter(3, usuario.getPassword())
+				.setParameter(4, usuario.getEstado().toString())
+				.executeUpdate();				
+			}
+			 this.entityManager.flush();
+			 this.entityManager.clear();
+			usuario.setIdPersona(persona.getIdPersona());
+			
+			return this.modelMapper.map(
+					this.usuarioRepositoryInt.save(this.modelMapper.map(usuario, UsuarioEntity.class)), Usuario.class);
+		}
 	}
 
 	/**
@@ -243,15 +275,8 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	 */
 	@Override
 	public Persona consultarPersonaPorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion) {
-		TipoIdentificacionEntity tipoIdentificacionEntity = new TipoIdentificacionEntity();
-		tipoIdentificacionEntity.setIdTipoIdentificacion(idTipoIdentificacion);
-		PersonaEntity personaEntity = this.personaRepositoryInt
-				.findByTipoIdentificacionAndNumeroIdentificacion(tipoIdentificacionEntity, numeroIdentificacion);
-		
-		if(Objects.isNull(personaEntity)) {
-			return null;
-		}
-		return this.modelMapper.map(personaEntity, Persona.class);
+		return this.gestionarPersonaGatewayIntPort
+				.consultarPersonaPorTipoYNumeroIdentificacion(idTipoIdentificacion, numeroIdentificacion);
 	}
 
 	/** 
