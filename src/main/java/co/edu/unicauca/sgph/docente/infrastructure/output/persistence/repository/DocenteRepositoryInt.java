@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.TipoIdentificacionEntity;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
 
@@ -23,18 +22,27 @@ public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long>
 	 * @param numeroIdentificacion
 	 * @return
 	 */
-	public DocenteEntity findByTipoIdentificacionAndNumeroIdentificacion(TipoIdentificacionEntity tipoIdentificacion,
-			String numeroIdentificacion);
+	@Query("SELECT doc "
+			+ " FROM DocenteEntity doc "
+			+ " JOIN doc.persona per "
+			+ " WHERE per.tipoIdentificacion.idTipoIdentificacion = :idTipoIdentificacion "
+			+ " AND per.numeroIdentificacion = :numeroIdentificacion "
+			+ "")
+	public DocenteEntity consultarDocentePorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion);
 
 	/**
-	 * Método encargado de consultar un docente por su identificador único <br>
+	 * Método encargado de consultar un docente por persona<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
 	 * 
 	 * @param idPersona
 	 * @return
 	 */
-	public DocenteEntity findByIdPersona(Long idPersona);
+	@Query("SELECT doc "
+			+ " FROM DocenteEntity doc "
+			+ " WHERE doc.persona.idPersona = :idPersona "
+			+ "")
+	public DocenteEntity consultarDocentePorIdPersona(Long idPersona);
 	
 	/**
 	 * Método encargado de consultar los nombres de los docentes de un curso<br>
@@ -44,8 +52,8 @@ public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long>
 	 * @param idCurso
 	 * @return
 	 */
-	@Query("SELECT TRIM(CONCAT(d.primerNombre,' ', COALESCE(d.segundoNombre,''),' ', d.primerApellido,' ', COALESCE(d.segundoApellido,'')))"
-			+ " FROM CursoEntity c JOIN c.docentes d "
+	@Query("SELECT TRIM(CONCAT(p.primerNombre,' ', COALESCE(p.segundoNombre,''),' ', p.primerApellido,' ', COALESCE(p.segundoApellido,'')))"
+			+ " FROM CursoEntity c JOIN c.docentes d JOIN d.persona p "
 			+ " WHERE c.idCurso = :idCurso")
 	public List<String> consultarNombresDocentesPorIdCurso(@Param("idCurso") Long idCurso);
 	
@@ -68,7 +76,15 @@ public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long>
 	@Query("SELECT doc "
 			+ " FROM DocenteEntity doc "
 			+ " WHERE doc.codigo = :codigo "
-			+ " AND (:idPersona IS NULL OR doc.idPersona != :idPersona) "
+			+ " AND (:idDocente IS NULL OR doc.idDocente != :idDocente) "
 			+ "")
-	DocenteEntity consultarDocentePorCodigo(String codigo, Long idPersona);
+	public DocenteEntity consultarDocentePorCodigo(String codigo, Long idDocente);
+	
+	@Query("SELECT doc "
+			+ " FROM DocenteEntity doc "
+			+ " WHERE doc.persona.idPersona = :idPersona "
+			+ " AND (:idDocente IS NULL OR doc.idDocente != :idDocente) "
+			+ "")
+	public DocenteEntity consultarUsuarioPorIdPersona(Long idPersona, Long idDocente);	
+
 }

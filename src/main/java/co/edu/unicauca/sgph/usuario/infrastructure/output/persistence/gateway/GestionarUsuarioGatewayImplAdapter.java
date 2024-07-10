@@ -20,9 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import co.edu.unicauca.sgph.common.aplication.output.GestionarPersonaGatewayIntPort;
-import co.edu.unicauca.sgph.common.domain.model.Persona;
-import co.edu.unicauca.sgph.common.domain.model.TipoIdentificacion;
+import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
@@ -39,16 +37,13 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	private EntityManager entityManager;
 	private PasswordEncoder passwordEncoder;
 
-	private GestionarPersonaGatewayIntPort gestionarPersonaGatewayIntPort;
-	
 	private UsuarioRepositoryInt usuarioRepositoryInt;
 	private ModelMapper modelMapper;
 
 	public GestionarUsuarioGatewayImplAdapter(UsuarioRepositoryInt usuarioRepositoryInt, ModelMapper modelMapper,
-			GestionarPersonaGatewayIntPort gestionarPersonaGatewayIntPort, PasswordEncoder passwordEncoder) {
+			PasswordEncoder passwordEncoder) {
 		this.usuarioRepositoryInt = usuarioRepositoryInt;
 		this.modelMapper = modelMapper;
-		this.gestionarPersonaGatewayIntPort = gestionarPersonaGatewayIntPort;
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -66,44 +61,45 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 
 		// Construcción de la consulta con StringBuilder
 		StringBuilder queryBuilder = new StringBuilder();
-		queryBuilder.append(
-				" SELECT NEW co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO(");
-		queryBuilder.append(" usu.idPersona, ti.idTipoIdentificacion, usu.numeroIdentificacion, ");
-		queryBuilder.append(" ti.codigoTipoIdentificacion, usu.primerNombre, usu.segundoNombre, usu.primerApellido, ");
-		queryBuilder.append(" usu.segundoApellido, usu.email, usu.nombreUsuario, usu.password, usu.estado, ");
+		queryBuilder.append(" SELECT NEW co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO(");
+		queryBuilder.append(" per.idPersona, ti.idTipoIdentificacion, per.numeroIdentificacion, ");
+		queryBuilder.append(" ti.codigoTipoIdentificacion, per.primerNombre, per.segundoNombre, per.primerApellido, ");
+		queryBuilder.append(" per.segundoApellido, per.email, usu.nombreUsuario, usu.password, usu.estado, ");
 		queryBuilder.append(" (CASE WHEN EXISTS (");
 		queryBuilder.append("     SELECT 1");
 		queryBuilder.append("     FROM DocenteEntity docenteEntity");
-		queryBuilder.append("     WHERE docenteEntity.idPersona = usu.idPersona");
+		queryBuilder.append("     WHERE docenteEntity.persona.idPersona = usu.persona.idPersona");
 		queryBuilder.append(" ) THEN true ELSE false END)");
 		queryBuilder.append(" )");
 		queryBuilder.append(" FROM UsuarioEntity usu ");
-		queryBuilder.append(" JOIN usu.tipoIdentificacion ti ");
+		queryBuilder.append(" JOIN usu.persona per ");
+		queryBuilder.append(" JOIN per.tipoIdentificacion ti ");
 		queryBuilder.append(" WHERE 1=1");
 
 		Map<String, Object> parametros = new HashMap<>();
 
 		if (Objects.nonNull(filtroUsuarioDTO.getNombre())) {
 			queryBuilder.append(" AND UPPER(TRIM(BOTH ' ' FROM CONCAT( ");
-			queryBuilder.append(" usu.primerNombre,");
+			queryBuilder.append(" per.primerNombre,");
 			queryBuilder.append(
-					" CASE WHEN usu.segundoNombre IS NOT NULL THEN CONCAT(' ', usu.segundoNombre) ELSE '' END,");
-			queryBuilder.append(" CONCAT(' ',usu.primerApellido),");
+					" CASE WHEN per.segundoNombre IS NOT NULL THEN CONCAT(' ', per.segundoNombre) ELSE '' END,");
+			queryBuilder.append(" CONCAT(' ',per.primerApellido),");
 			queryBuilder.append(
-					" CASE WHEN usu.segundoApellido IS NOT NULL THEN CONCAT(' ', usu.segundoApellido) ELSE '' END )))");
+					" CASE WHEN per.segundoApellido IS NOT NULL THEN CONCAT(' ', per.segundoApellido) ELSE '' END )))");
 			queryBuilder.append(" LIKE UPPER(:nombre)");
 			parametros.put("nombre", "%" + filtroUsuarioDTO.getNombre().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroUsuarioDTO.getNumeroIdentificacion())) {
-			queryBuilder.append(" AND usu.numeroIdentificacion LIKE (:numeroIdentificacion) ");
-			parametros.put("numeroIdentificacion", "%" + filtroUsuarioDTO.getNumeroIdentificacion().replaceAll("\\s+", " ").trim() + "%");
+			queryBuilder.append(" AND per.numeroIdentificacion LIKE (:numeroIdentificacion) ");
+			parametros.put("numeroIdentificacion",
+					"%" + filtroUsuarioDTO.getNumeroIdentificacion().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroUsuarioDTO.getEstado())) {
 			queryBuilder.append(" AND usu.estado = :estado");
 			parametros.put("estado", filtroUsuarioDTO.getEstado());
 		}
 
-		queryBuilder.append(" ORDER BY usu.primerNombre asc");
+		queryBuilder.append(" ORDER BY per.primerNombre asc");
 
 		// Realiza la consulta paginada
 		TypedQuery<UsuarioOutDTO> typedQuery = entityManager.createQuery(queryBuilder.toString(), UsuarioOutDTO.class);
@@ -144,32 +140,34 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(" SELECT COUNT(usu)");
 		queryBuilder.append(" FROM UsuarioEntity usu ");
-		queryBuilder.append(" JOIN usu.tipoIdentificacion ti ");
+		queryBuilder.append(" JOIN usu.persona per ");
+		queryBuilder.append(" JOIN per.tipoIdentificacion ti ");
 		queryBuilder.append(" WHERE 1=1");
 
 		Map<String, Object> parametros = new HashMap<>();
 
 		if (Objects.nonNull(filtroUsuarioDTO.getNombre())) {
 			queryBuilder.append(" AND UPPER(TRIM(BOTH ' ' FROM CONCAT( ");
-			queryBuilder.append(" usu.primerNombre,");
+			queryBuilder.append(" per.primerNombre,");
 			queryBuilder.append(
-					" CASE WHEN usu.segundoNombre IS NOT NULL THEN CONCAT(' ', usu.segundoNombre) ELSE '' END,");
-			queryBuilder.append(" usu.primerApellido,");
+					" CASE WHEN per.segundoNombre IS NOT NULL THEN CONCAT(' ', per.segundoNombre) ELSE '' END,");
+			queryBuilder.append(" per.primerApellido,");
 			queryBuilder.append(
-					" CASE WHEN usu.segundoApellido IS NOT NULL THEN CONCAT(' ', usu.segundoApellido) ELSE '' END )))");
+					" CASE WHEN per.segundoApellido IS NOT NULL THEN CONCAT(' ', per.segundoApellido) ELSE '' END )))");
 			queryBuilder.append(" LIKE UPPER(:nombre)");
 			parametros.put("nombre", "%" + filtroUsuarioDTO.getNombre().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroUsuarioDTO.getNumeroIdentificacion())) {
-			queryBuilder.append(" AND usu.numeroIdentificacion LIKE (:numeroIdentificacion) ");
-			parametros.put("numeroIdentificacion", "%" + filtroUsuarioDTO.getNumeroIdentificacion().replaceAll("\\s+", " ").trim() + "%");
+			queryBuilder.append(" AND per.numeroIdentificacion LIKE (:numeroIdentificacion) ");
+			parametros.put("numeroIdentificacion",
+					"%" + filtroUsuarioDTO.getNumeroIdentificacion().replaceAll("\\s+", " ").trim() + "%");
 		}
 		if (Objects.nonNull(filtroUsuarioDTO.getEstado())) {
 			queryBuilder.append(" AND usu.estado = :estado");
 			parametros.put("estado", filtroUsuarioDTO.getEstado());
 		}
 
-		queryBuilder.append(" ORDER BY usu.primerNombre asc");
+		queryBuilder.append(" ORDER BY per.primerNombre asc");
 
 		// Realiza la consulta para contar
 		TypedQuery<Long> countQuery = entityManager.createQuery(queryBuilder.toString(), Long.class);
@@ -189,32 +187,8 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	@Transactional
 	public Usuario guardarUsuario(Usuario usuario) {
 		usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-
-		Persona persona = this.gestionarPersonaGatewayIntPort.consultarPersonaPorTipoYNumeroIdentificacion(
-				usuario.getTipoIdentificacion().getIdTipoIdentificacion(), usuario.getNumeroIdentificacion());
-
-		if (Objects.isNull(persona)) {
-			return this.modelMapper.map(
-					this.usuarioRepositoryInt.save(this.modelMapper.map(usuario, UsuarioEntity.class)), Usuario.class);
-		} else {					
-			UsuarioEntity usuarioEntity= this.entityManager.find(UsuarioEntity.class, persona.getIdPersona());
-		   
-			if(Objects.isNull(usuarioEntity)) {
-				String sql = "INSERT INTO USUARIO (ID_PERSONA, NOMBRE_USUARIO, PASSWORD, ESTADO) VALUES (?, ?, ?, ?)";
-				entityManager.createNativeQuery(sql)
-				.setParameter(1, persona.getIdPersona())  
-				.setParameter(2, usuario.getNombreUsuario())
-				.setParameter(3, usuario.getPassword())
-				.setParameter(4, usuario.getEstado().toString())
-				.executeUpdate();				
-			}
-			 this.entityManager.flush();
-			 this.entityManager.clear();
-			usuario.setIdPersona(persona.getIdPersona());
-			
-			return this.modelMapper.map(
-					this.usuarioRepositoryInt.save(this.modelMapper.map(usuario, UsuarioEntity.class)), Usuario.class);
-		}
+		return this.modelMapper.map(this.usuarioRepositoryInt.save(this.modelMapper.map(usuario, UsuarioEntity.class)),
+				Usuario.class);
 	}
 
 	/**
@@ -270,22 +244,27 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 		return Arrays.stream(EstadoUsuarioEnum.values()).map(Enum::name).collect(Collectors.toList());
 	}
 
-	/** 
-	 * @see co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort#consultarPersonaPorIdentificacion(java.lang.Long, java.lang.String)
+	/**
+	 * @see co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort#existeUsuarioPorNombreUsuario(java.lang.String,
+	 *      java.lang.Long)
 	 */
 	@Override
-	public Persona consultarPersonaPorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion) {
-		return this.gestionarPersonaGatewayIntPort
-				.consultarPersonaPorTipoYNumeroIdentificacion(idTipoIdentificacion, numeroIdentificacion);
+	public Boolean existeUsuarioPorNombreUsuario(String nombreUsuario, Long idUsuario) {
+		UsuarioEntity usuarioEntity = this.usuarioRepositoryInt.consultarUsuarioPorNombreUsuario(nombreUsuario,
+				idUsuario);
+		if (Objects.nonNull(usuarioEntity)) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
 	}
 
 	/** 
-	 * @see co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort#existsByNombreUsuario(java.lang.String, java.lang.Long)
+	 * @see co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort#existeUsuarioPorIdPersona(java.lang.Long, java.lang.Long)
 	 */
 	@Override
-	public Boolean existsByNombreUsuario(String nombreUsuario, Long idPersona) {
-		UsuarioEntity usuarioEntity = this.usuarioRepositoryInt.consultarUsuarioPorNombreUsuario(nombreUsuario,
-				idPersona);
+	public Boolean existeUsuarioPorIdPersona(Long idPersona, Long idUsuario) {
+		UsuarioEntity usuarioEntity = this.usuarioRepositoryInt.consultarUsuarioPorIdPersona(idPersona, idUsuario);
 		if (Objects.nonNull(usuarioEntity)) {
 			return Boolean.TRUE;
 		} else {

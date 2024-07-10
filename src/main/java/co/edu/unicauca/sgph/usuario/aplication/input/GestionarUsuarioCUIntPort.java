@@ -4,8 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import co.edu.unicauca.sgph.common.domain.model.Persona;
-import co.edu.unicauca.sgph.common.domain.model.TipoIdentificacion;
+import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
@@ -61,14 +60,4 @@ public interface GestionarUsuarioCUIntPort {
 	 * @return
 	 */
 	public List<String> consultarEstadosUsuario();
-	
-	/**
-	 * Método encargado de consultar una persona con el tipo y número de identificación<br>
-	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
-	 * @return
-	 */
-	public Persona consultarPersonaPorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion);
-
 }

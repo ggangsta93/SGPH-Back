@@ -2,13 +2,15 @@ package co.edu.unicauca.sgph.docente.domain.model;
 
 import java.util.List;
 
-import co.edu.unicauca.sgph.common.domain.model.Persona;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.departamento.domain.model.Departamento;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
+import co.edu.unicauca.sgph.persona.domain.model.Persona;
 
-public class Docente extends Persona {
-
+public class Docente{
+	
+	private Long idDocente;
+	
 	private String codigo;
 
 	private EstadoDocenteEnum estado;
@@ -16,13 +18,11 @@ public class Docente extends Persona {
 	private List<Curso> cursos;
 
 	private Departamento departamento;
+	
+	private Persona persona;
 
 	public Docente() {
 		// Constructor sin parámetros
-	}
-
-	public Docente(Long idPersona) {
-		super(idPersona);
 	}
 
 	public String getCodigo() {
@@ -55,5 +55,21 @@ public class Docente extends Persona {
 
 	public void setDepartamento(Departamento departamento) {
 		this.departamento = departamento;
+	}
+
+	public Persona getPersona() {
+		return persona;
+	}
+
+	public void setPersona(Persona persona) {
+		this.persona = persona;
+	}
+
+	public Long getIdDocente() {
+		return idDocente;
+	}
+
+	public void setIdDocente(Long idDocente) {
+		this.idDocente = idDocente;
 	}
 }

@@ -40,6 +40,9 @@ import co.edu.unicauca.sgph.horario.domain.useCase.GestionarHorarioCUAdapter;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.PeriodoAcademicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.periodoacademico.domain.useCase.GestionarPeriodoAcademicoCUAdapter;
+import co.edu.unicauca.sgph.persona.aplication.output.GestionarPersonaGatewayIntPort;
+import co.edu.unicauca.sgph.persona.aplication.output.PersonaFormatterResultsIntPort;
+import co.edu.unicauca.sgph.persona.domain.useCase.GestionarPersonaCUAdapter;
 import co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort;
 import co.edu.unicauca.sgph.programa.aplication.output.ProgramaFormatterResultsIntPort;
 import co.edu.unicauca.sgph.programa.domain.useCase.GestionarProgramaCUAdapter;
@@ -56,7 +59,7 @@ public class BeanConfigurations {
 			FacultadFormatterResultsIntPort facultadFormatterResultsIntPort) {
 		return new GestionarFacultadCUAdapter(gestionarFacultadGatewayIntPort, facultadFormatterResultsIntPort);
 	}
-	
+
 	@Bean
 	GestionarDepartamentoCUAdapter crearGestionarDepartamentoCUInt(
 			GestionarDepartamentoGatewayIntPort gestionarDepartamentoGatewayIntPort) {
@@ -78,9 +81,21 @@ public class BeanConfigurations {
 	}
 
 	@Bean
+	GestionarPersonaCUAdapter crearGestionarPersonaCUInt(GestionarPersonaGatewayIntPort gestionarPersonaGatewayIntPort,
+			PersonaFormatterResultsIntPort personaFormatterResultsIntPort) {
+		return new GestionarPersonaCUAdapter(gestionarPersonaGatewayIntPort, personaFormatterResultsIntPort);
+	}
+
+	@Bean
 	GestionarDocenteCUAdapter crearGestionarDocenteCUInt(GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort,
 			DocenteFormatterResultsIntPort docenteFormatterResultsIntPort) {
 		return new GestionarDocenteCUAdapter(gestionarDocenteGatewayIntPort, docenteFormatterResultsIntPort);
+	}
+
+	@Bean
+	GestionarUsuarioCUAdapter crearGestionarUsuarioCUInt(GestionarUsuarioGatewayIntPort gestionarUsuarioGatewayIntPort,
+			UsuarioFormatterResultsIntPort usuarioFormatterResultsIntPort) {
+		return new GestionarUsuarioCUAdapter(gestionarUsuarioGatewayIntPort, usuarioFormatterResultsIntPort);
 	}
 
 	@Bean
@@ -110,13 +125,13 @@ public class BeanConfigurations {
 		return new GestionarTipoEspacioFisicoCUAdapter(gestionarTipoEspacioFisicoGatewayIntPort,
 				tipoEspacioFisicoFormatterResultsIntPort);
 	}
-	
+
 	@Bean
 	GestionarEdificioCUAdapter crearGestionarEdificioCUInt(
 			GestionarEdificioGatewayIntPort gestionarEdificioGatewayIntPort) {
 		return new GestionarEdificioCUAdapter(gestionarEdificioGatewayIntPort);
 	}
-	
+
 	@Bean
 	GestionarUbicacionCUAdapter crearGestionarUbicacionCUInt(
 			GestionarUbicacionGatewayIntPort gestionarUbicacionGatewayIntPort) {
@@ -129,12 +144,6 @@ public class BeanConfigurations {
 			AgrupadorEspacioFisicoFormatterResultsIntPort agrupadorEspacioFisicoFormatterResultsIntPort) {
 		return new GestionarAgrupadorEspacioFisicoCUAdapter(gestionarAgrupadorEspacioFisicoGatewayIntPort,
 				agrupadorEspacioFisicoFormatterResultsIntPort);
-	}
-
-	@Bean
-	GestionarUsuarioCUAdapter crearGestionarUsuarioCUInt(GestionarUsuarioGatewayIntPort gestionarUsuarioGatewayIntPort,
-			UsuarioFormatterResultsIntPort usuarioFormatterResultsIntPort) {
-		return new GestionarUsuarioCUAdapter(gestionarUsuarioGatewayIntPort, usuarioFormatterResultsIntPort);
 	}
 
 	@Bean
@@ -163,8 +172,12 @@ public class BeanConfigurations {
 
 	@Bean
 	GestionarLaborDocenciaCUAdapter crearGestionarLaborDocenciaCUInt(
-			GestionarLaborDocenciaGatewayIntPort gestionarLaborDocenciaGatewayIntPort) {
-		return new GestionarLaborDocenciaCUAdapter(gestionarLaborDocenciaGatewayIntPort);
+			GestionarLaborDocenciaGatewayIntPort gestionarLaborDocenciaGatewayIntPort,
+			GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort,
+			GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort,
+			GestionarAsignaturaGatewayIntPort gestionarAsignaturaGatewayIntPort) {
+		return new GestionarLaborDocenciaCUAdapter(gestionarLaborDocenciaGatewayIntPort, gestionarDocenteGatewayIntPort,
+				gestionarCursoGatewayIntPort, gestionarAsignaturaGatewayIntPort);
 	}
 
 }

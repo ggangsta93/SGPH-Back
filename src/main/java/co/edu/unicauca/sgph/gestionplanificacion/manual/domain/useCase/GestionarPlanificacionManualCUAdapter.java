@@ -192,7 +192,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 						.consultarCursoPorIdCurso(crearActualizarDocentesCursoInDTO.getIdCurso());
 
 				List<Docente> docentesEliminar = curso.getDocentes().stream().filter(
-						doc -> !crearActualizarDocentesCursoInDTO.getListaIdPersona().contains(doc.getIdPersona()))
+						doc -> !crearActualizarDocentesCursoInDTO.getListaIdPersona().contains(doc.getPersona().getIdPersona()))
 						.collect(Collectors.toList());
 
 				List<Docente> docentesActualizar = new ArrayList<Docente>();
@@ -202,7 +202,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 						.consultarHorarioPorCurso(new Curso(crearActualizarDocentesCursoInDTO.getIdCurso()));
 
 				for (Long idPersona : crearActualizarDocentesCursoInDTO.getListaIdPersona()) {
-					Docente docente = curso.getDocentes().stream().filter(doc -> doc.getIdPersona().equals(idPersona))
+					Docente docente = curso.getDocentes().stream().filter(doc -> doc.getPersona().getIdPersona().equals(idPersona))
 							.findFirst().orElse(null);
 
 					if (Objects.isNull(docente)) {
@@ -217,8 +217,8 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 							if (!lstCruces.isEmpty()) {
 								mensajesCruces.add(String.format(
 										"El docente con identificación %s%s se solapa con la franja %s del curso %s",
-										docente.getTipoIdentificacion().getCodigoTipoIdentificacion(),
-										docente.getNumeroIdentificacion(),
+										docente.getPersona().getTipoIdentificacion().getCodigoTipoIdentificacion(),
+										docente.getPersona().getNumeroIdentificacion(),
 										horario.getDia().toString() + " " + horario.getHoraInicio().toString() + "-"
 												+ horario.getHoraFin().toString(),
 										curso.getAsignatura().getNombre() + " " + curso.getGrupo()));

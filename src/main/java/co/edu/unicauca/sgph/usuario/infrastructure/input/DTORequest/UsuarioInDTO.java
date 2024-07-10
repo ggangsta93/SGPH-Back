@@ -5,15 +5,19 @@ import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import co.edu.unicauca.sgph.common.dto.PersonaInDTOAbstract;
-import co.edu.unicauca.sgph.usuario.infrastructure.input.validation.ExistsAtLeastOneProgramForPlanificadorRole;
-import co.edu.unicauca.sgph.usuario.infrastructure.input.validation.ExistsByNombreUsuario;
+import co.edu.unicauca.sgph.persona.infrastructure.input.validation.ExistePersonaPorIdPersona;
+import co.edu.unicauca.sgph.usuario.infrastructure.input.validation.ExisteAlMenosUnProgramaParaRolPlanificador;
+import co.edu.unicauca.sgph.usuario.infrastructure.input.validation.ExisteNombreUsuario;
+import co.edu.unicauca.sgph.usuario.infrastructure.input.validation.ExisteIdPersonaUsuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 
-@ExistsByNombreUsuario
-@ExistsAtLeastOneProgramForPlanificadorRole
-public class UsuarioInDTO extends PersonaInDTOAbstract{
+@ExisteNombreUsuario
+@ExisteAlMenosUnProgramaParaRolPlanificador
+@ExisteIdPersonaUsuario
+public class UsuarioInDTO{
 		
+	private Long idUsuario;
+	
 	@NotEmpty
 	private String nombreUsuario;
 	
@@ -26,13 +30,25 @@ public class UsuarioInDTO extends PersonaInDTOAbstract{
 	private List<Long> lstIdRol;
 	
 	private List<Long> lstIdPrograma;
-
+	
+	@NotNull
+	@ExistePersonaPorIdPersona
+	private Long idPersona;
+	
 	/**
 	 * Atributo que determina si la invocación es para validar la información o
 	 * persistirla
 	 */
 	private Boolean esValidar;
-	
+
+	public Long getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(Long idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
 	public String getNombreUsuario() {
 		return nombreUsuario;
 	}
@@ -71,6 +87,14 @@ public class UsuarioInDTO extends PersonaInDTOAbstract{
 
 	public void setLstIdPrograma(List<Long> lstIdPrograma) {
 		this.lstIdPrograma = lstIdPrograma;
+	}
+
+	public Long getIdPersona() {
+		return idPersona;
+	}
+
+	public void setIdPersona(Long idPersona) {
+		this.idPersona = idPersona;
 	}
 
 	public Boolean getEsValidar() {

@@ -17,12 +17,15 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
 
 @Entity
-@Table(name = "ESPACIO_FISICO")
+@Table(name = "ESPACIO_FISICO", uniqueConstraints = {
+	    @UniqueConstraint(columnNames = {"OID"})
+})
 public class EspacioFisicoEntity {
 
 	@Id

@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.TipoIdentificacionEntity;
+import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.entity.TipoIdentificacionEntity;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.RolEntity;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
 
@@ -19,7 +19,7 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 	 * @param idPersona
 	 * @return
 	 */
-	@Query("SELECT pro.idPrograma FROM UsuarioEntity usu JOIN usu.programas pro WHERE usu.idPersona IN (:idPersona)")
+	@Query("SELECT pro.idPrograma FROM UsuarioEntity usu JOIN usu.programas pro WHERE usu.persona.idPersona IN (:idPersona)")
 	public List<Long> consultarIdentificadoresProgramasUsuarioPorPersona(Long idPersona);
 
 	/**
@@ -29,7 +29,7 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 	 * @param idPersona
 	 * @return
 	 */
-	@Query("SELECT rol.idRol FROM UsuarioEntity usu JOIN usu.roles rol WHERE usu.idPersona IN (:idPersona)")
+	@Query("SELECT rol.idRol FROM UsuarioEntity usu JOIN usu.roles rol WHERE usu.persona.idPersona IN (:idPersona)")
 	public List<Long> consultarIdentificadoresRolesUsuarioPorPersona(Long idPersona);
 	
 	
@@ -53,14 +53,20 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 	@Query("SELECT rol FROM RolEntity rol")
 	public List<RolEntity> consultarRoles();
 
-	Optional<UsuarioEntity> findByNombreUsuario(String nombreUsuario);
+	public Optional<UsuarioEntity> findByNombreUsuario(String nombreUsuario);
 	
 
 	@Query("SELECT usu "
 		+ " FROM UsuarioEntity usu "
 		+ " WHERE usu.nombreUsuario = :nombreUsuario "
-		+ " AND (:idPersona IS NULL OR usu.idPersona != :idPersona) "
+		+ " AND (:idUsuario IS NULL OR usu.idUsuario != :idUsuario) "
 		+ "")
-	UsuarioEntity consultarUsuarioPorNombreUsuario(String nombreUsuario, Long idPersona);
+	public UsuarioEntity consultarUsuarioPorNombreUsuario(String nombreUsuario, Long idUsuario);
+	
+	@Query("SELECT usu "
+			+ " FROM UsuarioEntity usu "
+			+ " WHERE usu.persona.idPersona = :idPersona "
+			+ " AND (:idUsuario IS NULL OR usu.idUsuario != :idUsuario) "
+			+ "")
+	public UsuarioEntity consultarUsuarioPorIdPersona(Long idPersona, Long idUsuario);	
 }
-

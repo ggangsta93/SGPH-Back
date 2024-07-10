@@ -8,11 +8,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
 
 @Entity
-@Table(name = "HORARIO_ESPACIOFISICO")
+@Table(name = "HORARIO_ESPACIOFISICO", uniqueConstraints = {
+	    @UniqueConstraint(columnNames = {"ID_HORARIO", "ID_ESPACIO_FISICO"})
+})
 public class HorarioEspacioEntity {
 
 	@EmbeddedId

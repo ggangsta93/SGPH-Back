@@ -45,10 +45,11 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private PlanificacionManualRepositoryInt planificacionManualRepositoryInt;
-	private ModelMapper modelMapper;
 	private GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort;
 	private GestionarAgrupadorEspacioFisicoGatewayIntPort gestionarAgrupadorEspacioFisicoGatewayIntPort;
+	
+	private PlanificacionManualRepositoryInt planificacionManualRepositoryInt;
+	private ModelMapper modelMapper;
 
 	public GestionarPlanificacionManualGatewayImplAdapter(
 			PlanificacionManualRepositoryInt planificacionManualRepositoryInt, ModelMapper modelMapper,
@@ -491,9 +492,9 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		queryBuilder.append("FROM CursoEntity curso ");
 		queryBuilder.append("JOIN curso.docentes docentes ");
 		queryBuilder.append("JOIN curso.horarios horarios ");
-		queryBuilder.append("WHERE docentes.idPersona IN (");
+		queryBuilder.append("WHERE docentes.persona.idPersona IN (");
 		queryBuilder.append(
-				"SELECT docente.idPersona FROM DocenteEntity docente JOIN docente.cursos cursos WHERE cursos.idCurso = :idCurso ");
+				"SELECT docente.persona.idPersona FROM DocenteEntity docente JOIN docente.cursos cursos WHERE cursos.idCurso = :idCurso ");
 		queryBuilder.append(") ");
 		queryBuilder.append("AND curso.periodoAcademico.idPeriodoAcademico = :idPeriodoAcademicoVigente ");
 

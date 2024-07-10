@@ -6,6 +6,18 @@ import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.Est
 
 public class UsuarioOutDTO {
 
+	private Long idUsuario;
+	
+	private String nombreUsuario;
+	
+	private String password;
+	
+	private EstadoUsuarioEnum estado;
+	
+	private List<Long> lstIdRol;
+	
+	private List<Long> lstIdPrograma;
+	
 	private Long idPersona;
 
 	private Long idTipoIdentificacion;
@@ -24,26 +36,13 @@ public class UsuarioOutDTO {
 
 	private String email;
 
-	private String nombreUsuario;
-
-	private String password;
-
-	private EstadoUsuarioEnum estado;
-
-	private List<Long> lstIdRol;
-
-	private List<Long> lstIdPrograma;
-
-	private Boolean esDocente;
-
 	public UsuarioOutDTO() {
 		// Constructor sin parámetros
 	}
 
 	public UsuarioOutDTO(Long idPersona, Long idTipoIdentificacion, String numeroIdentificacion,
 			String codigoTipoIdentificacion, String primerNombre, String segundoNombre, String primerApellido,
-			String segundoApellido, String email, String nombreUsuario, String password, EstadoUsuarioEnum estado,
-			Boolean esDocente) {
+			String segundoApellido, String email, String nombreUsuario, String password, EstadoUsuarioEnum estado) {
 		this.idPersona = idPersona;
 		this.idTipoIdentificacion = idTipoIdentificacion;
 		this.numeroIdentificacion = numeroIdentificacion;
@@ -56,7 +55,6 @@ public class UsuarioOutDTO {
 		this.nombreUsuario = nombreUsuario;
 		this.password = password;
 		this.estado = estado;
-		this.esDocente = esDocente;
 	}
 
 	public Long getIdPersona() {
@@ -171,11 +169,11 @@ public class UsuarioOutDTO {
 		this.lstIdPrograma = lstIdPrograma;
 	}
 
-	public Boolean getEsDocente() {
-		return esDocente;
+	public Long getIdUsuario() {
+		return idUsuario;
 	}
 
-	public void setEsDocente(Boolean esDocente) {
-		this.esDocente = esDocente;
+	public void setIdUsuario(Long idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 }

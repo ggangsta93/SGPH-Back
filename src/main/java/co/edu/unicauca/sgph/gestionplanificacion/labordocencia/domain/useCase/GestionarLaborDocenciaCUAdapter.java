@@ -1,13 +1,26 @@
 package co.edu.unicauca.sgph.gestionplanificacion.labordocencia.domain.useCase;
 
+import co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort;
+import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort;
+import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.aplication.input.GestionarLaborDocenciaCUIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.aplication.output.GestionarLaborDocenciaGatewayIntPort;
 
 public class GestionarLaborDocenciaCUAdapter implements GestionarLaborDocenciaCUIntPort {
 
 	private GestionarLaborDocenciaGatewayIntPort gestionarLaborDocenciaGatewayIntPort;
+	private GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort;
+	private GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort;
+	private GestionarAsignaturaGatewayIntPort gestionarAsignaturaGatewayIntPort;
 
-	public GestionarLaborDocenciaCUAdapter(GestionarLaborDocenciaGatewayIntPort gestionarLaborDocenciaGatewayIntPort) {
+	public GestionarLaborDocenciaCUAdapter(GestionarLaborDocenciaGatewayIntPort gestionarLaborDocenciaGatewayIntPort,
+			GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort,
+			GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort,
+			GestionarAsignaturaGatewayIntPort gestionarAsignaturaGatewayIntPort) {
 		gestionarLaborDocenciaGatewayIntPort = gestionarLaborDocenciaGatewayIntPort;
+		gestionarDocenteGatewayIntPort = gestionarDocenteGatewayIntPort;
+		gestionarCursoGatewayIntPort = gestionarCursoGatewayIntPort;
+		gestionarAsignaturaGatewayIntPort = gestionarAsignaturaGatewayIntPort;
 	}
+
 }

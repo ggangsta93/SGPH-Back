@@ -107,7 +107,7 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 		return String.join(", ", nombres);
 	}
 	private String nombreCompletoDocente(DocenteEntity docente) {
-		String nombreCompleto = docente.getPrimerNombre() + " " + docente.getSegundoNombre() + " " + docente.getPrimerApellido() + " " + docente.getSegundoApellido();
+		String nombreCompleto = docente.getPersona().getPrimerNombre() + " " + docente.getPersona().getSegundoNombre() + " " + docente.getPersona().getPrimerApellido() + " " + docente.getPersona().getSegundoApellido();
 		return nombreCompleto;
 	}
 	private HorarioDTO mapHorarioEnityToDTO(HorarioEntity entidad) {

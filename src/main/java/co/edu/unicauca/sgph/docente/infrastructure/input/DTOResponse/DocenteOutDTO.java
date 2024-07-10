@@ -3,7 +3,9 @@ package co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
 
 public class DocenteOutDTO {
-
+	
+	private Long idDocente;
+	
 	private Long idPersona;
 
 	private Long idTipoIdentificacion;
@@ -32,9 +34,10 @@ public class DocenteOutDTO {
 		// Constructor sin parámetros
 	}
 
-	public DocenteOutDTO(Long idPersona, Long idTipoIdentificacion, String numeroIdentificacion,
+	public DocenteOutDTO(Long idDocente, Long idPersona, Long idTipoIdentificacion, String numeroIdentificacion,
 			String codigoTipoIdentificacion, String primerNombre, String segundoNombre, String primerApellido,
 			String segundoApellido, String email, String codigo, EstadoDocenteEnum estado, Long idDepartamento) {
+		this.idDocente = idDocente;
 		this.idPersona = idPersona;
 		this.idTipoIdentificacion = idTipoIdentificacion;
 		this.numeroIdentificacion = numeroIdentificacion;
@@ -46,7 +49,7 @@ public class DocenteOutDTO {
 		this.email = email;
 		this.codigo = codigo;
 		this.estado = estado;
-		this.idDepartamento=idDepartamento;
+		this.idDepartamento = idDepartamento;
 	}
 
 	public Long getIdPersona() {
@@ -143,5 +146,13 @@ public class DocenteOutDTO {
 
 	public void setIdDepartamento(Long idDepartamento) {
 		this.idDepartamento = idDepartamento;
+	}
+
+	public Long getIdDocente() {
+		return idDocente;
+	}
+
+	public void setIdDocente(Long idDocente) {
+		this.idDocente = idDocente;
 	}
 }

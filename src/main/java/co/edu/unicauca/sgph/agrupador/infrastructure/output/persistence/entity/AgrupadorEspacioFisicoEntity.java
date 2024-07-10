@@ -19,7 +19,9 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.enti
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 
 @Entity
-@Table(name = "AGRUPADOR_ESPACIO_FISICO", uniqueConstraints = { @UniqueConstraint(columnNames = { "nombre" }) })
+@Table(name = "AGRUPADOR_ESPACIO_FISICO", uniqueConstraints = { 
+		@UniqueConstraint(columnNames = { "NOMBRE" }) 
+})
 public class AgrupadorEspacioFisicoEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

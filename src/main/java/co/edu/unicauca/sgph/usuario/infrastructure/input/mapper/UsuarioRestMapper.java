@@ -8,8 +8,7 @@ import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import co.edu.unicauca.sgph.common.domain.model.Persona;
-import co.edu.unicauca.sgph.common.domain.model.TipoIdentificacion;
+import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
@@ -28,23 +27,21 @@ public interface UsuarioRestMapper {
 	TipoIdentificacionOutDTO toTipoIdentificacionOutDTO(TipoIdentificacion tipoIdentificacion);
 	
 	List<TipoIdentificacionOutDTO> toLstTipoIdentificacionOutDTO(List<TipoIdentificacion> lstTipoIdentificacion);
-	
-	@Mapping(target = "idTipoIdentificacion", expression = "java(persona.getTipoIdentificacion().getIdTipoIdentificacion())")
-	@Mapping(target = "codigoTipoIdentificacion", expression = "java(persona.getTipoIdentificacion().getCodigoTipoIdentificacion())")
-	@Mapping(target = "estado", ignore = true)
-    @Mapping(target = "lstIdPrograma", ignore = true)
-    @Mapping(target = "lstIdRol", ignore = true)
-    @Mapping(target = "nombreUsuario", ignore = true)
-    @Mapping(target = "password", ignore = true)
-	UsuarioOutDTO toUsuarioOutDTO(Persona persona);
-
-	@Mapping(target = "idTipoIdentificacion", expression = "java(usuario.getTipoIdentificacion().getIdTipoIdentificacion())")
-	@Mapping(target = "codigoTipoIdentificacion", expression = "java(usuario.getTipoIdentificacion().getCodigoTipoIdentificacion())")
+		
+	@Mapping(target = "idPersona", source = "usuario.persona.idPersona")
+	@Mapping(target = "idTipoIdentificacion", source = "usuario.persona.tipoIdentificacion.idTipoIdentificacion")
+	@Mapping(target = "codigoTipoIdentificacion", source = "usuario.persona.tipoIdentificacion.codigoTipoIdentificacion")
+	@Mapping(target = "numeroIdentificacion", source = "usuario.persona.numeroIdentificacion")
+	@Mapping(target = "primerNombre", source = "usuario.persona.primerNombre")	
+	@Mapping(target = "segundoNombre", source = "usuario.persona.segundoNombre")	
+	@Mapping(target = "primerApellido", source = "usuario.persona.primerApellido")	
+	@Mapping(target = "segundoApellido", source = "usuario.persona.segundoApellido")	
+	@Mapping(target = "email", source = "usuario.persona.email")
     @Mapping(target = "lstIdRol", source = "usuario.roles")
 	@Mapping(target = "lstIdPrograma", source = "usuario.programas")	
 	UsuarioOutDTO toUsuarioOutDTO(Usuario usuario);
 
-	@Mapping(target = "tipoIdentificacion", expression = "java(new TipoIdentificacion(usuarioInDTO.getIdTipoIdentificacion()))")
+	@Mapping(target = "persona", expression = "java(new Persona(usuarioInDTO.getIdPersona()))")
     @Mapping(target = "roles", source = "usuarioInDTO.lstIdRol")
 	@Mapping(target = "programas", source = "usuarioInDTO.lstIdPrograma")
 	Usuario toUsuario(UsuarioInDTO usuarioInDTO);

@@ -3,11 +3,13 @@ package co.edu.unicauca.sgph.usuario.domain.model;
 import java.util.Set;
 import java.util.List;
 
-import co.edu.unicauca.sgph.common.domain.model.Persona;
+import co.edu.unicauca.sgph.persona.domain.model.Persona;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 
-public class Usuario extends Persona {
+public class Usuario{
+	
+	private Long idUsuario;
 
 	private String nombreUsuario;
 
@@ -18,13 +20,11 @@ public class Usuario extends Persona {
 	private Set<Rol> roles;
 	
 	private List<Programa> programas;
+	
+	private Persona persona;
 
 	public Usuario() {
 		// Constructor sin parámetros
-	}
-
-	public Usuario(Long idPersona) {
-		super(idPersona);
 	}
 
 	public String getNombreUsuario() {
@@ -65,5 +65,21 @@ public class Usuario extends Persona {
 
 	public void setProgramas(List<Programa> programas) {
 		this.programas = programas;
+	}
+
+	public Persona getPersona() {
+		return persona;
+	}
+
+	public void setPersona(Persona persona) {
+		this.persona = persona;
+	}
+
+	public Long getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(Long idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 }

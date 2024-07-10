@@ -16,17 +16,16 @@ import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.Hor
 
 public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioEntity, Long> {
 	
-	
-	@Query("SELECT d.idPersona, c.idCurso, TRIM(CONCAT(d.primerNombre,' ', COALESCE(d.segundoNombre,''),' ', d.primerApellido,' ', COALESCE(d.segundoApellido,'')))"
-			 + "FROM HorarioEntity h JOIN h.curso c JOIN c.docentes d "
+	@Query("SELECT per.idPersona, c.idCurso, TRIM(CONCAT(per.primerNombre,' ', COALESCE(per.segundoNombre,''),' ', per.primerApellido,' ', COALESCE(per.segundoApellido,'')))"
+			 + "FROM HorarioEntity h JOIN h.curso c JOIN c.docentes d JOIN d.persona per "
 			 + "WHERE c.idCurso IN (SELECT c.idCurso "
 			 + "					   FROM DocenteEntity d "
 			 + "					   JOIN d.cursos c "
-			 + "					   WHERE d.idPersona IN (SELECT d.idPersona "
-			 + "											 FROM DocenteEntity d "
-			 + "											 JOIN d.cursos c "
-			 + "											 WHERE c.idCurso = :idCurso ))"
-			 + "AND d.idPersona IN (SELECT d.idPersona "
+			 + "					   WHERE d.persona.idPersona IN (SELECT d.persona.idPersona "
+			 + "													 FROM DocenteEntity d "
+			 + "													 JOIN d.cursos c "
+			 + "													 WHERE c.idCurso = :idCurso ))"
+			 + "AND per.idPersona IN (SELECT d.persona.idPersona "
 			 + "					   FROM DocenteEntity d "
 			 + "					   JOIN d.cursos c "
 			 + "					   WHERE c.idCurso = :idCurso )"
@@ -48,9 +47,9 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 				LocalTime horaInicio, LocalTime horaFin, Long idPeriodoAcademicoVigente);
 		
 		
-		@Query("SELECT d.idPersona, c.idCurso "
+		@Query("SELECT d.persona.idPersona, c.idCurso "
 				 + "FROM HorarioEntity h JOIN h.curso c JOIN c.docentes d "
-				 + "WHERE d.idPersona IN (:idPersona)"
+				 + "WHERE d.persona.idPersona IN (:idPersona)"
 				 + "AND h.dia = :dia "
 				 + "AND h.horaInicio < :horaFin "
 				 + "AND h.horaFin > :horaInicio "
@@ -113,7 +112,7 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 				+ "JOIN cur.docentes docentes "
 				+ "JOIN cur.asignatura asi "
 				+ "JOIN asi.programa pro "
-				+ "WHERE docentes.idPersona =:idPersona "
+				+ "WHERE docentes.persona.idPersona =:idPersona "
 				+ "AND (cur.periodoAcademico.idPeriodoAcademico =:idPeriodoAcademicoVigente) ")
 		public List<FranjaHorariaDocenteDTO> consultarFranjasDocentePorIdPersona(Long idPersona, Long idPeriodoAcademicoVigente);
 		

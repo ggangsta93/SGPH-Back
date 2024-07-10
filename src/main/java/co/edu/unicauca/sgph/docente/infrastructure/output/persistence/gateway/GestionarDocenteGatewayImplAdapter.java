@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.TipoIdentificacionEntity;
 import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
@@ -49,11 +48,11 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 	 */
 	@Override
 	public Docente consultarDocentePorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion) {		
-		DocenteEntity docenteEntity = this.docenteRepositoryInt.findByTipoIdentificacionAndNumeroIdentificacion(
-				new TipoIdentificacionEntity(idTipoIdentificacion), numeroIdentificacion);		
-		if(Objects.isNull(docenteEntity)) {
+		DocenteEntity docenteEntity = this.docenteRepositoryInt
+				.consultarDocentePorIdentificacion(idTipoIdentificacion, numeroIdentificacion);
+		if (Objects.isNull(docenteEntity)) {
 			return null;
-		}		
+		}	
 		return this.modelMapper.map(docenteEntity, Docente.class);
 	}
 
@@ -62,7 +61,7 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 	 */
 	@Override
 	public Docente consultarDocentePorIdPersona(Long idPersona) {
-		DocenteEntity docenteEntity = this.docenteRepositoryInt.findByIdPersona(idPersona);
+		DocenteEntity docenteEntity = this.docenteRepositoryInt.consultarDocentePorIdPersona(idPersona);
 		if (Objects.isNull(docenteEntity)) {
 			return null;
 		} else {
@@ -93,27 +92,28 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 		// Construcción de la consulta con StringBuilder
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(" SELECT NEW co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO(");
-		queryBuilder.append(" doc.idPersona, ti.idTipoIdentificacion, doc.numeroIdentificacion, ");
-		queryBuilder.append(" ti.codigoTipoIdentificacion, doc.primerNombre, doc.segundoNombre, doc.primerApellido, ");
-		queryBuilder.append(" doc.segundoApellido, doc.email, doc.codigo, doc.estado, doc.departamento.idDepartamento)");
+		queryBuilder.append(" doc.idDocente, per.idPersona, ti.idTipoIdentificacion, per.numeroIdentificacion, ");
+		queryBuilder.append(" ti.codigoTipoIdentificacion, per.primerNombre, per.segundoNombre, per.primerApellido, ");
+		queryBuilder.append(" per.segundoApellido, per.email, doc.codigo, doc.estado, doc.departamento.idDepartamento)");
 		queryBuilder.append(" FROM DocenteEntity doc ");
-		queryBuilder.append(" JOIN doc.tipoIdentificacion ti ");
+		queryBuilder.append(" JOIN doc.persona per ");
+		queryBuilder.append(" JOIN per.tipoIdentificacion ti ");
 		queryBuilder.append(" WHERE 1=1");
 
 		Map<String, Object> parametros = new HashMap<>();
 
 		if (Objects.nonNull(filtroDocenteDTO.getNombre())) {
 			queryBuilder.append(" AND UPPER(TRIM(BOTH ' ' FROM CONCAT( ");
-			queryBuilder.append(" doc.primerNombre,");
-			queryBuilder.append(" CASE WHEN doc.segundoNombre IS NOT NULL THEN CONCAT(' ', doc.segundoNombre) ELSE '' END,");
-			queryBuilder.append(" CONCAT(' ',doc.primerApellido),");
-			queryBuilder.append(" CASE WHEN doc.segundoApellido IS NOT NULL THEN CONCAT(' ', doc.segundoApellido) ELSE '' END )))");
+			queryBuilder.append(" per.primerNombre,");
+			queryBuilder.append(" CASE WHEN per.segundoNombre IS NOT NULL THEN CONCAT(' ', per.segundoNombre) ELSE '' END,");
+			queryBuilder.append(" CONCAT(' ',per.primerApellido),");
+			queryBuilder.append(" CASE WHEN per.segundoApellido IS NOT NULL THEN CONCAT(' ', per.segundoApellido) ELSE '' END )))");
 			queryBuilder.append(" LIKE UPPER(:nombre)");
 			parametros.put("nombre", "%"+filtroDocenteDTO.getNombre().replaceAll("\\s+", " ").trim()+"%");
 		}		
 		if (Objects.nonNull(filtroDocenteDTO.getNumeroIdentificacion())
 				&& !filtroDocenteDTO.getNumeroIdentificacion().isEmpty()) {
-			queryBuilder.append(" AND doc.numeroIdentificacion LIKE :numeroIdentificacion");
+			queryBuilder.append(" AND per.numeroIdentificacion LIKE :numeroIdentificacion");
 			parametros.put("numeroIdentificacion",
 					"%" + filtroDocenteDTO.getNumeroIdentificacion().replaceAll("\\s+", " ").trim() + "%");
 		}
@@ -126,7 +126,7 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 			parametros.put("estado", filtroDocenteDTO.getEstado());
 		}
 
-		queryBuilder.append(" ORDER BY doc.primerNombre asc");
+		queryBuilder.append(" ORDER BY per.primerNombre asc");
 
 		// Realiza la consulta paginada
 		TypedQuery<DocenteOutDTO> typedQuery = entityManager.createQuery(queryBuilder.toString(), DocenteOutDTO.class);
@@ -163,23 +163,24 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(" SELECT COUNT(doc)");
 		queryBuilder.append(" FROM DocenteEntity doc ");
-		queryBuilder.append(" JOIN doc.tipoIdentificacion ti ");
+		queryBuilder.append(" JOIN doc.persona per ");
+		queryBuilder.append(" JOIN per.tipoIdentificacion ti ");
 		queryBuilder.append(" WHERE 1=1");
 
 		Map<String, Object> parametros = new HashMap<>();
 
 		if (Objects.nonNull(filtroDocenteDTO.getNombre())) {
 			queryBuilder.append(" AND UPPER(TRIM(BOTH ' ' FROM CONCAT( ");
-			queryBuilder.append(" doc.primerNombre,");
-			queryBuilder.append(" CASE WHEN doc.segundoNombre IS NOT NULL THEN CONCAT(' ', doc.segundoNombre) ELSE '' END,");
-			queryBuilder.append(" doc.primerApellido,");
-			queryBuilder.append(" CASE WHEN doc.segundoApellido IS NOT NULL THEN CONCAT(' ', doc.segundoApellido) ELSE '' END )))");
+			queryBuilder.append(" per.primerNombre,");
+			queryBuilder.append(" CASE WHEN per.segundoNombre IS NOT NULL THEN CONCAT(' ', per.segundoNombre) ELSE '' END,");
+			queryBuilder.append(" per.primerApellido,");
+			queryBuilder.append(" CASE WHEN per.segundoApellido IS NOT NULL THEN CONCAT(' ', per.segundoApellido) ELSE '' END )))");
 			queryBuilder.append(" LIKE UPPER(:nombre)");
 			parametros.put("nombre", "%"+filtroDocenteDTO.getNombre().replaceAll("\\s+", " ").trim()+"%");
 		}
 		if (Objects.nonNull(filtroDocenteDTO.getNumeroIdentificacion())
 				&& !filtroDocenteDTO.getNumeroIdentificacion().isEmpty()) {
-			queryBuilder.append(" AND doc.numeroIdentificacion LIKE :numeroIdentificacion");
+			queryBuilder.append(" AND per.numeroIdentificacion LIKE :numeroIdentificacion");
 			parametros.put("numeroIdentificacion",
 					"%" + filtroDocenteDTO.getNumeroIdentificacion().replaceAll("\\s+", " ").trim() + "%");
 		}
@@ -192,7 +193,7 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 			parametros.put("estado", filtroDocenteDTO.getEstado());
 		}
 
-		queryBuilder.append(" ORDER BY doc.primerNombre asc");
+		queryBuilder.append(" ORDER BY per.primerNombre asc");
 
 		// Realiza la consulta para contar
 		TypedQuery<Long> countQuery = entityManager.createQuery(queryBuilder.toString(), Long.class);
@@ -219,8 +220,21 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 	 * @see co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort#existsDocenteByCodigo(java.lang.String, java.lang.Long)
 	 */
 	@Override
-	public Boolean existsDocenteByCodigo(String codigo, Long idPersona) {
-		DocenteEntity docenteEntity = this.docenteRepositoryInt.consultarDocentePorCodigo(codigo, idPersona);
+	public Boolean existsDocenteByCodigo(String codigo, Long idDocente) {
+		DocenteEntity docenteEntity = this.docenteRepositoryInt.consultarDocentePorCodigo(codigo, idDocente);
+		if (Objects.nonNull(docenteEntity)) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort#existeDocentePorIdPersona(java.lang.Long, java.lang.Long)
+	 */
+	@Override
+	public Boolean existeDocentePorIdPersona(Long idPersona, Long idDocente) {
+		DocenteEntity docenteEntity = this.docenteRepositoryInt.consultarUsuarioPorIdPersona(idPersona, idDocente);
 		if (Objects.nonNull(docenteEntity)) {
 			return Boolean.TRUE;
 		} else {

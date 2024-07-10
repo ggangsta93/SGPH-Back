@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.edu.unicauca.sgph.common.domain.model.Persona;
 import co.edu.unicauca.sgph.usuario.aplication.input.GestionarUsuarioCUIntPort;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.UsuarioInDTO;
@@ -55,10 +53,9 @@ public class UsuarioController {
 	@PostMapping("/guardarUsuario")
 	public ResponseEntity<?> guardarUsuario(@Valid @RequestBody UsuarioInDTO usuarioInDTO, BindingResult result) {
 		Set<String> validaciones = new HashSet<String>();
-		validaciones.add("ExistsByEmail");
-		validaciones.add("ExistsByNombreUsuario");
-		validaciones.add("ExistsByTipoAndNumeroIdentificacion");
-		validaciones.add("ExistsAtLeastOneProgramForPlanificadorRole");
+		validaciones.add("ExisteNombreUsuario");
+		validaciones.add("ExisteAlMenosUnProgramaParaRolPlanificador");
+		validaciones.add("ExisteIdPersonaUsuario");
 		
 		if (result.hasErrors()) {
 			return validacion(result, validaciones);
@@ -158,19 +155,4 @@ public class UsuarioController {
 	public List<String> consultarEstadosUsuario() {
 		return this.gestionarUsuarioCUIntPort.consultarEstadosUsuario();
 	}
-	
-	
-	/**
-	 * Método encargado de consultar una persona con el tipo y número de identificación<br>
-	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
-	 * @return
-	 */
-	@GetMapping("/consultarPersonaPorIdentificacion")
-	public UsuarioOutDTO consultarPersonaPorIdentificacion(@RequestParam Long idTipoIdentificacion, @RequestParam String numeroIdentificacion) {		
-		Persona persona = this.gestionarUsuarioCUIntPort.consultarPersonaPorIdentificacion(idTipoIdentificacion, numeroIdentificacion);		
-		return this.usuarioRestMapper.toUsuarioOutDTO(persona);
-	}
-
 }

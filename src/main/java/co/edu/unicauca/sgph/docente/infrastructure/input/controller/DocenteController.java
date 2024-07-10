@@ -46,9 +46,8 @@ public class DocenteController {
 	@PostMapping("/guardarDocente")
 	public ResponseEntity<?> guardarDocente(@Valid @RequestBody DocenteInDTO docenteInDTO, BindingResult result) {
 		Set<String> validaciones = new HashSet<String>();
-		validaciones.add("ExistsByCodigo");
-		validaciones.add("ExistsByEmail");
-		validaciones.add("ExistsByTipoAndNumeroIdentificacion");
+		validaciones.add("ExisteCodigoDocente");
+		validaciones.add("ExisteIdPersonaDocente");
 		
 		if (result.hasErrors()) {
 			return validacion(result, validaciones);

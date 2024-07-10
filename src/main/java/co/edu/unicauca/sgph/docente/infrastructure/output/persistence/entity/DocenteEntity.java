@@ -8,24 +8,36 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import co.edu.unicauca.sgph.common.infrastructure.output.persistence.entities.PersonaEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 import co.edu.unicauca.sgph.departamento.infrastructure.output.persistence.entity.DepartamentoEntity;
+import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.entity.PersonaEntity;
 
 @Entity
-@Table(name = "DOCENTE")
-@PrimaryKeyJoinColumn(name = "ID_PERSONA")
-public class DocenteEntity extends PersonaEntity {
+@Table(name = "DOCENTE", uniqueConstraints = {
+	    @UniqueConstraint(columnNames = {"CODIGO"}),
+	    @UniqueConstraint(columnNames = {"ID_PERSONA"})
+})
+public class DocenteEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID_DOCENTE", nullable = false)
+	private Long idDocente;
+	
 	@Column(name = "CODIGO")
 	private String codigo;
 	
@@ -45,11 +57,23 @@ public class DocenteEntity extends PersonaEntity {
 	@ManyToOne
 	@JoinColumn(name = "ID_DEPARTAMENTO", nullable = true)
 	private DepartamentoEntity departamento;
+	
+	@OneToOne
+    @JoinColumn(name = "ID_PERSONA", nullable = false)
+    private PersonaEntity persona;
 
 	public DocenteEntity() {
 		this.cursos = new ArrayList<>();
 	}
 
+	public Long getIdDocente() {
+		return idDocente;
+	}
+
+	public void setIdDocente(Long idDocente) {
+		this.idDocente = idDocente;
+	}
+	
 	public List<CursoEntity> getCursos() {
 		return cursos;
 	}
@@ -80,5 +104,13 @@ public class DocenteEntity extends PersonaEntity {
 
 	public void setDepartamento(DepartamentoEntity departamento) {
 		this.departamento = departamento;
+	}
+
+	public PersonaEntity getPersona() {
+		return persona;
+	}
+
+	public void setPersona(PersonaEntity persona) {
+		this.persona = persona;
 	}
 }
