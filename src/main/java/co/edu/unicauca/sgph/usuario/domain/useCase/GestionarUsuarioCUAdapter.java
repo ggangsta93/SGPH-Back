@@ -57,4 +57,12 @@ public class GestionarUsuarioCUAdapter implements GestionarUsuarioCUIntPort {
 	public List<String> consultarEstadosUsuario() {
 		return this.gestionarUsuarioGatewayIntPort.consultarEstadosUsuario();
 	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.usuario.aplication.input.GestionarUsuarioCUIntPort#cambiarEstadoUsuarioPorIdUsuario(java.lang.Long)
+	 */
+	@Override
+	public Usuario cambiarEstadoUsuarioPorIdUsuario(Long idUsuario) {
+		return this.gestionarUsuarioGatewayIntPort.cambiarEstadoUsuarioPorIdUsuario(idUsuario);
+	}
 }

@@ -84,4 +84,14 @@ public interface GestionarUsuarioGatewayIntPort {
 	 * @return
 	 */
 	public Boolean existeUsuarioPorIdPersona(Long idPersona, Long idUsuario);
+	
+	/**
+	 * Método encargado de cambiar el estado al usuario dado su identificador único</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idUsuario
+	 * @return
+	 */
+	public Usuario cambiarEstadoUsuarioPorIdUsuario(Long idUsuario);
 }

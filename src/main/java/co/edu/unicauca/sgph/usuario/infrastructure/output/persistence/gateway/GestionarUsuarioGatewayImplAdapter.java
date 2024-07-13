@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -20,6 +21,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
 import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
@@ -62,14 +66,9 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 		// Construcción de la consulta con StringBuilder
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(" SELECT NEW co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO(");
-		queryBuilder.append(" per.idPersona, ti.idTipoIdentificacion, per.numeroIdentificacion, ");
+		queryBuilder.append(" usu.idUsuario, per.idPersona, ti.idTipoIdentificacion, per.numeroIdentificacion, ");
 		queryBuilder.append(" ti.codigoTipoIdentificacion, per.primerNombre, per.segundoNombre, per.primerApellido, ");
-		queryBuilder.append(" per.segundoApellido, per.email, usu.nombreUsuario, usu.password, usu.estado, ");
-		queryBuilder.append(" (CASE WHEN EXISTS (");
-		queryBuilder.append("     SELECT 1");
-		queryBuilder.append("     FROM DocenteEntity docenteEntity");
-		queryBuilder.append("     WHERE docenteEntity.persona.idPersona = usu.persona.idPersona");
-		queryBuilder.append(" ) THEN true ELSE false END)");
+		queryBuilder.append(" per.segundoApellido, per.email, usu.nombreUsuario, usu.password, usu.estado ");
 		queryBuilder.append(" )");
 		queryBuilder.append(" FROM UsuarioEntity usu ");
 		queryBuilder.append(" JOIN usu.persona per ");
@@ -270,5 +269,23 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 		} else {
 			return Boolean.FALSE;
 		}
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort#cambiarEstadoUsuarioPorIdUsuario(java.lang.Long)
+	 */
+	@Override
+	public Usuario cambiarEstadoUsuarioPorIdUsuario(Long idUsuario) {
+		Optional<UsuarioEntity> usuario = this.usuarioRepositoryInt.findById(idUsuario);
+		if (usuario.isPresent()) {
+			UsuarioEntity usuarioEntity = usuario.get();
+			if (usuarioEntity.getEstado() != null && usuarioEntity.getEstado().equals(EstadoUsuarioEnum.ACTIVO)) {
+				usuarioEntity.setEstado(EstadoUsuarioEnum.INACTIVO);
+			} else {
+				usuarioEntity.setEstado(EstadoUsuarioEnum.ACTIVO);
+			}
+			return this.modelMapper.map(this.usuarioRepositoryInt.save(usuarioEntity), Usuario.class);
+		}
+		return null;
 	}
 }

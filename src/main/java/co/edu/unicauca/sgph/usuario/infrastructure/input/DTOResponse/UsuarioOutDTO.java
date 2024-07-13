@@ -40,9 +40,10 @@ public class UsuarioOutDTO {
 		// Constructor sin parámetros
 	}
 
-	public UsuarioOutDTO(Long idPersona, Long idTipoIdentificacion, String numeroIdentificacion,
+	public UsuarioOutDTO(Long idUsuario, Long idPersona, Long idTipoIdentificacion, String numeroIdentificacion,
 			String codigoTipoIdentificacion, String primerNombre, String segundoNombre, String primerApellido,
 			String segundoApellido, String email, String nombreUsuario, String password, EstadoUsuarioEnum estado) {
+		this.idUsuario=idUsuario;
 		this.idPersona = idPersona;
 		this.idTipoIdentificacion = idTipoIdentificacion;
 		this.numeroIdentificacion = numeroIdentificacion;

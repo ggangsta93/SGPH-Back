@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.usuario.aplication.input.GestionarUsuarioCUIntPort;
+import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.UsuarioInDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.RolOutDTO;
@@ -155,4 +157,23 @@ public class UsuarioController {
 	public List<String> consultarEstadosUsuario() {
 		return this.gestionarUsuarioCUIntPort.consultarEstadosUsuario();
 	}
+	
+	/**
+	 * Método encargado de cambiar el estado al usuario dado su identificador único</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idUsuario
+	 * @return
+	 */
+	@GetMapping("/cambiarEstadoUsuarioPorIdUsuario")
+	private UsuarioOutDTO cambiarEstadoUsuarioPorIdUsuario(@RequestParam Long idUsuario) {
+		Usuario usuario = this.gestionarUsuarioCUIntPort.cambiarEstadoUsuarioPorIdUsuario(idUsuario);
+		if (usuario != null) {
+			return this.usuarioRestMapper.toUsuarioOutDTO(usuario);
+		}
+		return new UsuarioOutDTO();
+	}
+	
+	
 }

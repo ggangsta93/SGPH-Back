@@ -777,7 +777,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			
 		horarioPrincipalActual = horarioPrincipalActual.stream()
 				.filter(frPr -> horarioSecundario.stream()
-						.noneMatch(frSec -> !(frPr.getDia().equals(frSec.getDia())
+						.noneMatch(frSec -> (frPr.getDia().equals(frSec.getDia())
 								&& frPr.getHoraInicio().equals(frSec.getHoraInicio())
 								&& frPr.getHoraFin().equals(frSec.getHoraFin()))))
 				.collect(Collectors.toList());

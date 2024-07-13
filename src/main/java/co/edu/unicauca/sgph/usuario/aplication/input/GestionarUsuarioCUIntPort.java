@@ -59,5 +59,15 @@ public interface GestionarUsuarioCUIntPort {
 	 * 
 	 * @return
 	 */
-	public List<String> consultarEstadosUsuario();
+	public List<String> consultarEstadosUsuario();	
+	
+	/**
+	 * Método encargado de cambiar el estado al usuario dado su identificador único</br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param idUsuario
+	 * @return
+	 */
+	public Usuario cambiarEstadoUsuarioPorIdUsuario(Long idUsuario);
 }
