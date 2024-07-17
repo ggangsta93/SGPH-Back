@@ -205,8 +205,8 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 				int aplicaEspSec = (int) row.getCell(8).getNumericCellValue();
 				Optional<ProgramaEntity> programaEntidad = this.programaRepositoryInt.findByNombre(programa);
 				if (programaEntidad.isPresent()) {
-					AsignaturaInDTO asignatura = new AsignaturaInDTO(nombre, codigoAsignatura, oid, semestre, pensum, horasSemana, programaEntidad.get().getIdPrograma(), estado, aplicaEspSec);
-					asignatura.setAplicaEspacioSecundario(asignatura.getAplicaEspSec() == 1 ? true : false);
+					AsignaturaInDTO asignatura = new AsignaturaInDTO(nombre, codigoAsignatura, oid, semestre, pensum, horasSemana, programaEntidad.get().getIdPrograma(), estado);
+					asignatura.setAplicaEspacioSecundario(aplicaEspSec == 1 ? true : false);
 					asignaturas.add(asignatura);
 				} else {
 					MensajeOutDTO mensaje = new MensajeOutDTO();
@@ -313,6 +313,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		if (entidad.getEstado() != null) {
 			asignaturaOutDTO.setEstado(entidad.getEstado().getDescripcionEstado());
 		}
+		asignaturaOutDTO.setAplicaEspacioSecundario(entidad.getAplicaEspacioSecundario());
 		return asignaturaOutDTO;
 	}
 
@@ -340,7 +341,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 					asignatura.getHorasSemana() == null ||
 					asignatura.getIdPrograma() == null
 					|| asignatura.getEstado() == null || asignatura.getEstado().isEmpty()
-					|| asignatura.getAplicaEspSec() == null) {
+					|| asignatura.getAplicaEspacioSecundario() == null) {
 				mensaje.setDescripcion("Todos los campos deben estar llenos y no ser nulos");
 				mensaje.setError(Boolean.TRUE);
 				return mensaje;

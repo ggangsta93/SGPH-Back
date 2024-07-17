@@ -13,7 +13,7 @@ public class AgrupadorEspacioFisico {
 	private Facultad facultad;
 
 	public AgrupadorEspacioFisico() {
-		//Constructor si parámetros
+		//Constructor sin parámetros
 	}	
 	
 	public AgrupadorEspacioFisico(Long idAgrupadorEspacioFisico) {
