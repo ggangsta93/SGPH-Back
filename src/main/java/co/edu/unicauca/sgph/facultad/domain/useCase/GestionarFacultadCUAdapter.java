@@ -1,7 +1,6 @@
 package co.edu.unicauca.sgph.facultad.domain.useCase;
 
 import java.util.List;
-import java.util.Objects;
 
 import co.edu.unicauca.sgph.facultad.aplication.input.GestionarFacultadCUIntPort;
 import co.edu.unicauca.sgph.facultad.aplication.output.FacultadFormatterResultsIntPort;
@@ -19,13 +18,6 @@ public class GestionarFacultadCUAdapter implements GestionarFacultadCUIntPort {
 		this.facultadFormatterResultsIntPort = facultadFormatterResultsIntPort;
 	}
 
-	@Override
-	public Facultad consultarFacultadPorNombre(String nombre) {
-		Facultad facultad = this.gestionarFacultadGatewayIntPort.consultarFacultadPorNombre(nombre);
-		return Objects.nonNull(facultad) ? facultad
-				: this.facultadFormatterResultsIntPort
-						.prepararRespuestaFallida("No se encontró facultad con ese nombre");
-	}
 
 	@Override
 	public Facultad guardarFacultad(Facultad facultad) {

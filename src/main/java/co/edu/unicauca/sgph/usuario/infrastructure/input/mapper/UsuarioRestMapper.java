@@ -8,13 +8,11 @@ import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.UsuarioInDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.RolOutDTO;
-import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.TipoIdentificacionOutDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
 
 @Mapper(componentModel = "spring")
@@ -23,11 +21,7 @@ public interface UsuarioRestMapper {
 	RolOutDTO toRolOutDTO(Rol rol);
 	
 	List<RolOutDTO> toLstRolOutDTO(List<Rol> rol);
-	
-	TipoIdentificacionOutDTO toTipoIdentificacionOutDTO(TipoIdentificacion tipoIdentificacion);
-	
-	List<TipoIdentificacionOutDTO> toLstTipoIdentificacionOutDTO(List<TipoIdentificacion> lstTipoIdentificacion);
-		
+			
 	@Mapping(target = "idPersona", source = "usuario.persona.idPersona")
 	@Mapping(target = "idTipoIdentificacion", source = "usuario.persona.tipoIdentificacion.idTipoIdentificacion")
 	@Mapping(target = "codigoTipoIdentificacion", source = "usuario.persona.tipoIdentificacion.codigoTipoIdentificacion")

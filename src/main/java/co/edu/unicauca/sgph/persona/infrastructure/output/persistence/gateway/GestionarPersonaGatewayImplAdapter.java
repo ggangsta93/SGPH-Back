@@ -1,15 +1,18 @@
 package co.edu.unicauca.sgph.persona.infrastructure.output.persistence.gateway;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.persona.aplication.output.GestionarPersonaGatewayIntPort;
 import co.edu.unicauca.sgph.persona.domain.model.Persona;
+import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.entity.PersonaEntity;
 import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.repository.PersonaRepositoryInt;
 
@@ -90,5 +93,15 @@ public class GestionarPersonaGatewayImplAdapter implements GestionarPersonaGatew
 		} else {
 			return Boolean.FALSE;
 		}
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.persona.aplication.output.GestionarPersonaGatewayIntPort#consultarTiposIdentificacion()
+	 */
+	@Override
+	public List<TipoIdentificacion> consultarTiposIdentificacion() {
+		return this.modelMapper.map(this.personaRepositoryInt.consultarTiposIdentificacion(),
+				new TypeToken<List<TipoIdentificacion>>() {
+				}.getType());
 	}
 }

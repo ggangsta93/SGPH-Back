@@ -2,6 +2,7 @@ package co.edu.unicauca.sgph.persona.infrastructure.input.controller;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -24,6 +25,7 @@ import co.edu.unicauca.sgph.persona.domain.model.Persona;
 import co.edu.unicauca.sgph.persona.infrastructure.input.DTORequest.PersonaInDTO;
 import co.edu.unicauca.sgph.persona.infrastructure.input.DTOResponse.PersonaOutDTO;
 import co.edu.unicauca.sgph.persona.infrastructure.input.mapper.PersonaRestMapper;
+import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.TipoIdentificacionOutDTO;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
@@ -98,5 +100,19 @@ public class PersonaController {
 	public PersonaOutDTO consultarPersonaPorIdentificacion(@RequestParam Long idTipoIdentificacion, @RequestParam String numeroIdentificacion) {		
 		Persona persona = this.gestionarPersonaCUIntPort.consultarPersonaPorIdentificacion(idTipoIdentificacion, numeroIdentificacion);		
 		return this.personaRestMapper.toPersonaOutDTO(persona);
+	}
+	
+	/**
+	 * Método encargado de consultar todos los tipos de identificación de
+	 * persona<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @return
+	 */
+	@GetMapping("/consultarTiposIdentificacion")
+	public List<TipoIdentificacionOutDTO> consultarTiposIdentificacion() {
+		return this.personaRestMapper
+				.toLstTipoIdentificacionOutDTO(this.gestionarPersonaCUIntPort.consultarTiposIdentificacion());
 	}
 }

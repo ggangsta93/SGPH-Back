@@ -27,7 +27,6 @@ import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.UsuarioInDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.RolOutDTO;
-import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.TipoIdentificacionOutDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.mapper.UsuarioRestMapper;
 
@@ -121,20 +120,6 @@ public class UsuarioController {
 	}
 
 	/**
-	 * Método encargado de consultar todos los tipos de identificación de
-	 * persona<br>
-	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
-	 * @return
-	 */
-	@GetMapping("/consultarTiposIdentificacion")
-	public List<TipoIdentificacionOutDTO> consultarTiposIdentificacion() {
-		return this.usuarioRestMapper
-				.toLstTipoIdentificacionOutDTO(this.gestionarUsuarioCUIntPort.consultarTiposIdentificacion());
-	}
-
-	/**
 	 * Método encargado de consultar todos los roles de usuario<br>
 	 * 
 	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
@@ -174,6 +159,5 @@ public class UsuarioController {
 		}
 		return new UsuarioOutDTO();
 	}
-	
 	
 }

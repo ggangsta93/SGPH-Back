@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.entity.TipoIdentificacionEntity;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.RolEntity;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
 
@@ -31,18 +30,7 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 	 */
 	@Query("SELECT rol.idRol FROM UsuarioEntity usu JOIN usu.roles rol WHERE usu.persona.idPersona IN (:idPersona)")
 	public List<Long> consultarIdentificadoresRolesUsuarioPorPersona(Long idPersona);
-	
-	
-	/**
-	 * Método encargado de consultar todos los tipos de identificación persona <br>
-	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
-	 * @return
-	 */
-	@Query("SELECT ti FROM TipoIdentificacionEntity ti")
-	public List<TipoIdentificacionEntity> consultarTiposIdentificacion();
-	
+		
 	/**
 	 * Método encargado de consultar todos los roles de usuario<br>
 	 * 

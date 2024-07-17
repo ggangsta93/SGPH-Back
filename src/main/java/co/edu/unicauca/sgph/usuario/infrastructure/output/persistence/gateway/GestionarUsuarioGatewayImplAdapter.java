@@ -21,10 +21,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
-import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
-import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
-import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
@@ -214,16 +210,6 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	 */
 	private List<Long> consultarIdentificadoresProgramasUsuarioPorPersona(Long idPersona) {
 		return this.usuarioRepositoryInt.consultarIdentificadoresProgramasUsuarioPorPersona(idPersona);
-	}
-
-	/**
-	 * @see co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort#consultarTiposIdentificacion()
-	 */
-	@Override
-	public List<TipoIdentificacion> consultarTiposIdentificacion() {
-		return this.modelMapper.map(this.usuarioRepositoryInt.consultarTiposIdentificacion(),
-				new TypeToken<List<TipoIdentificacion>>() {
-				}.getType());
 	}
 
 	/**

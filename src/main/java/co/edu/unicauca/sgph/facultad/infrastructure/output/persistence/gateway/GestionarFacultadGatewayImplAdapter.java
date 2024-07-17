@@ -1,7 +1,6 @@
 package co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.gateway;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -21,12 +20,6 @@ public class GestionarFacultadGatewayImplAdapter implements GestionarFacultadGat
 	public GestionarFacultadGatewayImplAdapter(FacultadRepositoryInt facultadRepositoryInt, ModelMapper modelMapper) {
 		this.facultadRepositoryInt = facultadRepositoryInt;
 		this.modelMapper = modelMapper;
-	}
-
-	@Override
-	public Facultad consultarFacultadPorNombre(String nombre) {
-		FacultadEntity facultadEntity = this.facultadRepositoryInt.findByNombre(nombre);
-		return Objects.isNull(facultadEntity) ? null : this.modelMapper.map(facultadEntity, Facultad.class);
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
-import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
@@ -30,16 +29,6 @@ public interface GestionarUsuarioGatewayIntPort {
 	 * @return
 	 */
 	public Page<UsuarioOutDTO> consultarUsuariosPorFiltro(FiltroUsuarioDTO filtroUsuarioDTO);
-
-	/**
-	 * Método encargado de consultar todos los tipos de identificación de
-	 * persona<br>
-	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
-	 * @return
-	 */
-	public List<TipoIdentificacion> consultarTiposIdentificacion();
 
 	/**
 	 * Método encargado de consultar todos los roles de usuario<br>

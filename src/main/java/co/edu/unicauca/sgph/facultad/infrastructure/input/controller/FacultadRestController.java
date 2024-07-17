@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.facultad.aplication.input.GestionarFacultadCUIntPort;
@@ -29,12 +28,6 @@ public class FacultadRestController {
 			FacultadRestMapper facultadRestMapper) {
 		this.gestionarFacultadCUIntPort = gestionarFacultadCUIntPort;
 		this.facultadRestMapper = facultadRestMapper;
-	}
-
-	@GetMapping("/consultarFacultadPorNombre")
-	public FacultadOutDTO consultarFacultadPorNombre(@RequestParam String nombre) {
-		return this.facultadRestMapper
-				.toFacultadOutDTO(gestionarFacultadCUIntPort.consultarFacultadPorNombre(nombre));
 	}
 
 	@PostMapping("/guardarFacultad")

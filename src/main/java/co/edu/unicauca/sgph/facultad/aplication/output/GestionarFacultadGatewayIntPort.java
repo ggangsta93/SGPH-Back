@@ -6,8 +6,6 @@ import co.edu.unicauca.sgph.facultad.domain.model.Facultad;
 
 public interface GestionarFacultadGatewayIntPort {
 	
-	public Facultad consultarFacultadPorNombre(String nombre);
-
 	public Facultad guardarFacultad(Facultad facultad);
 	
 	/**

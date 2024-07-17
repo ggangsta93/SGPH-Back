@@ -18,8 +18,10 @@ public interface TipoEspacioFisicoRepositoryInt extends JpaRepository<TipoEspaci
 	 * @param lstIdEdificio
 	 * @return
 	 */
-	@Query("SELECT tipoEspacioFisico " + "FROM TipoEspacioFisicoEntity tipoEspacioFisico "
-			+ "WHERE tipoEspacioFisico in (" + "    SELECT espacioFisico.tipoEspacioFisico "
+	@Query("SELECT tipoEspacioFisico " 
+			+ "FROM TipoEspacioFisicoEntity tipoEspacioFisico "
+			+ "WHERE tipoEspacioFisico in (" 
+			+ "    SELECT espacioFisico.tipoEspacioFisico "
 			+ "    FROM EspacioFisicoEntity espacioFisico "
 			+ "    WHERE espacioFisico.edificio.idEdificio in (:lstIdEdificio) " + ")")
 	public List<TipoEspacioFisicoEntity> consultarTiposEspaciosFisicosPorEdificio(List<Long> lstIdEdificio);
