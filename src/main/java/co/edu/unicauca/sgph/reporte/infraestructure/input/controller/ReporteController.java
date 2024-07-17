@@ -1,5 +1,6 @@
 package co.edu.unicauca.sgph.reporte.infraestructure.input.controller;
 
+import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,5 +20,9 @@ public class ReporteController {
     @PostMapping("/simca")
     public ReporteSimcaDTO obtenerReporteSimca(@RequestBody ReporteSimcaDTO reporte) {
         return this.gestionarReporteIntPort.generarReporteSimca(reporte);
+    }
+    @PostMapping("/laborDocente")
+    public ReporteDocenteDTO obtenerReporteLaborDocente(@RequestBody ReporteDocenteDTO filtro) {
+        return this.gestionarReporteIntPort.obtenerReporteLaborDocente(filtro);
     }
 }
