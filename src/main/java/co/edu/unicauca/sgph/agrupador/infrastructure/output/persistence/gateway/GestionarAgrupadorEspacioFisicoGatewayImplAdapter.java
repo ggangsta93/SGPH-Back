@@ -1,17 +1,21 @@
 package co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.gateway;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,8 @@ import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTORequest.FiltroGrup
 import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
 import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.repository.AgrupadorEspacioFisicoRepositoryInt;
+import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
+import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
@@ -83,26 +89,89 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 	}
 
 	@Override
-	public Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(FiltroGrupoDTO filtro) {
-		Pageable pageable = PageRequest.of(filtro.getPageNumber(), filtro.getPageSize());
-		Page<AgrupadorEspacioFisicoEntity> resultado = this.agrupadorEspacioFisicoRepositoryInt
-				.findByFacultadIdFacultadIn(filtro.getListaIdFacultades(), pageable);
-		Page<AgrupadorEspacioFisicoOutDTO> pageAgrupadorEspacioFisicoOutDTO = resultado.map(this::mapGrupo);
-
-		// Se contabilizan los espacio físicos por grupo
-		List<Object[]> lstContEspaciosPorGrupo = this.agrupadorEspacioFisicoRepositoryInt
-				.contarEspaciosFisicosPorAgrupador();
-
-		Map<Long, Long> mapaContEspaciosPorGrupo = lstContEspaciosPorGrupo.stream()
-				.collect(Collectors.toMap(obj -> (Long) obj[0], obj -> (Long) obj[1]));
-
-		for (AgrupadorEspacioFisicoOutDTO agrupadorEspacioFisicoOutDTO : pageAgrupadorEspacioFisicoOutDTO
-				.getContent()) {
-			agrupadorEspacioFisicoOutDTO.setCantidadEspaciosFisicosAsignados(
-					mapaContEspaciosPorGrupo.get(agrupadorEspacioFisicoOutDTO.getIdAgrupadorEspacioFisico()));
+	public Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(FiltroGrupoDTO filtroGrupoDTO) {
+		
+		PageRequest pageable = null;
+		if (Objects.nonNull(filtroGrupoDTO.getPageNumber())
+				&& Objects.nonNull(filtroGrupoDTO.getPageSize())) {
+			// Configuración de la paginación
+			pageable = PageRequest.of(filtroGrupoDTO.getPageNumber(), filtroGrupoDTO.getPageSize());
 		}
-		return pageAgrupadorEspacioFisicoOutDTO;
+		
+		// Construcción de la consulta con StringBuilder
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append(" SELECT NEW co.edu.unicauca.sgph.agrupador.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO(");
+		queryBuilder.append(" agrupador.idAgrupadorEspacioFisico, agrupador.nombre, agrupador.observacion, ");
+		queryBuilder.append(" facultad.idFacultad, facultad.nombre, SIZE(agrupador.espaciosFisicos) )");
+		queryBuilder.append(" FROM AgrupadorEspacioFisicoEntity agrupador ");
+		queryBuilder.append(" JOIN agrupador.facultad facultad ");
+		queryBuilder.append(" WHERE 1=1");
+		
+		Map<String, Object> parametros = new HashMap<>();
+		
+		if(Objects.nonNull(filtroGrupoDTO.getListaIdFacultades()) && !filtroGrupoDTO.getListaIdFacultades().isEmpty()) {
+			queryBuilder.append(" AND agrupador.facultad.idFacultad IN (:listaIdFacultad)");
+			parametros.put("listaIdFacultad", filtroGrupoDTO.getListaIdFacultades());
+		}
+		
+		if (Objects.nonNull(filtroGrupoDTO.getNombre())) {
+			queryBuilder.append(" AND agrupador.nombre LIKE UPPER(:nombre)");
+			parametros.put("nombre", "%"+filtroGrupoDTO.getNombre().replaceAll("\\s+", " ").trim()+"%");
+		}	
+				
+		// Realiza la consulta paginada
+		TypedQuery<AgrupadorEspacioFisicoOutDTO> typedQuery = em.createQuery(queryBuilder.toString(), AgrupadorEspacioFisicoOutDTO.class);
+		
+		if (Objects.nonNull(pageable)) {
+	        typedQuery.setFirstResult((int) pageable.getOffset());
+	        typedQuery.setMaxResults(pageable.getPageSize());
+	    }
+
+		// Establece parámetros en la consulta
+		for (Map.Entry<String, Object> entry : parametros.entrySet()) {
+			typedQuery.setParameter(entry.getKey(), entry.getValue());
+		}
+
+		 // Si pageable es nulo, entonces retornar todos los resultados sin paginación
+	    if (Objects.isNull(pageable)) {
+	        return new PageImpl<>(typedQuery.getResultList());
+	    }else {
+	    	return new PageImpl<>(typedQuery.getResultList(), pageable, contarGruposConsultados(filtroGrupoDTO));
+	    }
 	}
+	
+	
+	private Long contarGruposConsultados(FiltroGrupoDTO filtroGrupoDTO) {
+
+		// Construcción de la consulta con StringBuilder
+		StringBuilder queryBuilder = new StringBuilder();
+		queryBuilder.append(" SELECT COUNT(agrupador)");
+		queryBuilder.append(" FROM AgrupadorEspacioFisicoEntity agrupador ");
+		queryBuilder.append(" JOIN agrupador.facultad facultad ");
+		queryBuilder.append(" WHERE 1=1");
+
+		Map<String, Object> parametros = new HashMap<>();
+
+		if (Objects.nonNull(filtroGrupoDTO.getListaIdFacultades()) && !filtroGrupoDTO.getListaIdFacultades().isEmpty()) {
+			queryBuilder.append(" AND agrupador.facultad.idFacultad IN (:listaIdFacultad)");
+			parametros.put("listaIdFacultad", filtroGrupoDTO.getListaIdFacultades());
+		}
+
+		if (Objects.nonNull(filtroGrupoDTO.getNombre())) {
+			queryBuilder.append(" AND agrupador.nombre LIKE UPPER(:nombre)");
+			parametros.put("nombre", "%" + filtroGrupoDTO.getNombre().replaceAll("\\s+", " ").trim() + "%");
+		}
+		// Realiza la consulta para contar
+		TypedQuery<Long> countQuery = em.createQuery(queryBuilder.toString(), Long.class);
+
+		// Establece parámetros en la consulta
+		for (Map.Entry<String, Object> entry : parametros.entrySet()) {
+			countQuery.setParameter(entry.getKey(), entry.getValue());
+		}
+
+		return countQuery.getSingleResult();
+	}
+	
 
 	@Override
 	public AgrupadorEspacioFisicoOutDTO guardarGrupo(AgrupadorEspacioFisicoOutDTO agrupador) {

@@ -12,7 +12,17 @@ public class AgrupadorEspacioFisicoOutDTO {
 	
 	private String nombreFacultad;
 	
-	private Long cantidadEspaciosFisicosAsignados;
+	private Long cantidadEspaciosFisicosAsignados;	
+
+	public AgrupadorEspacioFisicoOutDTO(Long idAgrupadorEspacioFisico, String nombre, String observacion,
+			Long idFacultad, String nombreFacultad, int cantidadEspaciosFisicosAsignados) {
+		this.idAgrupadorEspacioFisico = idAgrupadorEspacioFisico;
+		this.nombre = nombre;
+		this.observacion = observacion;
+		this.idFacultad = idFacultad;
+		this.nombreFacultad = nombreFacultad;
+		this.cantidadEspaciosFisicosAsignados = (long)cantidadEspaciosFisicosAsignados;
+	}
 
 	public AgrupadorEspacioFisicoOutDTO() {
 	}

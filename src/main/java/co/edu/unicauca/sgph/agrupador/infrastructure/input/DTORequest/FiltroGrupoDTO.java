@@ -8,6 +8,7 @@ public class FiltroGrupoDTO implements Serializable {
 	private static final long serialVersionUID = -147848070840420608L;
 
 	private List<Long> listaIdFacultades;
+	private String nombre;
 	private Integer pageNumber;
 	private Integer pageSize;
 
@@ -33,5 +34,13 @@ public class FiltroGrupoDTO implements Serializable {
 
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 }
