@@ -77,7 +77,7 @@ public class DocenteController extends CommonEJB{
 	/**
 	 * Método encargado de consultar los nombres de docentes por curso<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return
@@ -91,7 +91,7 @@ public class DocenteController extends CommonEJB{
 	 * Método encargado de consultar los docentes por diferentes criterios de
 	 * busqueda y retornarlos de manera paginada
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co> *
+	 * @author apedro
 	 * 
 	 * @param filtroDocenteDTO DTO con los filtros de busqueda
 	 * @return
@@ -104,7 +104,7 @@ public class DocenteController extends CommonEJB{
 	/**
 	 * Método encargado de obtener los docentes asociadas a un curso.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return

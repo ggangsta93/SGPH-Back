@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
-import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
 
 
 
@@ -16,7 +15,7 @@ public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long>
 	/**
 	 * Método encargado de consultar un docente por su identificación<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idTipoIdentificacion
 	 * @param numeroIdentificacion
@@ -33,7 +32,7 @@ public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long>
 	/**
 	 * Método encargado de consultar un docente por persona<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPersona
 	 * @return
@@ -47,7 +46,7 @@ public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long>
 	/**
 	 * Método encargado de consultar los nombres de los docentes de un curso<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return
@@ -61,7 +60,7 @@ public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long>
 	/**
 	 * Método encargado de obtener los docentes asociadas a un curso.<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return

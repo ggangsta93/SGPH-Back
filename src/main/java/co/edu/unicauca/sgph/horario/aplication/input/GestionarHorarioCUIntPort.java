@@ -10,7 +10,7 @@ public interface GestionarHorarioCUIntPort {
 	/**
 	 * Método encargado de obtener los horarios de un curso
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param curso
 	 * @return

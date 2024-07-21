@@ -12,7 +12,7 @@ public abstract class CommonEJB {
 	/**
 	 * Método encargado de manejar la validación de errores en las peticiones.<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param result El resultado de la validación.
 	 * @param codes  Codigos personalizados

@@ -34,7 +34,7 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 	/**
 	 * Método encargado de consultar todos los roles de usuario<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */

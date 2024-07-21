@@ -16,7 +16,7 @@ import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTOResponse.Pe
  * 
  * <b>Caso de Uso:<b>
  * 
- * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+ * @author apedro
  * @version 1.0
  */
 public class GestionarPeriodoAcademicoCUAdapter implements GestionarPeriodoAcademicoCUIntPort {

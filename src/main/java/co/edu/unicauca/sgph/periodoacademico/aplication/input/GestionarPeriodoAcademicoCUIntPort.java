@@ -13,7 +13,7 @@ public interface GestionarPeriodoAcademicoCUIntPort {
 	/**
 	 * Método encargado de guardar o actualizar un periodo académico <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param periodoAcademico
 	 * @return
@@ -25,7 +25,7 @@ public interface GestionarPeriodoAcademicoCUIntPort {
 	 * dentro del rango de fechas de inicio y fin del último período académico, y
 	 * actualiza su estado a 'CERRADO' si no está dentro de dicho rango.<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param fechaActual Fecha actual del sistema
 	 */
@@ -34,7 +34,7 @@ public interface GestionarPeriodoAcademicoCUIntPort {
 	/**
 	 * Método encargado de consultar el periodo académico vigente<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -43,7 +43,7 @@ public interface GestionarPeriodoAcademicoCUIntPort {
 	/**
 	 * Método encargado de consultar los periodos académicos <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param filtroPeriodoAcademicoDTO
 	 * @return Page de instancias PeriodoAcademicoOutDTO

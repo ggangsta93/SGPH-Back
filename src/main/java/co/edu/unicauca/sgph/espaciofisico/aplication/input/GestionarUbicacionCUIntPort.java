@@ -9,7 +9,7 @@ public interface GestionarUbicacionCUIntPort {
 	/**
 	 * Método encargado de consultar todas las ubicaciones <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Lista de instancias de Ubicacion
 	 */

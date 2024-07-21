@@ -12,7 +12,7 @@ public interface GestionarPersonaCUIntPort {
 	/**
 	 * Método encargado de consultar una persona con el tipo y número de identificación<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -22,7 +22,7 @@ public interface GestionarPersonaCUIntPort {
 	 * Método encargado de consultar todos los tipos de identificación de
 	 * persona<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */

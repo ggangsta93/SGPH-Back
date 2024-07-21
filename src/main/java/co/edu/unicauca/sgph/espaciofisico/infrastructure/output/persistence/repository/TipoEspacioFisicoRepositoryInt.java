@@ -13,7 +13,7 @@ public interface TipoEspacioFisicoRepositoryInt extends JpaRepository<TipoEspaci
 	 * Método encargado de consultar los tipo de espacios físicos asociados a una
 	 * lista de edificios<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param lstIdEdificio
 	 * @return

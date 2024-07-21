@@ -8,7 +8,7 @@ public interface GestionarEdificioCUIntPort {
 	/**
 	 * Método encargado de consultar todos los edificios <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Listas de instancias Edificio
 	 */

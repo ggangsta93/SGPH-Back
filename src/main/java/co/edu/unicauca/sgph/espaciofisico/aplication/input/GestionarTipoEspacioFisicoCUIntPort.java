@@ -10,7 +10,7 @@ public interface GestionarTipoEspacioFisicoCUIntPort {
 	 * Método encargado de consultar los tipos de espacios físicos por ubicaciones
 	 * <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param lstIdUbicacion
 	 * @return

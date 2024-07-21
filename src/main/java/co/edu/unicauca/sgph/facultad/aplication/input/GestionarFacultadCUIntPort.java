@@ -11,7 +11,7 @@ public interface GestionarFacultadCUIntPort {
 	/**
 	 * Método encargado de consultar todas las facultades
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Lista de objetos de tipo Facultad
 	 */

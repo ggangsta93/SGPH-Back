@@ -38,7 +38,7 @@ public class DepartamentoController extends CommonEJB {
 	/**
 	 * Método encargado de consultar todos los departamentos<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */

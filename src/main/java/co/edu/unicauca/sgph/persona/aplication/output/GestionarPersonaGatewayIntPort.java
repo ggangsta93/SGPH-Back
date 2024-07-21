@@ -13,7 +13,7 @@ public interface GestionarPersonaGatewayIntPort {
 	 * Método encargado de validar si existe una persona con el email consultado.
 	 * Este es utilizado por la anotación @ExisteEmail<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param email     Correo electrónico a validar
 	 * @param idPersona Identificador único persona (Es requerido para
@@ -27,7 +27,7 @@ public interface GestionarPersonaGatewayIntPort {
 	 * identificación. Este es utilizado por la
 	 * anotación @ExistePersonaPorIdentificacion<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idTipoIdentificacion Identificador del tipo de identificación
 	 * @param numeroIdentificacion Número de identificación
@@ -42,7 +42,7 @@ public interface GestionarPersonaGatewayIntPort {
 	 * Método encargado de validar si existe una persona con el idPersona. Este es
 	 * utilizado por la anotación @ExistePersonaPorIdPersona<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPersona Identificador único persona
 	 * @return
@@ -53,7 +53,7 @@ public interface GestionarPersonaGatewayIntPort {
 	 * Método encargado de consultar una persona con el tipo y número de
 	 * identificación<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -63,7 +63,7 @@ public interface GestionarPersonaGatewayIntPort {
 	 * Método encargado de consultar todos los tipos de identificación de
 	 * persona<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */

@@ -39,7 +39,7 @@ public class AsignaturaController extends CommonEJB {
 	/**
 	 * Método encargado de guardar o actualizar una asignatura <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param asignaturaInDTO
 	 * @return
@@ -53,7 +53,7 @@ public class AsignaturaController extends CommonEJB {
 	/**
 	 * Método encargado de consultar las asignaturas por programa <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPrograma
 	 * @return

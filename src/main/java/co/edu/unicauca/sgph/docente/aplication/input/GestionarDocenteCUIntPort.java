@@ -15,7 +15,7 @@ public interface GestionarDocenteCUIntPort {
 	/**
 	 * Método encargado de consultar un docente por su identificación<br>
 	 *  
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idTipoIdentificacion
 	 * @param numeroIdentificacion
@@ -26,7 +26,7 @@ public interface GestionarDocenteCUIntPort {
 	/**
 	 * Método encargado de consultar un docente por su identificador único <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPersona
 	 * @return
@@ -36,7 +36,7 @@ public interface GestionarDocenteCUIntPort {
 	/**
 	 * Método encargado de consultar los nombres de docentes por curso<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return
@@ -47,7 +47,7 @@ public interface GestionarDocenteCUIntPort {
 	 * Método encargado de obtener los docentes dado un conjunto de criterios de
 	 * busqueda.<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
+	 * @author apedro
 	 * 
 	 * @param filtroDocenteDTO
 	 * @return
@@ -57,7 +57,7 @@ public interface GestionarDocenteCUIntPort {
 	/**
 	 * Método encargado de obtener los docentes asociadas a un curso.<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return

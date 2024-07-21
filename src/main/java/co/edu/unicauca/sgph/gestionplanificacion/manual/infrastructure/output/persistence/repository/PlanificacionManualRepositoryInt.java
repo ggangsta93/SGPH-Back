@@ -61,7 +61,7 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		 * Método encargado de obtener los nombres completos de cada espacio físico.
 		 * Ejemplo del formato: 'Salón 204-Edificio nuevo'
 		 * 
-		 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+		 * @author apedro
 		 * 
 		 * @return
 		 */
@@ -77,7 +77,7 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		 * Método encargado de obtener las franjas horarias de un curso dado el
 		 * identificador del curso
 		 * 
-		 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+		 * @author apedro
 		 * 
 		 * @param idCurso
 		 * @return
@@ -98,7 +98,7 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		/**
 		 * Método encargado de obtener todas las franjas horarias de un docente
 		 * 
-		 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+		 * @author apedro
 		 * 
 		 * @param idPersona
 		 * @param idPeriodoAcademicoVigente
@@ -120,7 +120,7 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		 * Método encargado de obtener todas las franjas horarias de un espacio físico
 		 * 
 		 * 
-		 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+		 * @author apedro
 		 * 
 		 * @param idEspacioFisico
 		 * @return
@@ -175,7 +175,7 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		 * Método encargado de obtener las franjas horarias principales de un programa
 		 * dados el identificador del programa y el periodo académico
 		 * 
-		 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+		 * @author apedro
 		 * 
 		 * @param idPrograma
 		 * @param idPeriodoAcademico
@@ -202,7 +202,7 @@ public interface PlanificacionManualRepositoryInt extends JpaRepository<HorarioE
 		 * Método encargado de consultar la cantidad de horas actual de un curso dado su
 		 * identificador </br>
 		 * 
-		 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+		 * @author apedro
 		 * 
 		 * @param idCurso
 		 * @return

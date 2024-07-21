@@ -22,7 +22,7 @@ public interface GestionarEspacioFisicoCUIntPort {
 	 * Método encargado de obtener los horarios formateados a partir del curso<br>
 	 * Ejemplo del formato: 'LUNES 07:00-09:00 Salón 204-Edificio nuevo'	 
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @param esPrincipal
@@ -35,7 +35,7 @@ public interface GestionarEspacioFisicoCUIntPort {
 	 * único<br>
 	 * -Utilizado en la pantalla de Gestionar espacios físicos<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idEspacioFisico
 	 * @return
@@ -46,7 +46,7 @@ public interface GestionarEspacioFisicoCUIntPort {
 	 * Método encargado de consultar los espacios físicos por diferentes criterios
 	 * de busqueda y retornarlos de manera paginada<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param filtroEspacioFisicoDTO DTO con los filtros de busqueda
 	 * @return
@@ -57,7 +57,7 @@ public interface GestionarEspacioFisicoCUIntPort {
 	 * Método encargado de consultar los tipo de espacios físicos asociados a una
 	 * lista de edificios <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param lstEdificio
 	 * @return
@@ -67,7 +67,7 @@ public interface GestionarEspacioFisicoCUIntPort {
 	/**
 	 * Método encargado de consultar todos los edificios de los espacios físicos <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Nombres de los edificios
 	 */
@@ -76,7 +76,7 @@ public interface GestionarEspacioFisicoCUIntPort {
 	/**
 	 * Método encargado de consultar todas las ubicaciones de los espacios físicos <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Nombres de las ubicaciones
 	 */
@@ -86,7 +86,7 @@ public interface GestionarEspacioFisicoCUIntPort {
 	 * Método encargado de consultar los edificios de los espacios físicos por
 	 * ubicación <br>
 	 *
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 *
 	 * @return Identificadores de los edificios
 	 */

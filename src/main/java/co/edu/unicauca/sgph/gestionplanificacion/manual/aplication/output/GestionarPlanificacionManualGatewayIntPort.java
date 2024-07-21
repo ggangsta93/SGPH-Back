@@ -24,7 +24,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * Método encargado de obtener los cursos dado un conjunto de criterios de
 	 * busqueda.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
+	 * @author apedro
 	 * 
 	 * @param filtroCursoPlanificacionDTO
 	 * @param idPeriodoAcademicoVigente   Periodo académico vigente
@@ -37,7 +37,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * Método encargado de consultar la información gneral de los cursos de un
 	 * programa dado el identificador del programa
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
+	 * @author apedro
 	 * 
 	 * @param idPrograma                DTO Identificador del programa
 	 * @param idPeriodoAcademicoVigente Periodo académico vigente
@@ -50,7 +50,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * Método encargado de consultar la cantidad de horas actual de un curso dado su
 	 * identificador </br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return
@@ -62,7 +62,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * curso dado una franja horaria. Si no retorna resultados es porque no hay
 	 * cruces, caso contrario retorna las franjas solapadas.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @param dia
@@ -79,7 +79,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * franja horaria. Si no retorna resultados es porque no hay cruces, caso
 	 * contrario retorna las franjas solapadas.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param lstIdEspacioFisico
 	 * @param dia
@@ -96,7 +96,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * Método encargado de validar si existe cruces con el horario del docente dado
 	 * una franja horaria y el identificador de la persona
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPersona
 	 * @param dia
@@ -112,7 +112,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * Método encargado de obtener los nombres completos de cada espacio físico.
 	 * Ejemplo del formato: 'Salón 204-Edificio nuevo'
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -122,7 +122,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * Método encargado de obtener las franjas horarias de un curso dado el
 	 * identificador del curso
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @param esPrincipal Booleano que indica si se consultan las franjas
@@ -136,7 +136,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * Método encargado de obtener las franjas horarias principales de un programa
 	 * dados el identificador del programa y el periodo académico
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPrograma
 	 * @param idPeriodoAcademico
@@ -148,7 +148,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un docente
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPersona
 	 * @param idPeriodoAcademicoVigente Periodo académico vigente
@@ -160,7 +160,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un espacio físico
 	 *
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idEspacioFisico
 	 * @param idPeriodoAcademicoVigente Periodo académico vigente
@@ -174,7 +174,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * EL usuario puede filtrar los espacios físicos por: Ubicación, tipo espacio
 	 * físico (Salón y/o Sala), agrupadores o salón(Coincidencia por nombre) <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @param listaIdUbicacion
@@ -192,7 +192,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * Método encargado de consultar todas las franjas horarias del docente o
 	 * docentes que imparten el curso<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @param idPeriodoAcademicoVigente Periodo académico vigente
@@ -205,7 +205,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * Método encargado de consultar todas las franjas horarias de los cursos de un
 	 * semestre partiendo del curso que ingresa por parámetro <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @param idAsignatura
@@ -218,7 +218,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	/**
 	 * Método encargado de consultar las franajas horarias del curso<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return
@@ -229,7 +229,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	 * Método encargado de consultar la asignatura a la que pertenece un curso, su
 	 * cupo y la cantidad de horas por semana<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return
@@ -239,7 +239,7 @@ public interface GestionarPlanificacionManualGatewayIntPort {
 	/**
 	 * Método encargado de eliminar todo el horario de un programa</br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param eliminarHorarioInDTO      Información necesaria para eliminar el
 	 *                                  horario de un programa

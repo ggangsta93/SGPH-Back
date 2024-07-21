@@ -83,7 +83,7 @@ public class EspacioFisicoController extends CommonEJB {
 	 * único<br>
 	 * -Utilizado en la pantalla de Gestionar espacios físicos<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idEspacioFisico
 	 * @return
@@ -98,7 +98,7 @@ public class EspacioFisicoController extends CommonEJB {
 	 * Método encargado de consultar los tipos de espacios físicos por
 	 * ubicaciones<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param lstUbicaciones
 	 * @return
@@ -114,7 +114,7 @@ public class EspacioFisicoController extends CommonEJB {
 	 * Método encargado de consultar los espacios físicos por diferentes criterios
 	 * de busqueda y retornarlos de manera paginada<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param filtroEspacioFisicoDTO DTO con los filtros de busqueda
 	 * @return
@@ -128,7 +128,7 @@ public class EspacioFisicoController extends CommonEJB {
 	 * Método encargado de consultar los tipos de espacios físicos asociados a una
 	 * lista de edificios <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param lstIdEdificio
 	 * @return
@@ -143,7 +143,7 @@ public class EspacioFisicoController extends CommonEJB {
 	/**
 	 * Método encargado de consultar todos los edificios <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Listas de instancias EdificioOutDTO
 	 */
@@ -155,7 +155,7 @@ public class EspacioFisicoController extends CommonEJB {
 	/**
 	 * Método encargado de consultar todas las ubicaciones <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Lista de instancias UbicacionOutDTO
 	 */
@@ -168,7 +168,7 @@ public class EspacioFisicoController extends CommonEJB {
 	 * Método encargado de consultar los edificios de los espacios físicos por
 	 * ubicación <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Nombres de los edificios
 	 */

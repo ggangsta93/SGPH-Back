@@ -14,7 +14,7 @@ public interface GestionarProgramaGatewayIntPort {
 	 * Método encargado de consultar los programas asociados a una lista de
 	 * facultades <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param lstIdFacultad
 	 * @return
@@ -24,7 +24,7 @@ public interface GestionarProgramaGatewayIntPort {
 	/**
 	 * Método encargado de consultar todos los programas<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -33,7 +33,7 @@ public interface GestionarProgramaGatewayIntPort {
 	/**
 	 * Método encargado de consultar un programa dado el identificador único </br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPrograma Identificador único del programa
 	 * @return

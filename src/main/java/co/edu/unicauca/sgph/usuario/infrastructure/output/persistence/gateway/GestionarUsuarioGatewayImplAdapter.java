@@ -190,7 +190,7 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	 * Método encargado de consultar los identificadores de roles asociados a un
 	 * usuario <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPersona
 	 * @return
@@ -203,7 +203,7 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	 * Método encargado de consultar los identificadores de programas asociados a un
 	 * usuario <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPersona
 	 * @return

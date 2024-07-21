@@ -40,7 +40,7 @@ public class FacultadRestController extends CommonEJB {
 	/**
 	 * Método encargado de consultar todas las facultades
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */

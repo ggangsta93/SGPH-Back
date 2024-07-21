@@ -45,7 +45,7 @@ public class PeriodoAcademicoController extends CommonEJB {
 	/**
 	 * Método encargado de guardar o actualizar un periodo académico <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param periodoAcademicoInDTO
 	 * @return
@@ -82,7 +82,7 @@ public class PeriodoAcademicoController extends CommonEJB {
 	/**
 	 * Método encargado de consultar los periodos académicos <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param filtroPeriodoAcademicoDTO
 	 * @return Page de instancias PeriodoAcademico
@@ -96,7 +96,7 @@ public class PeriodoAcademicoController extends CommonEJB {
 	/**
 	 * Método encargado de consultar el periodo académico vigente<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -114,7 +114,7 @@ public class PeriodoAcademicoController extends CommonEJB {
 	 * 
 	 * Esta tarea se ejecuta automáticamente cada día a la medianoche <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 */
 	@Scheduled(cron = "0 0 0 * * *") // Se ejecuta todos los días a la medianoche

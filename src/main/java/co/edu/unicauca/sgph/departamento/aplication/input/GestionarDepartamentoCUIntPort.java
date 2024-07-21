@@ -9,7 +9,7 @@ public interface GestionarDepartamentoCUIntPort {
 	/**
 	 * Método encargado de consultar guardar y/o actualizar un departamento<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -18,7 +18,7 @@ public interface GestionarDepartamentoCUIntPort {
 	/**
 	 * Método encargado de consultar todos los departamentos<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */

@@ -26,7 +26,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 * Método encargado de obtener los cursos dado un conjunto de criterios de
 	 * busqueda.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
+	 * @author apedro
 	 * 
 	 * @param filtroCursoPlanificacionDTO
 	 * @return
@@ -38,7 +38,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 * Método encargado de consultar la información gneral de los cursos de un
 	 * programa dado el identificador del programa
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
+	 * @author apedro
 	 * 
 	 * @param idPrograma Identificador del programa
 	 * @return
@@ -48,7 +48,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	/**
 	 * Método encargado de crear y/o actualizar los horarios de un curso.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param crearActualizarHorarioCursoInDTO
 	 * @return
@@ -60,7 +60,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 * Método encargado de crear y/o actualizar los horarios secundarios de un
 	 * curso.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param crearActualizarHorarioCursoInDTO
 	 * @return
@@ -71,7 +71,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	/**
 	 * Método encargado de crear y/o actualizar los docentes de un curso.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param crearActualizarDocentesCursoInDTO
 	 * @return
@@ -84,7 +84,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 * conjunto de criterios de busqueda; este método considera los horarios de los
 	 * docentes y espacios físicos.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param filtroFranjaHorariaDisponibleCursoDTO
 	 * @return
@@ -96,7 +96,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 * Método encargado de obtener los nombres completos de cada espacio físico.
 	 * Ejemplo del formato: 'Salón 204-Edificio nuevo'
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -106,7 +106,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 * Método encargado de obtener las franjas horarias de un curso dado el
 	 * identificador del curso
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @param esPrincipal
@@ -117,7 +117,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	/**
 	 * Método encargado de eliminar todo el horario de un programa</br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param eliminarHorarioInDTO Información necesaria para eliminar el horario de
 	 *                             un programa
@@ -128,7 +128,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un docente
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPersona
 	 * @return
@@ -138,7 +138,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un espacio físico
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idEspacioFisico
 	 * @return
@@ -149,7 +149,7 @@ public interface GestionarPlanificacionManualCUIntPort {
 	 * Método encargado de generar un horario base para un programa partiendo del
 	 * horario del semestre anterior del mismo</br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param generarHorarioBaseInDTO Información requerida para generar el horario
 	 *                                base

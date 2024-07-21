@@ -17,7 +17,7 @@ public interface AsignaturaRepositoryInt extends JpaRepository<AsignaturaEntity,
 	/**
 	 * Método encargado de obtener las materias de un programa
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPrograma
 	 * @return

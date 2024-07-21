@@ -34,7 +34,7 @@ public interface PersonaRepositoryInt extends JpaRepository<PersonaEntity, Long>
 	/**
 	 * Método encargado de consultar todos los tipos de identificación persona <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */

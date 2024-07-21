@@ -78,7 +78,7 @@ public class PlanificacionManualController extends CommonEJB{
 	 * Método encargado de consultar los cursos por diferentes criterios de busqueda
 	 * y retornarlos de manera paginada
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
+	 * @author apedro
 	 * 
 	 * @param filtroCursoPlanificacionDTO DTO con los filtros de busqueda
 	 * @return
@@ -94,7 +94,7 @@ public class PlanificacionManualController extends CommonEJB{
 	 * Método encargado de consultar la información gneral de los cursos de un
 	 * programa dado el identificador del programa
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
+	 * @author apedro
 	 * 
 	 * @param idPrograma Identificador del programa
 	 * @return
@@ -107,7 +107,7 @@ public class PlanificacionManualController extends CommonEJB{
 	/**
 	 * Método encargado de crear y/o actualizar los horarios de un curso.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param crearActualizarHorarioCursoInDTO
 	 * @return
@@ -122,7 +122,7 @@ public class PlanificacionManualController extends CommonEJB{
 	 * Método encargado de crear y/o actualizar los horarios secundarios de un
 	 * curso.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param crearActualizarHorarioCursoInDTO
 	 * @return
@@ -137,7 +137,7 @@ public class PlanificacionManualController extends CommonEJB{
 	/**
 	 * Método encargado de crear y/o actualizar los docentes de un curso.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param crearActualizarDocentesCursoInDTO
 	 * @return
@@ -154,7 +154,7 @@ public class PlanificacionManualController extends CommonEJB{
 	 * conjunto de criterios de busqueda; este método considera los horarios de los
 	 * docentes y espacios físicos.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param filtroFranjaHorariaDisponibleCursoDTO
 	 * @return
@@ -170,7 +170,7 @@ public class PlanificacionManualController extends CommonEJB{
 	 * Método encargado de obtener las franjas horarias de un curso dado el
 	 * identificador del curso
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @param esPrincipal
@@ -193,7 +193,7 @@ public class PlanificacionManualController extends CommonEJB{
 	 * está obteniendo el identificador único del espacio físico y el salon (Incluye
 	 * el formato que se necesario, ya no es necesrio armarlo)
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -211,7 +211,7 @@ public class PlanificacionManualController extends CommonEJB{
 	 * Método encargado de generar un horario base para un programa partiendo del
 	 * horario del semestre anterior del mismo</br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param generarHorarioBaseInDTO Información requerida para generar el horario
 	 *                                base
@@ -238,7 +238,7 @@ public class PlanificacionManualController extends CommonEJB{
 	/**
 	 * Método encargado de eliminar todo el horario de un programa</br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param eliminarHorarioDTO Información necesaria para eliminar el horario de
 	 *                           un programa
@@ -256,7 +256,7 @@ public class PlanificacionManualController extends CommonEJB{
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un docente
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPersona
 	 * @return
@@ -269,7 +269,7 @@ public class PlanificacionManualController extends CommonEJB{
 	/**
 	 * Método encargado de obtener todas las franjas horarias de un espacio físico
 	 *
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idEspacioFisico
 	 * @return

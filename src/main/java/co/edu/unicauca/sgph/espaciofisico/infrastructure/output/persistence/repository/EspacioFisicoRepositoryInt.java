@@ -16,7 +16,7 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	 * único<br>
 	 * -Utilizado en la pantalla de Gestionar espacios físicos<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idEspacioFisico
 	 * @return
@@ -28,7 +28,7 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	 * Ejemplo del formato: 'LUNES 07:00-09:00 Salón 204-Edificio nuevo'
 	 * 
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return
@@ -52,7 +52,7 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	 * Método encargado de consultar todos los edificios de los espacios físicos
 	 * <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Nombres de los edificios
 	 */
@@ -63,7 +63,7 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	 * Método encargado de consultar todos las ubicaciones de los espacios físicos
 	 * <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Nombres de las ubicaciones
 	 */
@@ -75,7 +75,7 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	 * Método encargado de consultar los edificios de los espacios físicos por
 	 * ubicación <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Identificadores de edificios
 	 */
@@ -87,7 +87,7 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	 * Método encargado de consultar la capacidad, el estado y salon de espacios
 	 * físicos dado una lista de identificadores únicos <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param lstIdEspacioFisico
 	 * @return
@@ -101,7 +101,7 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	 * Método encargado de obtener el espacio físico principal de un curso dado el
 	 * identificador único de horario <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idHorario
 	 * @param esPrincipal

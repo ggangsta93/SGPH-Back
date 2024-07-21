@@ -14,7 +14,7 @@ public interface GestionarProgramaCUIntPort {
 	 * Método encargado de consultar los programas asociados a una lista de
 	 * facultades <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param lstIdFacultad
 	 * @return
@@ -24,7 +24,7 @@ public interface GestionarProgramaCUIntPort {
 	/**
 	 * Método encargado de consultar todos los programas<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */

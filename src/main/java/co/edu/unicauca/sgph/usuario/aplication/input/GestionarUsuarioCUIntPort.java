@@ -14,7 +14,7 @@ public interface GestionarUsuarioCUIntPort {
 	/**
 	 * Método encargado de guardar o actualizar un usuario <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param usuario
 	 * @return
@@ -25,7 +25,7 @@ public interface GestionarUsuarioCUIntPort {
 	 * Método encargado de consultar los usuarios por diferentes criterios de
 	 * busqueda y retornarlos de manera paginada<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param filtroUsuarioDTO DTO con los criterios de busqueda
 	 * @return
@@ -35,7 +35,7 @@ public interface GestionarUsuarioCUIntPort {
 	/**
 	 * Método encargado de consultar todos los roles de usuario<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -44,7 +44,7 @@ public interface GestionarUsuarioCUIntPort {
 	/**
 	 * Método encargado de consultar todos los estados de usuario<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -53,7 +53,7 @@ public interface GestionarUsuarioCUIntPort {
 	/**
 	 * Método encargado de cambiar el estado al usuario dado su identificador único</br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idUsuario
 	 * @return

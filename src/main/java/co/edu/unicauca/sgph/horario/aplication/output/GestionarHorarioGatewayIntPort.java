@@ -11,7 +11,7 @@ public interface GestionarHorarioGatewayIntPort {
 	/**
 	 * Método encargado de crear un horario principal
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param horario
 	 * @return
@@ -21,7 +21,7 @@ public interface GestionarHorarioGatewayIntPort {
 	/**
 	 * Método encargado de crear un horario secundario
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param horarioEspacio
 	 * @return
@@ -31,7 +31,7 @@ public interface GestionarHorarioGatewayIntPort {
 	/**
 	 * Método encargado de eliminar un horario 
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param horario
 	 */
@@ -40,7 +40,7 @@ public interface GestionarHorarioGatewayIntPort {
 	/**
 	 * Método encargado de eliminar un horario secundario 
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param horarioEspacio
 	 */
@@ -49,7 +49,7 @@ public interface GestionarHorarioGatewayIntPort {
 	/**
 	 * Método encargado de obtener los horarios de un curso
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param curso
 	 * @return
@@ -60,7 +60,7 @@ public interface GestionarHorarioGatewayIntPort {
 	 * Método encargado de consultar la entidad HorarioEspacio por idHorario y
 	 * idEspacioFisico
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idHorario
 	 * @param idEspacioFisico

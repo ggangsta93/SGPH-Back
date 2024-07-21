@@ -9,7 +9,7 @@ public interface GestionarCursoCUIntPort {
 	/**
 	 * Método encargado de consultar un curso por grupo y asignatura <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param grupo
 	 * @param idAsignatura
@@ -21,7 +21,7 @@ public interface GestionarCursoCUIntPort {
 	/**
 	 * Método encargado de guardar o actualizar un curso <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param curso
 	 * @return
@@ -31,7 +31,7 @@ public interface GestionarCursoCUIntPort {
 	/**
 	 * Método encargado de obtener el curso por su identificador<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return
@@ -42,7 +42,7 @@ public interface GestionarCursoCUIntPort {
 	 * Método encargado de consultar los agrupadores de espacios físicos asociados
 	 * al curso<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param cursoInDTO
 	 * @return Lista de idAgrupadorEspacioFisico

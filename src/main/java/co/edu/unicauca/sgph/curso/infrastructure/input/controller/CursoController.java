@@ -33,7 +33,7 @@ public class CursoController extends CommonEJB {
 	/**
 	 * Método encargado de guardar o actualizar un curso <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param cursoInDTO
 	 * @return
@@ -53,7 +53,7 @@ public class CursoController extends CommonEJB {
 	 * Método encargado de consultar los agrupadores de espacios físicos asociados
 	 * al curso<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param cursoInDTO
 	 * @return Lista de idAgrupadorEspacioFisico
@@ -66,7 +66,7 @@ public class CursoController extends CommonEJB {
 	/**
 	 * Método encargado de consultar un curso por grupo y asignatura <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param grupo
 	 * @param idAsignatura

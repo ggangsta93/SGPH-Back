@@ -9,7 +9,7 @@ public interface GestionarCursoGatewayIntPort {
 	/**
 	 * Método encargado de consultar un curso por grupo y asignatura <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param grupo
 	 * @param idAsignatura
@@ -21,7 +21,7 @@ public interface GestionarCursoGatewayIntPort {
 	/**
 	 * Método encargado de guardar o actualizar un curso <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param curso
 	 * @return
@@ -32,7 +32,7 @@ public interface GestionarCursoGatewayIntPort {
 	 * Método encargado de obtener el curso por su identificador, si no existe
 	 * retorna nulo.
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.com.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return Retorna el curso si existe, caso contrario retorna nulo
@@ -43,7 +43,7 @@ public interface GestionarCursoGatewayIntPort {
 	 * Método encargado de consultar los agrupadores de espacios físicos asociados
 	 * al curso<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param cursoInDTO
 	 * @return Lista de idAgrupadorEspacioFisico
@@ -54,7 +54,7 @@ public interface GestionarCursoGatewayIntPort {
 	 * Método encargado de consultar todos los cursos de un programa dado el
 	 * programa y periodo académico </br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPrograma         Identificador único del programa
 	 * @param idPeriodoAcademico Identificador único del periodo académico

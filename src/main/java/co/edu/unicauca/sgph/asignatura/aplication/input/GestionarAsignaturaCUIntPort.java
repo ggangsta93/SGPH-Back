@@ -14,7 +14,7 @@ public interface GestionarAsignaturaCUIntPort {
 	/**
 	 * Método encargado de guardar o actualizar una asignatura <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param asignatura
 	 * @return
@@ -24,7 +24,7 @@ public interface GestionarAsignaturaCUIntPort {
 	/**
 	 * Método encargado de consultar las asignaturas por programa <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPrograma
 	 * @return

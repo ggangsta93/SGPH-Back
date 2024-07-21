@@ -371,7 +371,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	/**
 	 * Método encargado de realizar las validaciones iniciales </br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param crearActualizarHorarioCursoInDTO Información recibida por parámetro
 	 */
@@ -416,7 +416,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 * Método encargado de convertir una franja en formato {día}
 	 * {horaInicio}-{horaFin}. Ej. Lunes 07:00-09:00 </br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param franja
 	 * @return
@@ -832,7 +832,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 * de la semana (Opcional), cantidad de horas por franja (Obligatorio), y por
 	 * hora de inicio(Opcional).<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param filtroFranjaHorariaDisponibleCursoDTO
 	 * @return
@@ -903,7 +903,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 * y docentes.<br>
 	 * 
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param dia
 	 * @param horaInicio
@@ -927,7 +927,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 * no deben sobreponerse, excepto los mismos cursos que pertenecen a la misma
 	 * asignatura. <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param franjaCandidata
 	 * @param lstFranjasDeCursosSemestre
@@ -951,7 +951,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 * Método encargado de validar que una franja candidata no se sobreponga con el
 	 * horario de un espacio<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param franjaCandidata
 	 * @param lstFranjasDeEspacioFisico
@@ -966,7 +966,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 * Método encargado de validar que una franja candidata no se sobreponga con los
 	 * horarios de los docentes que orientan el curso<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param franjaCandidata
 	 * @param lstFranjasDeEspacioFisico
@@ -981,7 +981,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 * Método encargado de validar que una franja candidata no se sobreponga con los
 	 * horarios del mismo curso<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param franjaCandidata
 	 * @param lstFranjasDeEspacioFisico
@@ -996,7 +996,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	 * Método que refactoriza parte de la lógica en común para validar el
 	 * solapamiento de una franja candidata en una lista de franjas <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param franjaCandidata
 	 * @param lstFranjasDeEspacioFisico

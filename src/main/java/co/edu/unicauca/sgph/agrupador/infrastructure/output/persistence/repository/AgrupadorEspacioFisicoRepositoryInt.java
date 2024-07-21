@@ -15,7 +15,7 @@ public interface AgrupadorEspacioFisicoRepositoryInt extends JpaRepository<Agrup
 	 * Método encargado de consultar los agrupadores de espacios físicos dado una
 	 * lista de identificadores únicos<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idAgrupadorEspacioFisico
 	 * @return Lista de instancias de AgrupadorEspacioFisico
@@ -29,7 +29,7 @@ public interface AgrupadorEspacioFisicoRepositoryInt extends JpaRepository<Agrup
 	 * Método encargado de consultar los agrupadores de espacios físicos dado una
 	 * lista de identificadores únicos de facultades<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idFacultad
 	 * @return Lista de instancias de AgrupadorEspacioFisico
@@ -42,7 +42,7 @@ public interface AgrupadorEspacioFisicoRepositoryInt extends JpaRepository<Agrup
 	 * Método encargado de consultar los agrupadores de espacios físicos asociados a
 	 * un curso<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idCurso
 	 * @return Lista de instancias de AgrupadorEspacioFisico
@@ -55,7 +55,7 @@ public interface AgrupadorEspacioFisicoRepositoryInt extends JpaRepository<Agrup
 	/**
 	 * Método encargado de contar los espacios físicos por grupo<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return Lista de Object[]
 	 */

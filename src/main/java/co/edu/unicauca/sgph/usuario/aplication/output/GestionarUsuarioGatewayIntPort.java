@@ -14,7 +14,7 @@ public interface GestionarUsuarioGatewayIntPort {
 	/**
 	 * Método encargado de guardar o actualizar un usuario <br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param usuario
 	 * @return
@@ -33,7 +33,7 @@ public interface GestionarUsuarioGatewayIntPort {
 	/**
 	 * Método encargado de consultar todos los roles de usuario<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -42,7 +42,7 @@ public interface GestionarUsuarioGatewayIntPort {
 	/**
 	 * Método encargado de consultar todos los estados de usuario<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @return
 	 */
@@ -52,7 +52,7 @@ public interface GestionarUsuarioGatewayIntPort {
 	 * Método encargado de validar si existe un nombre de usuario. Este es utilizado
 	 * por la anotación @existeUsuarioPorNombreUsuario<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param nombreUsuario Nombre de usuario
 	 * @param idUsuario     Identificador único usuario (Es requerido para
@@ -65,7 +65,7 @@ public interface GestionarUsuarioGatewayIntPort {
 	 * Método encargado de validar si ya existe un usuario con el idPersona. Este es
 	 * utilizado por la anotación @existeIdPersona<br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idPersona Identificador único persona
 	 * @param idUsuario Identificador único usuario (Es requerido para
@@ -77,7 +77,7 @@ public interface GestionarUsuarioGatewayIntPort {
 	/**
 	 * Método encargado de cambiar el estado al usuario dado su identificador único</br>
 	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * @author apedro
 	 * 
 	 * @param idUsuario
 	 * @return
