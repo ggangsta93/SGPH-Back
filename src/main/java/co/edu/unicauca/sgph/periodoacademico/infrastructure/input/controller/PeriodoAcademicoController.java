@@ -3,9 +3,7 @@ package co.edu.unicauca.sgph.periodoacademico.infrastructure.input.controller;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.periodoacademico.aplication.input.GestionarPeriodoAcademicoCUIntPort;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.FiltroPeriodoAcademicoDTO;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.PeriodoAcademicoInDTO;
@@ -32,7 +31,7 @@ import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.mapper.Periodo
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/AdministrarPeriodoAcademico")
-public class PeriodoAcademicoController {
+public class PeriodoAcademicoController extends CommonEJB {
 
 	private GestionarPeriodoAcademicoCUIntPort gestionarPeriodoAcademicoCUIntPort;
 	private PeriodoAcademicoRestMapper periodoAcademicoRestMapper;
@@ -124,30 +123,5 @@ public class PeriodoAcademicoController {
 		LocalDate localDate = LocalDate.now();
 		Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		this.gestionarPeriodoAcademicoCUIntPort.actualizarEstadoPeriodoAcademicoAutomaticamente(date);
-	}
-
-	/**
-	 * Método encargado de manejar la validación de errores en las peticiones.<br>
-	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
-	 * @param result El resultado de la validación.
-	 * @param codes  Codigos personalizados
-	 * @return ResponseEntity con los errores de validación.
-	 * 
-	 */
-	private ResponseEntity<?> validacion(BindingResult result, Set<String> codes) {
-		Map<String, String> errores = new HashMap<>();
-		// Se validan restricciones de campos
-		result.getAllErrors().forEach(error -> {
-			if (codes.contains(error.getCode())) {
-				errores.put(error.getCode(), error.getDefaultMessage());
-			}
-		});
-		// Se validan restricciones de campos
-		result.getFieldErrors().forEach(error -> {
-			errores.put(error.getField(), "El campo " + error.getField() + " " + error.getDefaultMessage());
-		});
-		return ResponseEntity.accepted().body(errores);
 	}
 }

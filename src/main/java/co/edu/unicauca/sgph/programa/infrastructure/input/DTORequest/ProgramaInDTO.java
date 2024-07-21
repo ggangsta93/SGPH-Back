@@ -3,6 +3,8 @@ package co.edu.unicauca.sgph.programa.infrastructure.input.DTORequest;
 public class ProgramaInDTO {
 
 	private Long idPrograma;
+	
+	private Long oid;
 
 	private String nombre;
 
@@ -40,5 +42,13 @@ public class ProgramaInDTO {
 
 	public void setIdFacultad(Long idFacultad) {
 		this.idFacultad = idFacultad;
+	}
+
+	public Long getOid() {
+		return oid;
+	}
+
+	public void setOid(Long oid) {
+		this.oid = oid;
 	}
 }

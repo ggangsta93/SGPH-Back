@@ -63,5 +63,11 @@ public interface AgrupadorEspacioFisicoRepositoryInt extends JpaRepository<Agrup
 	public List<Object[]> contarEspaciosFisicosPorAgrupador();
 
 	Page<AgrupadorEspacioFisicoEntity> findByFacultadIdFacultadIn(List<Long> idFacultad, Pageable page);
-
+	
+	@Query("SELECT agrupador "
+			+ " FROM AgrupadorEspacioFisicoEntity agrupador "
+			+ " WHERE agrupador.nombre = :nombreAgrupador "
+			+ " AND (:idAgrupadorEspacioFisico IS NULL OR agrupador.idAgrupadorEspacioFisico != :idAgrupadorEspacioFisico) "
+			+ "")
+	public AgrupadorEspacioFisicoEntity consultarAgrupadorPorNombreAgrupador(String nombreAgrupador, Long idAgrupadorEspacioFisico);
 }

@@ -20,11 +20,12 @@ import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
+import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
 @RestController
 @RequestMapping("/AdministrarAsignatura")
-public class AsignaturaController {
+public class AsignaturaController extends CommonEJB {
 
 	private GestionarAsignaturaCUIntPort gestionarAsignaturaCUIntPort;
 	private AsignaturaRestMapper asignaturaRestMapper;

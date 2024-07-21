@@ -48,8 +48,21 @@ public interface GestionarAgrupadorEspacioFisicoGatewayIntPort {
 
 	Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(FiltroGrupoDTO filtro);
 
-	AgrupadorEspacioFisicoOutDTO guardarGrupo(AgrupadorEspacioFisicoOutDTO agrupador);
+	AgrupadorEspacioFisico guardarGrupo(AgrupadorEspacioFisico agrupadorEspacioFisicor);
 	
 	MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion);
+	
+	/**
+	 * Método encargado de validar si existe un nombre de agrupador. Este es
+	 * utilizado por la anotación @existeNombreAgrupador<br>
+	 * 
+	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
+	 * 
+	 * @param nombreAgrupador          Nombre de agrupador
+	 * @param idAgrupadorEspacioFisico Identificador único agrupador (Es requerido
+	 *                                 para actualización)
+	 * @return
+	 */
+	public Boolean existeAgrupadorPorNombreAgrupador(String nombreAgrupador, Long idAgrupadorEspacioFisico);
 
 }

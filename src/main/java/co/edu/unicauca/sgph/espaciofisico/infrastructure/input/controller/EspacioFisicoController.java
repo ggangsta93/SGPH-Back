@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEdificioCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarTipoEspacioFisicoCUIntPort;
@@ -36,7 +37,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.UbicacionR
 @RestController
 @RequestMapping("/AdministrarEspacioFisico")
 @CrossOrigin(origins = "http://localhost:4200")
-public class EspacioFisicoController {
+public class EspacioFisicoController extends CommonEJB {
 
 	// Gestionadores
 	private GestionarEspacioFisicoCUIntPort gestionarEspacioFisicoCUIntPort;

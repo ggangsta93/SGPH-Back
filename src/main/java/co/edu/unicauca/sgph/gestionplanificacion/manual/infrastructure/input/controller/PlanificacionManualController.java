@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioInDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
@@ -32,7 +33,7 @@ import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.CrearActual
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/PlanificacionManual")
-public class PlanificacionManualController {
+public class PlanificacionManualController extends CommonEJB{
 
 	private GestionarPlanificacionManualCUIntPort gestionarPlanificacionManualCUIntPort;
 	private PlanificacionManualRestMapper planificacionManualRestMapper;

@@ -10,6 +10,8 @@ import lombok.Data;
 public class Programa {
 
 	private Long idPrograma;
+	
+	private Long oid;
 
 	private String nombre;
 	
@@ -65,5 +67,13 @@ public class Programa {
 
 	public void setAsignaturas(List<Asignatura> asignaturas) {
 		this.asignaturas = asignaturas;
+	}
+
+	public Long getOid() {
+		return oid;
+	}
+
+	public void setOid(Long oid) {
+		this.oid = oid;
 	}
 }

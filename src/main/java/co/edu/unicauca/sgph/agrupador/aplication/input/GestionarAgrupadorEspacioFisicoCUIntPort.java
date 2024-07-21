@@ -48,7 +48,7 @@ public interface GestionarAgrupadorEspacioFisicoCUIntPort {
 
 	Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(FiltroGrupoDTO filtro);
 
-    AgrupadorEspacioFisicoOutDTO guardarGrupo(AgrupadorEspacioFisicoOutDTO agrupador);
+	AgrupadorEspacioFisico guardarGrupo(AgrupadorEspacioFisico agrupador);
     
     MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion);
 }

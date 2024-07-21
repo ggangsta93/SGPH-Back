@@ -13,18 +13,24 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 
 @Entity
-@Table(name = "PROGRAMA")
+@Table(name = "PROGRAMA", uniqueConstraints = {
+	    @UniqueConstraint(columnNames = {"OID"})
+})
 public class ProgramaEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PROGRAMA", nullable = false)
 	private Long idPrograma;
+	
+	@Column(name = "OID")
+	private String oid;
 
 	@Column(name = "NOMBRE")
 	private String nombre;
@@ -85,5 +91,13 @@ public class ProgramaEntity {
 
 	public void setAsignaturas(List<AsignaturaEntity> asignaturas) {
 		this.asignaturas = asignaturas;
+	}
+
+	public String getOid() {
+		return oid;
+	}
+
+	public void setOid(String oid) {
+		this.oid = oid;
 	}
 }

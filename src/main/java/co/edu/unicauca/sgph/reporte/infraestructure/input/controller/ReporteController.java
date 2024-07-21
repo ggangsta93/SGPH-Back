@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.reporte.aplication.input.GestionarReporteIntPort;
 import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteSimcaDTO;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/reporte")
-public class ReporteController {
+public class ReporteController extends CommonEJB {
     @Autowired
     private GestionarReporteIntPort gestionarReporteIntPort;
     @PostMapping("/simca")

@@ -3,6 +3,8 @@ package co.edu.unicauca.sgph.departamento.infrastructure.input.DTOResponse;
 public class DepartamentoOutDTO {
 
 	private Long idDepartamento;
+	
+	private Long oid;
 
 	private String nombre;
 
@@ -30,5 +32,13 @@ public class DepartamentoOutDTO {
 
 	public void setIdFacultad(Long idFacultad) {
 		this.idFacultad = idFacultad;
+	}
+
+	public Long getOid() {
+		return oid;
+	}
+
+	public void setOid(Long oid) {
+		this.oid = oid;
 	}
 }

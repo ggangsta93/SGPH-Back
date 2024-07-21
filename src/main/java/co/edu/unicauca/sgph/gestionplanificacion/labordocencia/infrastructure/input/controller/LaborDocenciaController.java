@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.aplication.input.GestionarLaborDocenciaCUIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.infrastructure.input.mapper.LaborDocenciaRestMapper;
 import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.infrastructure.output.persistence.entity.LaborDocenciaEntity;
@@ -18,7 +19,7 @@ import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.infrastructure.ou
 @RestController
 @RequestMapping("/LaborDocencia")
 @Service
-public class LaborDocenciaController {
+public class LaborDocenciaController extends CommonEJB{
 
 	private GestionarLaborDocenciaCUIntPort gestionarLaborDocenciaCUIntPort;
 	private LaborDocenciaRestMapper laborDocenciaRestMapper;

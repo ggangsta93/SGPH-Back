@@ -59,8 +59,8 @@ public class GestionarAgrupadorEspacioFisicoCUAdapter implements GestionarAgrupa
 	}
 
 	@Override
-	public AgrupadorEspacioFisicoOutDTO guardarGrupo(AgrupadorEspacioFisicoOutDTO agrupador) {
-		return this.gestionarAgrupadorEspacioFisicoGatewayIntPort.guardarGrupo(agrupador);
+	public AgrupadorEspacioFisico guardarGrupo(AgrupadorEspacioFisico agrupadorEspacioFisico) {
+		return this.gestionarAgrupadorEspacioFisicoGatewayIntPort.guardarGrupo(agrupadorEspacioFisico);
 	}
 	
 	@Override

@@ -7,6 +7,8 @@ import lombok.Data;
 public class Departamento {
 
 	private Long idDepartamento;
+	
+	private Long oid;
 
 	private String nombre;
 
@@ -42,5 +44,13 @@ public class Departamento {
 
 	public void setFacultad(Facultad facultad) {
 		this.facultad = facultad;
+	}
+
+	public Long getOid() {
+		return oid;
+	}
+
+	public void setOid(Long oid) {
+		this.oid = oid;
 	}
 }

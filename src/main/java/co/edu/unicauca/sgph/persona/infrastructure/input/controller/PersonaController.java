@@ -1,9 +1,7 @@
 package co.edu.unicauca.sgph.persona.infrastructure.input.controller;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
 import co.edu.unicauca.sgph.persona.domain.model.Persona;
 import co.edu.unicauca.sgph.persona.infrastructure.input.DTORequest.PersonaInDTO;
@@ -30,7 +29,7 @@ import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.TipoIdentif
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/AdministrarPersona")
-public class PersonaController {
+public class PersonaController extends CommonEJB {
 
 	private GestionarPersonaCUIntPort gestionarPersonaCUIntPort;
 	private PersonaRestMapper personaRestMapper;
@@ -64,31 +63,6 @@ public class PersonaController {
 		}
 	}
 
-	/**
-	 * Método encargado de manejar la validación de errores en las peticiones.<br>
-	 * 
-	 * @author Pedro Javier Arias Lasso <apedro@unicauca.edu.co>
-	 * 
-	 * @param result El resultado de la validación.
-	 * @param codes  Codigos personalizados
-	 * @return ResponseEntity con los errores de validación.
-	 * 
-	 */
-	private ResponseEntity<?> validacion(BindingResult result, Set<String> codes) {
-		Map<String, String> errores = new HashMap<>();
-		// Se validan restricciones de campos
-		result.getAllErrors().forEach(error -> {
-			if (codes.contains(error.getCode())) {
-				errores.put(error.getCode(), error.getDefaultMessage());
-			}
-		});
-		// Se validan restricciones de campos
-		result.getFieldErrors().forEach(error -> {
-			errores.put(error.getField(), "El campo " + error.getField() + " " + error.getDefaultMessage());
-		});
-		return ResponseEntity.accepted().body(errores);
-	}
-	
 	/**
 	 * Método encargado de consultar una persona con el tipo y número de identificación<br>
 	 * 

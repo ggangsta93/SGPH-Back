@@ -34,7 +34,7 @@ public class EspacioFisicoEntity {
 	private Long idEspacioFisico;
 	
 	@Column(name = "OID")
-	private String OID;
+	private String oid;
 	
 	@Column(name = "CAPACIDAD")
 	private Long capacidad;
@@ -171,11 +171,11 @@ public class EspacioFisicoEntity {
 		this.agrupadores = agrupadores;
 	}
 
-	public String getOID() {
-		return OID;
+	public String getOid() {
+		return oid;
 	}
 
-	public void setOID(String oID) {
-		OID = oID;
-	}	
+	public void setOid(String oid) {
+		this.oid = oid;
+	}
 }

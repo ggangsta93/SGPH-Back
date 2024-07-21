@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.programa.aplication.input.GestionarProgramaCUIntPort;
 import co.edu.unicauca.sgph.programa.infrastructure.input.DTORequest.ProgramaInDTO;
 import co.edu.unicauca.sgph.programa.infrastructure.input.DTOResponse.ProgramaOutDTO;
@@ -16,7 +18,7 @@ import co.edu.unicauca.sgph.programa.infrastructure.input.mapper.ProgramaRestMap
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/AdministrarPrograma")
-public class ProgramaController {
+public class ProgramaController extends CommonEJB {
 
 	// Gestionadores
 	private GestionarProgramaCUIntPort gestionarProgramaCUIntPort;
@@ -34,7 +36,7 @@ public class ProgramaController {
 				.toProgramaOutDTO(this.gestionarProgramaCUIntPort.consultarProgramaPorNombre(nombre));
 	}
 
-	public ProgramaOutDTO guardarPrograma(ProgramaInDTO programaInDTO) {
+	public ProgramaOutDTO guardarPrograma(@RequestBody ProgramaInDTO programaInDTO) {
 		return this.programaRestMapper.toProgramaOutDTO(
 				this.gestionarProgramaCUIntPort.guardarPrograma(this.programaRestMapper.toPrograma(programaInDTO)));
 	}

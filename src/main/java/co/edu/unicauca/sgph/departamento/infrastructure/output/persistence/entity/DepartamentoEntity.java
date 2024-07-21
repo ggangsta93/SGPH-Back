@@ -9,17 +9,23 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 
 @Entity
-@Table(name = "DEPARTAMENTO")
+@Table(name = "DEPARTAMENTO", uniqueConstraints = {
+	    @UniqueConstraint(columnNames = {"OID"})
+})
 public class DepartamentoEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_DEPARTAMENTO", nullable = false)
 	private Long idDepartamento;
+	
+	@Column(name = "OID")
+	private String oid;
 
 	@Column(name = "NOMBRE")
 	private String nombre;
@@ -59,5 +65,13 @@ public class DepartamentoEntity {
 
 	public void setFacultad(FacultadEntity facultad) {
 		this.facultad = facultad;
+	}
+
+	public String getOid() {
+		return oid;
+	}
+
+	public void setOid(String oid) {
+		this.oid = oid;
 	}
 }

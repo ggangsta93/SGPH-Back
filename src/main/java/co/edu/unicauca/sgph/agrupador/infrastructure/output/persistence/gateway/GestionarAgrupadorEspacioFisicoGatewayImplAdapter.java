@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
@@ -27,13 +26,10 @@ import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTORequest.FiltroGrup
 import co.edu.unicauca.sgph.agrupador.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoOutDTO;
 import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.repository.AgrupadorEspacioFisicoRepositoryInt;
-import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
-import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.EspacioFisicoRepositoryInt;
-import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 
 @Service
 public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
@@ -174,32 +170,13 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 	
 
 	@Override
-	public AgrupadorEspacioFisicoOutDTO guardarGrupo(AgrupadorEspacioFisicoOutDTO agrupador) {
-		AgrupadorEspacioFisicoEntity entidad = this.agrupadorEspacioFisicoRepositoryInt.save(this.mapGrupoEntidad(agrupador));
-		return this.mapGrupo(entidad);
+	public AgrupadorEspacioFisico guardarGrupo(AgrupadorEspacioFisico agrupadorEspacioFisico) {
+		return this.modelMapper.map(
+				this.agrupadorEspacioFisicoRepositoryInt
+						.save(this.modelMapper.map(agrupadorEspacioFisico, AgrupadorEspacioFisicoEntity.class)),
+				AgrupadorEspacioFisico.class);
 	}
-	private AgrupadorEspacioFisicoEntity mapGrupoEntidad(AgrupadorEspacioFisicoOutDTO dto) {
-		AgrupadorEspacioFisicoEntity entidad = new AgrupadorEspacioFisicoEntity();
-		if (dto.getIdAgrupadorEspacioFisico() != null) {
-			entidad.setIdAgrupadorEspacioFisico(dto.getIdAgrupadorEspacioFisico());
-		}
-		FacultadEntity facultad = new FacultadEntity();
-		facultad.setIdFacultad(dto.getIdFacultad());
-		entidad.setFacultad(facultad);
-		entidad.setNombre(dto.getNombre());
-		entidad.setObservacion(dto.getObservacion());
-		return entidad;
-	}
-	private AgrupadorEspacioFisicoOutDTO mapGrupo(AgrupadorEspacioFisicoEntity entidad) {
-		AgrupadorEspacioFisicoOutDTO dto = new AgrupadorEspacioFisicoOutDTO();
-		dto.setIdAgrupadorEspacioFisico(entidad.getIdAgrupadorEspacioFisico());
-		dto.setNombre(entidad.getNombre());
-		dto.setIdFacultad(entidad.getFacultad().getIdFacultad());
-		dto.setNombreFacultad(entidad.getFacultad().getNombre());
-		dto.setObservacion(entidad.getObservacion());
-		return dto;
-	}
-	
+		
 	@Override
 	public MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion) {
 		this.eliminarAgrupadoresEspacioFisico(asignacion.getQuitados(), asignacion.getIdGrupo());
@@ -233,6 +210,20 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 			espacioFisicoEntity.setAgrupadores(agrupadores);
 			this.espacioFisicoRepositoryInt.save(espacioFisicoEntity);
 		});
-	}	
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort#existeAgrupadorPorNombreAgrupador(java.lang.String, java.lang.Long)
+	 */
+	@Override
+	public Boolean existeAgrupadorPorNombreAgrupador(String nombreAgrupador, Long idAgrupadorEspacioFisico) {
+		AgrupadorEspacioFisicoEntity agrupadorEspacioFisicoEntity = this.agrupadorEspacioFisicoRepositoryInt
+				.consultarAgrupadorPorNombreAgrupador(nombreAgrupador, idAgrupadorEspacioFisico);
+		if (Objects.nonNull(agrupadorEspacioFisicoEntity)) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
+	}
 	
 }

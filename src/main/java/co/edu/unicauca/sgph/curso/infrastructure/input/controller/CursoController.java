@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
 import co.edu.unicauca.sgph.curso.infrastructure.input.DTORequest.CursoInDTO;
 import co.edu.unicauca.sgph.curso.infrastructure.input.DTOResponse.CursoOutDTO;
@@ -19,7 +20,7 @@ import co.edu.unicauca.sgph.curso.infrastructure.input.mapper.CursoRestMapper;
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/AdministrarCurso")
-public class CursoController {
+public class CursoController extends CommonEJB {
 
 	private GestionarCursoCUIntPort gestionarCursoCUIntPort;
 	private CursoRestMapper cursoRestMapper;

@@ -1,14 +1,33 @@
 package co.edu.unicauca.sgph.agrupador.infrastructure.input.DTORequest;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import co.edu.unicauca.sgph.agrupador.infrastructure.input.validation.ExisteNombreAgrupador;
+
+@ExisteNombreAgrupador
 public class AgrupadorEspacioFisicoInDTO {
 
 	private Long idAgrupadorEspacioFisico;
 
+	@NotEmpty
 	private String nombre;
 
+	@NotEmpty
 	private String observacion;
 
+	@NotNull
 	private Long idFacultad;
+	
+	/**
+	 * Atributo que determina si la invocación es para validar la información o
+	 * persistirla
+	 */
+	private Boolean esValidar;
+
+	public AgrupadorEspacioFisicoInDTO() {
+		// Constructor sin parametros
+	}
 
 	public AgrupadorEspacioFisicoInDTO(Long idAgrupadorEspacioFisico) {
 		this.idAgrupadorEspacioFisico = idAgrupadorEspacioFisico;
@@ -44,5 +63,13 @@ public class AgrupadorEspacioFisicoInDTO {
 
 	public void setIdFacultad(Long idFacultad) {
 		this.idFacultad = idFacultad;
+	}
+
+	public Boolean getEsValidar() {
+		return esValidar;
+	}
+
+	public void setEsValidar(Boolean esValidar) {
+		this.esValidar = esValidar;
 	}
 }
