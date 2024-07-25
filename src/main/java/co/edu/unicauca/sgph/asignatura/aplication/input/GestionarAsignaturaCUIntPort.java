@@ -6,6 +6,7 @@ import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import org.springframework.data.domain.Page;
 
@@ -38,5 +39,5 @@ public interface GestionarAsignaturaCUIntPort {
 	Asignatura inactivarAsignaturaPorId(Long idAsignatura);
 
 	MensajeOutDTO cargaMasivaAsignaturas(AsignaturaInDTO asignatura);
-	Boolean validarExistenciaAsignaturasPorOID(List<String> oid);
+	List<Asignatura> obtenerAsignaturasPorOids(List<String> oid);
 }

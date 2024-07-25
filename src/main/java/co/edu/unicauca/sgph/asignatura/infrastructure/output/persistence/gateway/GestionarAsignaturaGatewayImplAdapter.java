@@ -234,9 +234,8 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 	}
 
 	@Override
-	public Boolean validarExistenciaAsignaturasPorOID(List<String> oid) {
-		List<AsignaturaEntity> asignaturas = this.asignaturaRepositoryInt.findByOidInAndEstado(oid, EstadoAsignaturaEnum.ACTIVO);
-		return asignaturas.size() == oid.size();
+	public List<Asignatura> obtenerAsignaturasPorListaOids(List<String> oid) {
+		return this.asignaturaRepositoryInt.findByOidInAndEstado(oid, EstadoAsignaturaEnum.ACTIVO).stream().map(a -> asignaturaMapper.map(a, Asignatura.class)).collect(Collectors.toList());
 	}
 
 	private static String getCellValueAsString(Cell cell) {

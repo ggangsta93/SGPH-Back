@@ -1,10 +1,14 @@
 package co.edu.unicauca.sgph.docente.domain.useCase;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
+import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteLaborDTO;
@@ -135,25 +139,39 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 		String periodoString = periodoVigente.getAnio() + "-"+ periodoVigente.getPeriodo();
 		List<DocenteLaborDTO> docentesFiltrados = docentes.stream().filter(docente -> docente.getNombrePrograma().equals(programa.getNombre()) && docente.getPeriodo().equals(periodoString)).collect(Collectors.toList());
 		// 3.3 VALIDAR EXISTENCIA ASIGANTURA.
-		List<String> oidAsignaturas = docentesFiltrados.stream().map(d -> d.getOid()).collect(Collectors.toList());
-		Boolean valido = this.gestionarAsignaturaCUIntPort.validarExistenciaAsignaturasPorOID(oidAsignaturas);
+		List<String> oidAsignaturas = docentesFiltrados.stream().map(d -> d.getOid()).distinct().collect(Collectors.toList());
+		List<Asignatura> asignaturas = this.gestionarAsignaturaCUIntPort.obtenerAsignaturasPorOids(oidAsignaturas);
+		Boolean valido = asignaturas.size() == oidAsignaturas.size();
 		if (!valido) {
 			mensaje.setDescripcion("Hay asignaturas pendientes por registrar o activar en el sistema");
 			return mensaje;
 		}
-		// 4 CREAR DOCENTES
-		this.crearDocentes(docentesFiltrados);
+		// CREAR LABOR
+		this.guardarLaborDocente(docentesFiltrados, asignaturas, periodoVigente);
 		mensaje.setError(false);
 		mensaje.setDescripcion("Cargue labor docente exitoso");
 		return mensaje;
 	}
 
-	private void crearDocentes(List<DocenteLaborDTO> docentes) {
-		docentes.forEach(nuevoDocente -> {
-			Docente docente = this.gestionarDocenteGatewayIntPort.consultarDocentePorNumeroIdentificacion(nuevoDocente.getIdentificacion());
-			if (docente == null) {
-				this.gestionarDocenteGatewayIntPort.guardarDocente(this.mapearDocenteLaborPorDocente(nuevoDocente));
+	private void crearCurso(DocenteLaborDTO docenteLaborDTO, Docente docenteNuevo, List<Asignatura> asignatura, PeriodoAcademico periodoAcademico) {
+		Curso curso = new Curso();
+		curso.setDocentes(Arrays.asList(docenteNuevo));
+		Asignatura asignaturaExistente = asignatura.stream().filter(a -> a.getOID() == docenteLaborDTO.getOid()).collect(Collectors.toList()).get(0);
+		curso.setAsignatura(asignaturaExistente);
+		curso.setCupo(40); // TODO CUPO
+		curso.setGrupo(docenteLaborDTO.getGrupo());
+		curso.setHorarios(null); // TODO HORARIOS.
+		curso.setPeriodoAcademico(periodoAcademico);
+		this.gestionarCursoCUIntPort.guardarCurso(curso);
+	}
+	private void guardarLaborDocente(List<DocenteLaborDTO> docentes, List<Asignatura> asignaturas, PeriodoAcademico periodoAcademico) {
+		List<Docente> docentesNuevos = new ArrayList<>();
+		docentes.forEach(docenteLabor -> {
+			Docente docenteNuevo = this.gestionarDocenteGatewayIntPort.consultarDocentePorNumeroIdentificacion(docenteLabor.getIdentificacion());
+			if (docenteNuevo == null) {
+				docenteNuevo = this.gestionarDocenteGatewayIntPort.guardarDocente(this.mapearDocenteLaborPorDocente(docenteLabor));
 			}
+			this.crearCurso(docenteLabor, docenteNuevo, asignaturas, periodoAcademico);
 		});
 	}
 	private Docente mapearDocenteLaborPorDocente(DocenteLaborDTO dto) {
