@@ -137,7 +137,7 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 		// 3.3 VALIDAR EXISTENCIA ASIGANTURA.
 		List<String> oidAsignaturas = docentesFiltrados.stream().map(d -> d.getOid()).collect(Collectors.toList());
 		Boolean valido = this.gestionarAsignaturaCUIntPort.validarExistenciaAsignaturasPorOID(oidAsignaturas);
-		if (valido) {
+		if (!valido) {
 			mensaje.setDescripcion("Hay asignaturas pendientes por registrar o activar en el sistema");
 			return mensaje;
 		}
