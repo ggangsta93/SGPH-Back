@@ -233,6 +233,12 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		return mensaje;
 	}
 
+	@Override
+	public Boolean validarExistenciaAsignaturasPorOID(List<String> oid) {
+		List<AsignaturaEntity> asignaturas = this.asignaturaRepositoryInt.findByOidInAndEstado(oid, EstadoAsignaturaEnum.ACTIVO);
+		return asignaturas.size() == oid.size();
+	}
+
 	private static String getCellValueAsString(Cell cell) {
 		if (cell == null) {
 			return "";

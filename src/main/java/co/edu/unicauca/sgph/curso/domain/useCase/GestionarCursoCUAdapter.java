@@ -62,4 +62,9 @@ public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
 		return this.gestionarCursoGatewayIntPort.eliminarCurso(id);
 	}
 
+	@Override
+	public List<Curso> consultarCursosPorIdPeriodoYIdPrograma(Long idPeriodo, Long idPrograma) {
+		return  this.gestionarCursoGatewayIntPort.consultarCursosPorProgramaYPeriodoAcademico(idPrograma, idPeriodo);
+	}
+
 }

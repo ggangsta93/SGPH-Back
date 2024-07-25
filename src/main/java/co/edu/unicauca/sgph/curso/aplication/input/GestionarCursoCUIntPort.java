@@ -52,4 +52,5 @@ public interface GestionarCursoCUIntPort {
 	Curso obtenerCurso(Long id);
 
 	Boolean eliminarCurso(Long id);
+	List<Curso> consultarCursosPorIdPeriodoYIdPrograma(Long idPeriodo, Long idPrograma);
 }

@@ -1,5 +1,8 @@
 package co.edu.unicauca.sgph.common.infrastructure.configuration;
 
+import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
+import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
+import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -87,9 +90,22 @@ public class BeanConfigurations {
 	}
 
 	@Bean
-	GestionarDocenteCUAdapter crearGestionarDocenteCUInt(GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort,
-			DocenteFormatterResultsIntPort docenteFormatterResultsIntPort) {
-		return new GestionarDocenteCUAdapter(gestionarDocenteGatewayIntPort, docenteFormatterResultsIntPort);
+	GestionarDocenteCUAdapter crearGestionarDocenteCUInt(
+			GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort,
+			DocenteFormatterResultsIntPort docenteFormatterResultsIntPort,
+			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort,
+			GestionarCursoCUIntPort gestionarCursoCUIntPort,
+			GestionarProgramaGatewayIntPort gestionarProgramaGatewayIntPort,
+			GestionarAsignaturaCUIntPort gestionarAsignaturaCUIntPort,
+			GestionarPersonaCUIntPort gestionarPersonaCUIntPort) {
+		return new GestionarDocenteCUAdapter(
+				gestionarDocenteGatewayIntPort,
+				docenteFormatterResultsIntPort,
+				gestionarPeriodoAcademicoGatewayIntPort,
+				gestionarCursoCUIntPort,
+				gestionarProgramaGatewayIntPort,
+				gestionarAsignaturaCUIntPort,
+				gestionarPersonaCUIntPort);
 	}
 
 	@Bean

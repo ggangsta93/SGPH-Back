@@ -58,4 +58,9 @@ public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPor
 	public MensajeOutDTO cargaMasivaAsignaturas(AsignaturaInDTO asignatura) {
 		return this.gestionarAsignaturaGatewayIntPort.cargaMasivaAsignaturas(asignatura);
 	}
+
+	@Override
+	public Boolean validarExistenciaAsignaturasPorOID(List<String> oid) {
+		return this.gestionarAsignaturaGatewayIntPort.validarExistenciaAsignaturasPorOID(oid);
+	}
 }

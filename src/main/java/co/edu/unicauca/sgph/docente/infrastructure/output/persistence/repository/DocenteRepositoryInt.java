@@ -28,7 +28,19 @@ public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long>
 			+ " AND per.numeroIdentificacion = :numeroIdentificacion "
 			+ "")
 	public DocenteEntity consultarDocentePorIdentificacion(Long idTipoIdentificacion, String numeroIdentificacion);
-
+	/**
+	 * Método encargado de consultar un docente por su numero identificación<br>
+	 *
+	 * @author apedro
+	 *
+	 * @param numeroIdentificacion
+	 * @return
+	 */
+	@Query("SELECT doc "
+			+ " FROM DocenteEntity doc "
+			+ " JOIN doc.persona per "
+			+ " WHERE per.numeroIdentificacion = :numeroIdentificacion")
+	 DocenteEntity consultarDocentePorIdentificacion(String numeroIdentificacion);
 	/**
 	 * Método encargado de consultar un docente por persona<br>
 	 * 

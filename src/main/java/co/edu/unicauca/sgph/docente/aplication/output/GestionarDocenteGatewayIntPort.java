@@ -2,6 +2,9 @@ package co.edu.unicauca.sgph.docente.aplication.output;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteLaborDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
@@ -90,4 +93,7 @@ public interface GestionarDocenteGatewayIntPort {
 	 * @return
 	 */
 	public Boolean existeDocentePorIdPersona(Long idPersona, Long idDocente);
+
+	List<DocenteLaborDTO> cargarLaborDocente(ReporteDocenteDTO archivoDocente);
+	Docente consultarDocentePorNumeroIdentificacion(String numeroIdentificacion);
 }

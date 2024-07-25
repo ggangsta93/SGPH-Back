@@ -3,6 +3,7 @@ package co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.reposi
 import java.util.List;
 import java.util.Optional;
 
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,7 @@ public interface AsignaturaRepositoryInt extends JpaRepository<AsignaturaEntity,
 																							Long idFacultad,
 																							Pageable pageable);
 	Optional<AsignaturaEntity> findByOid(String OID);
+	List<AsignaturaEntity> findByOidInAndEstado(List<String> oids, EstadoAsignaturaEnum estado);
 	Optional<AsignaturaEntity> findByCodigoAsignatura(String codigoAsignatura);
 
 }

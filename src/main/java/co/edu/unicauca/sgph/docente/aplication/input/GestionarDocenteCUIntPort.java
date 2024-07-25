@@ -2,6 +2,8 @@ package co.edu.unicauca.sgph.docente.aplication.input;
 
 import java.util.List;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
@@ -64,4 +66,5 @@ public interface GestionarDocenteCUIntPort {
 	 */
 	public List<Docente> consultarDocentePorIdCurso(Long idCurso);
 
+	MensajeOutDTO cargarLaborDocente(ReporteDocenteDTO archivoDocente);
 }

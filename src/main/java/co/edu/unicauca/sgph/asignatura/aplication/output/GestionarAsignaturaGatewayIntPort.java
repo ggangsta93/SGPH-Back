@@ -38,4 +38,6 @@ public interface GestionarAsignaturaGatewayIntPort {
 	Asignatura inactivarAsignaturaPorId(Long idAsignatura);
 
 	MensajeOutDTO cargaMasivaAsignaturas(AsignaturaInDTO asignatura);
+
+    Boolean validarExistenciaAsignaturasPorOID(List<String> oid);
 }

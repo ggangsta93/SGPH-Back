@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -114,4 +116,19 @@ public class DocenteController extends CommonEJB{
 		return this.docenteRestMapper
 				.toLstDocenteOutDTO(this.gestionarDocenteCUIntPort.consultarDocentePorIdCurso(idCurso));
 	}
+
+	/**
+	 * Método que se ejecuta para cargar labor docente
+	 *
+	 *
+	 * @author
+	 *
+	 *
+	 *
+	 */
+	@PostMapping("/cargarLaborDocente")
+	public MensajeOutDTO cargarLaborDocente(@RequestBody ReporteDocenteDTO archivoDocente) {
+		return this.gestionarDocenteCUIntPort.cargarLaborDocente(archivoDocente);
+	}
+
 }
