@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -129,6 +130,10 @@ public class DocenteController extends CommonEJB{
 	@PostMapping("/cargarLaborDocente")
 	public MensajeOutDTO cargarLaborDocente(@RequestBody ReporteDocenteDTO archivoDocente) {
 		return this.gestionarDocenteCUIntPort.cargarLaborDocente(archivoDocente);
+	}
+	@PostMapping("/consultaLaborDocente")
+	public ReporteDocenteDTO consultaLaborDocente(@RequestBody ReporteDocenteDTO filtro) {
+		return this.gestionarDocenteCUIntPort.consultaLaborDocente(filtro);
 	}
 
 }

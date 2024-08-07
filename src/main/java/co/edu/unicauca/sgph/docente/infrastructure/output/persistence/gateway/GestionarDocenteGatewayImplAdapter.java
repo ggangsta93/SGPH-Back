@@ -1,12 +1,14 @@
 package co.edu.unicauca.sgph.docente.infrastructure.output.persistence.gateway;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -266,6 +268,12 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 	}
 
 	@Override
+	public String obtenerBase64ArchivoFiltrado(ReporteDocenteDTO archivoDocente) throws IOException {
+		List<DocenteLaborDTO> docentes = this.cargarLaborDocente(archivoDocente);
+		return this.generarExcelBase64(docentes.stream().filter(a -> archivoDocente.getNombrePrograma().equalsIgnoreCase(a.getNombrePrograma())).collect(Collectors.toList()));
+	}
+
+	@Override
 	public Docente consultarDocentePorNumeroIdentificacion(String numeroIdentificacion) {
 		DocenteEntity docenteEntity = this.docenteRepositoryInt.consultarDocentePorIdentificacion(numeroIdentificacion);
 		if (Objects.isNull(docenteEntity)) {
@@ -358,5 +366,49 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 			return false;
 		}
 		return true;
+	}
+	public static String generarExcelBase64(List<DocenteLaborDTO> docenteLaborDTOList) throws IOException {
+		Workbook workbook = new XSSFWorkbook(); // o HSSFWorkbook() si necesitas XLS
+		Sheet sheet = workbook.createSheet("Docentes");
+
+		// Crear encabezados
+		Row headerRow = sheet.createRow(0);
+		String[] headers = {"OID Período", "Período", "Identificación", "Primer Apellido", "Segundo Apellido",
+				"Primer Nombre", "Segundo Nombre", "Correo", "Nombre Materia", "Nombre Programa",
+				"OID", "Código", "Tipo Materia", "Grupo", "Horas Teóricas"};
+		for (int i = 0; i < headers.length; i++) {
+			Cell cell = headerRow.createCell(i);
+			cell.setCellValue(headers[i]);
+		}
+
+		// Agregar datos
+		int rowNum = 1;
+		for (DocenteLaborDTO docente : docenteLaborDTOList) {
+			Row row = sheet.createRow(rowNum++);
+
+			row.createCell(0).setCellValue(docente.getOidPeriodo());
+			row.createCell(1).setCellValue(docente.getPeriodo());
+			row.createCell(2).setCellValue(docente.getIdentificacion());
+			row.createCell(3).setCellValue(docente.getPrimerApellido());
+			row.createCell(4).setCellValue(docente.getSegundoApellido());
+			row.createCell(5).setCellValue(docente.getPrimerNombre());
+			row.createCell(6).setCellValue(docente.getSegundoNombre());
+			row.createCell(7).setCellValue(docente.getCorreo());
+			row.createCell(8).setCellValue(docente.getNombreMateria());
+			row.createCell(9).setCellValue(docente.getNombrePrograma());
+			row.createCell(10).setCellValue(docente.getOid());
+			row.createCell(11).setCellValue(docente.getCodigo());
+			row.createCell(12).setCellValue(docente.getTipoMateria());
+			row.createCell(13).setCellValue(docente.getGrupo());
+			row.createCell(14).setCellValue(docente.getHorasTeoricas());
+		}
+
+		// Convertir a Base64
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		workbook.write(outputStream);
+		workbook.close();
+
+		byte[] excelBytes = outputStream.toByteArray();
+		return Base64.encodeBase64String(excelBytes);
 	}
 }

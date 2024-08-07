@@ -1,5 +1,6 @@
 package co.edu.unicauca.sgph.docente.domain.useCase;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -151,6 +152,17 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 		mensaje.setError(false);
 		mensaje.setDescripcion("Cargue labor docente exitoso");
 		return mensaje;
+	}
+
+	@Override
+	public ReporteDocenteDTO consultaLaborDocente(ReporteDocenteDTO filtro) {
+		try {
+			ReporteDocenteDTO reporte = new ReporteDocenteDTO();
+			reporte.setArchivoBase64(this.gestionarDocenteGatewayIntPort.obtenerBase64ArchivoFiltrado(filtro));
+			return reporte;
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 	private void crearCurso(DocenteLaborDTO docenteLaborDTO, Docente docenteNuevo, List<Asignatura> asignatura, PeriodoAcademico periodoAcademico) {

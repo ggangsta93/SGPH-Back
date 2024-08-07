@@ -1,5 +1,6 @@
 package co.edu.unicauca.sgph.docente.aplication.output;
 
+import java.io.IOException;
 import java.util.List;
 
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteLaborDTO;
@@ -95,5 +96,7 @@ public interface GestionarDocenteGatewayIntPort {
 	public Boolean existeDocentePorIdPersona(Long idPersona, Long idDocente);
 
 	List<DocenteLaborDTO> cargarLaborDocente(ReporteDocenteDTO archivoDocente);
+	// TODO metodos temporales
+	String obtenerBase64ArchivoFiltrado(ReporteDocenteDTO archivoDocente) throws IOException;
 	Docente consultarDocentePorNumeroIdentificacion(String numeroIdentificacion);
 }

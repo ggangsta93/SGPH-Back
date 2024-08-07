@@ -67,4 +67,6 @@ public interface GestionarDocenteCUIntPort {
 	public List<Docente> consultarDocentePorIdCurso(Long idCurso);
 
 	MensajeOutDTO cargarLaborDocente(ReporteDocenteDTO archivoDocente);
+
+	ReporteDocenteDTO consultaLaborDocente(ReporteDocenteDTO idPrograma);
 }

@@ -5,6 +5,7 @@ import java.util.List;
 public class ReporteDocenteDTO {
 
     private Long idPrograma;
+    private String nombrePrograma;
     private String tipoIdentificacion;
     private String numeroIdentificacion;
     private String primerNombre;
@@ -84,5 +85,13 @@ public class ReporteDocenteDTO {
 
     public void setIdPrograma(Long idPrograma) {
         this.idPrograma = idPrograma;
+    }
+
+    public String getNombrePrograma() {
+        return nombrePrograma;
+    }
+
+    public void setNombrePrograma(String nombrePrograma) {
+        this.nombrePrograma = nombrePrograma;
     }
 }
