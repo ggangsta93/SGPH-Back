@@ -1,7 +1,7 @@
 package co.edu.unicauca.sgph.docente.infrastructure.output.persistence.gateway;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,9 +14,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteLaborDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
-import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -33,10 +30,12 @@ import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
+import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteLaborDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.repository.DocenteRepositoryInt;
+import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 
 @Service
 public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatewayIntPort {
@@ -258,19 +257,64 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 	}
 
 	@Override
-	public List<DocenteLaborDTO> cargarLaborDocente(ReporteDocenteDTO archivoDocente) {
-		try {
-			return mockLeerExcelBase64(archivoDocente.getArchivoBase64());
-		} catch (IOException e) {
-			return null;
+	public List<DocenteLaborDTO> cargarLaborDocente(String nombrePrograma, String periodoVigente) throws IOException {
+		String filePath = "Y:/ARCHIVOS DE LAS TICs/LaborAcademica2023-2024.xlsx";
+
+        FileInputStream fileInputStream = new FileInputStream(filePath);
+        Workbook workbook = null;
+
+        // Determina el tipo de archivo
+        if (filePath.toLowerCase().endsWith("xlsx") || filePath.toLowerCase().endsWith("xls")) {
+            workbook = new XSSFWorkbook(fileInputStream);
+        } 
+        if (workbook == null) {
+            throw new IOException("El archivo no es un archivo Excel válido.");
+        }
+		Sheet sheet = workbook.getSheetAt(0);
+		List<DocenteLaborDTO> docenteLaborDTOList = new ArrayList<>();
+
+		for (Row row : sheet) {
+			try {
+				
+				if (row.getRowNum() == 0) continue; // Skip header row
+				DocenteLaborDTO docente = new DocenteLaborDTO();
+				
+				if(nombrePrograma.equalsIgnoreCase(getStringCellValue(row, 9)) && periodoVigente.equals(getStringCellValue(row, 1))) {
+					docente.setNombrePrograma(getStringCellValue(row, 9));
+					docente.setOidPeriodo((int) row.getCell(0).getNumericCellValue());
+					docente.setPeriodo(getStringCellValue(row, 1));
+					docente.setIdentificacion(String.valueOf(row.getCell(2).getNumericCellValue()));
+					docente.setPrimerApellido(getStringCellValue(row, 3));
+					docente.setSegundoApellido(getStringCellValue(row, 4));
+					docente.setPrimerNombre(getStringCellValue(row, 5));
+					docente.setSegundoNombre(getStringCellValue(row, 6));
+					docente.setCorreo(getStringCellValue(row, 7));
+					docente.setNombreMateria(getStringCellValue(row, 8));					
+					docente.setOid(String.valueOf(row.getCell(10)==null? null:row.getCell(10)));
+					//Se quitan las comas a los OID
+					docente.setOid(docente.getOid()==null? null: docente.getOid().replace(",","") );					
+					docente.setCodigo(String.valueOf(row.getCell(11)==null? null:row.getCell(11)));
+					docente.setTipoMateria(String.valueOf(getIntCellValue(row, 12)));
+					docente.setGrupo(String.valueOf(row.getCell(13)==null? null:row.getCell(13)));
+
+					//docente.setHorasTeoricas(String.valueOf(getIntCellValue(row, 14))); //La hora teorica lo tiene la asignatura
+					docenteLaborDTOList.add(docente);
+					
+					
+				}
+			} catch (Exception e) {
+				int i = row.getRowNum();
+			}
 		}
+
+		workbook.close();
+		return docenteLaborDTOList;
 
 	}
 
 	@Override
-	public String obtenerBase64ArchivoFiltrado(ReporteDocenteDTO archivoDocente) throws IOException {
-		List<DocenteLaborDTO> docentes = this.cargarLaborDocente(archivoDocente);
-		return this.generarExcelBase64(docentes.stream().filter(a -> archivoDocente.getNombrePrograma().equalsIgnoreCase(a.getNombrePrograma())).collect(Collectors.toList()));
+	public String obtenerBase64ArchivoFiltrado(String nombrePrograma, String periodoVigente) throws IOException {
+		return this.generarExcelBase64(cargarLaborDocente(nombrePrograma, periodoVigente));
 	}
 
 	@Override
@@ -281,75 +325,80 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 		}
 		return this.modelMapper.map(docenteEntity, Docente.class);
 	}
-	private static boolean isXlsxFile(byte[] fileContent) {
-		return fileContent[0] == 0x50 && fileContent[1] == 0x4B;
-	}
-	private static boolean isXlsFile(byte[] fileContent) {
-		return fileContent[0] == (byte) 0xD0 && fileContent[1] == (byte) 0xCF;
-	}
+
 	public static List<DocenteLaborDTO> mockLeerExcelBase64(String base64Excel) throws IOException {
-		byte[] decodedBytes = Base64.decodeBase64(base64Excel);
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(decodedBytes);
-		Workbook workbook = null;
-		// Determina el tipo de archivo
-		if (isXlsxFile(decodedBytes)) {
-			workbook = new XSSFWorkbook(inputStream);
-		} else if (isXlsFile(decodedBytes)) {
-			workbook = new HSSFWorkbook(inputStream);
-		}
-		if (workbook == null) {
-			throw new IOException("El archivo no es un archivo Excel válido.");
-		}
+		
+		String filePath = "Y:/ARCHIVOS DE LAS TICs/LaborAcademica2023-2024.xlsx";
+
+        FileInputStream fileInputStream = new FileInputStream(filePath);
+        Workbook workbook = null;
+
+        // Determina el tipo de archivo
+        if (filePath.toLowerCase().endsWith("xlsx") || filePath.toLowerCase().endsWith("xls")) {
+            workbook = new XSSFWorkbook(fileInputStream);
+        } 
+        if (workbook == null) {
+            throw new IOException("El archivo no es un archivo Excel válido.");
+        }
 		Sheet sheet = workbook.getSheetAt(0);
 		List<DocenteLaborDTO> docenteLaborDTOList = new ArrayList<>();
 
 		for (Row row : sheet) {
-			if (row.getRowNum() == 0) continue; // Skip header row
-			DocenteLaborDTO docente = new DocenteLaborDTO();
-			docente.setOidPeriodo((int) row.getCell(0).getNumericCellValue());
-			docente.setPeriodo(getStringCellValue(row, 1));
-			docente.setIdentificacion(String.valueOf(row.getCell(2).getNumericCellValue()));
-			docente.setPrimerApellido(getStringCellValue(row, 3));
-			docente.setSegundoApellido(getStringCellValue(row, 4));
-			docente.setPrimerNombre(getStringCellValue(row, 5));
-			docente.setSegundoNombre(getStringCellValue(row, 6));
-			docente.setCorreo(getStringCellValue(row, 7));
-			docente.setNombreMateria(getStringCellValue(row, 8));
-			docente.setNombrePrograma(getStringCellValue(row, 9));
-			int valorOid = getIntCellValue(row, 10);
-			docente.setOid(String.valueOf(valorOid));
-			Object cellValue = row.getCell(11);
-			if (cellValue == null) {
-				docente.setCodigo("");
-			} else if (cellValue instanceof Number) {
-				docente.setCodigo(String.valueOf(((Number) cellValue).intValue()));
-			} else if (cellValue instanceof String) {
-				docente.setCodigo((String) cellValue);
-			} else {
-				// En caso de otro tipo de dato, manejarlo según sea necesario
-				docente.setCodigo(cellValue.toString());
-			}
-			docente.setTipoMateria(String.valueOf(getIntCellValue(row, 12)));
-			Object cellValueGrupo = row.getCell(13);
-			if (cellValueGrupo == null) {
-				docente.setGrupo("");
-			} else if (cellValueGrupo instanceof Number) {
-				docente.setGrupo(String.valueOf(((Number) cellValue).intValue()));
-			} else if (cellValueGrupo instanceof String) {
-				docente.setGrupo((String) cellValue);
-			} else {
-				docente.setGrupo(cellValueGrupo.toString());
-			}
-			docente.setHorasTeoricas(String.valueOf(getIntCellValue(row, 14)));
-			docenteLaborDTOList.add(docente);
-			if (!validarGrupoYDocente(docente)) {
-				throw new IOException("Información faltante");
+			try {
+				
+				if (row.getRowNum() == 0) continue; // Skip header row
+				if (row.getRowNum() == 94) {
+					DocenteLaborDTO docente = new DocenteLaborDTO();
+				}
+				DocenteLaborDTO docente = new DocenteLaborDTO();
+				docente.setOidPeriodo((int) row.getCell(0).getNumericCellValue());
+				docente.setPeriodo(getStringCellValue(row, 1));
+				docente.setIdentificacion(String.valueOf(row.getCell(2).getNumericCellValue()));
+				docente.setPrimerApellido(getStringCellValue(row, 3));
+				docente.setSegundoApellido(getStringCellValue(row, 4));
+				docente.setPrimerNombre(getStringCellValue(row, 5));
+				docente.setSegundoNombre(getStringCellValue(row, 6));
+				docente.setCorreo(getStringCellValue(row, 7));
+				docente.setNombreMateria(getStringCellValue(row, 8));
+				docente.setNombrePrograma(getStringCellValue(row, 9));
+				int valorOid = getIntCellValue(row, 10);
+				docente.setOid(String.valueOf(valorOid));
+				Object cellValue = row.getCell(11);
+				if (cellValue == null) {
+					docente.setCodigo("");
+				} else if (cellValue instanceof Number) {
+					docente.setCodigo(String.valueOf(((Number) cellValue).intValue()));
+				} else if (cellValue instanceof String) {
+					docente.setCodigo((String) cellValue);
+				} else {
+					// En caso de otro tipo de dato, manejarlo según sea necesario
+					docente.setCodigo(cellValue.toString());
+				}
+				docente.setTipoMateria(String.valueOf(getIntCellValue(row, 12)));
+				Object cellValueGrupo = row.getCell(13);
+				if (cellValueGrupo == null) {
+					docente.setGrupo("");
+				} else if (cellValueGrupo instanceof Number) {
+					docente.setGrupo(String.valueOf(((Number) cellValue).intValue()));
+				} else if (cellValueGrupo instanceof String) {
+					docente.setGrupo((String) cellValue);
+				} else {
+					docente.setGrupo(cellValueGrupo.toString());
+				}
+				//docente.setHorasTeoricas(String.valueOf(getIntCellValue(row, 14)));
+				docenteLaborDTOList.add(docente);
+				if (!validarGrupoYDocente(docente)) {
+					throw new IOException("Información faltante");
+				}
+			} catch (Exception e) {
+				int i = row.getRowNum();
 			}
 		}
 
 		workbook.close();
 		return docenteLaborDTOList;
 	}
+	
 	private static String getStringCellValue(Row row, int cellIndex) {
 		Cell cell = row.getCell(cellIndex);
 		return cell != null ? cell.getStringCellValue() : "";

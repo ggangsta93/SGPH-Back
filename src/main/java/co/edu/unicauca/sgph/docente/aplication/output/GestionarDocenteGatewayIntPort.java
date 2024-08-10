@@ -95,8 +95,8 @@ public interface GestionarDocenteGatewayIntPort {
 	 */
 	public Boolean existeDocentePorIdPersona(Long idPersona, Long idDocente);
 
-	List<DocenteLaborDTO> cargarLaborDocente(ReporteDocenteDTO archivoDocente);
+	List<DocenteLaborDTO> cargarLaborDocente(String nombrePrograma, String periodoVigente)throws IOException ;
 	// TODO metodos temporales
-	String obtenerBase64ArchivoFiltrado(ReporteDocenteDTO archivoDocente) throws IOException;
+	String obtenerBase64ArchivoFiltrado(String nombrePrograma, String periodoVigente) throws IOException;
 	Docente consultarDocentePorNumeroIdentificacion(String numeroIdentificacion);
 }

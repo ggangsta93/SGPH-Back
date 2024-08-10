@@ -3,36 +3,34 @@ package co.edu.unicauca.sgph.docente.domain.useCase;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+
 import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
-import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
+import co.edu.unicauca.sgph.docente.aplication.input.GestionarDocenteCUIntPort;
+import co.edu.unicauca.sgph.docente.aplication.output.DocenteFormatterResultsIntPort;
+import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
+import co.edu.unicauca.sgph.docente.domain.model.Docente;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteLaborDTO;
+import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
+import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
 import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
-import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.gateway.GestionarPeriodoAcademicoGatewayImplAdapter;
 import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
 import co.edu.unicauca.sgph.persona.domain.model.Persona;
 import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
 import co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
-import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
 import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
-import org.springframework.data.domain.Page;
-
-import co.edu.unicauca.sgph.docente.aplication.input.GestionarDocenteCUIntPort;
-import co.edu.unicauca.sgph.docente.aplication.output.DocenteFormatterResultsIntPort;
-import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
-import co.edu.unicauca.sgph.docente.domain.model.Docente;
-import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
-import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 
 public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 
@@ -112,43 +110,64 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	}
 
 	@Override
-	public MensajeOutDTO cargarLaborDocente(ReporteDocenteDTO archivoDocente) {
+	public MensajeOutDTO cargarLaborDocente(ReporteDocenteDTO archivoDocente) {		
 		MensajeOutDTO mensaje = new MensajeOutDTO();
 		mensaje.setError(true);
 
-		// 1
+		// Se valida periodo académico vigente
 		PeriodoAcademico periodoVigente = this.obtenerPeriodoVigente();
 		if (periodoVigente == null) {
 			mensaje.setDescripcion("No existe periodo vigente");
 			return mensaje;
 		}
-		// 2
+		// Se valida que no existan cursos cargados para el programa consultado
+		String  periodoFormato = periodoVigente.getAnio() + "-"+ periodoVigente.getPeriodo();
+		Programa programa = gestionarProgramaGatewayIntPort.consultarProgramaPorId(archivoDocente.getIdPrograma());
 		List<Curso> cursos = this.gestionarCursoCUIntPort.consultarCursosPorIdPeriodoYIdPrograma(periodoVigente.getIdPeriodoAcademico(), archivoDocente.getIdPrograma());
 		if (cursos != null && cursos.size() > 0) {
-			mensaje.setDescripcion("Existen cursos para el periodo academico vigente");
+			mensaje.setDescripcion("Ya existe una carga de cursos para el programa "+programa.getNombre());
 			return mensaje;
 		}
-		// 3 Filtrar por docente y programa usando el mock del excel
-		// 3.1 leer todo el excel.
-		List<DocenteLaborDTO> docentes = this.gestionarDocenteGatewayIntPort.cargarLaborDocente(archivoDocente);
-		if (docentes == null) {
-			mensaje.setDescripcion("Error lectura");
+		// Se consulta la labor académica del programa
+		List<DocenteLaborDTO> laborAcademica;
+		try {
+			// Se lee el excel, simulando la consulta al servicio de SIMCA Labor
+			laborAcademica = this.gestionarDocenteGatewayIntPort.cargarLaborDocente(programa.getNombre(),periodoFormato);
+			if(laborAcademica.isEmpty()) {
+				mensaje.setDescripcion("No existe labor académica para el programa consultado");
+				return mensaje;
+			}
+				
+			//TODO: Aquí se debe validar que la información esté completa y no haya inconsistencias
+			for (DocenteLaborDTO docenteLaborDTO : laborAcademica) {
+				//TODO: Cada inconsistencia debe almacenarse en una lista			
+			}			
+			
+		} catch (IOException e) {
+			mensaje.setDescripcion("Error lectura del archivo");
 			return mensaje;
-		}
-		// 3.2 filtrar por periodo y programa.
-		Programa programa = gestionarProgramaGatewayIntPort.consultarProgramaPorId(archivoDocente.getIdPrograma());
-		String periodoString = periodoVigente.getAnio() + "-"+ periodoVigente.getPeriodo();
-		List<DocenteLaborDTO> docentesFiltrados = docentes.stream().filter(docente -> docente.getNombrePrograma().equals(programa.getNombre()) && docente.getPeriodo().equals(periodoString)).collect(Collectors.toList());
-		// 3.3 VALIDAR EXISTENCIA ASIGANTURA.
-		List<String> oidAsignaturas = docentesFiltrados.stream().map(d -> d.getOid()).distinct().collect(Collectors.toList());
+		}		
+		
+		// Se valida las restricciones de las asignaturas del sistema contra las del cargue
+		
+		//TODO: Falta validar que asignaturas OID no se encuentran en el sistema
+		//TODO: Falta validar que todas las asignaturas esten en estado ACTIVO
+		List<String> oidAsignaturas = laborAcademica.stream().map(d -> d.getOid()).distinct().collect(Collectors.toList());
 		List<Asignatura> asignaturas = this.gestionarAsignaturaCUIntPort.obtenerAsignaturasPorOids(oidAsignaturas);
 		Boolean valido = asignaturas.size() == oidAsignaturas.size();
-		if (!valido) {
-			mensaje.setDescripcion("Hay asignaturas pendientes por registrar o activar en el sistema");
+		if (!valido) {			
+			List<String> OIDDiferencia = oidAsignaturas.stream().filter(OID -> !(asignaturas.stream().map(asig -> asig.getOID()).collect(Collectors.toList()).contains(OID))).collect(Collectors.toList());
+			mensaje.setDescripcion(
+					"Hay asignaturas pendientes por registrar o activar en el sistema:\nEn la consulta hay "
+							+ oidAsignaturas.size() + " -> OID: " + String.join(", ", oidAsignaturas)
+							+ "\nEn el sistema hay " + asignaturas.size() + " -> OID: "
+							+ String.join(", ",
+									asignaturas.stream().map(asig -> asig.getOID()).collect(Collectors.toList()))
+							+ "\nDiferencia OID: "+String.join(", ", OIDDiferencia));
 			return mensaje;
 		}
-		// CREAR LABOR
-		this.guardarLaborDocente(docentesFiltrados, asignaturas, periodoVigente);
+		// Se crean cursos, docentes y su asociación
+		this.guardarLaborDocente(laborAcademica, asignaturas, periodoVigente);
 		mensaje.setError(false);
 		mensaje.setDescripcion("Cargue labor docente exitoso");
 		return mensaje;
@@ -156,9 +175,16 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 
 	@Override
 	public ReporteDocenteDTO consultaLaborDocente(ReporteDocenteDTO filtro) {
+		ReporteDocenteDTO reporte = new ReporteDocenteDTO();
 		try {
-			ReporteDocenteDTO reporte = new ReporteDocenteDTO();
-			reporte.setArchivoBase64(this.gestionarDocenteGatewayIntPort.obtenerBase64ArchivoFiltrado(filtro));
+			// Se valida periodo académico vigente
+			PeriodoAcademico periodoVigente = this.obtenerPeriodoVigente();
+			if (periodoVigente == null) {
+				return null;
+			}
+			Programa programa = gestionarProgramaGatewayIntPort.consultarProgramaPorId(filtro.getIdPrograma());
+			String periodoString = periodoVigente.getAnio() + "-"+ periodoVigente.getPeriodo();
+			reporte.setArchivoBase64(this.gestionarDocenteGatewayIntPort.obtenerBase64ArchivoFiltrado(programa.getNombre(),periodoString));
 			return reporte;
 		} catch (IOException e) {
 			return null;
