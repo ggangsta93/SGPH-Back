@@ -27,4 +27,13 @@ public interface GestionarPersonaCUIntPort {
 	 * @return
 	 */
 	public List<TipoIdentificacion> consultarTiposIdentificacion();
+	/**
+	 * Método encargado de consultar la persona por email
+	 * persona<br>
+	 *
+	 * @author apedro
+	 *
+	 * @return
+	 */
+    Persona consultarPersonaPorEmail(String email);
 }

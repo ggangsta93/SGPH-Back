@@ -3,6 +3,7 @@ package co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse;
 import java.util.List;
 
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
+import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.RolUsuarioEnum;
 
 public class UsuarioOutDTO {
 
@@ -35,6 +36,7 @@ public class UsuarioOutDTO {
 	private String segundoApellido;
 
 	private String email;
+	private List<RolUsuarioEnum> lstRol;
 
 	public UsuarioOutDTO() {
 		// Constructor sin parámetros
@@ -56,6 +58,14 @@ public class UsuarioOutDTO {
 		this.nombreUsuario = nombreUsuario;
 		this.password = password;
 		this.estado = estado;
+	}
+
+	public List<RolUsuarioEnum> getLstRol() {
+		return lstRol;
+	}
+
+	public void setLstRol(List<RolUsuarioEnum> lstRol) {
+		this.lstRol = lstRol;
 	}
 
 	public Long getIdPersona() {

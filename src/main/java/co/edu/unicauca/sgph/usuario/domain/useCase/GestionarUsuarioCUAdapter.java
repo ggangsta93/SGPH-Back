@@ -56,4 +56,9 @@ public class GestionarUsuarioCUAdapter implements GestionarUsuarioCUIntPort {
 	public Usuario cambiarEstadoUsuarioPorIdUsuario(Long idUsuario) {
 		return this.gestionarUsuarioGatewayIntPort.cambiarEstadoUsuarioPorIdUsuario(idUsuario);
 	}
+
+	@Override
+	public Usuario consultarUsuarioPorIdPersona(Long idPersona) {
+		return this.gestionarUsuarioGatewayIntPort.consultarUsuarioPorIdPersona(idPersona);
+	}
 }

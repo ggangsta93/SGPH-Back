@@ -83,4 +83,6 @@ public interface GestionarUsuarioGatewayIntPort {
 	 * @return
 	 */
 	public Usuario cambiarEstadoUsuarioPorIdUsuario(Long idUsuario);
+
+	Usuario consultarUsuarioPorIdPersona(Long idPersona);
 }

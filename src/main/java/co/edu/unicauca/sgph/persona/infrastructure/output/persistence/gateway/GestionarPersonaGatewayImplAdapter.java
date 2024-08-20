@@ -104,4 +104,13 @@ public class GestionarPersonaGatewayImplAdapter implements GestionarPersonaGatew
 				new TypeToken<List<TipoIdentificacion>>() {
 				}.getType());
 	}
+
+	@Override
+	public Persona consultarPersonaPorEmail(String email) {
+		PersonaEntity personaEntity = this.personaRepositoryInt.findByEmail(email);
+		if (Objects.isNull(personaEntity)) {
+			return null;
+		}
+		return this.modelMapper.map(personaEntity, Persona.class);
+	}
 }

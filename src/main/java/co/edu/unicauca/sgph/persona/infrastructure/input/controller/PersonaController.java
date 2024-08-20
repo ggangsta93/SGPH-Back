@@ -89,4 +89,16 @@ public class PersonaController extends CommonEJB {
 		return this.personaRestMapper
 				.toLstTipoIdentificacionOutDTO(this.gestionarPersonaCUIntPort.consultarTiposIdentificacion());
 	}
+	/**
+	 * Método encargado de consultar una persona con el correo<br>
+	 *
+	 * @author apedro
+	 *
+	 * @return
+	 */
+	@GetMapping("/consultarPersonaPorEmail")
+	public PersonaOutDTO consultarPersonaPorEmail(@RequestParam String email) {
+		Persona persona = this.gestionarPersonaCUIntPort.consultarPersonaPorEmail(email);
+		return this.personaRestMapper.toPersonaOutDTO(persona);
+	}
 }

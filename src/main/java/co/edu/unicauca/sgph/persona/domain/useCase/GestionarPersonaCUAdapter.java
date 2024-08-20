@@ -41,4 +41,9 @@ public class GestionarPersonaCUAdapter implements GestionarPersonaCUIntPort {
 	public List<TipoIdentificacion> consultarTiposIdentificacion() {
 		return this.gestionarPersonaGatewayIntPort.consultarTiposIdentificacion();
 	}
+
+	@Override
+	public Persona consultarPersonaPorEmail(String email) {
+		return this.gestionarPersonaGatewayIntPort.consultarPersonaPorEmail(email);
+	}
 }

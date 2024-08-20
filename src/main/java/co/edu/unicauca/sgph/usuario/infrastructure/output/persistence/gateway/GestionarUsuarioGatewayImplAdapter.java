@@ -274,4 +274,13 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 		}
 		return null;
 	}
+
+	@Override
+	public Usuario consultarUsuarioPorIdPersona(Long idPersona) {
+		Optional<UsuarioEntity> usuario = this.usuarioRepositoryInt.findByPersonaIdPersonaAndEstado(idPersona, EstadoUsuarioEnum.ACTIVO);
+		if (usuario.isPresent()) {
+			return this.modelMapper.map(usuario.get(), Usuario.class);
+		}
+		return null;
+	}
 }

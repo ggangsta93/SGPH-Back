@@ -40,4 +40,5 @@ public interface PersonaRepositoryInt extends JpaRepository<PersonaEntity, Long>
 	 */
 	@Query("SELECT ti FROM TipoIdentificacionEntity ti")
 	public List<TipoIdentificacionEntity> consultarTiposIdentificacion();
+	PersonaEntity findByEmail(String email);
 }

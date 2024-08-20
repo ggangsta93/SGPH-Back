@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.RolUsuarioEnum;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -32,6 +34,7 @@ public interface UsuarioRestMapper {
 	@Mapping(target = "segundoApellido", source = "usuario.persona.segundoApellido")	
 	@Mapping(target = "email", source = "usuario.persona.email")
     @Mapping(target = "lstIdRol", source = "usuario.roles")
+    @Mapping(target = "lstRol", source = "usuario.roles")
 	@Mapping(target = "lstIdPrograma", source = "usuario.programas")	
 	UsuarioOutDTO toUsuarioOutDTO(Usuario usuario);
 
@@ -58,7 +61,12 @@ public interface UsuarioRestMapper {
         	lstIdRol.add(rol.getIdRol());
         }
         return lstIdRol;
-    }  
+    }
+    default List<RolUsuarioEnum> mapRolesToRolUsuario(Set<Rol> roles) {
+        return roles.stream()
+                .map(Rol::getRolUsuario) // Ensure Rol has a method getRolUsuario()
+                .collect(Collectors.toList());
+    }
     
     default List<Programa> toPrograma(List<Long> lstIdPrograma) {
         List<Programa> programas = new ArrayList<>();

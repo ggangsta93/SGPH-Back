@@ -3,6 +3,7 @@ package co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.repositor
 import java.util.List;
 import java.util.Optional;
 
+import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -56,5 +57,6 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 			+ " WHERE usu.persona.idPersona = :idPersona "
 			+ " AND (:idUsuario IS NULL OR usu.idUsuario != :idUsuario) "
 			+ "")
-	public UsuarioEntity consultarUsuarioPorIdPersona(Long idPersona, Long idUsuario);	
+	public UsuarioEntity consultarUsuarioPorIdPersona(Long idPersona, Long idUsuario);
+	Optional<UsuarioEntity> findByPersonaIdPersonaAndEstado(Long idPersona, EstadoUsuarioEnum estado);
 }

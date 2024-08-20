@@ -68,4 +68,6 @@ public interface GestionarPersonaGatewayIntPort {
 	 * @return
 	 */
 	public List<TipoIdentificacion> consultarTiposIdentificacion();
+
+    Persona consultarPersonaPorEmail(String email);
 }

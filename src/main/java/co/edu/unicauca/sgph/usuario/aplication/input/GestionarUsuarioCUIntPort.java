@@ -59,4 +59,6 @@ public interface GestionarUsuarioCUIntPort {
 	 * @return
 	 */
 	public Usuario cambiarEstadoUsuarioPorIdUsuario(Long idUsuario);
+
+	Usuario consultarUsuarioPorIdPersona(Long idPersona);
 }
