@@ -3,6 +3,7 @@ package co.edu.unicauca.sgph.seguridad;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.BadCredentialsException;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -34,6 +35,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             if (isValidToken(token)) {
+                UsernamePasswordAuthenticationToken usernamePAT = TokenUtils.obtenerAutenticacion(token);
+                SecurityContextHolder.getContext().setAuthentication(usernamePAT);
                 Authentication auth = new JwtAuthenticationToken(token);
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 return auth;

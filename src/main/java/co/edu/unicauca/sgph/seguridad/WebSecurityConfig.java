@@ -21,12 +21,10 @@ import org.springframework.web.client.RestTemplate;
 @EnableWebSecurity
 public class WebSecurityConfig {
     private final UserDetailsService userDetailsService;
-    private final JWTAuthorizationFilter jwtAuthorizationFilter;
     private final RestTemplate restTemplate;
 
-    public WebSecurityConfig(UserDetailsService userDetailsService, JWTAuthorizationFilter jwtAuthorizationFilter, RestTemplate restTemplate) {
+    public WebSecurityConfig(UserDetailsService userDetailsService, RestTemplate restTemplate) {
         this.userDetailsService = userDetailsService;
-        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
         this.restTemplate = restTemplate;
     }
 
@@ -49,8 +47,7 @@ public class WebSecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(jwtAuthenticationFilter)
-                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
     @Bean
