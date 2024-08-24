@@ -21,6 +21,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import co.edu.unicauca.sgph.persona.domain.model.Persona;
+import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
@@ -281,6 +283,41 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 		if (usuario.isPresent()) {
 			return this.modelMapper.map(usuario.get(), Usuario.class);
 		}
+		return null;
+	}
+	
+	/** 
+	 * @see co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort#consultarUsuarioPorNombreUsuario(java.lang.String)
+	 */
+	@Override
+	public Usuario consultarUsuarioPorNombreUsuario(String nombreUsuario) {
+		Optional<UsuarioEntity> usuarioEntity = this.usuarioRepositoryInt.findByNombreUsuario(nombreUsuario);
+		if (usuarioEntity.isPresent()) {
+
+			// Convertir manualmente
+			Usuario usuario = new Usuario();
+			usuario.setNombreUsuario(usuarioEntity.get().getNombreUsuario());
+			usuario.setPassword(usuarioEntity.get().getPassword());
+			usuario.setEstado(usuarioEntity.get().getEstado());
+			usuario.setPersona(new Persona());
+			usuario.getPersona().setEmail(usuarioEntity.get().getPersona().getEmail());
+
+			// Manejar las colecciones manualmente
+			usuario.setRoles(usuarioEntity.get().getRoles().stream().map(obj -> {
+				Rol rol = new Rol();
+				rol.setIdRol(obj.getIdRol());
+				rol.setRolUsuario(obj.getRolUsuario());
+				return rol;
+			}).collect(Collectors.toSet()));
+			usuario.setProgramas(usuarioEntity.get().getProgramas().stream().map(obj -> {
+				Programa programa = new Programa();
+				programa.setIdPrograma(obj.getIdPrograma());
+				programa.setNombre(obj.getNombre());
+				return programa;
+			}).collect(Collectors.toList()));
+
+			return usuario;
+		}	
 		return null;
 	}
 }

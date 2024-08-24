@@ -42,6 +42,7 @@ public interface UsuarioRepositoryInt extends JpaRepository<UsuarioEntity, Long>
 	@Query("SELECT rol FROM RolEntity rol")
 	public List<RolEntity> consultarRoles();
 
+	@Query("SELECT u FROM UsuarioEntity u JOIN FETCH u.roles LEFT JOIN FETCH u.programas WHERE u.nombreUsuario = :nombreUsuario")
 	public Optional<UsuarioEntity> findByNombreUsuario(String nombreUsuario);
 	
 

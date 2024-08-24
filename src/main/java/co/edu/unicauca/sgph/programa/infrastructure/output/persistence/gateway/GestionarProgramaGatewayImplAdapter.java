@@ -4,12 +4,15 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.repository.ProgramaRepositoryInt;
+import co.edu.unicauca.sgph.seguridad.entity.UsuarioPrincipal;
 
 @Service
 public class GestionarProgramaGatewayImplAdapter implements GestionarProgramaGatewayIntPort {
@@ -49,10 +52,9 @@ public class GestionarProgramaGatewayImplAdapter implements GestionarProgramaGat
 	 * @see co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort#consultarProgramas()
 	 */
 	@Override
-	public List<Programa> consultarProgramas() {
-
+	public List<Programa> consultarProgramas() {	    
 		return this.modelMapper.map(this.programaRepositoryInt.findAll(), new TypeToken<List<Programa>>() {
-		}.getType());
+		}.getType());		
 	}
 
 	/** 

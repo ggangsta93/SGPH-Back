@@ -85,4 +85,14 @@ public interface GestionarUsuarioGatewayIntPort {
 	public Usuario cambiarEstadoUsuarioPorIdUsuario(Long idUsuario);
 
 	Usuario consultarUsuarioPorIdPersona(Long idPersona);
+
+	/**
+	 * Método encargado de consultar el usuario a partir del nombre de usuario</br>
+	 * 
+	 * @author apedro
+	 * 
+	 * @param nombreUsuario
+	 * @return
+	 */
+	public Usuario consultarUsuarioPorNombreUsuario(String nombreUsuario);
 }

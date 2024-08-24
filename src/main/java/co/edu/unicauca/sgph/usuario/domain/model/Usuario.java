@@ -1,6 +1,8 @@
 package co.edu.unicauca.sgph.usuario.domain.model;
 
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import co.edu.unicauca.sgph.persona.domain.model.Persona;
@@ -23,8 +25,9 @@ public class Usuario{
 	
 	private Persona persona;
 
-	public Usuario() {
-		// Constructor sin parámetros
+	public Usuario() {		
+		programas = new ArrayList<>();
+		roles=new HashSet<>();
 	}
 
 	public String getNombreUsuario() {
