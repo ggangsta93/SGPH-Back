@@ -28,9 +28,10 @@ import co.edu.unicauca.sgph.seguridad.dto.LoginUsuario;
 import co.edu.unicauca.sgph.seguridad.dto.TokenDto;
 import co.edu.unicauca.sgph.seguridad.entity.UsuarioPrincipal;
 import co.edu.unicauca.sgph.seguridad.jwt.JwtProvider;
+import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/Autenticacion")
 @CrossOrigin
 public class AuthController {
 
@@ -56,6 +57,7 @@ public class AuthController {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@PostMapping("/loginGoogle")
 	public ResponseEntity<TokenDto> loginGoogle(@RequestBody TokenDto tokenDto) throws IOException {
 
@@ -68,28 +70,37 @@ public class AuthController {
 			Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
 					userDetails.getAuthorities());
 
-			return new ResponseEntity(this.autenticarYGenerarJwt(authentication), HttpStatus.OK);
+			return this.validarAutenticarYGenerarJwt(authentication);
+		}else {
+			return new ResponseEntity("Token invalido", HttpStatus.BAD_REQUEST);			
 		}
-
-		return new ResponseEntity("Token invalido", HttpStatus.BAD_REQUEST);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@PostMapping("/login")
 	public ResponseEntity<JwtDto> login(@Valid @RequestBody LoginUsuario loginUsuario, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
-			return new ResponseEntity("campos mal puestos", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity("Campos mal diligenciados", HttpStatus.BAD_REQUEST);
 		}
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginUsuario.getNombreUsuario(), loginUsuario.getPassword()));
-		return new ResponseEntity(this.autenticarYGenerarJwt(authentication), HttpStatus.OK);
+
+		return this.validarAutenticarYGenerarJwt(authentication);
 	}
 
-	private JwtDto autenticarYGenerarJwt(Authentication authentication) {
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtProvider.generateToken(authentication);
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-		return new JwtDto(jwt, userDetails.getUsername(), userDetails.getAuthorities(),
-				((UsuarioPrincipal) userDetails).getProgramas().stream().map(obj -> obj.getIdPrograma()).toList());
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private ResponseEntity validarAutenticarYGenerarJwt(Authentication authentication) {
+
+		if (!((UsuarioPrincipal) authentication.getPrincipal()).getEstado().equals(EstadoUsuarioEnum.ACTIVO)) {
+			return new ResponseEntity("Usuario Inactivo", HttpStatus.BAD_REQUEST);
+		} else {
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			String jwt = jwtProvider.generateToken(authentication);
+			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+			JwtDto jwtDTO = new JwtDto(jwt, userDetails.getUsername(), userDetails.getAuthorities(),
+					((UsuarioPrincipal) userDetails).getProgramas().stream().map(obj -> obj.getIdPrograma()).toList());
+			return new ResponseEntity(jwtDTO, HttpStatus.OK);
+		}
 	}
 
 }

@@ -14,7 +14,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 
@@ -57,9 +56,11 @@ public class JwtProvider {
             logger.error("token expirado");
         }catch (IllegalArgumentException e){
             logger.error("token vacío");
-        }catch (SignatureException e){
-            logger.error("fail en la firma");
-        }
+        }catch (SecurityException e){
+            logger.error("fail en la firma o seguridad");
+        }catch (Exception e) {
+        	logger.error("token invalido");
+		}
         return false;
     }
 }

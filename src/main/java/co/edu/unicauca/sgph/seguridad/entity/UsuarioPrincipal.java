@@ -2,7 +2,6 @@ package co.edu.unicauca.sgph.seguridad.entity;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -10,13 +9,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
-import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
-import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
 
 public class UsuarioPrincipal implements UserDetails {
-
+	
+	private static final long serialVersionUID = 2840076810500648125L;
+	
 	private String nombreUsuario;
 	private String email;
 	private String password;
