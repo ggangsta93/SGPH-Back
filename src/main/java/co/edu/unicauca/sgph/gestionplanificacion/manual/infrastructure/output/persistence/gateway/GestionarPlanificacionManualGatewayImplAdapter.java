@@ -19,6 +19,8 @@ import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
@@ -38,6 +40,7 @@ import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTO
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.output.persistence.repository.PlanificacionManualRepositoryInt;
 import co.edu.unicauca.sgph.horario.domain.model.Horario;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
+import co.edu.unicauca.sgph.seguridad.entity.UsuarioPrincipal;
 
 @Service
 public class GestionarPlanificacionManualGatewayImplAdapter implements GestionarPlanificacionManualGatewayIntPort {
@@ -98,8 +101,16 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		queryBuilder.append(" JOIN c.asignatura a");
 		queryBuilder.append(" JOIN a.programa pr");
 		queryBuilder.append(" WHERE 1=1");
+		queryBuilder.append(" AND pr.idPrograma IN (SELECT programas.idPrograma FROM UsuarioEntity usu JOIN usu.programas programas WHERE usu.nombreUsuario = :nombreUsuario ) ");
 
+		
 		Map<String, Object> parametros = new HashMap<>();
+		
+		// Se consulta el usuario del contexto y se filtra sobre los programas que tiene permitidos
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UsuarioPrincipal usuarioPrincipal = (UsuarioPrincipal) authentication.getPrincipal();		
+		parametros.put("nombreUsuario", usuarioPrincipal.getUsername());	
+		
 
 		if (Objects.nonNull(idPeriodoAcademicoVigente)) {
 			queryBuilder.append(" AND c.periodoAcademico.idPeriodoAcademico =:idPeriodoAcademico");
@@ -169,17 +180,16 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 			typedQuery.setParameter(entry.getKey(), entry.getValue());
 		}
 
-		return new PageImpl<>(typedQuery.getResultList(), pageable,
-				contarCursosConsultados(filtroCursoPlanificacionDTO.getListaIdFacultad(),
-						filtroCursoPlanificacionDTO.getListaIdPrograma(),
-						filtroCursoPlanificacionDTO.getListaIdAsignatura(), filtroCursoPlanificacionDTO.getSemestre(),
-						filtroCursoPlanificacionDTO.getEstadoCursoHorario(),
-						filtroCursoPlanificacionDTO.getCantidadDocentes(), idPeriodoAcademicoVigente));
+		return new PageImpl<>(typedQuery.getResultList(), pageable, contarCursosConsultados(
+				filtroCursoPlanificacionDTO.getListaIdFacultad(), filtroCursoPlanificacionDTO.getListaIdPrograma(),
+				filtroCursoPlanificacionDTO.getListaIdAsignatura(), filtroCursoPlanificacionDTO.getSemestre(),
+				filtroCursoPlanificacionDTO.getEstadoCursoHorario(), filtroCursoPlanificacionDTO.getCantidadDocentes(),
+				idPeriodoAcademicoVigente, usuarioPrincipal.getUsername()));
 	}
 
 	private Long contarCursosConsultados(List<Long> listaIdFacultad, List<Long> listaIdPograma,
 			List<Long> listaIdAsignatura, Integer semestre, EstadoCursoHorarioEnum estadoCursoHorario,
-			Integer cantidadDocentes, Long idPeriodoAcademicoVigente) {
+			Integer cantidadDocentes, Long idPeriodoAcademicoVigente, String nombreUsuario) {
 
 		StringBuilder queryBuilder = new StringBuilder();
 		queryBuilder.append(" SELECT COUNT(c)");
@@ -187,8 +197,10 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		queryBuilder.append(" JOIN c.asignatura a");
 		queryBuilder.append(" JOIN a.programa pr");
 		queryBuilder.append(" WHERE 1=1");
+		queryBuilder.append(" AND pr.idPrograma IN (SELECT programas.idPrograma FROM UsuarioEntity usu JOIN usu.programas programas WHERE usu.nombreUsuario = :nombreUsuario ) ");
 
 		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("nombreUsuario", nombreUsuario);	
 
 		if (Objects.nonNull(idPeriodoAcademicoVigente)) {
 			queryBuilder.append(" AND c.periodoAcademico.idPeriodoAcademico =:idPeriodoAcademico");
@@ -259,20 +271,30 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 	 * @see co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.output.GestionarPlanificacionManualGatewayIntPort#consultarInfoGeneralCursosPorPrograma(java.lang.Long)
 	 */
 	@Override
-	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma, Long idPeriodoAcademicoVigente) {
+	public InfoGeneralCursosPorProgramaDTO consultarInfoGeneralCursosPorPrograma(Long idPrograma,
+			Long idPeriodoAcademicoVigente) {
+		/*
+		 * Se consulta el usuario del contexto y se filtra sobre los programas que tiene
+		 * permitidos
+		 */
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UsuarioPrincipal usuarioPrincipal = (UsuarioPrincipal) authentication.getPrincipal();
+
 		InfoGeneralCursosPorProgramaDTO infoGeneralCursosPorProgramaDTO = new InfoGeneralCursosPorProgramaDTO();
-		infoGeneralCursosPorProgramaDTO
-				.setCantidadCursosHorarioParcial(this.contarCursosConsultados(null, Arrays.asList(idPrograma), null,
-						null, EstadoCursoHorarioEnum.PARCIALMENTE, null, idPeriodoAcademicoVigente));
-		infoGeneralCursosPorProgramaDTO
-				.setCantidadCursosSinHorario(this.contarCursosConsultados(null, Arrays.asList(idPrograma), null, null,
-						EstadoCursoHorarioEnum.SIN_ASIGNAR, null, idPeriodoAcademicoVigente));
+		infoGeneralCursosPorProgramaDTO.setCantidadCursosHorarioParcial(this.contarCursosConsultados(null,
+				Arrays.asList(idPrograma), null, null, EstadoCursoHorarioEnum.PARCIALMENTE, null,
+				idPeriodoAcademicoVigente, usuarioPrincipal.getUsername()));
+		infoGeneralCursosPorProgramaDTO.setCantidadCursosSinHorario(this.contarCursosConsultados(null,
+				Arrays.asList(idPrograma), null, null, EstadoCursoHorarioEnum.SIN_ASIGNAR, null,
+				idPeriodoAcademicoVigente, usuarioPrincipal.getUsername()));
 		infoGeneralCursosPorProgramaDTO.setCantidadCursosConHorario(this.contarCursosConsultados(null,
-				Arrays.asList(idPrograma), null, null, EstadoCursoHorarioEnum.ASIGNADO, null, idPeriodoAcademicoVigente));
+				Arrays.asList(idPrograma), null, null, EstadoCursoHorarioEnum.ASIGNADO, null, idPeriodoAcademicoVigente,
+				usuarioPrincipal.getUsername()));
 		infoGeneralCursosPorProgramaDTO.setTotalCursos(this.contarCursosConsultados(null, Arrays.asList(idPrograma),
-				null, null, null, null, idPeriodoAcademicoVigente));
-		infoGeneralCursosPorProgramaDTO.setCantidadCursosSinDocente(this.contarCursosConsultados(null,
-				Arrays.asList(idPrograma), null, null, null, 0, idPeriodoAcademicoVigente));
+				null, null, null, null, idPeriodoAcademicoVigente, usuarioPrincipal.getUsername()));
+		infoGeneralCursosPorProgramaDTO
+				.setCantidadCursosSinDocente(this.contarCursosConsultados(null, Arrays.asList(idPrograma), null, null,
+						null, 0, idPeriodoAcademicoVigente, usuarioPrincipal.getUsername()));
 		return infoGeneralCursosPorProgramaDTO;
 	}
 

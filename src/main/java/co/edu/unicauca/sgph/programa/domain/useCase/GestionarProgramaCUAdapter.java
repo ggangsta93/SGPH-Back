@@ -47,4 +47,12 @@ public class GestionarProgramaCUAdapter implements GestionarProgramaCUIntPort {
 	public List<Programa> consultarProgramas() {
 		return this.gestionarProgramaGatewayIntPort.consultarProgramas();
 	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.programa.aplication.input.GestionarProgramaCUIntPort#consultarProgramasPermitidosPorUsuario()
+	 */
+	@Override
+	public List<Programa> consultarProgramasPermitidosPorUsuario() {
+		return this.gestionarProgramaGatewayIntPort.consultarProgramasPermitidosPorUsuario();
+	}
 }

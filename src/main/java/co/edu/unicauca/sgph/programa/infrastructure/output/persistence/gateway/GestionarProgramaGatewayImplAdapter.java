@@ -1,5 +1,6 @@
 package co.edu.unicauca.sgph.programa.infrastructure.output.persistence.gateway;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -64,5 +65,24 @@ public class GestionarProgramaGatewayImplAdapter implements GestionarProgramaGat
 	public Programa consultarProgramaPorId(Long idPrograma) {
 		ProgramaEntity programaEntity = this.programaRepositoryInt.consultarProgramaPorId(idPrograma);
 		return this.modelMapper.map(programaEntity, Programa.class);
+	}
+
+	/** 
+	 * @see co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort#consultarProgramasPermitidosPorUsuario()
+	 */
+	@Override
+	public List<Programa> consultarProgramasPermitidosPorUsuario() {
+		//Se consulta el usuario del contexto
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UsuarioPrincipal usuarioPrincipal = (UsuarioPrincipal) authentication.getPrincipal();
+		//Se valida si tiene programas asociados
+		if (usuarioPrincipal.getProgramas() != null && !usuarioPrincipal.getProgramas().isEmpty()) {
+			List<ProgramaEntity> programaEntities = this.programaRepositoryInt.consultarProgramasPermitidosPorUsuario(
+					usuarioPrincipal.getProgramas().stream().map(pro -> pro.getIdPrograma()).toList());
+			return this.modelMapper.map(programaEntities, new TypeToken<List<Programa>>() {
+			}.getType());
+		} else {
+			return new ArrayList<>();
+		}
 	}
 }

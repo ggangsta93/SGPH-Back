@@ -23,46 +23,49 @@ import co.edu.unicauca.sgph.seguridad.service.UserDetailServiceImpl;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MainSecurity {
 
-	 @Autowired
-	    private UserDetailServiceImpl userDetailsService;
+	@Autowired
+	private UserDetailServiceImpl userDetailsService;
 
-	    @Autowired
-	    private JwtEntryPoint jwtEntryPoint;
+	@Autowired
+	private JwtEntryPoint jwtEntryPoint;
 
-	    @Bean
-	    public JwtTokenFilter jwtTokenFilter() {
-	        return new JwtTokenFilter();
-	    }
+	@Bean
+	public JwtTokenFilter jwtTokenFilter() {
+		return new JwtTokenFilter();
+	}
 
-	    @Bean
-	    public PasswordEncoder passwordEncoder() {
-	        return new BCryptPasswordEncoder();
-	    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-	    @Bean
-	    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-	        return authenticationConfiguration.getAuthenticationManager();
-	    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
 
-	    @Bean
-	    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	    	http
-            .cors().and().csrf().disable()
-            .authorizeHttpRequests(authorizeRequests -> 
-                authorizeRequests
-                    .antMatchers("/Autenticacion/**").permitAll()
-                    .antMatchers("/AdministrarUsuario/**").hasRole("ADMINISTRADOR")
-                    .anyRequest().authenticated()
-            )
-            .exceptionHandling(exceptionHandling -> 
-                exceptionHandling.authenticationEntryPoint(jwtEntryPoint)
-            )
-            .sessionManagement(sessionManagement -> 
-                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            );
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    	http
+        .cors().and().csrf().disable()
+        .authorizeHttpRequests(authorizeRequests -> 
+            authorizeRequests
+                .antMatchers("/Autenticacion/**").permitAll()
+                .antMatchers("/PlanificacionManual/**").hasRole("PLANIFICADOR")
+                .antMatchers("/AdministrarPrograma/consultarProgramasPermitidosPorUsuario").hasRole("PLANIFICADOR")
+                .antMatchers("/AdministrarUsuario/**").hasRole("ADMINISTRADOR")
+                .anyRequest().authenticated()
+        )
+        .exceptionHandling(exceptionHandling -> 
+            exceptionHandling.authenticationEntryPoint(jwtEntryPoint)
+        )
+        .sessionManagement(sessionManagement -> 
+            sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
 
-        http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-	    }
+		return http.build();
+	}
 }

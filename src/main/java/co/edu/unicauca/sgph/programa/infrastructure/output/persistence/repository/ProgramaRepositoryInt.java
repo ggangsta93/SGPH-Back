@@ -27,4 +27,8 @@ public interface ProgramaRepositoryInt extends JpaRepository<ProgramaEntity, Lon
 	
 	@Query("SELECT pro FROM ProgramaEntity pro WHERE pro.idPrograma = :idPrograma")
 	public ProgramaEntity consultarProgramaPorId(Long idPrograma);
+	
+	
+	@Query("SELECT pro FROM ProgramaEntity pro WHERE pro.idPrograma IN (:lstIdPrograma)")
+	public List<ProgramaEntity> consultarProgramasPermitidosPorUsuario(List<Long> lstIdPrograma);
 }

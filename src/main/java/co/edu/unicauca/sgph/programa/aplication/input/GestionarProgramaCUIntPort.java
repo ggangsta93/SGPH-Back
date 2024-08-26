@@ -29,4 +29,14 @@ public interface GestionarProgramaCUIntPort {
 	 * @return
 	 */
 	public List<Programa> consultarProgramas();
+	
+	/**
+	 * Método encargado de consultar los programas permitidos para el usuario que se
+	 * encuentra logueado<br>
+	 * 
+	 * @author apedro
+	 * 
+	 * @return
+	 */
+	public List<Programa> consultarProgramasPermitidosPorUsuario();
 }

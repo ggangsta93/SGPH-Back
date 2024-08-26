@@ -39,5 +39,15 @@ public interface GestionarProgramaGatewayIntPort {
 	 * @return
 	 */
 	public Programa consultarProgramaPorId(Long idPrograma);
+	
+	/**
+	 * Método encargado de consultar los programas permitidos para el usuario que se
+	 * encuentra logueado<br>
+	 * 
+	 * @author apedro
+	 * 
+	 * @return
+	 */
+	public List<Programa> consultarProgramasPermitidosPorUsuario();
 
 }
