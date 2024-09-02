@@ -314,7 +314,7 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 				programa.setIdPrograma(obj.getIdPrograma());
 				programa.setNombre(obj.getNombre());
 				return programa;
-			}).collect(Collectors.toList()));
+			}).distinct().collect(Collectors.toList()));
 
 			return usuario;
 		}	

@@ -66,11 +66,14 @@ public class AuthController {
 		if (response.getStatusCode().is2xxSuccessful()) {
 			JSONObject jsonObject = new JSONObject(response.getBody());
 			String email = jsonObject.getString("email");
-			UserDetails userDetails = userDetailsService.loadUserByUsername(email.split("@")[0]);
-			Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
-					userDetails.getAuthorities());
-
-			return this.validarAutenticarYGenerarJwt(authentication);
+			try {
+				UserDetails userDetails = userDetailsService.loadUserByUsername(email.split("@")[0]);				
+				Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+						userDetails.getAuthorities());
+				return this.validarAutenticarYGenerarJwt(authentication);
+			} catch (Exception e) {
+				return new ResponseEntity("Usuario invalido", HttpStatus.BAD_REQUEST);			
+			}
 		}else {
 			return new ResponseEntity("Token invalido", HttpStatus.BAD_REQUEST);			
 		}

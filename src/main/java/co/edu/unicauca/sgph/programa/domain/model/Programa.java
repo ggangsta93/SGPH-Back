@@ -1,6 +1,7 @@
 package co.edu.unicauca.sgph.programa.domain.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.facultad.domain.model.Facultad;
@@ -76,4 +77,23 @@ public class Programa {
 	public void setOid(Long oid) {
 		this.oid = oid;
 	}
+	
+    /** 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Programa programa = (Programa) o;
+        return Objects.equals(idPrograma, programa.idPrograma);
+    }
+
+    /** 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(idPrograma);
+    }
 }
