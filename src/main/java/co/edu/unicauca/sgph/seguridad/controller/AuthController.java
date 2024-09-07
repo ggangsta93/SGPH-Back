@@ -1,6 +1,7 @@
 package co.edu.unicauca.sgph.seguridad.controller;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -101,7 +102,7 @@ public class AuthController {
 			String jwt = jwtProvider.generateToken(authentication);
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 			JwtDto jwtDTO = new JwtDto(jwt, userDetails.getUsername(), userDetails.getAuthorities(),
-					((UsuarioPrincipal) userDetails).getProgramas().stream().map(obj -> obj.getIdPrograma()).toList());
+					((UsuarioPrincipal) userDetails).getProgramas().stream().map(obj -> obj.getIdPrograma()).collect(Collectors.toList()));
 			return new ResponseEntity(jwtDTO, HttpStatus.OK);
 		}
 	}

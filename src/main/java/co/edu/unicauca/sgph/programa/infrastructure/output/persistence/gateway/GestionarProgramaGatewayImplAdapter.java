@@ -2,6 +2,7 @@ package co.edu.unicauca.sgph.programa.infrastructure.output.persistence.gateway;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -78,7 +79,7 @@ public class GestionarProgramaGatewayImplAdapter implements GestionarProgramaGat
 		//Se valida si tiene programas asociados
 		if (usuarioPrincipal.getProgramas() != null && !usuarioPrincipal.getProgramas().isEmpty()) {
 			List<ProgramaEntity> programaEntities = this.programaRepositoryInt.consultarProgramasPermitidosPorUsuario(
-					usuarioPrincipal.getProgramas().stream().map(pro -> pro.getIdPrograma()).toList());
+					usuarioPrincipal.getProgramas().stream().map(pro -> pro.getIdPrograma()).collect(Collectors.toList()));
 			return this.modelMapper.map(programaEntities, new TypeToken<List<Programa>>() {
 			}.getType());
 		} else {
