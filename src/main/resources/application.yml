@@ -4,9 +4,10 @@ spring:
   application:
     name: sgph
   datasource:
-    url: jdbc:mysql://localhost/sgph?useSSL=false&serverTimezone=GMT&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/sgph?useSSL=false&serverTimezone=GMT&allowPublicKeyRetrieval=true    
+    #url: jdbc:mysql://db-sgph.cpw0ksu2q9qr.us-east-2.rds.amazonaws.com:3306/sgph?useSSL=false&serverTimezone=GMT&allowPublicKeyRetrieval=true 
     username: root
-    password: 1234
+    password: sasa1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     #database-platform: org.hibernate.dialect.MySQL8Dialect

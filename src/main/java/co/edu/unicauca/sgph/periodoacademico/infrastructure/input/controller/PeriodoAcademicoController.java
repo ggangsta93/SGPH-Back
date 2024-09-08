@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +27,6 @@ import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.Per
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTOResponse.PeriodoAcademicoOutDTO;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.mapper.PeriodoAcademicoRestMapper;
 
-@CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/AdministrarPeriodoAcademico")
 public class PeriodoAcademicoController extends CommonEJB {

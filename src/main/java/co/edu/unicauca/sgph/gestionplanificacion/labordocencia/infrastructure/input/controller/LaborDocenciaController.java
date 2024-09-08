@@ -5,7 +5,6 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +14,6 @@ import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.aplication.input.
 import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.infrastructure.input.mapper.LaborDocenciaRestMapper;
 import co.edu.unicauca.sgph.gestionplanificacion.labordocencia.infrastructure.output.persistence.entity.LaborDocenciaEntity;
 
-@CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/LaborDocencia")
 @Service

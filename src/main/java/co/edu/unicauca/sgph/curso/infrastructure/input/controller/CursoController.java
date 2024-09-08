@@ -2,7 +2,6 @@ package co.edu.unicauca.sgph.curso.infrastructure.input.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +16,6 @@ import co.edu.unicauca.sgph.curso.infrastructure.input.DTORequest.CursoInDTO;
 import co.edu.unicauca.sgph.curso.infrastructure.input.DTOResponse.CursoOutDTO;
 import co.edu.unicauca.sgph.curso.infrastructure.input.mapper.CursoRestMapper;
 
-@CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/AdministrarCurso")
 public class CursoController extends CommonEJB {

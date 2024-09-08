@@ -3,9 +3,6 @@ package co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.co
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,9 +28,7 @@ import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.CrearActuali
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.FiltroFranjaHorariaDisponibleCursoDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.CrearActualizarDocentesCursoOutDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.CrearActualizarHorarioCursoOutDTO;
-import co.edu.unicauca.sgph.seguridad.entity.UsuarioPrincipal;
 
-@CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/PlanificacionManual")
 public class PlanificacionManualController extends CommonEJB{
