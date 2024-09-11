@@ -5,6 +5,7 @@ import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
 import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import co.edu.unicauca.sgph.agrupador.aplication.output.AgrupadorEspacioFisicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
@@ -191,9 +192,18 @@ public class BeanConfigurations {
 			GestionarLaborDocenciaGatewayIntPort gestionarLaborDocenciaGatewayIntPort,
 			GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort,
 			GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort,
-			GestionarAsignaturaGatewayIntPort gestionarAsignaturaGatewayIntPort) {
+			GestionarAsignaturaGatewayIntPort gestionarAsignaturaGatewayIntPort,
+			GestionarProgramaGatewayIntPort gestionarProgramaGatewayIntPort,
+			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort,
+			GestionarPersonaGatewayIntPort gestionarPersonaGatewayIntPort) {
 		return new GestionarLaborDocenciaCUAdapter(gestionarLaborDocenciaGatewayIntPort, gestionarDocenteGatewayIntPort,
-				gestionarCursoGatewayIntPort, gestionarAsignaturaGatewayIntPort);
+				gestionarCursoGatewayIntPort, gestionarAsignaturaGatewayIntPort, gestionarProgramaGatewayIntPort,
+				gestionarPeriodoAcademicoGatewayIntPort, gestionarPersonaGatewayIntPort);
 	}
+	
+	@Bean
+    RestTemplate restTemplate() {
+        return new RestTemplate();
+    }	
 
 }
