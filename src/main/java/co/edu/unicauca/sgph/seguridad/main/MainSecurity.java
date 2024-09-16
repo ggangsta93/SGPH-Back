@@ -75,12 +75,12 @@ public class MainSecurity {
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-			public void addCorsMappings(CorsRegistry registry) {
+			public void addCorsMappings(CorsRegistry registry) {                
                 registry.addMapping("/**")
-        		.allowedOriginPatterns("http://localhost:4200", "http://sgph-app.s3-website.us-east-2.amazonaws.com")
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+                .allowedOriginPatterns("http://localhost:4200","http://localhost","http://159.89.37.197","https://sgph-unicauca.netlify.app")
+                .allowedMethods("*")         // Aceptar cualquier método HTTP
+                .allowedHeaders("*")         // Aceptar cualquier encabezado
+                .allowCredentials(true);     // Permitir credenciales
 			}
         };
     }
