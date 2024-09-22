@@ -115,7 +115,7 @@ public class PeriodoAcademicoController extends CommonEJB {
 	 * @author apedro
 	 * 
 	 */
-	@Scheduled(cron = "0 0 0 * * *") // Se ejecuta todos los días a la medianoche
+	@Scheduled(cron = "0 0 0 * * *", zone = "America/Bogota") // Se ejecuta todos los días a la medianoche
 	// @Scheduled(fixedRate = 30000) // Se ejecuta cada hora
 	private void actualizarEstadoPeriodoAcademico() {
 		LocalDate localDate = LocalDate.now();

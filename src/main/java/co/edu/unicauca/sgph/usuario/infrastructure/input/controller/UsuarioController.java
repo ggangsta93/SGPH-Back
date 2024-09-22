@@ -131,6 +131,16 @@ public class UsuarioController extends CommonEJB {
 		}
 		return new UsuarioOutDTO();
 	}
+	
+	/**
+	 * Método encargado de consultar los usuarios activos dado el identificador de
+	 * persona </br>
+	 *
+	 * @author
+	 * 
+	 * @param idPersona
+	 * @return
+	 */
 	@GetMapping("/consultarUsuarioPorIdPersona")
 	private UsuarioOutDTO consultarUsuarioPorIdPersona(@RequestParam Long idPersona) {
 		Usuario usuario = this.gestionarUsuarioCUIntPort.consultarUsuarioPorIdPersona(idPersona);

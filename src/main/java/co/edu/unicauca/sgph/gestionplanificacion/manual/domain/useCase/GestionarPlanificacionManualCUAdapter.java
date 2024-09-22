@@ -59,6 +59,7 @@ import co.edu.unicauca.sgph.programa.domain.model.Programa;
 
 public class GestionarPlanificacionManualCUAdapter implements GestionarPlanificacionManualCUIntPort {
 
+	private static final String PROGRAMA_NO_PERMITIDO_PARA_EL_USUARIO = "Programa no permitido para el usuario";
 	private static final String NO_EXISTE_PERIODO_ACADEMICO_VIGENTE = "No existe periodo académico vigente";
 	private static final String FRANJA_REPETIDA = "Franja repetida";
 	private static final String CRUCE_CON_HORARIO_DEL_DOCENTE = "Cruce con horario del docente: ";
@@ -670,42 +671,47 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		 * Se valida que exista periodo académico vigente y que el curso a consultar
 		 * pertenezca al mismo
 		 */
-		if (Objects.nonNull(periodoAcademicoVigente) && this.cursoPerteneceAlPeriodoAcademicoVigente(
-				filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(), periodoAcademicoVigente.getIdPeriodoAcademico())) {
+		if (Objects.nonNull(periodoAcademicoVigente)) {
+			
+			if (this.cursoPerteneceAlPeriodoAcademicoVigente(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
+					periodoAcademicoVigente.getIdPeriodoAcademico())) {
 
-			// Se consulta las franjas horarias actuales del curso
-			List<FranjaHorariaBasicaDTO> lstFranjasHorariasCurso = this.gestionarPlanificacionManualGatewayIntPort
-					.consultarFranjasHorariasDeCursoPorCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso());
+				// Se consulta las franjas horarias actuales del curso
+				List<FranjaHorariaBasicaDTO> lstFranjasHorariasCurso = this.gestionarPlanificacionManualGatewayIntPort
+						.consultarFranjasHorariasDeCursoPorCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso());
 
-			// Se consultan las franjas horarias de los espacios físicos
-			Map<Long, List<FranjaHorariaBasicaDTO>> mapaFranjasHorariasPorEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
-					.consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(
-							filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
-							filtroFranjaHorariaDisponibleCursoDTO.getListaIdUbicacion(),
-							filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico(),
-							filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico(),
-							filtroFranjaHorariaDisponibleCursoDTO.getSalon(),
-							periodoAcademicoVigente.getIdPeriodoAcademico());
+				// Se consultan las franjas horarias de los espacios físicos
+				Map<Long, List<FranjaHorariaBasicaDTO>> mapaFranjasHorariasPorEspacioFisico = this.gestionarPlanificacionManualGatewayIntPort
+						.consultarFranjasHorariasDeEspaciosFisicosPorCursoYCriterios(
+								filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
+								filtroFranjaHorariaDisponibleCursoDTO.getListaIdUbicacion(),
+								filtroFranjaHorariaDisponibleCursoDTO.getListaIdTipoEspacioFisico(),
+								filtroFranjaHorariaDisponibleCursoDTO.getListaIdAgrupadorEspacioFisico(),
+								filtroFranjaHorariaDisponibleCursoDTO.getSalon(),
+								periodoAcademicoVigente.getIdPeriodoAcademico());
 
-			// Se consultan las franjas horarias de cursos del semestre
-			List<FranjaHorariaBasicaDTO> lstFranjasHorariasCursosSemestre = this.gestionarPlanificacionManualGatewayIntPort
-					.consultarFranjasHorariasDeSemestrePorCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
-							filtroFranjaHorariaDisponibleCursoDTO.getIdAsignatura(),
-							periodoAcademicoVigente.getIdPeriodoAcademico());
+				// Se consultan las franjas horarias de cursos del semestre
+				List<FranjaHorariaBasicaDTO> lstFranjasHorariasCursosSemestre = this.gestionarPlanificacionManualGatewayIntPort
+						.consultarFranjasHorariasDeSemestrePorCurso(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
+								filtroFranjaHorariaDisponibleCursoDTO.getIdAsignatura(),
+								periodoAcademicoVigente.getIdPeriodoAcademico());
 
-			// Se consultan las franjas horarias de los docentes asociados al curso
-			List<FranjaHorariaBasicaDTO> lstFranjasHorariasDocentes = this.gestionarPlanificacionManualGatewayIntPort
-					.consultarFranjasHorariasDeDocentesAsociadosACurso(
-							filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
-							periodoAcademicoVigente.getIdPeriodoAcademico());
+				// Se consultan las franjas horarias de los docentes asociados al curso
+				List<FranjaHorariaBasicaDTO> lstFranjasHorariasDocentes = this.gestionarPlanificacionManualGatewayIntPort
+						.consultarFranjasHorariasDeDocentesAsociadosACurso(
+								filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
+								periodoAcademicoVigente.getIdPeriodoAcademico());
 
-			if (Boolean.FALSE.equals(filtroFranjaHorariaDisponibleCursoDTO.getEsPrincipal())) {
-				return this.consultarYValidarFranjasDisponiblesParaHorarioSecundario(
-						filtroFranjaHorariaDisponibleCursoDTO, mapaFranjasHorariasPorEspacioFisico);
-			} else {
-				return this.consultarYValidarFranjasDisponiblesParaHorarioPrincipal(
-						filtroFranjaHorariaDisponibleCursoDTO, mapaFranjasHorariasPorEspacioFisico,
-						lstFranjasHorariasDocentes, lstFranjasHorariasCursosSemestre, lstFranjasHorariasCurso);
+				if (Boolean.FALSE.equals(filtroFranjaHorariaDisponibleCursoDTO.getEsPrincipal())) {
+					return this.consultarYValidarFranjasDisponiblesParaHorarioSecundario(
+							filtroFranjaHorariaDisponibleCursoDTO, mapaFranjasHorariasPorEspacioFisico);
+				} else {
+					return this.consultarYValidarFranjasDisponiblesParaHorarioPrincipal(
+							filtroFranjaHorariaDisponibleCursoDTO, mapaFranjasHorariasPorEspacioFisico,
+							lstFranjasHorariasDocentes, lstFranjasHorariasCursosSemestre, lstFranjasHorariasCurso);
+				}
+			}else {
+				throw new RuntimeException(CURSO_NO_PERTENECE_A_PERIODO_ACADEMICO_VIGENTE);
 			}
 
 		}else {
@@ -1242,6 +1248,13 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	@Override
 	@Transactional(rollbackFor = RuntimeException.class)
 	public Boolean eliminarHorarioPrograma(EliminarHorarioInDTO eliminarHorarioInDTO) {
+		
+		if (!this.gestionarProgramaGatewayIntPort.consultarProgramasPermitidosPorUsuario().stream()
+				.map(Programa::getIdPrograma).collect(Collectors.toList())
+				.contains(eliminarHorarioInDTO.getIdPrograma())) {
+			throw new RuntimeException(PROGRAMA_NO_PERMITIDO_PARA_EL_USUARIO);
+		}		
+		
 		// Se consulta periodo académico vigente
 		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
 				.consultarPeriodoAcademicoVigente();

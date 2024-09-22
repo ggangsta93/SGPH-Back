@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.agrupador.domain.model.AgrupadorEspacioFisico;
@@ -178,6 +179,7 @@ public class GestionarAgrupadorEspacioFisicoGatewayImplAdapter
 	}
 		
 	@Override
+	@Transactional
 	public MensajeOutDTO guardarAsignacion(AsignacionEspacioFisicoDTO asignacion) {
 		this.eliminarAgrupadoresEspacioFisico(asignacion.getQuitados(), asignacion.getIdGrupo());
 		this.agregarAgrupadosEspacioFisico(asignacion.getAgregados(), asignacion.getIdGrupo());

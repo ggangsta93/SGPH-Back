@@ -54,6 +54,9 @@ public class MainSecurity {
         .authorizeHttpRequests(authorizeRequests -> 
             authorizeRequests
                 .antMatchers("/Autenticacion/**").permitAll()
+                .antMatchers("/AdministrarPeriodoAcademico/guardarPeriodoAcademico").hasAnyRole("PLANIFICADOR","PRESTAMISTA")
+                .antMatchers("/AdministrarAgrupador/guardarGrupo").hasRole("PLANIFICADOR")
+                .antMatchers("/AdministrarAgrupador/guardarAsignacion").hasRole("PLANIFICADOR")                
                 .antMatchers("/PlanificacionManual/**").hasRole("PLANIFICADOR")
                 .antMatchers("/AdministrarPrograma/consultarProgramasPermitidosPorUsuario").hasRole("PLANIFICADOR")
                 .antMatchers("/AdministrarUsuario/**").hasRole("ADMINISTRADOR")
