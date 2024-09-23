@@ -399,4 +399,24 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		return dto;
 	}
 
+	@Override
+	public Boolean existsEspacioFisicoByOid(String OID) {
+		EspacioFisicoEntity espacioFisicoEntity = this.espacioFisicoRepositoryInt.consultarEspacioFisicoPorOID(OID);
+		if (Objects.nonNull(espacioFisicoEntity)) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
+	}
+
+	@Override
+	public Boolean existsEspacioFisicoByNombre(String salon) {
+		EspacioFisicoEntity espacioFisicoEntity = this.espacioFisicoRepositoryInt.consultarEspacioFisicoPorNombre(salon);
+		if (Objects.nonNull(espacioFisicoEntity)) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
+	}
+
 }

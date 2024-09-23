@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
@@ -65,4 +66,21 @@ public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
 			+ " WHERE asignatura.programa.idPrograma = :idPrograma"
 			+ " AND curso.periodoAcademico.idPeriodoAcademico = :idPeriodoAcademico")
 	public List<CursoEntity> consultarCursosPorProgramaYPeriodoAcademico(Long idPrograma, Long idPeriodoAcademico);
+	
+	@Query("SELECT curso " 
+			+ " FROM CursoEntity curso "
+			+ " JOIN curso.asignatura asignatura"			
+			+ " WHERE curso.asignatura.idAsignatura = :idAsignatura "
+			+ " AND asignatura.estado = co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum.ACTIVO")
+	public List<CursoEntity> consultarCursoPorAsignaturaActiva(@Param("idAsignatura") Long idAsignatura);
+	
+	@Query("SELECT curso FROM CursoEntity curso " +
+		       "WHERE curso.asignatura.idAsignatura = :idAsignatura " +
+		       "AND curso.grupo = :grupo")
+	public List<CursoEntity> consultarCursosPorAsignaturaYGrupo(@Param("idAsignatura") Long idAsignatura, @Param("grupo") String grupo);
+
+	@Query("SELECT curso FROM CursoEntity curso " +
+		       "WHERE curso.idCurso = :idCurso " +
+		       "AND (size(curso.docentes) > 0 OR size(curso.horarios) > 0)")
+	public List<CursoEntity> consultarExisteDocenteAsociadoAlCurso(@Param("idCurso") Long idCurso);
 }

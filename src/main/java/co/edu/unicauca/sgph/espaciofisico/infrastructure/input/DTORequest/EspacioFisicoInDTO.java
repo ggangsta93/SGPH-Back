@@ -2,30 +2,46 @@ package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ExisteNombreEspacioFisico;
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ExisteOidEspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
 
+@ExisteOidEspacioFisico
+@ExisteNombreEspacioFisico
 public class EspacioFisicoInDTO {
 
 	private Long idEspacioFisico;
 
+	@NotEmpty
 	private String OID;
 
+	@NotNull
 	private Long capacidad;
 
+	@NotNull
 	private EstadoEspacioFisicoEnum estado;
 
+	@NotEmpty
 	private String salon;
 
 	private Long idEdificio;
 
+	@NotNull
 	private Long idUbicacion;
 	
+	@NotNull
 	private Long idTipoEspacioFisico;
 
 	private List<Long> lstIdAgrupadorEspacioFisico;
 	private List<Long> recursos;
 
 	private List<Long> saveIdAgrupadores;
+	
+	private Boolean esValidar;
+
 
 	public Long getIdEspacioFisico() {
 		return idEspacioFisico;
@@ -114,4 +130,13 @@ public class EspacioFisicoInDTO {
 	public void setSaveIdAgrupadores(List<Long> saveIdAgrupadores) {
 		this.saveIdAgrupadores = saveIdAgrupadores;
 	}
+
+	public Boolean getEsValidar() {
+		return esValidar;
+	}
+
+	public void setEsValidar(Boolean esValidar) {
+		this.esValidar = esValidar;
+	}
+	
 }

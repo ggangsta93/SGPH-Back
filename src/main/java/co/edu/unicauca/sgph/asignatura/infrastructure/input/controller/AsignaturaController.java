@@ -1,10 +1,18 @@
 package co.edu.unicauca.sgph.asignatura.infrastructure.input.controller;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import javax.validation.Valid;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +29,7 @@ import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.Asignatur
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
+import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
 @RestController
@@ -45,9 +54,30 @@ public class AsignaturaController extends CommonEJB {
 	 * @return
 	 */
 	@PostMapping("/guardarAsignatura")
-	public AsignaturaOutDTO guardarAsignatura(@RequestBody AsignaturaInDTO asignaturaInDTO) {
-		return this.asignaturaRestMapper.toAsignaturaOutDTO(this.gestionarAsignaturaCUIntPort
-				.guardarAsignatura(this.asignaturaRestMapper.toAsignatura(asignaturaInDTO)));
+	public ResponseEntity<?> guardarAsignatura(@Valid @RequestBody AsignaturaInDTO asignaturaInDTO, BindingResult result) {
+		Set<String> validaciones = new HashSet<String>();
+		validaciones.add("ExisteCodigoAsignatura");
+		validaciones.add("ExisteOidAsignatura");
+		
+		if (result.hasErrors()) {
+			return validacion(result, validaciones);
+		}
+		
+		if (Boolean.FALSE.equals(asignaturaInDTO.getEsValidar())) {
+	        AsignaturaOutDTO asignaturaOutDTO = this.asignaturaRestMapper.toAsignaturaOutDTO(
+	                this.gestionarAsignaturaCUIntPort.guardarAsignatura(
+	                        this.asignaturaRestMapper.toAsignatura(asignaturaInDTO)
+	                )
+	        );
+
+	        if (Objects.equals(asignaturaOutDTO.getIdAsignatura(), asignaturaOutDTO.getIdAsignatura())) {
+	            return new ResponseEntity<>(asignaturaOutDTO, HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>(asignaturaOutDTO, HttpStatus.CREATED);
+	        }
+	    } else {
+	        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+	    }
 	}
 
 	/**

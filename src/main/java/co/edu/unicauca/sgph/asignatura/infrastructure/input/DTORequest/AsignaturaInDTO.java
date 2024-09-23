@@ -2,29 +2,50 @@ package co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.validation.ExisteCodigoAsignatura;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.validation.ExisteOidAsignatura;
+
+@ExisteCodigoAsignatura
+@ExisteOidAsignatura
 public class AsignaturaInDTO {
 
 	private Long idAsignatura;
 
+	@NotEmpty
 	private String nombre;
 
+	@NotEmpty
 	private String codigoAsignatura;
 
+	@NotEmpty
 	private String OID;
 
+	@NotNull
 	private Integer semestre;
 
+	@NotNull
 	private String pensum;
 
+	@NotNull
 	private Integer horasSemana;
-
+	
+	@NotNull
 	private Long idPrograma;
+	
+	@NotNull
 	private String estado;
+	
 	private String base64;
 
+	@NotNull
 	private List<Long> lstIdAgrupadorEspacioFisico;
 	
 	private Boolean aplicaEspacioSecundario;
+	
+	private Boolean esValidar;
 
 	public AsignaturaInDTO(String nombre,
 						   String codigoAsignatura,
@@ -141,4 +162,14 @@ public class AsignaturaInDTO {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
+
+	public Boolean getEsValidar() {
+		return esValidar;
+	}
+
+	public void setEsValidar(Boolean esValidar) {
+		this.esValidar = esValidar;
+	}
+	
+	
 }

@@ -124,4 +124,14 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 	List<EspacioFisicoEntity> obtenerEspacioFisicoPorFiltro(@Param("salon") String salon,
 												 @Param("ubicacion") String ubicacion,
 												 @Param("tipoEspacioFisico") String tipoEspacioFisico);
+	
+	@Query("SELECT e "
+			+ "FROM EspacioFisicoEntity e "
+			+ "WHERE e.oid = :OID ")
+	public EspacioFisicoEntity consultarEspacioFisicoPorOID(@Param("OID") String OID);	
+	
+	@Query("SELECT e "
+			+ "FROM EspacioFisicoEntity e "
+			+ "WHERE e.salon = :salon ")
+	public EspacioFisicoEntity consultarEspacioFisicoPorNombre(@Param("salon") String salon);
 }

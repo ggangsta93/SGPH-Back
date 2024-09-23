@@ -66,5 +66,4 @@ public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
 	public List<Curso> consultarCursosPorIdPeriodoYIdPrograma(Long idPeriodo, Long idPrograma) {
 		return  this.gestionarCursoGatewayIntPort.consultarCursosPorProgramaYPeriodoAcademico(idPrograma, idPeriodo);
 	}
-
 }

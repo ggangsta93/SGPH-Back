@@ -63,4 +63,10 @@ public interface GestionarCursoGatewayIntPort {
 	public List<Curso> consultarCursosPorProgramaYPeriodoAcademico(Long idPrograma, Long idPeriodoAcademico);
 
 	Boolean eliminarCurso(Long id);
+	
+	public Boolean existsCursoByAsignaturaActiva(Long idAsignatura);
+	
+	public Boolean existsCursoByGrupoYAsignatura(String Grupo, Long idAsignatura);
+	
+	public Boolean existsCursoByDocente(Long idCurso);
 }

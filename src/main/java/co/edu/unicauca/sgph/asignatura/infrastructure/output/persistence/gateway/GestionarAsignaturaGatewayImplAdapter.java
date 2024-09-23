@@ -375,5 +375,17 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		return mensaje;
 	}
 
+	@Override
+	public Boolean existeCodigoAsignatura(String codigo) {
+		Optional<AsignaturaEntity> asignatura = this.asignaturaRepositoryInt.findByCodigoAsignatura(codigo);		
+		return asignatura.isPresent();
+	}
+
+	@Override
+	public Boolean existeOidAsignatura(String oid) {
+		Optional<AsignaturaEntity> asignatura = this.asignaturaRepositoryInt.findByOid(oid);		
+		return asignatura.isPresent();
+	}
+
 
 }

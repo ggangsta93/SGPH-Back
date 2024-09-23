@@ -1,10 +1,17 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.controller;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +26,6 @@ import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEdificioCUIn
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarTipoEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarUbicacionCUIntPort;
-import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
@@ -68,11 +74,30 @@ public class EspacioFisicoController extends CommonEJB {
 
 	@PostMapping("/guardarEspacioFisico")
 	@Transactional
-	public EspacioFisicoOutDTO guardarEspacioFisico(@RequestBody EspacioFisicoInDTO espacioFisicoInDTO) {
-		EspacioFisico espacioFisico = this.gestionarEspacioFisicoCUIntPort
-				.guardarEspacioFisico(espacioFisicoInDTO);
-		return this.espacioFisicoRestMapper.toEspacioFisicoOutDTO(espacioFisico);
+	public ResponseEntity<?> guardarEspacioFisico(@Valid @RequestBody EspacioFisicoInDTO espacioFisicoInDTO, BindingResult result) {
+		Set<String> validaciones = new HashSet<String>();
+		validaciones.add("ExisteOidEspacioFisico");
+		validaciones.add("ExisteNombreEspacioFisico");
+		
+		if (result.hasErrors()) {
+			return validacion(result, validaciones);
+		}
+		
+		if(Boolean.FALSE.equals(espacioFisicoInDTO.getEsValidar())) {
+			EspacioFisicoOutDTO espacioFisicoOutDTO = this.espacioFisicoRestMapper.toEspacioFisicoOutDTO(
+					this.gestionarEspacioFisicoCUIntPort.guardarEspacioFisico(
+							this.espacioFisicoRestMapper.toEspacioFisico(espacioFisicoInDTO)));
+			
+			if (Objects.equals(espacioFisicoOutDTO.getIdEspacioFisico(), espacioFisicoOutDTO.getIdEspacioFisico())) {
+	            return new ResponseEntity<>(espacioFisicoOutDTO, HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>(espacioFisicoOutDTO, HttpStatus.CREATED);
+	        }
+	    } else {
+	        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+	    }
 	}
+	
 	@GetMapping("activarInactivarEspacioFisicio/{id}")
 	public void activarInactivarEspacioFisico(@PathVariable Long id) {
 		this.gestionarEspacioFisicoCUIntPort.activarInactivarEspacioFisico(id);

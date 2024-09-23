@@ -41,4 +41,8 @@ public interface GestionarAsignaturaGatewayIntPort {
 	MensajeOutDTO cargaMasivaAsignaturas(AsignaturaInDTO asignatura);
 
 	List<Asignatura> obtenerAsignaturasPorListaOids(List<String> oid);
+
+	public Boolean existeCodigoAsignatura(String codigo);
+	
+	public Boolean existeOidAsignatura(String oid);
 }

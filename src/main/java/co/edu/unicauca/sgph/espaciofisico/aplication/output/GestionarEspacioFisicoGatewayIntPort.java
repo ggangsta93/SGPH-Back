@@ -127,4 +127,8 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	EspacioFisico guardarEspacioFisico(EspacioFisicoInDTO espacioFisicoInDTO);
 
 	void activarInactivarEspacioFisico(Long id);
+	
+	public Boolean existsEspacioFisicoByOid(String OID);
+	
+	public Boolean existsEspacioFisicoByNombre(String salon);
 }

@@ -23,8 +23,8 @@ public interface EspacioFisicoRestMapper {
 			@Mapping(target = "nombreTipoEspacioFisico", expression = "java(espacioFisico.getTipoEspacioFisico() != null ?  espacioFisico.getTipoEspacioFisico().getTipo(): null)"),
 			@Mapping(target = "idEdificio", expression = "java(espacioFisico.getEdificio() != null ? espacioFisico.getEdificio().getIdEdificio() : null)"),
 			@Mapping(target = "nombreEdificio", expression = "java(espacioFisico.getEdificio() != null ? espacioFisico.getEdificio().getNombre() : null)"),
-			@Mapping(target = "idUbicacion", expression = "java(espacioFisico.getUbicacion().getIdUbicacion())"),
-			@Mapping(target = "nombreUbicacion", expression = "java(espacioFisico.getUbicacion().getNombre())"),
+			@Mapping(target = "idUbicacion", expression = "java(espacioFisico.getUbicacion() != null ? espacioFisico.getUbicacion().getIdUbicacion() : null)"),
+			@Mapping(target = "nombreUbicacion", expression = "java(espacioFisico.getUbicacion() != null ? espacioFisico.getUbicacion().getNombre() : null)"),
 			@Mapping(target = "lstIdAgrupadorEspacioFisico", source = "agrupadores"),
 			@Mapping(target = "recursos", source = "recursosEspacioFisico"),
 			@Mapping(target = "OID", source = "OID")

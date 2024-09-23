@@ -1,16 +1,30 @@
 package co.edu.unicauca.sgph.curso.infrastructure.input.DTORequest;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import co.edu.unicauca.sgph.curso.infrastructura.input.validation.ExisteCursoConMismoGrupo;
+import co.edu.unicauca.sgph.curso.infrastructura.input.validation.ExisteCursoPorAsignaturaActiva;
+
+@ExisteCursoPorAsignaturaActiva
+@ExisteCursoConMismoGrupo
 public class CursoInDTO {
 	private Long idCurso;
 
+	@NotEmpty
 	private String grupo;
 
+	@NotNull
 	private Integer cupo;
 
+	@NotNull
 	private Long idAsignatura;
 	
+	@NotNull
 	private Long idPeriodoAcademico;
 
+	private Boolean esValidar;
+	
 	public Long getIdCurso() {
 		return idCurso;
 	}
@@ -50,4 +64,14 @@ public class CursoInDTO {
 	public void setIdPeriodoAcademico(Long idPeriodoAcademico) {
 		this.idPeriodoAcademico = idPeriodoAcademico;
 	}
+
+	public Boolean getEsValidar() {
+		return esValidar;
+	}
+
+	public void setEsValidar(Boolean esValidar) {
+		this.esValidar = esValidar;
+	}
+	
+	
 }
