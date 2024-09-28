@@ -32,6 +32,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.EdificioRe
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.EspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.TipoEspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.UbicacionRestMapper;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
 
 @RestController
 @RequestMapping("/AdministrarEspacioFisico")
@@ -117,9 +118,28 @@ public class EspacioFisicoController extends CommonEJB {
 	 * @param filtroEspacioFisicoDTO DTO con los filtros de busqueda
 	 * @return
 	 */
-	@PostMapping("/consultarEspaciosFisicos")
-	public Page<EspacioFisicoDTO> consultarEspaciosFisicos(@RequestBody FiltroEspacioFisicoDTO filtroEspacioFisicoDTO) {
-		return this.gestionarEspacioFisicoCUIntPort.consultarEspaciosFisicos(filtroEspacioFisicoDTO);
+	@GetMapping("/consultarEspaciosFisicos")
+	public Page<EspacioFisicoDTO> consultarEspaciosFisicos(
+	    @RequestParam(required = false) List<Long> listaIdUbicacion,
+	    @RequestParam(required = false) List<Long> listaIdEdificio,
+	    @RequestParam(required = false) List<Long> listaIdTipoEspacioFisico,
+	    @RequestParam(required = false) String salon,
+	    @RequestParam(required = false) EstadoEspacioFisicoEnum estado,
+	    @RequestParam(required = false) Long capacidad,
+	    @RequestParam(defaultValue = "0") Integer pagina,
+	    @RequestParam(defaultValue = "10") Integer registrosPorPagina) {
+
+	    FiltroEspacioFisicoDTO filtro = new FiltroEspacioFisicoDTO();
+	    filtro.setListaIdUbicacion(listaIdUbicacion);
+	    filtro.setListaIdEdificio(listaIdEdificio);
+	    filtro.setListaIdTipoEspacioFisico(listaIdTipoEspacioFisico);
+	    filtro.setSalon(salon);
+	    filtro.setEstado(estado);
+	    filtro.setCapacidad(capacidad);
+	    filtro.setPagina(pagina);
+	    filtro.setRegistrosPorPagina(registrosPorPagina);
+
+	    return this.gestionarEspacioFisicoCUIntPort.consultarEspaciosFisicos(filtro);
 	}
 
 	/**
@@ -185,10 +205,20 @@ public class EspacioFisicoController extends CommonEJB {
 		return this.gestionarEspacioFisicoCUIntPort.obtenerEspaciosFisicosSinAsignarAAgrupadorId(idAgrupador);
 	}
 
-	@PostMapping("/consultarEspacioFisicoConFiltro")
+	@GetMapping("/consultarEspacioFisicoConFiltro")
 	public List<EspacioFisicoDTO> consultarEspaciosFisicosConFiltro(
-			@RequestBody FiltroEspacioFisicoAgrupadorDTO filtro) {
-		return this.gestionarEspacioFisicoCUIntPort.consultarEspaciosFisicosConFiltro(filtro);
+	        @RequestParam(value = "ubicacion", required = false) String ubicacion,
+	        @RequestParam(value = "nombre", required = false) String nombre,
+	        @RequestParam(value = "tipo", required = false) String tipo,
+	        @RequestParam(value = "idAgrupador", required = false) Long idAgrupador) {
+
+	    FiltroEspacioFisicoAgrupadorDTO filtro = new FiltroEspacioFisicoAgrupadorDTO();
+	    filtro.setUbicacion(ubicacion);
+	    filtro.setNombre(nombre);
+	    filtro.setTipo(tipo);
+	    filtro.setIdAgrupador(idAgrupador);
+
+	    return this.gestionarEspacioFisicoCUIntPort.consultarEspaciosFisicosConFiltro(filtro);
 	}
 
 	@GetMapping("/obtenerListaRecursos")

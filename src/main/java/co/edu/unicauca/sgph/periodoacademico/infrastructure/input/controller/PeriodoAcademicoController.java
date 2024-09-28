@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
@@ -58,7 +59,7 @@ public class PeriodoAcademicoController extends CommonEJB {
 		validaciones.add("FechaInicioGreaterThanUltimaFechaFin");
 
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return this.validarCampos(result, validaciones);
 		}
 
 		if (Boolean.FALSE.equals(periodoAcademicoInDTO.getEsValidar())) {
@@ -85,10 +86,16 @@ public class PeriodoAcademicoController extends CommonEJB {
 	 * @param filtroPeriodoAcademicoDTO
 	 * @return Page de instancias PeriodoAcademico
 	 */
-	@PostMapping("/consultarPeriodosAcademicos")
+	@GetMapping("/consultarPeriodosAcademicos")
 	public Page<PeriodoAcademicoOutDTO> consultarPeriodosAcademicos(
-			@RequestBody FiltroPeriodoAcademicoDTO filtroPeriodoAcademicoDTO) {
-		return this.gestionarPeriodoAcademicoCUIntPort.consultarPeriodosAcademicos(filtroPeriodoAcademicoDTO);
+	        @RequestParam(value = "pagina", required = false) Integer pagina,
+	        @RequestParam(value = "registrosPorPagina", required = false) Integer registrosPorPagina) {
+	    
+	    FiltroPeriodoAcademicoDTO filtro = new FiltroPeriodoAcademicoDTO();
+	    filtro.setPagina(pagina);
+	    filtro.setRegistrosPorPagina(registrosPorPagina);
+
+	    return this.gestionarPeriodoAcademicoCUIntPort.consultarPeriodosAcademicos(filtro);
 	}
 
 	/**

@@ -30,6 +30,9 @@ public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
 	 * @param idCurso
 	 * @return
 	 */
+	@Query("SELECT curso " 
+			+ " FROM CursoEntity curso "
+			+ " WHERE curso.idCurso = :idCurso")
 	public CursoEntity findByIdCurso(Long idCurso);
 	
 	

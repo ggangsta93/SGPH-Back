@@ -94,6 +94,14 @@ public class GestionarPersonaGatewayImplAdapter implements GestionarPersonaGatew
 			return Boolean.FALSE;
 		}
 	}
+	
+	public Persona consultarPersonaPorIdPersona(Long idPersona) {
+		PersonaEntity personaEntity = this.personaRepositoryInt.consultarPersonaPorIdPersona(idPersona);
+		if (Objects.isNull(personaEntity)) {
+			return null;
+		}
+		return this.modelMapper.map(personaEntity, Persona.class);
+	}
 
 	/** 
 	 * @see co.edu.unicauca.sgph.persona.aplication.output.GestionarPersonaGatewayIntPort#consultarTiposIdentificacion()

@@ -44,7 +44,7 @@ public class PersonaController extends CommonEJB {
 		validaciones.add("ExistePersonaPorIdentificacion");
 
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return this.validarCampos(result, validaciones);
 		}
 
 		if (Boolean.FALSE.equals(personaInDTO.getEsValidar())) {

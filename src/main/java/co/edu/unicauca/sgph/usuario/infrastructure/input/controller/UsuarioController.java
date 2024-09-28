@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.UsuarioInDTO
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.RolOutDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.mapper.UsuarioRestMapper;
+import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 
 @RestController
 @RequestMapping("/AdministrarUsuario")
@@ -56,7 +58,7 @@ public class UsuarioController extends CommonEJB {
 		validaciones.add("ExisteIdPersonaUsuario");
 		
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return this.validarCampos(result, validaciones);
 		}
 				
 		if (Boolean.FALSE.equals(usuarioInDTO.getEsValidar())) {
@@ -84,11 +86,24 @@ public class UsuarioController extends CommonEJB {
 	 * 
 	 * @param filtroUsuarioDTO DTO con los criterios de busqueda
 	 * @return
-	 */
-	@PostMapping("/consultarUsuariosPorFiltro")
-	public Page<UsuarioOutDTO> consultarUsuariosPorFiltro(@RequestBody FiltroUsuarioDTO filtroUsuarioDTO) {
-		Page<UsuarioOutDTO>  respuesta = this.gestionarUsuarioCUIntPort.consultarUsuariosPorFiltro(filtroUsuarioDTO);
-		return respuesta;
+	 */	
+	@GetMapping("/consultarUsuariosPorFiltro")
+	public Page<UsuarioOutDTO> consultarUsuariosPorFiltro(
+	    @RequestParam(required = false) String nombre,
+	    @RequestParam(required = false) String numeroIdentificacion,
+	    @RequestParam(required = false) EstadoUsuarioEnum estado,
+	    @RequestParam(required = true) int pagina,
+	    @RequestParam(required = true) int registrosPorPagina) {
+
+	    // Crear un objeto FiltroUsuarioDTO con los parámetros recibidos
+	    FiltroUsuarioDTO filtroUsuarioDTO = new FiltroUsuarioDTO();
+	    filtroUsuarioDTO.setNombre(nombre);
+	    filtroUsuarioDTO.setNumeroIdentificacion(numeroIdentificacion);
+	    filtroUsuarioDTO.setEstado(estado);
+	    filtroUsuarioDTO.setPagina(pagina);
+	    filtroUsuarioDTO.setRegistrosPorPagina(registrosPorPagina);
+
+	    return this.gestionarUsuarioCUIntPort.consultarUsuariosPorFiltro(filtroUsuarioDTO);
 	}
 
 	/**
@@ -123,7 +138,7 @@ public class UsuarioController extends CommonEJB {
 	 * @param idUsuario
 	 * @return
 	 */
-	@GetMapping("/cambiarEstadoUsuarioPorIdUsuario")
+	@PatchMapping("/cambiarEstadoUsuarioPorIdUsuario")
 	private UsuarioOutDTO cambiarEstadoUsuarioPorIdUsuario(@RequestParam Long idUsuario) {
 		Usuario usuario = this.gestionarUsuarioCUIntPort.cambiarEstadoUsuarioPorIdUsuario(idUsuario);
 		if (usuario != null) {

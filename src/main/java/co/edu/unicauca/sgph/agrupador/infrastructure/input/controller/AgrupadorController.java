@@ -93,9 +93,20 @@ public class AgrupadorController extends CommonEJB{
 						.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso));
 	}
 
-	@PostMapping("/filtrarGrupos")
-	public Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(@RequestBody FiltroGrupoDTO filtro) {
-		return this.gestionarAgrupadorEspacioFisicoCUIntPort.filtrarGrupos(filtro);
+	@GetMapping("/filtrarGrupos")
+	public Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(
+	        @RequestParam(value = "listaIdFacultades", required = false) List<Long> listaIdFacultades,
+	        @RequestParam(value = "nombre", required = false) String nombre,
+	        @RequestParam(value = "pageNumber", required = true) Integer pageNumber,
+	        @RequestParam(value = "pageSize", required = true) Integer pageSize) {
+
+	    FiltroGrupoDTO filtro = new FiltroGrupoDTO();
+	    filtro.setListaIdFacultades(listaIdFacultades);
+	    filtro.setNombre(nombre);
+	    filtro.setPageNumber(pageNumber);
+	    filtro.setPageSize(pageSize);
+
+	    return this.gestionarAgrupadorEspacioFisicoCUIntPort.filtrarGrupos(filtro);
 	}
 
 	@PostMapping("/guardarGrupo")
@@ -105,7 +116,7 @@ public class AgrupadorController extends CommonEJB{
 		validaciones.add("ExisteNombreAgrupador");
 
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return this.validarCampos(result, validaciones);
 		}
 
 		if (Boolean.FALSE.equals(agrupadorEspacioFisicoInDTO.getEsValidar())) {

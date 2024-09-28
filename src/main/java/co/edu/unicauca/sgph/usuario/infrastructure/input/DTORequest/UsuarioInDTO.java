@@ -27,6 +27,8 @@ public class UsuarioInDTO{
 	@NotNull
 	private EstadoUsuarioEnum estado;
 	
+	@NotEmpty
+	@NotNull
 	private List<Long> lstIdRol;
 	
 	private List<Long> lstIdPrograma;

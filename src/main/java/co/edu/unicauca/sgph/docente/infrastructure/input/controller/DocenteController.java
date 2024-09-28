@@ -24,6 +24,7 @@ import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteInDTO
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.mapper.DocenteRestMapper;
+import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 
@@ -49,7 +50,7 @@ public class DocenteController extends CommonEJB{
 		validaciones.add("ExisteIdPersonaDocente");
 		
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return this.validarCampos(result, validaciones);
 		}
 		
 		if (Boolean.FALSE.equals(docenteInDTO.getEsValidar())) {
@@ -96,9 +97,24 @@ public class DocenteController extends CommonEJB{
 	 * @param filtroDocenteDTO DTO con los filtros de busqueda
 	 * @return
 	 */
-	@PostMapping("/consultarDocentes")
-	public Page<DocenteOutDTO> consultarDocentes(@RequestBody FiltroDocenteDTO filtroDocenteDTO) {
-		return this.gestionarDocenteCUIntPort.consultarDocentes(filtroDocenteDTO);
+	@GetMapping("/consultarDocentes")
+	public Page<DocenteOutDTO> consultarDocentes(
+		    @RequestParam(required = false) String nombre,
+		    @RequestParam(required = false) String numeroIdentificacion,
+		    @RequestParam(required = false) String codigo,
+		    @RequestParam(required = false) EstadoDocenteEnum estado,
+		    @RequestParam(defaultValue = "0") Integer pagina,
+		    @RequestParam(defaultValue = "10") Integer registrosPorPagina) {
+
+	    FiltroDocenteDTO filtroDocenteDTO = new FiltroDocenteDTO();
+	    filtroDocenteDTO.setNombre(nombre);
+	    filtroDocenteDTO.setNumeroIdentificacion(numeroIdentificacion);
+	    filtroDocenteDTO.setCodigo(codigo);
+	    filtroDocenteDTO.setEstado(estado);
+	    filtroDocenteDTO.setPagina(pagina);
+	    filtroDocenteDTO.setRegistrosPorPagina(registrosPorPagina);
+
+	    return this.gestionarDocenteCUIntPort.consultarDocentes(filtroDocenteDTO);
 	}
 
 	/**

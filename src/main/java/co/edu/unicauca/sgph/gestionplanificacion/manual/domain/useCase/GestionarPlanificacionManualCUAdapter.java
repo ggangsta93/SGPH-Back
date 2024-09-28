@@ -1284,6 +1284,14 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 	@Transactional(propagation = Propagation.NOT_SUPPORTED)
 	public GenerarHorarioBaseOutDTO generarHorarioBasadoEnSemestreAnteriorPorPrograma(
 			GenerarHorarioBaseInDTO generarHorarioBaseInDTO) {
+		
+		// Se valida que el programa si pueda ser gestionado por el usuario
+		if (!this.gestionarProgramaGatewayIntPort.consultarProgramasPermitidosPorUsuario().stream()
+				.map(Programa::getIdPrograma).collect(Collectors.toList())
+				.contains(generarHorarioBaseInDTO.getIdPrograma())) {
+			throw new RuntimeException(PROGRAMA_NO_PERMITIDO_PARA_EL_USUARIO);
+		}
+		
 		// Se consulta periodo académico vigente
 		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
 				.consultarPeriodoAcademicoVigente();
@@ -1440,7 +1448,6 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		 * Se valida que exista periodo académico vigente
 		 */
 		if (Objects.nonNull(periodoAcademicoVigente)) {
-
 			// Se consulta todos los cursos del periodo 2023-1 con identificador 1
 			List<Curso> lstCursosBase = this.gestionarCursoGatewayIntPort
 					.consultarCursosPorProgramaYPeriodoAcademico(idPrograma, 1L);
