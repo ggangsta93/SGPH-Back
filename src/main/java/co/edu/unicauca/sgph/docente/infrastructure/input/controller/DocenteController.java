@@ -103,8 +103,8 @@ public class DocenteController extends CommonEJB{
 		    @RequestParam(required = false) String numeroIdentificacion,
 		    @RequestParam(required = false) String codigo,
 		    @RequestParam(required = false) EstadoDocenteEnum estado,
-		    @RequestParam(defaultValue = "0") Integer pagina,
-		    @RequestParam(defaultValue = "10") Integer registrosPorPagina) {
+		    @RequestParam(required = false) Integer pagina,
+		    @RequestParam(required = false) Integer registrosPorPagina) {
 
 	    FiltroDocenteDTO filtroDocenteDTO = new FiltroDocenteDTO();
 	    filtroDocenteDTO.setNombre(nombre);
