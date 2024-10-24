@@ -60,7 +60,7 @@ public class PeriodoAcademicoController extends CommonEJB {
 		validaciones.add("FechaInicioGreaterThanUltimaFechaFin");
 
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return validarCampos(result, validaciones);
 		}
 
 		if (Boolean.FALSE.equals(periodoAcademicoInDTO.getEsValidar())) {
@@ -72,7 +72,7 @@ public class PeriodoAcademicoController extends CommonEJB {
 					periodoAcademicoOutDTO.getIdPeriodoAcademico())) {
 				return new ResponseEntity<PeriodoAcademicoOutDTO>(periodoAcademicoOutDTO, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<PeriodoAcademicoOutDTO>(periodoAcademicoOutDTO, HttpStatus.CREATED);
+				return new ResponseEntity<PeriodoAcademicoOutDTO>(periodoAcademicoOutDTO, HttpStatus.OK);
 			}
 		} else {
 			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);

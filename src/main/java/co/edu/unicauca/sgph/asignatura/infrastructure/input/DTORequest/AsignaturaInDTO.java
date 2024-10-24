@@ -26,7 +26,7 @@ public class AsignaturaInDTO {
 	@NotNull
 	private Integer semestre;
 
-	@NotNull
+	
 	private String pensum;
 
 	@NotNull
@@ -35,7 +35,6 @@ public class AsignaturaInDTO {
 	@NotNull
 	private Long idPrograma;
 	
-	@NotNull
 	private String estado;
 	
 	private String base64;
@@ -46,6 +45,13 @@ public class AsignaturaInDTO {
 	private Boolean aplicaEspacioSecundario;
 	
 	private Boolean esValidar;
+	
+
+	public AsignaturaInDTO() {
+		super();
+	}
+
+
 
 	public AsignaturaInDTO(String nombre,
 						   String codigoAsignatura,

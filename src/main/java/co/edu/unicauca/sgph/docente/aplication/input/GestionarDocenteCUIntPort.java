@@ -1,5 +1,6 @@
 package co.edu.unicauca.sgph.docente.aplication.input;
 
+import java.io.IOException;
 import java.util.List;
 
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
@@ -69,4 +70,6 @@ public interface GestionarDocenteCUIntPort {
 	MensajeOutDTO cargarLaborDocente(ReporteDocenteDTO archivoDocente);
 
 	ReporteDocenteDTO consultaLaborDocente(ReporteDocenteDTO idPrograma);
+	
+	void procesarLaborDocenteDesdeJson(String jsonResponse) throws IOException;
 }

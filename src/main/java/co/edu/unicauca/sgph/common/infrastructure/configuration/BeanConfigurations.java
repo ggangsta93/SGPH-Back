@@ -5,6 +5,9 @@ import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
 import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.edu.unicauca.sgph.agrupador.aplication.output.AgrupadorEspacioFisicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
@@ -15,6 +18,7 @@ import co.edu.unicauca.sgph.asignatura.domain.useCase.GestionarAsignaturaCUAdapt
 import co.edu.unicauca.sgph.curso.aplication.output.CursoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort;
 import co.edu.unicauca.sgph.curso.domain.useCase.GestionarCursoCUAdapter;
+import co.edu.unicauca.sgph.departamento.aplication.input.GestionarDepartamentoCUIntPort;
 import co.edu.unicauca.sgph.departamento.aplication.output.GestionarDepartamentoGatewayIntPort;
 import co.edu.unicauca.sgph.departamento.domain.useCase.GestionarDepartamentoCUAdapter;
 import co.edu.unicauca.sgph.docente.aplication.output.DocenteFormatterResultsIntPort;
@@ -40,12 +44,14 @@ import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.useCase.Gestionar
 import co.edu.unicauca.sgph.horario.aplication.output.GestionarHorarioGatewayIntPort;
 import co.edu.unicauca.sgph.horario.aplication.output.HorarioFormatterResultsIntPort;
 import co.edu.unicauca.sgph.horario.domain.useCase.GestionarHorarioCUAdapter;
+import co.edu.unicauca.sgph.periodoacademico.aplication.input.GestionarPeriodoAcademicoCUIntPort;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.PeriodoAcademicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.periodoacademico.domain.useCase.GestionarPeriodoAcademicoCUAdapter;
 import co.edu.unicauca.sgph.persona.aplication.output.GestionarPersonaGatewayIntPort;
 import co.edu.unicauca.sgph.persona.aplication.output.PersonaFormatterResultsIntPort;
 import co.edu.unicauca.sgph.persona.domain.useCase.GestionarPersonaCUAdapter;
+import co.edu.unicauca.sgph.programa.aplication.input.GestionarProgramaCUIntPort;
 import co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort;
 import co.edu.unicauca.sgph.programa.aplication.output.ProgramaFormatterResultsIntPort;
 import co.edu.unicauca.sgph.programa.domain.useCase.GestionarProgramaCUAdapter;
@@ -97,7 +103,11 @@ public class BeanConfigurations {
 			GestionarCursoCUIntPort gestionarCursoCUIntPort,
 			GestionarProgramaGatewayIntPort gestionarProgramaGatewayIntPort,
 			GestionarAsignaturaCUIntPort gestionarAsignaturaCUIntPort,
-			GestionarPersonaCUIntPort gestionarPersonaCUIntPort) {
+			GestionarPersonaCUIntPort gestionarPersonaCUIntPort, 
+			GestionarDepartamentoCUIntPort gestionarDepartamentoCUIntPort,
+			GestionarProgramaCUIntPort gestionarProgramaCUIntPort,
+			RestTemplate restTemplate,  
+            ObjectMapper objectMapper) {
 		return new GestionarDocenteCUAdapter(
 				gestionarDocenteGatewayIntPort,
 				docenteFormatterResultsIntPort,
@@ -105,7 +115,11 @@ public class BeanConfigurations {
 				gestionarCursoCUIntPort,
 				gestionarProgramaGatewayIntPort,
 				gestionarAsignaturaCUIntPort,
-				gestionarPersonaCUIntPort);
+				gestionarPersonaCUIntPort,
+				gestionarDepartamentoCUIntPort,
+				gestionarProgramaCUIntPort,
+				restTemplate, 
+		        objectMapper);
 	}
 
 	@Bean
@@ -196,4 +210,10 @@ public class BeanConfigurations {
 				gestionarCursoGatewayIntPort, gestionarAsignaturaGatewayIntPort);
 	}
 
+	@Bean
+	public RestTemplate restTemplate() {
+	    return new RestTemplate();
+	}
+
+	
 }

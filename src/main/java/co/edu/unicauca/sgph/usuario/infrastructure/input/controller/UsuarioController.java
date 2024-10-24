@@ -58,7 +58,7 @@ public class UsuarioController extends CommonEJB {
 		validaciones.add("ExisteIdPersonaUsuario");
 		
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return validarCampos(result, validaciones);
 		}
 				
 		if (Boolean.FALSE.equals(usuarioInDTO.getEsValidar())) {
@@ -71,7 +71,7 @@ public class UsuarioController extends CommonEJB {
 			if (Objects.equals(usuarioInDTO.getIdPersona(), usuarioOutDTO.getIdPersona())) {
 				return new ResponseEntity<UsuarioOutDTO>(usuarioOutDTO, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<UsuarioOutDTO>(usuarioOutDTO, HttpStatus.CREATED);
+				return new ResponseEntity<UsuarioOutDTO>(usuarioOutDTO, HttpStatus.OK);
 			}
 		} else {
 			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);

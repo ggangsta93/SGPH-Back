@@ -33,8 +33,9 @@ public class FacultadRestController extends CommonEJB {
 
 	@PostMapping("/guardarFacultad")
 	public FacultadOutDTO guardarFacultad(@RequestBody FacultadInDTO facultadInDTO) {
-		Facultad facultad = facultadRestMapper.toFacultad(facultadInDTO);
-		return this.facultadRestMapper.toFacultadOutDTO(this.gestionarFacultadCUIntPort.guardarFacultad(facultad));
+		return this.facultadRestMapper.toFacultadOutDTO(
+                this.gestionarFacultadCUIntPort.guardarFacultad(
+                        this.facultadRestMapper.toFacultad(facultadInDTO)));
 	}
 
 	/**

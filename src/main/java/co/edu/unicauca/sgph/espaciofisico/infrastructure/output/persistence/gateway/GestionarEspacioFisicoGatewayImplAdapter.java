@@ -1,17 +1,26 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.gateway;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +28,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
@@ -29,7 +41,9 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.Espaci
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.mapper.EspacioFisicoRestMapper;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.RecursoEspacioFisicoEntity;
@@ -40,6 +54,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repo
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.RecursoEspacioFisicoRepositoryInt;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.RecursoFisicoRepositoryInt;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.TipoEspacioFisicoRepositoryInt;
+import io.jsonwebtoken.io.IOException;
 
 @Service
 public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspacioFisicoGatewayIntPort {
@@ -50,6 +65,7 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 	private EspacioFisicoRepositoryInt espacioFisicoRepositoryInt;
 	private TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt;
 	private RecursoFisicoRepositoryInt recursoFisicoRepositoryInt;
+	private EspacioFisicoRestMapper espacioFisicoRestMapper;
 	private ModelMapper modelMapper;
 	@Autowired
 	private RecursoEspacioFisicoRepositoryInt recursoEspacioFisicoRepositoryInt;
@@ -417,6 +433,151 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 		} else {
 			return Boolean.FALSE;
 		}
+	}
+
+	@Override
+	public MensajeOutDTO cargaMasivaEspaciosFisicos(EspacioFisicoInDTO dto) {
+		return null;
+		/*String base64Excel = dto.getBase64();
+	    byte[] decodedBytes = Base64.getDecoder().decode(base64Excel);
+	    List<EspacioFisicoInDTO> espaciosFisicos = new ArrayList<>();
+	    
+	    try {
+	        ByteArrayInputStream inputStream = new ByteArrayInputStream(decodedBytes);
+	        Workbook workbook = new XSSFWorkbook(inputStream);
+	        Sheet sheet = workbook.getSheetAt(0);
+	        Iterator<Row> rowIterator = sheet.iterator();
+	        rowIterator.next(); 
+
+	        while (rowIterator.hasNext()) {
+	            Row row = rowIterator.next();
+	            if (row.getCell(0) == null) {
+	                break; 
+	            }
+
+	            String oid = getCellValueAsString(row.getCell(0));
+	            Long capacidad = Long.parseLong(getCellValueAsString(row.getCell(1)));
+	            String salon = getCellValueAsString(row.getCell(2));
+	            String estado = getCellValueAsString(row.getCell(3));
+	            String tipoEspacio = getCellValueAsString(row.getCell(4));
+
+	            Optional<TipoEspacioFisicoEntity> tipoEspacioFisicoEntityOptional = tipoEspacioFisicoRepositoryInt.findByNombre(tipoEspacio);
+
+	            if (!tipoEspacioFisicoEntityOptional.isPresent()) {
+	                MensajeOutDTO mensaje = new MensajeOutDTO();
+	                mensaje.setError(Boolean.TRUE);
+	                mensaje.setDescripcion("No existe el tipo de espacio físico " + tipoEspacio);
+	                return mensaje;
+	            }
+
+	            TipoEspacioFisicoEntity tipoEspacioFisicoEntity = tipoEspacioFisicoEntityOptional.get();
+	            EspacioFisicoInDTO espacioFisico = new EspacioFisicoInDTO(
+	                    oid,
+	                    capacidad,	                    
+	                    EstadoEspacioFisicoEnum.valueOf(estado), 
+	                    salon,
+	                    tipoEspacioFisicoEntity.getIdTipoEspacioFisico()
+	            );
+
+	            espaciosFisicos.add(espacioFisico);
+	        }
+
+	        workbook.close();
+	        inputStream.close();
+	    } catch (IOException e) {
+	        MensajeOutDTO mensaje = new MensajeOutDTO();
+	        mensaje.setError(Boolean.TRUE);
+	        mensaje.setDescripcion("Error al leer el archivo");
+	        return mensaje;
+	    } catch (java.io.IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	    // Validar los espacios físicos antes de guardar
+	    MensajeOutDTO mensaje = this.validarEspaciosFisicos(espaciosFisicos);
+	    if (mensaje.getError()) {
+	        return mensaje;
+	    }
+
+	    // Guardar los espacios físicos
+	    for (EspacioFisicoInDTO espacioFisico : espaciosFisicos) {
+	        this.guardarEspacioFisico(this.espacioFisicoRestMapper.toEspacioFisico(espacioFisico));
+	    }
+
+	    return mensaje;*/
+		
+	}
+
+	private static String getCellValueAsString(Cell cell) {
+	    if (cell == null) {
+	        return "";
+	    }
+
+	    switch (cell.getCellType()) {
+	        case STRING:
+	            return cell.getStringCellValue();
+	        case NUMERIC:
+	            if (DateUtil.isCellDateFormatted(cell)) {
+	                return cell.getDateCellValue().toString();
+	            } else {
+	                return String.valueOf((int) cell.getNumericCellValue());
+	            }
+	        case BOOLEAN:
+	            return String.valueOf(cell.getBooleanCellValue());
+	        case FORMULA:
+	            return cell.getCellFormula();
+	        default:
+	            return "";
+	    }
+	}
+
+	public MensajeOutDTO validarEspaciosFisicos(List<EspacioFisicoInDTO> espaciosFisicos) {
+	    Set<String> oids = new HashSet<>();
+	    Set<String> salones = new HashSet<>();
+	    MensajeOutDTO mensaje = new MensajeOutDTO();
+	    mensaje.setError(Boolean.FALSE);
+
+	    for (EspacioFisicoInDTO espacioFisico : espaciosFisicos) {
+	        // Validar que ningún atributo sea vacío
+	        if (espacioFisico.getOID() == null || espacioFisico.getOID().isEmpty() ||
+	            espacioFisico.getCapacidad() == null ||
+	            espacioFisico.getSalon() == null || espacioFisico.getSalon().isEmpty() ||
+	            espacioFisico.getEstado() == null ||
+	            espacioFisico.getIdTipoEspacioFisico() == null) {
+	            mensaje.setDescripcion("Todos los campos deben estar llenos y no ser nulos");
+	            mensaje.setError(Boolean.TRUE);
+	            return mensaje;
+	        }
+
+	        // Validar que el estado sea ACTIVO o INACTIVO
+	        if (!espacioFisico.getEstado().equals(EstadoEspacioFisicoEnum.ACTIVO.name()) &&
+	            !espacioFisico.getEstado().equals(EstadoEspacioFisicoEnum.INACTIVO.name())) {
+	            mensaje.setDescripcion("El estado permitido debe ser ACTIVO o INACTIVO");
+	            mensaje.setError(Boolean.TRUE);
+	            return mensaje;
+	        }
+
+	        // Validar si el OID ya existe en la base de datos o está duplicado en la lista
+	        Optional<EspacioFisicoEntity> espacioExistenteOid = Optional.of(this.espacioFisicoRepositoryInt.consultarEspacioFisicoPorOID(espacioFisico.getOID()));
+	        if (espacioExistenteOid.isPresent() || !oids.add(espacioFisico.getOID())) {
+	            mensaje.setDescripcion("El OID " + espacioFisico.getOID() + " está duplicado");
+	            mensaje.setError(Boolean.TRUE);
+	            return mensaje;
+	        }
+
+	        // Validar si el salón ya existe en la base de datos o está duplicado en la lista
+	        Optional<EspacioFisicoEntity> espacioExistenteSalon = Optional.of(this.espacioFisicoRepositoryInt.consultarEspacioFisicoPorNombre(espacioFisico.getSalon()));
+	        if (espacioExistenteSalon.isPresent() || !salones.add(espacioFisico.getSalon())) {
+	            mensaje.setDescripcion("El salón " + espacioFisico.getSalon() + " está duplicado");
+	            mensaje.setError(Boolean.TRUE);
+	            return mensaje;
+	        }
+	    }
+
+	    // Si pasa todas las validaciones, el mensaje es satisfactorio
+	    mensaje.setDescripcion("Espacios físicos cargados correctamente");
+	    return mensaje;
 	}
 
 }

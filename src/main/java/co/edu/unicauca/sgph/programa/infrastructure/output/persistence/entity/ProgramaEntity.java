@@ -38,7 +38,7 @@ public class ProgramaEntity {
 	@Column(name = "ABREVIATURA")
 	private String abreviatura;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_FACULTAD")
 	private FacultadEntity facultad;
 

@@ -28,7 +28,7 @@ public class GestionarProgramaGatewayImplAdapter implements GestionarProgramaGat
 
 	@Override
 	public Programa consultarProgramaPorNombre(String nombre) {
-		return this.modelMapper.map(this.programaRepositoryInt.findByNombre(nombre), Programa.class);
+		return this.modelMapper.map(this.programaRepositoryInt.BuscarPorNombre(nombre), Programa.class);
 	}
 
 	@Override

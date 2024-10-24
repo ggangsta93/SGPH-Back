@@ -1,31 +1,80 @@
 package co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import co.edu.unicauca.sgph.docente.infrastructure.input.validation.ExisteCodigoDocente;
 import co.edu.unicauca.sgph.docente.infrastructure.input.validation.ExisteIdPersonaDocente;
-import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
-import co.edu.unicauca.sgph.persona.infrastructure.input.validation.ExistePersonaPorIdPersona;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 @ExisteCodigoDocente
 @ExisteIdPersonaDocente
 public class DocenteLaborDTO {
-	private int oidPeriodo;
-	private String periodo;
-	private String identificacion;
-	private String primerApellido;
-	private String segundoApellido;
-	private String primerNombre;
-	private String segundoNombre;
-	private String correo;
-	private String nombreMateria;
-	private String nombrePrograma;
-	private String oid;
-	private String codigo;
-	private String tipoMateria;
-	private String grupo;
-	private String horasTeoricas;
+	@JsonProperty("OIDPERIODO")
+    private int oidPeriodo;
+
+    @JsonProperty("PERIODO")
+    private String periodo;
+
+    @JsonProperty("OIDTIPOIDENTIFICACION")
+    private Long oidTipoIdentificacion;
+
+    @JsonProperty("TIPOIDENTIFICACION")
+    private String tipoIdentificacion;
+
+    @JsonProperty("IDENTIFICACION")
+    private String identificacion;
+
+    @JsonProperty("PRIMERAPELLIDO")
+    private String primerApellido;
+
+    @JsonProperty("SEGUNDOAPELLIDO")
+    private String segundoApellido;
+
+    @JsonProperty("PRIMERNOMBRE")
+    private String primerNombre;
+
+    @JsonProperty("SEGUNDONOMBRE")
+    private String segundoNombre;
+
+    @JsonProperty("CORREO")
+    private String correo;
+
+    @JsonProperty("NOMBREMATERIA")
+    private String nombreMateria;
+
+    @JsonProperty("NOMBREPROGRAMA")
+    private String nombrePrograma;
+
+    @JsonProperty("OID")
+    private String oid;
+
+    @JsonProperty("CODIGOMATERIA")
+    private String codigo;
+
+    @JsonProperty("TIPOASIGNATURA")
+    private String tipoMateria;
+
+    @JsonProperty("GRUPO")
+    private String grupo;
+
+    @JsonProperty("HORASTEORICAS")
+    private String horasTeoricas;
+
+    @JsonProperty("SEMESTRE")
+    private Integer semestre;
+
+    @JsonProperty("OIDPENSUM")
+    private Long oidPensum;
+
+    @JsonProperty("OIDDEPARTAMENTO")
+    private Long oidDepartamento;
+
+    @JsonProperty("DEPARTAMENTO")
+    private String departamento;
+
+    @JsonProperty("PROGRAMAASIGNATURA")
+    private Long programaAsignatura;
+
+    @JsonProperty("HORASSEMANALES")
+    private Integer horasSemanales;
 
 	public int getOidPeriodo() {
 		return oidPeriodo;
@@ -41,6 +90,22 @@ public class DocenteLaborDTO {
 
 	public void setPeriodo(String periodo) {
 		this.periodo = periodo;
+	}
+
+	public Long getOidTipoIdentificacion() {
+		return oidTipoIdentificacion;
+	}
+
+	public void setOidTipoIdentificacion(Long oidTipoIdentificacion) {
+		this.oidTipoIdentificacion = oidTipoIdentificacion;
+	}
+
+	public String getTipoIdentificacion() {
+		return tipoIdentificacion;
+	}
+
+	public void setTipoIdentificacion(String tipoIdentificacion) {
+		this.tipoIdentificacion = tipoIdentificacion;
 	}
 
 	public String getIdentificacion() {
@@ -146,4 +211,53 @@ public class DocenteLaborDTO {
 	public void setHorasTeoricas(String horasTeoricas) {
 		this.horasTeoricas = horasTeoricas;
 	}
+
+	public Integer getSemestre() {
+		return semestre;
+	}
+
+	public void setSemestre(Integer semestre) {
+		this.semestre = semestre;
+	}
+
+	public Long getOidPensum() {
+		return oidPensum;
+	}
+
+	public void setOidPensum(Long oidPensum) {
+		this.oidPensum = oidPensum;
+	}
+
+	public Long getOidDepartamento() {
+		return oidDepartamento;
+	}
+
+	public void setOidDepartamento(Long oidDepartamento) {
+		this.oidDepartamento = oidDepartamento;
+	}
+
+	public String getDepartamento() {
+		return departamento;
+	}
+
+	public void setDepartamento(String departamento) {
+		this.departamento = departamento;
+	}
+
+	public Long getProgramaAsignatura() {
+		return programaAsignatura;
+	}
+
+	public void setProgramaAsignatura(Long programaAsignatura) {
+		this.programaAsignatura = programaAsignatura;
+	}
+
+	public Integer getHorasSemanales() {
+		return horasSemanales;
+	}
+
+	public void setHorasSemanales(Integer horasSemanales) {
+		this.horasSemanales = horasSemanales;
+	}
+	
 }

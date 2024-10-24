@@ -36,7 +36,17 @@ public interface AsignaturaRepositoryInt extends JpaRepository<AsignaturaEntity,
 																							Long idFacultad,
 																							Pageable pageable);
 	Optional<AsignaturaEntity> findByOid(String OID);
+	Optional<AsignaturaEntity> findFirstByOid(String oid);
 	List<AsignaturaEntity> findByOidInAndEstado(List<String> oids, EstadoAsignaturaEnum estado);
 	Optional<AsignaturaEntity> findByCodigoAsignatura(String codigoAsignatura);
+	
+	@Query("SELECT p.idPrograma FROM ProgramaEntity p WHERE p.nombre = :nombrePrograma")
+	List<Long> consultarIdsPorNombrePrograma(@Param("nombrePrograma") String nombrePrograma);
+	
+	@Query("SELECT COUNT(a) > 0 FROM AsignaturaEntity a WHERE a.codigoAsignatura = :codigoAsignatura AND a.programa.idPrograma = :idPrograma")
+	boolean existeAsignaturaPorCodigoYPrograma(@Param("codigoAsignatura") String codigoAsignatura, @Param("idPrograma") Long idPrograma);
 
+	@Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM AsignaturaEntity a WHERE a.oid = :oid")
+	Boolean buscarAsignaturaOid(@Param("oid") String oid);
 }
+

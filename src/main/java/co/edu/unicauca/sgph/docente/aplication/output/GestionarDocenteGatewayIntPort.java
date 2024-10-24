@@ -99,4 +99,8 @@ public interface GestionarDocenteGatewayIntPort {
 	// TODO metodos temporales
 	String obtenerBase64ArchivoFiltrado(String nombrePrograma, String periodoVigente) throws IOException;
 	Docente consultarDocentePorNumeroIdentificacion(String numeroIdentificacion);
+	
+	void guardarLaborDocente(DocenteLaborDTO docenteLaborDTO);
+	
+	public Long obtenerIdDepartamentoPorNombre(String nombreDepartamento);
 }

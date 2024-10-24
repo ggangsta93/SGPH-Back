@@ -4,9 +4,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -22,6 +24,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.Mensa
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.repository.ProgramaRepositoryInt;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -37,6 +40,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
@@ -51,6 +57,7 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 
 @Service
 public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignaturaGatewayIntPort {
@@ -59,16 +66,18 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 	private final ModelMapper asignaturaMapper;
 	private final ProgramaRepositoryInt programaRepositoryInt;
 	private AsignaturaRestMapper asignaturaRestMapper;
+	private ModelMapper modelMapper;
 
 	@PersistenceContext
 	EntityManager em;
 
 	public GestionarAsignaturaGatewayImplAdapter(AsignaturaRepositoryInt asignaturaRepositoryInt,
-												 @Qualifier("asignaturaMapper") ModelMapper asignaturaMapper, ProgramaRepositoryInt programaRepositoryInt, AsignaturaRestMapper asignaturaRestMapper) {
+												 @Qualifier("asignaturaMapper") ModelMapper asignaturaMapper, ProgramaRepositoryInt programaRepositoryInt, AsignaturaRestMapper asignaturaRestMapper, ModelMapper modelMapper) {
 		this.asignaturaRepositoryInt = asignaturaRepositoryInt;
 		this.asignaturaMapper = asignaturaMapper;
 		this.programaRepositoryInt = programaRepositoryInt;
 		this.asignaturaRestMapper = asignaturaRestMapper;
+		this.modelMapper = modelMapper;
 	}
 
 	/**
@@ -178,6 +187,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		return null;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public MensajeOutDTO cargaMasivaAsignaturas(AsignaturaInDTO dto) {
 		String base64Excel = dto.getBase64();
@@ -381,11 +391,90 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		return asignatura.isPresent();
 	}
 
+	@Transactional
 	@Override
 	public Boolean existeOidAsignatura(String oid) {
-		Optional<AsignaturaEntity> asignatura = this.asignaturaRepositoryInt.findByOid(oid);		
-		return asignatura.isPresent();
+		return this.asignaturaRepositoryInt.buscarAsignaturaOid(oid);
 	}
 
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Asignatura> guardarAsignaturasDesdeJson(String base64Json) {
+		ObjectMapper objectMapper = new ObjectMapper();
+
+	    try {
+	        // Convertir el JSON a una lista de registros
+	        Map<String, List<Map<String, Object>>> data = objectMapper.readValue(base64Json, Map.class);
+	        String key = data.keySet().iterator().next();
+	        List<Map<String, Object>> records = data.get(key);
+
+	        List<Asignatura> asignaturasGuardadas = new ArrayList<>();
+
+	        // Iterar sobre los registros del JSON
+	        for (Map<String, Object> record : records) {
+	            String nombrePrograma = (String) record.get("NOMBRE");
+	            String codigoAsignatura = (String) record.get("CODIGO");
+
+	            // Consultar los IDs del programa por nombre (puede devolver más de uno)
+	            List<Long> idProgramas = asignaturaRepositoryInt.consultarIdsPorNombrePrograma(nombrePrograma);
+
+	            if (!idProgramas.isEmpty()) {
+	                // Iterar sobre cada programa con el mismo nombre
+	                for (Long idPrograma : idProgramas) {
+	                    // Verificar si ya existe una asignatura con este código y programa
+	                    boolean asignaturaExiste = asignaturaRepositoryInt.existeAsignaturaPorCodigoYPrograma(codigoAsignatura, idPrograma);
+
+	                    if (!asignaturaExiste) {
+	                        // Crear AsignaturaInDTO con el ID del programa correspondiente
+	                        AsignaturaInDTO asignaturaInDTO = new AsignaturaInDTO(
+	                            (String) record.get("MATERIA"),
+	                            codigoAsignatura,
+	                            String.valueOf(record.get("OID")),
+	                            (Integer) record.get("SEMESTRE"),
+	                            String.valueOf(record.get("OIDPENSUM")),
+	                            (Integer) record.get("HORASSEMANALES"),
+	                            idPrograma,
+	                            "ACTIVO"
+	                        );
+
+	                        // Guardar la asignatura en la base de datos
+	                        Asignatura asignaturaGuardada = this.guardarAsignatura(
+	                            this.asignaturaRestMapper.toAsignatura(asignaturaInDTO)
+	                        );
+
+	                        asignaturasGuardadas.add(asignaturaGuardada);
+	                    } else {
+	                        System.out.println("Asignatura ya existe para el programa: " + nombrePrograma + " con código: " + codigoAsignatura);
+	                    }
+	                }
+	            } else {
+	                System.out.println("No se encontró el programa: " + nombrePrograma);
+	            }
+	        }
+
+	        return asignaturasGuardadas;
+
+	    } catch (JsonProcessingException e) {
+	        throw new RuntimeException("Error al procesar el JSON", e);
+	    }
+	}
+
+	@Override
+	public List<Asignatura> obtenerAsignaturaPorCodigo(String codigo) {
+		// Buscar la asignatura por código
+	    Optional<AsignaturaEntity> optionalAsignatura = this.asignaturaRepositoryInt.findByCodigoAsignatura(codigo);
+	    
+	    // Si se encuentra, mapear la entidad a la clase de dominio Asignatura y devolverla en una lista
+	    if (optionalAsignatura.isPresent()) {
+	        Asignatura asignatura = this.modelMapper.map(optionalAsignatura.get(), Asignatura.class);
+	        return List.of(asignatura);
+	    }
+
+	    // Si no se encuentra, devolver una lista vacía
+	    return Collections.emptyList();
+	}
+
+
+	
 }

@@ -46,7 +46,7 @@ public class PersonaController extends CommonEJB {
 		validaciones.add("ExistePersonaPorIdentificacion");
 
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return validarCampos(result, validaciones);
 		}
 
 		if (Boolean.FALSE.equals(personaInDTO.getEsValidar())) {
@@ -56,7 +56,7 @@ public class PersonaController extends CommonEJB {
 			if (Objects.equals(personaOutDTO.getIdPersona(), personaOutDTO.getIdPersona())) {
 				return new ResponseEntity<PersonaOutDTO>(personaOutDTO, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<PersonaOutDTO>(personaOutDTO, HttpStatus.CREATED);
+				return new ResponseEntity<PersonaOutDTO>(personaOutDTO, HttpStatus.OK);
 			}
 		} else {
 			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);

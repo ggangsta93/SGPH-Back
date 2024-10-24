@@ -23,11 +23,21 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.repository.AsignaturaRepositoryInt;
+import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
+import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.repository.CursoRepositoryInt;
 import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteLaborDTO;
@@ -35,6 +45,8 @@ import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocent
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.repository.DocenteRepositoryInt;
+import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.entity.PersonaEntity;
+import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.repository.PersonaRepositoryInt;
 import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 
 @Service
@@ -43,12 +55,20 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	private final PersonaRepositoryInt personaRepository;
+    private final AsignaturaRepositoryInt asignaturaRepository;
+    private final CursoRepositoryInt cursoRepository;	
 	private DocenteRepositoryInt docenteRepositoryInt;
 	private ModelMapper modelMapper;
+	private final RestTemplate restTemplate;
 
-	public GestionarDocenteGatewayImplAdapter(DocenteRepositoryInt docenteRepository, ModelMapper modelMapper) {
+	public GestionarDocenteGatewayImplAdapter(PersonaRepositoryInt personaRepository, DocenteRepositoryInt docenteRepository, AsignaturaRepositoryInt asignaturaRepository, CursoRepositoryInt cursoRepository, ModelMapper modelMapper, RestTemplate restTemplate) {
 		this.docenteRepositoryInt = docenteRepository;
+		this.personaRepository = personaRepository;
+        this.asignaturaRepository = asignaturaRepository;
+        this.cursoRepository = cursoRepository;
 		this.modelMapper = modelMapper;
+		this.restTemplate = restTemplate;
 	}
 
 	@Override
@@ -459,5 +479,58 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 
 		byte[] excelBytes = outputStream.toByteArray();
 		return Base64.encodeBase64String(excelBytes);
+	}
+	
+	public Long obtenerIdDepartamentoPorNombre(String nombreDepartamento) {
+        // URL del servicio que devuelve el ID del departamento basado en el nombre
+        String url = "http://localhost:8080/AdministrarDepartamento/obtenerIdPorNombre?nombre=" + nombreDepartamento;
+        
+        // Realiza la llamada al servicio REST
+        ResponseEntity<Long> response = restTemplate.getForEntity(url, Long.class);
+        
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+            return response.getBody();
+        } else {
+            throw new RuntimeException("Error al obtener el ID del departamento: " + nombreDepartamento);
+        }
+    }
+	
+	@Override
+	public void guardarLaborDocente(DocenteLaborDTO docenteLaborDTO) {
+		/*
+		// 1. Persistir Persona
+        PersonaEntity persona = new PersonaEntity();
+        persona.setNumeroIdentificacion(docenteLaborDTO.getIdentificacion());
+        persona.setPrimerNombre(docenteLaborDTO.getPrimerNombre());
+        persona.setSegundoNombre(docenteLaborDTO.getSegundoNombre());
+        persona.setPrimerApellido(docenteLaborDTO.getPrimerApellido());
+        persona.setSegundoApellido(docenteLaborDTO.getSegundoApellido());
+        persona.setEmail(docenteLaborDTO.getCorreo());
+        persona = personaRepository.save(persona);
+        
+        // 2. Persistir Docente asociado a la Persona
+        DocenteEntity docente = new DocenteEntity();
+        docente.setPersona(persona);
+        docente.getDepartamento().setNombre(docenteLaborDTO.getDepartamento());
+        docente.setIdDocente(Long.parseLong(docenteLaborDTO.getIdentificacion()));
+        docente = docenteRepositoryInt.save(docente);
+
+        // 3. Persistir Asignatura
+        AsignaturaEntity asignatura = new AsignaturaEntity();
+        asignatura.setCodigoMateria(docenteLaborDTO.getCodigoMateria());
+        asignatura.setNombreMateria(docenteLaborDTO.getNombreMateria());
+        asignatura.setTipoAsignatura(docenteLaborDTO.getTipoAsignatura());
+        asignatura.setHorasTeoricas(docenteLaborDTO.getHorasTeoricas());
+        asignatura = asignaturaRepository.save(asignatura);
+
+        // 4. Persistir Curso asociado a la Asignatura
+        CursoEntity curso = new CursoEntity();
+        curso.setAsignatura(asignatura);
+        curso.setGrupo(docenteLaborDTO.getGrupo());
+        curso.setHorasSemanales(docenteLaborDTO.getHorasSemanales());
+        curso.setSemestre(docenteLaborDTO.getSemestre());
+        cursoRepository.save(curso);
+    }
+		*/
 	}
 }

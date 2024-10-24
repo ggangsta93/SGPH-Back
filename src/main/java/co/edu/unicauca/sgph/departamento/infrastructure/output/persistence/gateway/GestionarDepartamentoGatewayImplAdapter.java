@@ -41,4 +41,21 @@ public class GestionarDepartamentoGatewayImplAdapter implements GestionarDeparta
 		return this.modelMapper.map(this.departamentoRepositoryInt.findAll(), new TypeToken<List<Departamento>>() {
 		}.getType());
 	}
+	
+	public Long obtenerIdDepartamentoPorNombre(String nombreDepartamento) {
+        return departamentoRepositoryInt.findByNombre(nombreDepartamento)
+                .map(DepartamentoEntity::getIdDepartamento)
+                .orElseThrow(() -> new RuntimeException("Departamento no encontrado: " + nombreDepartamento));
+    }
+
+	@Override
+	public Long consultarDepartamentoPorNombre(String nombre) {
+		DepartamentoEntity idDepartamento = this.departamentoRepositoryInt
+				.consultarDepartamentoPorNombre(nombre);
+		if (idDepartamento == null || idDepartamento.getIdDepartamento() == null) {
+	        return 0L;
+	    } else {
+	        return idDepartamento.getIdDepartamento();
+	    }	
+	}
 }

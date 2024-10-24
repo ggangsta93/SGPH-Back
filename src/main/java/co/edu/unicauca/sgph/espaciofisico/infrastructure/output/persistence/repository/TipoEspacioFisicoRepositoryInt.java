@@ -1,6 +1,7 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,4 +26,6 @@ public interface TipoEspacioFisicoRepositoryInt extends JpaRepository<TipoEspaci
 			+ "    FROM EspacioFisicoEntity espacioFisico "
 			+ "    WHERE espacioFisico.edificio.idEdificio in (:lstIdEdificio) " + ")")
 	public List<TipoEspacioFisicoEntity> consultarTiposEspaciosFisicosPorEdificio(List<Long> lstIdEdificio);
+	
+	//Optional<TipoEspacioFisicoEntity> findByNombre(String nombre);
 }

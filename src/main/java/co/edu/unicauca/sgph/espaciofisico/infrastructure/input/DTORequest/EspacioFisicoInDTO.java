@@ -42,6 +42,18 @@ public class EspacioFisicoInDTO {
 	
 	private Boolean esValidar;
 
+	private String base64;
+	
+	
+	
+	public EspacioFisicoInDTO(@NotEmpty String oID, @NotNull Long capacidad, @NotNull EstadoEspacioFisicoEnum estado,
+			@NotEmpty String salon, @NotNull Long idTipoEspacioFisico) {
+		OID = oID;
+		this.capacidad = capacidad;
+		this.estado = estado;
+		this.salon = salon;
+		this.idTipoEspacioFisico = idTipoEspacioFisico;
+	}
 
 	public Long getIdEspacioFisico() {
 		return idEspacioFisico;
@@ -137,6 +149,14 @@ public class EspacioFisicoInDTO {
 
 	public void setEsValidar(Boolean esValidar) {
 		this.esValidar = esValidar;
+	}
+
+	public String getBase64() {
+		return base64;
+	}
+
+	public void setBase64(String base64) {
+		this.base64 = base64;
 	}
 	
 }

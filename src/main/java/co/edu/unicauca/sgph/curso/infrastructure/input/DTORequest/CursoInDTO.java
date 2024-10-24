@@ -13,15 +13,11 @@ public class CursoInDTO {
 
 	@NotEmpty
 	private String grupo;
-
-	@NotNull
+	
 	private Integer cupo;
 
 	@NotNull
 	private Long idAsignatura;
-	
-	@NotNull
-	private Long idPeriodoAcademico;
 
 	private Boolean esValidar;
 	
@@ -56,15 +52,6 @@ public class CursoInDTO {
 	public void setIdAsignatura(Long idAsignatura) {
 		this.idAsignatura = idAsignatura;
 	}
-
-	public Long getIdPeriodoAcademico() {
-		return idPeriodoAcademico;
-	}
-
-	public void setIdPeriodoAcademico(Long idPeriodoAcademico) {
-		this.idPeriodoAcademico = idPeriodoAcademico;
-	}
-
 	public Boolean getEsValidar() {
 		return esValidar;
 	}

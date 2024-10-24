@@ -32,6 +32,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.Filtro
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EdificioOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoOutDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.TipoEspacioFisicoOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.UbicacionOutDTO;
@@ -80,7 +81,7 @@ public class EspacioFisicoController extends CommonEJB {
 		validaciones.add("ExisteNombreEspacioFisico");
 		
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return validarCampos(result, validaciones);
 		}
 		
 		if(Boolean.FALSE.equals(espacioFisicoInDTO.getEsValidar())) {
@@ -91,7 +92,7 @@ public class EspacioFisicoController extends CommonEJB {
 			if (Objects.equals(espacioFisicoOutDTO.getIdEspacioFisico(), espacioFisicoOutDTO.getIdEspacioFisico())) {
 	            return new ResponseEntity<>(espacioFisicoOutDTO, HttpStatus.OK);
 	        } else {
-	            return new ResponseEntity<>(espacioFisicoOutDTO, HttpStatus.CREATED);
+	            return new ResponseEntity<>(espacioFisicoOutDTO, HttpStatus.OK);
 	        }
 	    } else {
 	        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
@@ -226,5 +227,10 @@ public class EspacioFisicoController extends CommonEJB {
 	public List<TipoEspacioFisicoOutDTO> consultarTiposEspaciosFisicos() {
 		return this.tipoEspacioFisicoRestMapper.toLstTipoEspacioFisicoOutDTO(
 				this.gestionarTipoEspacioFisicoCUIntPort.consultarTiposEspaciosFisicos());
+	}
+	
+	@PostMapping("cargaMasiva")
+	private MensajeOutDTO cargaMasivaEspacioFisico(@RequestBody EspacioFisicoInDTO espacioFisico) {
+		return this.gestionarEspacioFisicoCUIntPort.cargaMasivaEspacioFisico(espacioFisico);
 	}
 }

@@ -23,4 +23,6 @@ public interface GestionarDepartamentoCUIntPort {
 	 * @return
 	 */
 	public List<Departamento> consultarDepartamentos();
+	
+	public Long consultarDepartamentoPorNombre(String nombre);
 }

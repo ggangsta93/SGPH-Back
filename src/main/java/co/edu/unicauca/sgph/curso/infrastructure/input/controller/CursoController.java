@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.input.DTORequest.CursoInDTO;
 import co.edu.unicauca.sgph.curso.infrastructure.input.DTOResponse.CursoOutDTO;
 import co.edu.unicauca.sgph.curso.infrastructure.input.mapper.CursoRestMapper;
+import co.edu.unicauca.sgph.periodoacademico.aplication.input.GestionarPeriodoAcademicoCUIntPort;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
@@ -35,6 +37,8 @@ import co.edu.unicauca.sgph.curso.infrastructure.input.mapper.CursoRestMapper;
 public class CursoController extends CommonEJB {
 
 	private GestionarCursoCUIntPort gestionarCursoCUIntPort;
+	@Autowired
+	private GestionarPeriodoAcademicoCUIntPort gestionarPeriodoAcademicoCUIntPort;
 	private CursoRestMapper cursoRestMapper;
 	
 	@Autowired
@@ -60,17 +64,17 @@ public class CursoController extends CommonEJB {
 		validaciones.add("ExisteCursoConMismoGrupo");
 		
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
-		}
+			return validarCampos(result, validaciones);
+		}	
 		
 		if (Boolean.FALSE.equals(cursoInDTO.getEsValidar())) {
 			CursoOutDTO cursoOutDTO =  this.cursoRestMapper.toCursoOutDTO(
 					this.gestionarCursoCUIntPort.guardarCurso(this.cursoRestMapper.toCurso(cursoInDTO)));
-
+			cursoOutDTO.setIdPeriodoAcademico(this.gestionarPeriodoAcademicoCUIntPort.consultarPeriodoAcademicoVigente().getIdPeriodoAcademico());
 			if (Objects.equals(cursoOutDTO.getIdCurso(), cursoOutDTO.getIdCurso())) {
 				return new ResponseEntity<CursoOutDTO>(cursoOutDTO, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<CursoOutDTO>(cursoOutDTO, HttpStatus.CREATED);
+				return new ResponseEntity<CursoOutDTO>(cursoOutDTO, HttpStatus.OK);
 			}
 		} else {
 			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
@@ -110,7 +114,7 @@ public class CursoController extends CommonEJB {
 		return this.cursoRestMapper
 				.toCursoOutDTO(this.gestionarCursoCUIntPort.consultarCursoPorGrupoYAsignatura(grupo, idAsignatura));
 	}
-	@GetMapping("/eliminarCurso/{id}")
+	@DeleteMapping("/eliminarCurso/{id}")
 	public ResponseEntity<?> eliminarCurso(@PathVariable Long id, Locale locale) {
 		Set<String> errores = new HashSet<>();
 
@@ -124,7 +128,7 @@ public class CursoController extends CommonEJB {
 	        errores.add(mensajeHorarios);
 	    }
 	    if (!errores.isEmpty()) {
-	        return new ResponseEntity<>(errores, HttpStatus.CONFLICT);
+	        return new ResponseEntity<>(errores, HttpStatus.BAD_REQUEST);
 	    }
 
 	    this.gestionarCursoCUIntPort.eliminarCurso(id);

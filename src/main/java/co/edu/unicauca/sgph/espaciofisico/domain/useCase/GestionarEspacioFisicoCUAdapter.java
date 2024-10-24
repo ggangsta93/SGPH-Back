@@ -14,6 +14,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.Espaci
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 
 public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCUIntPort {
@@ -117,5 +118,10 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	@Override
 	public void activarInactivarEspacioFisico(Long id) {
 		this.gestionarEspacioFisicoGatewayIntPort.activarInactivarEspacioFisico(id);
+	}
+
+	@Override
+	public MensajeOutDTO cargaMasivaEspacioFisico(EspacioFisicoInDTO espacioFisico) {
+		return this.gestionarEspacioFisicoGatewayIntPort.cargaMasivaEspaciosFisicos(espacioFisico);
 	}
 }

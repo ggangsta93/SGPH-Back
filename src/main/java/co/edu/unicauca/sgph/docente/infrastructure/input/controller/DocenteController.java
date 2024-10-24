@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.docente.aplication.input.GestionarDocenteCUIntPort;
+import co.edu.unicauca.sgph.docente.domain.model.Docente;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteInDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
@@ -52,7 +52,7 @@ public class DocenteController extends CommonEJB{
 		validaciones.add("ExisteIdPersonaDocente");
 		
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return validarCampos(result, validaciones);
 		}
 		
 		if (Boolean.FALSE.equals(docenteInDTO.getEsValidar())) {
@@ -62,7 +62,7 @@ public class DocenteController extends CommonEJB{
 			if (Objects.equals(docenteOutDTO.getIdPersona(), docenteOutDTO.getIdPersona())) {
 				return new ResponseEntity<DocenteOutDTO>(docenteOutDTO, HttpStatus.OK);
 			} else {
-				return new ResponseEntity<DocenteOutDTO>(docenteOutDTO, HttpStatus.CREATED);
+				return new ResponseEntity<DocenteOutDTO>(docenteOutDTO, HttpStatus.OK);
 			}
 		} else {
 			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
@@ -135,5 +135,15 @@ public class DocenteController extends CommonEJB{
 	public ReporteDocenteDTO consultaLaborDocente(@RequestBody ReporteDocenteDTO filtro) {
 		return this.gestionarDocenteCUIntPort.consultaLaborDocente(filtro);
 	}
+	
+	@PostMapping("/importar")
+    public ResponseEntity<?> importarLaborDocente(@RequestBody String jsonResponse) {
+        try {
+            this.gestionarDocenteCUIntPort.procesarLaborDocenteDesdeJson(jsonResponse);
+            return ResponseEntity.ok("Datos de labor docente procesados correctamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar los datos: " + e.getMessage());
+        }
+    }
 
 }

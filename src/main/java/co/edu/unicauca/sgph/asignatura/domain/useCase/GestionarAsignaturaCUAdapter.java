@@ -9,7 +9,6 @@ import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
-import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import org.springframework.data.domain.Page;
 
@@ -63,5 +62,15 @@ public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPor
 	@Override
 	public List<Asignatura> obtenerAsignaturasPorOids(List<String> oid) {
 		return this.gestionarAsignaturaGatewayIntPort.obtenerAsignaturasPorListaOids(oid);
+	}
+
+	@Override
+	public List<Asignatura> guardarAsignaturasDesdeJson(String archivoBase64) {
+		return this.gestionarAsignaturaGatewayIntPort.guardarAsignaturasDesdeJson(archivoBase64);
+	}
+
+	@Override
+	public List<Asignatura> obtenerAsignaturaPorCodigo(String Codigo) {
+		return this.gestionarAsignaturaGatewayIntPort.obtenerAsignaturaPorCodigo(Codigo);
 	}
 }

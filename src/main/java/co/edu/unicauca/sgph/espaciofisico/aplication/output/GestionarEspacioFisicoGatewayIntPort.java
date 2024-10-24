@@ -12,6 +12,7 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.Espaci
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
 
 public interface GestionarEspacioFisicoGatewayIntPort {
@@ -131,4 +132,6 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	public Boolean existsEspacioFisicoByOid(String OID);
 	
 	public Boolean existsEspacioFisicoByNombre(String salon);
+	
+	MensajeOutDTO cargaMasivaEspaciosFisicos(EspacioFisicoInDTO espacioFisico);
 }

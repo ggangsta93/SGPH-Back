@@ -29,7 +29,6 @@ import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.Asignatur
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
-import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
 @RestController
@@ -60,7 +59,7 @@ public class AsignaturaController extends CommonEJB {
 		validaciones.add("ExisteOidAsignatura");
 		
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return validarCampos(result, validaciones);
 		}
 		
 		if (Boolean.FALSE.equals(asignaturaInDTO.getEsValidar())) {
@@ -73,7 +72,7 @@ public class AsignaturaController extends CommonEJB {
 	        if (Objects.equals(asignaturaOutDTO.getIdAsignatura(), asignaturaOutDTO.getIdAsignatura())) {
 	            return new ResponseEntity<>(asignaturaOutDTO, HttpStatus.OK);
 	        } else {
-	            return new ResponseEntity<>(asignaturaOutDTO, HttpStatus.CREATED);
+	            return new ResponseEntity<>(asignaturaOutDTO, HttpStatus.OK);
 	        }
 	    } else {
 	        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
@@ -115,5 +114,10 @@ public class AsignaturaController extends CommonEJB {
 	@PostMapping("cargaMasiva")
 	private MensajeOutDTO cargaMasivaAsignaturas(@RequestBody AsignaturaInDTO asignatura) {
 		return this.gestionarAsignaturaCUIntPort.cargaMasivaAsignaturas(asignatura);
+	}
+	
+	@PostMapping("guardarAsignaturasDesdeJson")
+	private List<Asignatura> guardarAsignaturasDesdeJson(@RequestBody String archivoJSON) {
+		return this.gestionarAsignaturaCUIntPort.guardarAsignaturasDesdeJson(archivoJSON);
 	}
 }

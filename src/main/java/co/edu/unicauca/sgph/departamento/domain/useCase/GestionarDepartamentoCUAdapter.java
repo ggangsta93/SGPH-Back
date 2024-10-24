@@ -29,4 +29,9 @@ public class GestionarDepartamentoCUAdapter implements GestionarDepartamentoCUIn
 	public List<Departamento> consultarDepartamentos() {
 		return this.gestionarDepartamentoGatewayIntPort.consultarDepartamentos();
 	}
+
+	@Override
+	public Long consultarDepartamentoPorNombre(String nombre) {
+		return this.gestionarDepartamentoGatewayIntPort.consultarDepartamentoPorNombre(nombre);
+	}
 }

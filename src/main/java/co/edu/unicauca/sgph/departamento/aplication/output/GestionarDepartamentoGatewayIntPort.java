@@ -24,4 +24,5 @@ public interface GestionarDepartamentoGatewayIntPort {
 	 */
 	public List<Departamento> consultarDepartamentos();
 
+	public Long consultarDepartamentoPorNombre(String nombre);
 }

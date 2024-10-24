@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,7 @@ public class DepartamentoController extends CommonEJB {
 		this.departamentoRestMapper = departamentoRestMapper;
 	}
 
+	@PostMapping("/guardarDepartamento")
 	public DepartamentoOutDTO guardarDepartamento(@RequestBody DepartamentoInDTO departamentoInDTO) {
 		return this.departamentoRestMapper.toDepartamentoOutDTO(this.gestionarDepartamentoCUIntPort
 				.guardarDepartamento(this.departamentoRestMapper.toDepartamento(departamentoInDTO)));
