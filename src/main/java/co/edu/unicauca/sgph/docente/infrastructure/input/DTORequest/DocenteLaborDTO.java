@@ -1,80 +1,105 @@
 package co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import co.edu.unicauca.sgph.docente.infrastructure.input.validation.ExisteCodigoDocente;
 import co.edu.unicauca.sgph.docente.infrastructure.input.validation.ExisteIdPersonaDocente;
-@ExisteCodigoDocente
-@ExisteIdPersonaDocente
+//@ExisteCodigoDocente
+//@ExisteIdPersonaDocente
 public class DocenteLaborDTO {
 	@JsonProperty("OIDPERIODO")
     private int oidPeriodo;
 
+	@NotEmpty
     @JsonProperty("PERIODO")
     private String periodo;
-
+    
+    @NotNull
     @JsonProperty("OIDTIPOIDENTIFICACION")
     private Long oidTipoIdentificacion;
 
+    @NotEmpty
     @JsonProperty("TIPOIDENTIFICACION")
     private String tipoIdentificacion;
 
+    @NotEmpty
     @JsonProperty("IDENTIFICACION")
     private String identificacion;
 
+    @NotEmpty
     @JsonProperty("PRIMERAPELLIDO")
     private String primerApellido;
 
     @JsonProperty("SEGUNDOAPELLIDO")
     private String segundoApellido;
 
+    @NotEmpty
     @JsonProperty("PRIMERNOMBRE")
     private String primerNombre;
 
     @JsonProperty("SEGUNDONOMBRE")
     private String segundoNombre;
 
+    @NotEmpty
     @JsonProperty("CORREO")
     private String correo;
 
+    @NotEmpty
     @JsonProperty("NOMBREMATERIA")
     private String nombreMateria;
 
+    @NotEmpty
     @JsonProperty("NOMBREPROGRAMA")
     private String nombrePrograma;
 
     @JsonProperty("OID")
     private String oid;
 
+    @NotEmpty
     @JsonProperty("CODIGOMATERIA")
     private String codigo;
 
+    @NotEmpty
     @JsonProperty("TIPOASIGNATURA")
     private String tipoMateria;
 
+    @NotEmpty
     @JsonProperty("GRUPO")
     private String grupo;
 
+    @NotEmpty
     @JsonProperty("HORASTEORICAS")
     private String horasTeoricas;
 
+    @NotNull
     @JsonProperty("SEMESTRE")
     private Integer semestre;
 
     @JsonProperty("OIDPENSUM")
     private Long oidPensum;
 
+    @NotNull
     @JsonProperty("OIDDEPARTAMENTO")
     private Long oidDepartamento;
 
+    @NotEmpty
     @JsonProperty("DEPARTAMENTO")
     private String departamento;
 
+    @NotNull
     @JsonProperty("PROGRAMAASIGNATURA")
     private Long programaAsignatura;
 
+    @NotNull
     @JsonProperty("HORASSEMANALES")
     private Integer horasSemanales;
+    
+    @NotNull
+    @JsonProperty("CANTIDADESTUDIANTES")
+    private Integer cantidadEstudiantes;
 
 	public int getOidPeriodo() {
 		return oidPeriodo;
@@ -258,6 +283,14 @@ public class DocenteLaborDTO {
 
 	public void setHorasSemanales(Integer horasSemanales) {
 		this.horasSemanales = horasSemanales;
+	}
+
+	public Integer getCantidadEstudiantes() {
+		return cantidadEstudiantes;
+	}
+
+	public void setCantidadEstudiantes(Integer cantidadEstudiantes) {
+		this.cantidadEstudiantes = cantidadEstudiantes;
 	}
 	
 }

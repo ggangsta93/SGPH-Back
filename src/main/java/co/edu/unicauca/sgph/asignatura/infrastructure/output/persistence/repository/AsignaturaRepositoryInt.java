@@ -48,5 +48,8 @@ public interface AsignaturaRepositoryInt extends JpaRepository<AsignaturaEntity,
 
 	@Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM AsignaturaEntity a WHERE a.oid = :oid")
 	Boolean buscarAsignaturaOid(@Param("oid") String oid);
+	
+	@Query("SELECT COUNT(asi) FROM AsignaturaEntity asi")
+	public Long contarAsignaturas();
 }
 

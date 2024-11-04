@@ -15,7 +15,7 @@ public interface GestionarCursoCUIntPort {
 	 * @param idAsignatura
 	 * @return
 	 */
-	@Deprecated
+	
 	public Curso consultarCursoPorGrupoYAsignatura(String grupo, Long idAsignatura);
 
 	/**
@@ -53,4 +53,8 @@ public interface GestionarCursoCUIntPort {
 
 	Boolean eliminarCurso(Long id);
 	List<Curso> consultarCursosPorIdPeriodoYIdPrograma(Long idPeriodo, Long idPrograma);
+
+	Boolean existsCursoByGrupoYAsignatura(String grupo, Long idAsignatura);
+	
+	Boolean existsCursoByGrupoYCupoYPeriodoYAsignatura(String grupo, Integer cupo, Long idPeriodo, Long idAsignatura);
 }

@@ -34,6 +34,7 @@ import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarEdificioCUAdap
 import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarEspacioFisicoCUAdapter;
 import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarTipoEspacioFisicoCUAdapter;
 import co.edu.unicauca.sgph.espaciofisico.domain.useCase.GestionarUbicacionCUAdapter;
+import co.edu.unicauca.sgph.facultad.aplication.input.GestionarFacultadCUIntPort;
 import co.edu.unicauca.sgph.facultad.aplication.output.FacultadFormatterResultsIntPort;
 import co.edu.unicauca.sgph.facultad.aplication.output.GestionarFacultadGatewayIntPort;
 import co.edu.unicauca.sgph.facultad.domain.useCase.GestionarFacultadCUAdapter;
@@ -106,6 +107,7 @@ public class BeanConfigurations {
 			GestionarPersonaCUIntPort gestionarPersonaCUIntPort, 
 			GestionarDepartamentoCUIntPort gestionarDepartamentoCUIntPort,
 			GestionarProgramaCUIntPort gestionarProgramaCUIntPort,
+			GestionarFacultadCUIntPort gestionarFacultadCUIntPort,
 			RestTemplate restTemplate,  
             ObjectMapper objectMapper) {
 		return new GestionarDocenteCUAdapter(
@@ -118,6 +120,7 @@ public class BeanConfigurations {
 				gestionarPersonaCUIntPort,
 				gestionarDepartamentoCUIntPort,
 				gestionarProgramaCUIntPort,
+				gestionarFacultadCUIntPort,
 				restTemplate, 
 		        objectMapper);
 	}

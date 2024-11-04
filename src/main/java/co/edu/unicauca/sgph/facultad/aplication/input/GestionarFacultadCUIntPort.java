@@ -16,4 +16,6 @@ public interface GestionarFacultadCUIntPort {
 	 * @return Lista de objetos de tipo Facultad
 	 */
 	public List<Facultad> consultarFacultades();
+	
+	public Facultad consultarFacultadPorId(Long idFacultad);
 }

@@ -475,6 +475,11 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 	    return Collections.emptyList();
 	}
 
+	@Override
+	public Long contarAsignaturas() {
+		return this.asignaturaRepositoryInt.contarAsignaturas();
+	}
+
 
 	
 }

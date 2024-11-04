@@ -108,5 +108,12 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 		return !cursos.isEmpty();
 	}
 
+	@Override
+	public Boolean existsCursoByGrupoYCupoYPeriodoYAsignatura(String grupo, Integer cupo, Long idPeriodo,
+			Long idAsignatura) {
+		List<CursoEntity> cursos = this.cursoRepositoryInt.existsCursoByGrupoYCupoYPeriodoYAsignatura(grupo, cupo, idPeriodo, idAsignatura);
+		return !cursos.isEmpty();
+	}
+
 	
 }

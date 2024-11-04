@@ -5,6 +5,7 @@ import java.util.List;
 import co.edu.unicauca.sgph.departamento.aplication.input.GestionarDepartamentoCUIntPort;
 import co.edu.unicauca.sgph.departamento.aplication.output.GestionarDepartamentoGatewayIntPort;
 import co.edu.unicauca.sgph.departamento.domain.model.Departamento;
+import co.edu.unicauca.sgph.departamento.infrastructure.output.persistence.entity.DepartamentoEntity;
 
 public class GestionarDepartamentoCUAdapter implements GestionarDepartamentoCUIntPort {
 
@@ -31,7 +32,7 @@ public class GestionarDepartamentoCUAdapter implements GestionarDepartamentoCUIn
 	}
 
 	@Override
-	public Long consultarDepartamentoPorNombre(String nombre) {
+	public Departamento consultarDepartamentoPorNombre(String nombre) {
 		return this.gestionarDepartamentoGatewayIntPort.consultarDepartamentoPorNombre(nombre);
 	}
 }

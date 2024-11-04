@@ -533,4 +533,9 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
     }
 		*/
 	}
+
+	@Override
+	public Long contarDocente() {
+		return this.docenteRepositoryInt.contarDocentes();
+	}
 }

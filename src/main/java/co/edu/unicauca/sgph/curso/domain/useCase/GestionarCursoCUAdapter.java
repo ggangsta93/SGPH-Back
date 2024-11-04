@@ -23,7 +23,6 @@ public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
 	 *      java.lang.Long)
 	 */
 	@Override
-	@Deprecated
 	public Curso consultarCursoPorGrupoYAsignatura(String grupo, Long idAsignatura) {
 		return this.gestionarCursoGatewayIntPort.consultarCursoPorGrupoYAsignatura(grupo, idAsignatura);
 	}
@@ -65,5 +64,16 @@ public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
 	@Override
 	public List<Curso> consultarCursosPorIdPeriodoYIdPrograma(Long idPeriodo, Long idPrograma) {
 		return  this.gestionarCursoGatewayIntPort.consultarCursosPorProgramaYPeriodoAcademico(idPrograma, idPeriodo);
+	}
+	
+	@Override
+	public Boolean existsCursoByGrupoYAsignatura(String grupo, Long idAsignatura) {
+		return this.gestionarCursoGatewayIntPort.existsCursoByGrupoYAsignatura(grupo, idAsignatura);
+	}
+
+	@Override
+	public Boolean existsCursoByGrupoYCupoYPeriodoYAsignatura(String grupo, Integer cupo, Long idPeriodo,
+			Long idAsignatura) {
+		return this.gestionarCursoGatewayIntPort.existsCursoByGrupoYCupoYPeriodoYAsignatura(grupo, cupo, idPeriodo, idAsignatura);
 	}
 }

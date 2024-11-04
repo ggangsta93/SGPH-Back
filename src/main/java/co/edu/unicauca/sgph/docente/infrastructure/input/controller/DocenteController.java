@@ -1,20 +1,31 @@
 package co.edu.unicauca.sgph.docente.infrastructure.input.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.Validator;
 
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.docente.aplication.input.GestionarDocenteCUIntPort;
-import co.edu.unicauca.sgph.docente.domain.model.Docente;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteInDTO;
+import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteLaborDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.mapper.DocenteRestMapper;
@@ -135,15 +146,56 @@ public class DocenteController extends CommonEJB{
 	public ReporteDocenteDTO consultaLaborDocente(@RequestBody ReporteDocenteDTO filtro) {
 		return this.gestionarDocenteCUIntPort.consultaLaborDocente(filtro);
 	}
-	
-	@PostMapping("/importar")
-    public ResponseEntity<?> importarLaborDocente(@RequestBody String jsonResponse) {
-        try {
-            this.gestionarDocenteCUIntPort.procesarLaborDocenteDesdeJson(jsonResponse);
-            return ResponseEntity.ok("Datos de labor docente procesados correctamente");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar los datos: " + e.getMessage());
-        }
-    }
 
+	@Autowired
+	private Validator validator;
+	
+	@PostMapping("/importar/{idFacultad}")
+	public ResponseEntity<?> importarLaborDocente(@RequestBody List<DocenteLaborDTO> docenteLaborDTOList, @PathVariable Long idFacultad, BindingResult result) {
+	    // Verificar si hay errores de validación en la lista de DocenteLaborDTO
+		List<String> erroresConContexto = new ArrayList<>();
+
+	    // Validar cada objeto DocenteLaborDTO en la lista
+	    for (int i = 0; i < docenteLaborDTOList.size(); i++) {
+	        DocenteLaborDTO dto = docenteLaborDTOList.get(i);
+	        Set<ConstraintViolation<DocenteLaborDTO>> violaciones = validator.validate(dto);
+
+	        if (!violaciones.isEmpty()) {
+	            for (ConstraintViolation<DocenteLaborDTO> violacion : violaciones) {
+	                String mensajeError = String.format(
+	                    "Error en el registro %d (Asignatura: %s, Grupo: %s, Identificación: %s): %s - %s",
+	                    i + 1,
+	                    dto.getNombreMateria() != null ? dto.getNombreMateria() : "N/A",
+	                    dto.getGrupo() != null ? dto.getGrupo() : "N/A",
+	                    dto.getIdentificacion() != null ? dto.getIdentificacion() : "N/A",
+	                    violacion.getPropertyPath(),
+	                    violacion.getMessage()
+	                );
+	                erroresConContexto.add(mensajeError);
+	            }
+	        }
+	    }
+
+	    // Si hay errores de validación, devolver la respuesta con los errores
+	    if (!erroresConContexto.isEmpty()) {
+	        return ResponseEntity.badRequest().body(erroresConContexto);
+	    }
+
+	    try {
+	        // Procesar la lista validada y llamar al servicio
+	        List<String> mensajes = this.gestionarDocenteCUIntPort.procesarLaborDocenteDesdeJson(docenteLaborDTOList, idFacultad);
+	        return ResponseEntity.ok(mensajes);
+
+	    } catch (ConstraintViolationException ex) {
+	        StringBuilder errorMessage = new StringBuilder("Errores de validación: ");
+	        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+	            errorMessage.append(String.format("%s: %s; ", violation.getPropertyPath(), violation.getMessage()));
+	        }
+	        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage.toString());
+	    } catch (DataIntegrityViolationException ex) {
+	        return ResponseEntity.status(HttpStatus.CONFLICT).body("Error de integridad de datos: " + ex.getMostSpecificCause().getMessage());
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar los datos: " + e.getMessage());
+	    }
+	}
 }

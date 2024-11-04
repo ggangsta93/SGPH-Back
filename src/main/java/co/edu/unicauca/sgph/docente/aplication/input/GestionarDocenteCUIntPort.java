@@ -8,6 +8,7 @@ import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
+import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteLaborDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 
@@ -71,5 +72,7 @@ public interface GestionarDocenteCUIntPort {
 
 	ReporteDocenteDTO consultaLaborDocente(ReporteDocenteDTO idPrograma);
 	
-	void procesarLaborDocenteDesdeJson(String jsonResponse) throws IOException;
+	public List<String> procesarLaborDocenteDesdeJson(List<DocenteLaborDTO> docenteLaborDTOList, Long idFacultad) throws IOException;
+	
+	public Long contarDocentes();
 }

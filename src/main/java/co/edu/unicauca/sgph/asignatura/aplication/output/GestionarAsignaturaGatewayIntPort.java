@@ -48,4 +48,6 @@ public interface GestionarAsignaturaGatewayIntPort {
 	public List<Asignatura> guardarAsignaturasDesdeJson(String Archivo64);
 	
 	public List<Asignatura> obtenerAsignaturaPorCodigo(String codigo);
+	
+	public Long contarAsignaturas();
 }

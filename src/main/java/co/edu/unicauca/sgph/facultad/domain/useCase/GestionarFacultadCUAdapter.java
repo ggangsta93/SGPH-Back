@@ -31,4 +31,10 @@ public class GestionarFacultadCUAdapter implements GestionarFacultadCUIntPort {
 	public List<Facultad> consultarFacultades() {
 		return this.gestionarFacultadGatewayIntPort.consultarFacultades();
 	}
+
+
+	@Override
+	public Facultad consultarFacultadPorId(Long idFacultad) {
+		return this.gestionarFacultadGatewayIntPort.consultarFacultadPorId(idFacultad);
+	}
 }

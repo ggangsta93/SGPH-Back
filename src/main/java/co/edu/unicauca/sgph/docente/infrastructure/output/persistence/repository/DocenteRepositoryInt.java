@@ -98,4 +98,7 @@ public interface DocenteRepositoryInt extends JpaRepository<DocenteEntity, Long>
 			+ "")
 	public DocenteEntity consultarUsuarioPorIdPersona(Long idPersona, Long idDocente);	
 
+	@Query("SELECT COUNT(doc) "
+			+ " FROM DocenteEntity doc ")
+	public Long contarDocentes();
 }

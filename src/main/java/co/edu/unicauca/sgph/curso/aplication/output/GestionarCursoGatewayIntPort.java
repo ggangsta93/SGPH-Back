@@ -15,7 +15,6 @@ public interface GestionarCursoGatewayIntPort {
 	 * @param idAsignatura
 	 * @return
 	 */
-	@Deprecated
 	public Curso consultarCursoPorGrupoYAsignatura(String grupo, Long idAsignatura);
 
 	/**
@@ -69,4 +68,7 @@ public interface GestionarCursoGatewayIntPort {
 	public Boolean existsCursoByGrupoYAsignatura(String Grupo, Long idAsignatura);
 	
 	public Boolean existsCursoByDocente(Long idCurso);
+	
+	public Boolean existsCursoByGrupoYCupoYPeriodoYAsignatura(String grupo, Integer cupo, Long idPeriodo,
+			Long idAsignatura);
 }

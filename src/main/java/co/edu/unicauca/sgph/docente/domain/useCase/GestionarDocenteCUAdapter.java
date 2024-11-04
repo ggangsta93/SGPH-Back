@@ -3,52 +3,44 @@ package co.edu.unicauca.sgph.docente.domain.useCase;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
-import co.edu.unicauca.sgph.curso.infrastructure.input.DTORequest.CursoInDTO;
-import co.edu.unicauca.sgph.curso.infrastructure.input.DTOResponse.CursoOutDTO;
 import co.edu.unicauca.sgph.departamento.aplication.input.GestionarDepartamentoCUIntPort;
-import co.edu.unicauca.sgph.departamento.infrastructure.input.DTORequest.DepartamentoInDTO;
-import co.edu.unicauca.sgph.departamento.infrastructure.input.DTOResponse.DepartamentoOutDTO;
+import co.edu.unicauca.sgph.departamento.domain.model.Departamento;
 import co.edu.unicauca.sgph.docente.aplication.input.GestionarDocenteCUIntPort;
 import co.edu.unicauca.sgph.docente.aplication.output.DocenteFormatterResultsIntPort;
 import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
-import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteInDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteLaborDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.facultad.aplication.input.GestionarFacultadCUIntPort;
+import co.edu.unicauca.sgph.facultad.domain.model.Facultad;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
 import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
 import co.edu.unicauca.sgph.persona.domain.model.Persona;
 import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
-import co.edu.unicauca.sgph.persona.infrastructure.input.DTORequest.PersonaInDTO;
-import co.edu.unicauca.sgph.persona.infrastructure.input.DTOResponse.PersonaOutDTO;
 import co.edu.unicauca.sgph.programa.aplication.input.GestionarProgramaCUIntPort;
 import co.edu.unicauca.sgph.programa.aplication.output.GestionarProgramaGatewayIntPort;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
@@ -66,6 +58,7 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	private final GestionarPersonaCUIntPort gestionarPersonaCUIntPort;
 	private final GestionarDepartamentoCUIntPort gestionarDepartamentoCUIntPort;
 	private final GestionarProgramaCUIntPort gestionarProgramaCUIntPort;
+	private final GestionarFacultadCUIntPort gestionarFacultadCUIntPort;
 	private final ObjectMapper objectMapper;
 	private final RestTemplate restTemplate;
 	
@@ -82,6 +75,7 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 			GestionarPersonaCUIntPort gestionarPersonaCUIntPort, 
 			GestionarDepartamentoCUIntPort gestionarDepartamentoCUIntPort, 
 			GestionarProgramaCUIntPort gestionarProgramaCUIntPort,
+			GestionarFacultadCUIntPort gestionarFacultadCUIntPort,
 			RestTemplate restTemplate,
             ObjectMapper objectMapper) {
 		this.gestionarDocenteGatewayIntPort = gestionarDocenteGatewayIntPort;
@@ -93,6 +87,7 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 		this.gestionarPersonaCUIntPort = gestionarPersonaCUIntPort;
 		this.gestionarDepartamentoCUIntPort = gestionarDepartamentoCUIntPort;
 		this.gestionarProgramaCUIntPort = gestionarProgramaCUIntPort;
+		this.gestionarFacultadCUIntPort = gestionarFacultadCUIntPort;
 		this.restTemplate = restTemplate; 
         this.objectMapper = objectMapper;
 	}
@@ -273,150 +268,184 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	}
 
 	@Override
-	public void procesarLaborDocenteDesdeJson(String jsonResponse) throws IOException {
-	    List<DocenteLaborDTO> docenteLaborDTOList = objectMapper.readValue(
-	            jsonResponse, objectMapper.getTypeFactory().constructCollectionType(List.class, DocenteLaborDTO.class));
+	public List<String> procesarLaborDocenteDesdeJson(List<DocenteLaborDTO> docenteLaborDTOList, Long idFacultad) throws IOException {
+		List<String> mensajes = new ArrayList<>();
+
+	    // Crear una instancia de Validator
+	    Validator validator = javax.validation.Validation.buildDefaultValidatorFactory().getValidator();
+
+	    // Validar cada DocenteLaborDTO en la lista
+	    for (DocenteLaborDTO docenteLaborDTO : docenteLaborDTOList) {
+	        Set<ConstraintViolation<DocenteLaborDTO>> violations = validator.validate(docenteLaborDTO);
+
+	        if (!violations.isEmpty()) {
+	            // Si hay violaciones de validación, lanzar una excepción con los detalles
+	            StringBuilder errorMessages = new StringBuilder("Errores de validación en DocenteLaborDTO: ");
+	            for (ConstraintViolation<DocenteLaborDTO> violation : violations) {
+	                errorMessages.append(String.format("%s: %s; ", violation.getPropertyPath(), violation.getMessage()));
+	            }
+	            throw new ConstraintViolationException(errorMessages.toString(), violations);
+	        }
+	    }
+
+	    // Consultar programas y mapear los nombres de los programas
+	    List<Programa> programas = gestionarProgramaCUIntPort.consultarProgramasPorIdFacultad(Collections.singletonList(idFacultad));
+	    Set<String> programasNombres = programas.stream().map(Programa::getNombre).collect(Collectors.toSet());
+
+	    int cursosCreados = 0;
+	    int asignaturasCreadas = 0;
+	    int docentesCreados = 0;
 
 	    for (DocenteLaborDTO docenteLaborDTO : docenteLaborDTOList) {
 	        String programaNombre = docenteLaborDTO.getNombrePrograma();
-	        if (programaNombre.equals("Ingeniería Electrónica y Telecomunicaciones") ||
-	            programaNombre.equals("Ingeniería de Sistemas") ||
-	            programaNombre.equals("Ingeniería en Automática Industrial") ||
-	            programaNombre.equals("Tecnología en Telemática")) {
-	            
+	        if (programasNombres.contains(programaNombre)) {
 	            guardarPersona(docenteLaborDTO);
-	            guardarDocente(docenteLaborDTO);
-	            guardarCurso(docenteLaborDTO);
+	            
+	            if (guardarDocente(docenteLaborDTO, idFacultad)) {
+	                docentesCreados++;
+	            } 
+
+	            if (guardarAsignatura(docenteLaborDTO, mensajes)) {
+	                asignaturasCreadas++;
+	            } 
+
+	            if (guardarCurso(docenteLaborDTO, mensajes, asignaturasCreadas > 0)) {
+	                cursosCreados++;
+	            } 
 	        }
 	    }
+
+	    Long totalDocentesActualmente = this.contarDocentes();
+	    Long totalAsignaturasActualmente = gestionarAsignaturaCUIntPort.contarAsignaturas();
+
+	    mensajes.add(String.format("Cantidad de nuevos docentes creados: %d", docentesCreados));
+	    mensajes.add(String.format("Total docentes registrados actualmente: %d", totalDocentesActualmente));
+	    mensajes.add(String.format("Cantidad de nuevas asignaturas creadas: %d", asignaturasCreadas));
+	    mensajes.add(String.format("Total asignaturas registradas actualmente: %d", totalAsignaturasActualmente));
+	    mensajes.add(String.format("Cantidad de nuevos cursos creados: %d", cursosCreados));
+
+	    return mensajes;
 	}
 
-	private void guardarPersona(DocenteLaborDTO docenteLaborDTO) {
-	    PersonaInDTO personaInDTO = new PersonaInDTO();
-	    if (docenteLaborDTO.getTipoIdentificacion().equals("Cédula")) {
-	        personaInDTO.setIdTipoIdentificacion(1L);
-	    }
-	    personaInDTO.setNumeroIdentificacion(docenteLaborDTO.getIdentificacion());
-	    personaInDTO.setPrimerNombre(docenteLaborDTO.getPrimerNombre());
-	    personaInDTO.setSegundoNombre(docenteLaborDTO.getSegundoNombre());
-	    personaInDTO.setPrimerApellido(docenteLaborDTO.getPrimerApellido());
-	    personaInDTO.setSegundoApellido(docenteLaborDTO.getSegundoApellido());
-	    personaInDTO.setEmail(docenteLaborDTO.getCorreo());
-	    personaInDTO.setEsValidar(Boolean.FALSE);
+	private boolean guardarPersona(DocenteLaborDTO docenteLaborDTO) {
+	    Persona personaConsulta = gestionarPersonaCUIntPort.consultarPersonaPorIdentificacion(1L, docenteLaborDTO.getIdentificacion());
+	    if (personaConsulta == null) {
+	        Persona persona = new Persona();
+	        TipoIdentificacion tipoIdentificacion = new TipoIdentificacion();
+	        if ("Cédula".equals(docenteLaborDTO.getTipoIdentificacion())) {
+	            tipoIdentificacion.setIdTipoIdentificacion(1L);  
+	            persona.setTipoIdentificacion(tipoIdentificacion);
+	        }
+	        persona.setNumeroIdentificacion(docenteLaborDTO.getIdentificacion());
+	        persona.setPrimerNombre(docenteLaborDTO.getPrimerNombre());
+	        persona.setSegundoNombre(docenteLaborDTO.getSegundoNombre());
+	        persona.setPrimerApellido(docenteLaborDTO.getPrimerApellido());
+	        persona.setSegundoApellido(docenteLaborDTO.getSegundoApellido());
+	        persona.setEmail(docenteLaborDTO.getCorreo());
 
-	    try {
-	        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	        HttpHeaders headers = new HttpHeaders();
-	        headers.set("Authorization", "Bearer " + jwtProvider.generateToken(authentication));
-	        HttpEntity<PersonaInDTO> entity = new HttpEntity<>(personaInDTO, headers);
-
-	        ResponseEntity<PersonaOutDTO> response = restTemplate.exchange(
-	                "http://localhost:8081/AdministrarPersona/guardarPersona",
-	                HttpMethod.POST,
-	                entity,
-	                PersonaOutDTO.class);
-
-	        PersonaOutDTO personaOutDTO = response.getBody();
-	    } catch (Exception e) {
-	        throw new RuntimeException("Error en la solicitud POST: " + e.getMessage());
-	    }
+	        this.gestionarPersonaCUIntPort.guardarPersona(persona);
+	        return true; // Persona creada
+	    }   
+	    return false; // Persona ya existente
 	}
 
-	private void guardarDocente(DocenteLaborDTO docenteLaborDTO) {
-	    DocenteInDTO docenteInDTO = new DocenteInDTO();
-	    Long idDepartamento = gestionarDepartamentoCUIntPort.consultarDepartamentoPorNombre(docenteLaborDTO.getDepartamento());
-	    if (idDepartamento == 0L) {
-	        idDepartamento = guardarDepartamentoSiNoExiste(docenteLaborDTO.getDepartamento(), docenteLaborDTO.getOidDepartamento());
+
+
+	private boolean guardarDocente(DocenteLaborDTO docenteLaborDTO, Long idFacultad) {
+	    Docente docenteConsultar = this.consultarDocentePorIdentificacion(1L, docenteLaborDTO.getIdentificacion());
+
+	    if (docenteConsultar == null) {
+	        Docente docente = new Docente();
+	        
+	        // Obtener el departamento si existe
+	        Departamento departamento = gestionarDepartamentoCUIntPort.consultarDepartamentoPorNombre(docenteLaborDTO.getDepartamento());
+
+	        if (departamento == null) {
+	            // Crear un nuevo departamento solo si pertenece a la facultad especificada
+	            departamento = new Departamento();
+	            departamento.setNombre(docenteLaborDTO.getDepartamento());
+	            departamento.setOid(docenteLaborDTO.getOidDepartamento());
+
+	            // Buscar la facultad específica que coincide con el `idFacultad`
+	            Facultad facultad = gestionarFacultadCUIntPort.consultarFacultadPorId(idFacultad);
+	            if (facultad != null) {
+	                departamento.setFacultad(facultad);  // Asignar la facultad al departamento
+	                departamento = gestionarDepartamentoCUIntPort.guardarDepartamento(departamento);  // Guardar el departamento
+	            } else {
+	                System.out.println("Facultad no encontrada para idFacultad: " + idFacultad);
+	                return false; // No se guarda el departamento ni el docente
+	            }
+	        }
+
+	        // Asignar el departamento y otros detalles al docente
+	        Persona persona = gestionarPersonaCUIntPort.consultarPersonaPorIdentificacion(1L, docenteLaborDTO.getIdentificacion());
+	        docente.setPersona(persona);
+	        docente.setEstado(EstadoDocenteEnum.ACTIVO);
+	        docente.setDepartamento(departamento);
+
+	        // Guardar el docente en la base de datos
+	        this.guardarDocente(docente);
+	        return true; 
 	    }
-	    docenteInDTO.setIdDepartamento(idDepartamento);
-	    Persona persona = gestionarPersonaCUIntPort.consultarPersonaPorIdentificacion(1L, docenteLaborDTO.getIdentificacion());
-	    docenteInDTO.setIdPersona(persona.getIdPersona());
-	    docenteInDTO.setCodigo(docenteLaborDTO.getIdentificacion());
-	    docenteInDTO.setEstado(EstadoDocenteEnum.ACTIVO);
-	    docenteInDTO.setEsValidar(Boolean.FALSE);
-
-	    try {
-	        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	        HttpHeaders headers = new HttpHeaders();
-	        headers.set("Authorization", "Bearer " + jwtProvider.generateToken(authentication));
-	        HttpEntity<DocenteInDTO> entity = new HttpEntity<>(docenteInDTO, headers);
-
-	        ResponseEntity<DocenteOutDTO> response = restTemplate.exchange(
-	                "http://localhost:8081/AdministrarDocente/guardarDocente",
-	                HttpMethod.POST,
-	                entity,
-	                DocenteOutDTO.class);
-
-	        DocenteOutDTO docenteOutDTO = response.getBody();
-	    } catch (Exception e) {
-	        throw new RuntimeException("Error en la solicitud POST: " + e.getMessage());
-	    }
+	    return false;
 	}
 
-	private ResponseEntity<String> guardarCurso(DocenteLaborDTO docenteLaborDTO) {
-	    Curso cursoInDTO = new Curso();
-	    cursoInDTO.setGrupo(docenteLaborDTO.getGrupo());
-	    List<Asignatura> asignatura = gestionarAsignaturaCUIntPort.obtenerAsignaturaPorCodigo(docenteLaborDTO.getCodigo());
+	private boolean guardarAsignatura(DocenteLaborDTO docenteLaborDTO, List<String> mensajes) {
+	    List<Asignatura> asignaturasExistentes = gestionarAsignaturaCUIntPort.obtenerAsignaturaPorCodigo(docenteLaborDTO.getCodigo());
+	    if (asignaturasExistentes.isEmpty()) {
+	        Asignatura asignatura = new Asignatura();
+	        asignatura.setNombre(docenteLaborDTO.getNombreMateria());
+	        asignatura.setCodigoAsignatura(docenteLaborDTO.getCodigo());
+	        asignatura.setSemestre(docenteLaborDTO.getSemestre());
+	        asignatura.setHorasSemana(docenteLaborDTO.getHorasSemanales());
 
-	    if (asignatura != null && !asignatura.isEmpty()) {
-	    	cursoInDTO.setAsignatura(new Asignatura());
+	        Programa programa = gestionarProgramaCUIntPort.consultarProgramaPorNombre(docenteLaborDTO.getNombrePrograma());
+	        if (programa == null) {
+	            mensajes.add("Programa no encontrado: " + docenteLaborDTO.getNombrePrograma());
+	            return false;
+	        }
+	        asignatura.setPrograma(programa);
+
+	        gestionarAsignaturaCUIntPort.guardarAsignatura(asignatura);
+	        return true;
 	    } else {
-	        Asignatura nuevaAsignatura = new Asignatura();
-	        nuevaAsignatura.setNombre(docenteLaborDTO.getNombreMateria());
-	        nuevaAsignatura.setCodigoAsignatura(docenteLaborDTO.getCodigo());
-	        nuevaAsignatura.setOID(docenteLaborDTO.getOid());
-	        nuevaAsignatura.setSemestre(docenteLaborDTO.getSemestre());
-	        nuevaAsignatura.setHorasSemana(docenteLaborDTO.getHorasSemanales());
-	        Programa idPrograma = gestionarProgramaCUIntPort.consultarProgramaPorNombre(docenteLaborDTO.getNombrePrograma());
-
-	        if (idPrograma == null) {
-	            return new ResponseEntity<>("Programa no encontrado: " + docenteLaborDTO.getNombrePrograma(), HttpStatus.BAD_REQUEST);
-	        }
-
-	        nuevaAsignatura.setPrograma(idPrograma);
-	        Asignatura asignaturaCreada = gestionarAsignaturaCUIntPort.guardarAsignatura(nuevaAsignatura);
-	        cursoInDTO.setAsignatura(asignaturaCreada);
-	    }
-	    cursoInDTO.getAsignatura().setIdAsignatura(asignatura.get(0).getIdAsignatura());
-	    try {
-	        Curso guardarcurso = gestionarCursoCUIntPort.guardarCurso(cursoInDTO);
-	        if (guardarcurso != null) {
-	            return new ResponseEntity<>("Curso guardado exitosamente", HttpStatus.OK);
-	        } else {
-	            return new ResponseEntity<>("Error al guardar el curso", HttpStatus.INTERNAL_SERVER_ERROR);
-	        }
-	    } catch (Exception e) {
-	        return new ResponseEntity<>("Error general en la solicitud: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	        return false;
 	    }
 	}
 
-	private Long guardarDepartamentoSiNoExiste(String nombreDepartamento, Long oidDepartamento) {		
-	    Long idDepartamento = gestionarDepartamentoCUIntPort.consultarDepartamentoPorNombre(nombreDepartamento);
-	    if (idDepartamento == 0L) {
-	        DepartamentoInDTO nuevoDepartamento = new DepartamentoInDTO();
-	        nuevoDepartamento.setNombre(nombreDepartamento);
-	        nuevoDepartamento.setOid(oidDepartamento);
-	        nuevoDepartamento.setIdFacultad(1L);
-
-	        try {
-	            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	            HttpHeaders headers = new HttpHeaders();
-	            headers.set("Authorization", "Bearer " + jwtProvider.generateToken(authentication));
-	            HttpEntity<DepartamentoInDTO> entity = new HttpEntity<>(nuevoDepartamento, headers);
-
-	            ResponseEntity<DepartamentoOutDTO> response = restTemplate.exchange(
-	                    "http://localhost:8081/AdministrarDepartamento/guardarDepartamento",
-	                    HttpMethod.POST,
-	                    entity,
-	                    DepartamentoOutDTO.class);
-
-	            DepartamentoOutDTO departamentoOutDTO = response.getBody();
-	            idDepartamento = departamentoOutDTO.getIdDepartamento();
-	        } catch (Exception e) {
-	            throw new RuntimeException("Error en la solicitud POST: " + e.getMessage());
-	        }
+	private boolean guardarCurso(DocenteLaborDTO docenteLaborDTO, List<String> mensajes, boolean asignaturaCreada) {
+	    Asignatura asignatura = gestionarAsignaturaCUIntPort.obtenerAsignaturaPorCodigo(docenteLaborDTO.getCodigo()).get(0);
+	    PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort.consultarPeriodoAcademicoVigente();
+	    
+	    if (periodoAcademicoVigente == null) {
+	        mensajes.add("No hay un periodo académico vigente.");
+	        return false;
 	    }
-	    return idDepartamento;
+
+	    boolean cursoExiste = gestionarCursoCUIntPort.existsCursoByGrupoYCupoYPeriodoYAsignatura(
+	        docenteLaborDTO.getGrupo(),
+	        docenteLaborDTO.getCantidadEstudiantes(),
+	        periodoAcademicoVigente.getIdPeriodoAcademico(),
+	        asignatura.getIdAsignatura()
+	    );
+
+	    if (!cursoExiste) {
+	        Curso curso = new Curso();
+	        curso.setGrupo(docenteLaborDTO.getGrupo());
+	        curso.setPeriodoAcademico(periodoAcademicoVigente);
+	        curso.setAsignatura(asignatura);
+	        curso.setCupo(docenteLaborDTO.getCantidadEstudiantes());
+
+	        gestionarCursoCUIntPort.guardarCurso(curso);;
+	        return true;
+	    } else {	        
+	        return false;
+	    }
+	}
+
+	@Override
+	public Long contarDocentes() {
+		return this.gestionarDocenteGatewayIntPort.contarDocente();
 	}
 
 }

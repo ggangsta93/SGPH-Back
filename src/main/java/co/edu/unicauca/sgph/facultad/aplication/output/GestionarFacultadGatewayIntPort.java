@@ -16,4 +16,5 @@ public interface GestionarFacultadGatewayIntPort {
 	 * @return
 	 */
 	public List<Facultad> consultarFacultades();
+	public Facultad consultarFacultadPorId(Long idFacultad);
 }

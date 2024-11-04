@@ -73,4 +73,9 @@ public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPor
 	public List<Asignatura> obtenerAsignaturaPorCodigo(String Codigo) {
 		return this.gestionarAsignaturaGatewayIntPort.obtenerAsignaturaPorCodigo(Codigo);
 	}
+
+	@Override
+	public Long contarAsignaturas() {
+		return this.gestionarAsignaturaGatewayIntPort.contarAsignaturas();
+	}
 }

@@ -49,13 +49,8 @@ public class GestionarDepartamentoGatewayImplAdapter implements GestionarDeparta
     }
 
 	@Override
-	public Long consultarDepartamentoPorNombre(String nombre) {
-		DepartamentoEntity idDepartamento = this.departamentoRepositoryInt
-				.consultarDepartamentoPorNombre(nombre);
-		if (idDepartamento == null || idDepartamento.getIdDepartamento() == null) {
-	        return 0L;
-	    } else {
-	        return idDepartamento.getIdDepartamento();
-	    }	
+	public Departamento consultarDepartamentoPorNombre(String nombre) {
+		DepartamentoEntity departamentoEntity = this.departamentoRepositoryInt.consultarDepartamentoPorNombre(nombre);	    
+	    return departamentoEntity != null ? this.modelMapper.map(departamentoEntity, Departamento.class) : null;
 	}
 }

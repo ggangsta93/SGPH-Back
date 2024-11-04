@@ -20,7 +20,7 @@ public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
 	 * @param idAsignatura
 	 * @return
 	 */
-	@Deprecated
+	
 	public CursoEntity findByGrupoAndAsignatura(String grupo, AsignaturaEntity asignatura);
 
 	/**
@@ -83,4 +83,8 @@ public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
 		       "WHERE curso.idCurso = :idCurso " +
 		       "AND (size(curso.docentes) > 0 OR size(curso.horarios) > 0)")
 	public List<CursoEntity> consultarExisteDocenteAsociadoAlCurso(@Param("idCurso") Long idCurso);
+	
+	@Query("SELECT c FROM CursoEntity c WHERE c.grupo = :grupo AND c.cupo = :cupo AND c.periodoAcademico.idPeriodoAcademico = :periodoAcademico AND c.asignatura.idAsignatura = :idAsignatura")
+	public List<CursoEntity> existsCursoByGrupoYCupoYPeriodoYAsignatura(@Param("grupo") String grupo, @Param("cupo") Integer cupo, @Param("periodoAcademico") Long periodoAcademico, @Param("idAsignatura") Long idAsignatura);
+
 }

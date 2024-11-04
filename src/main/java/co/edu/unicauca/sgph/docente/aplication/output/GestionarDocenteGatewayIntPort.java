@@ -103,4 +103,6 @@ public interface GestionarDocenteGatewayIntPort {
 	void guardarLaborDocente(DocenteLaborDTO docenteLaborDTO);
 	
 	public Long obtenerIdDepartamentoPorNombre(String nombreDepartamento);
+	
+	public Long contarDocente();
 }
