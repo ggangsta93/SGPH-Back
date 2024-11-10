@@ -182,8 +182,8 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		 */
 		if (Objects.nonNull(periodoAcademicoVigente)) {
 
-			if (this.cursoPerteneceAlPeriodoAcademicoVigente(crearActualizarDocentesCursoInDTO.getIdCurso(),
-					periodoAcademicoVigente.getIdPeriodoAcademico())) {
+			if (Boolean.TRUE.equals(this.cursoPerteneceAlPeriodoAcademicoVigente(crearActualizarDocentesCursoInDTO.getIdCurso(),
+					periodoAcademicoVigente.getIdPeriodoAcademico()))) {
 
 				// Se validan que los docentes existan y estén en estado ACTIVO
 				this.validarExistenciaYEstadoActivoDocentes(crearActualizarDocentesCursoInDTO);
@@ -312,8 +312,8 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		 */
 		if (Objects.nonNull(periodoAcademicoVigente)) {
 
-			if (this.cursoPerteneceAlPeriodoAcademicoVigente(idCurso,
-					periodoAcademicoVigente.getIdPeriodoAcademico())) {
+			if (Boolean.TRUE.equals(this.cursoPerteneceAlPeriodoAcademicoVigente(idCurso,
+					periodoAcademicoVigente.getIdPeriodoAcademico()))) {
 
 				Object[] infoCurso =new Object[3];
 						
@@ -673,8 +673,8 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		 */
 		if (Objects.nonNull(periodoAcademicoVigente)) {
 			
-			if (this.cursoPerteneceAlPeriodoAcademicoVigente(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
-					periodoAcademicoVigente.getIdPeriodoAcademico())) {
+			if (Boolean.TRUE.equals(this.cursoPerteneceAlPeriodoAcademicoVigente(filtroFranjaHorariaDisponibleCursoDTO.getIdCurso(),
+					periodoAcademicoVigente.getIdPeriodoAcademico()))) {
 
 				// Se consulta las franjas horarias actuales del curso
 				List<FranjaHorariaBasicaDTO> lstFranjasHorariasCurso = this.gestionarPlanificacionManualGatewayIntPort
@@ -806,7 +806,7 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 							.seSuperponeConFranjasEspaciosFisicos(franjaCandidata, entry.getValue());
 					
 					// Se validan las restricciones
-					if (noseSuperponeConFranjasEspaciosFisicos) {
+					if (Boolean.TRUE.equals(noseSuperponeConFranjasEspaciosFisicos)) {
 						// Se adiciona la franja candidata como franja posible
 						listaDeFranjasDisponibles.add(new FranjaHorariaCursoDTO(entry.getKey(), franjaCandidata.getDia(),
 								franjaCandidata.getHoraInicio(), franjaCandidata.getHoraFin()));
@@ -1119,8 +1119,8 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		 * pertenezca al mismo
 		 */
 		if (Objects.nonNull(periodoAcademicoVigente)) {
-			if (this.cursoPerteneceAlPeriodoAcademicoVigente(idCurso,
-					periodoAcademicoVigente.getIdPeriodoAcademico())) {
+			if (Boolean.TRUE.equals(this.cursoPerteneceAlPeriodoAcademicoVigente(idCurso,
+					periodoAcademicoVigente.getIdPeriodoAcademico()))) {
 				
 				Object[] infoBasicaCurso =new Object[3]; 
 						
