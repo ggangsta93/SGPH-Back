@@ -1,7 +1,5 @@
 package co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse;
 
-import java.util.List;
-
 public class AgrupadorEspacioFisicoDTO {
 	private String nombreFacultad;
     private Long idFacultad;
@@ -9,6 +7,7 @@ public class AgrupadorEspacioFisicoDTO {
     private String nombre;
 
     public AgrupadorEspacioFisicoDTO() {
+    	//Constructor sin implementación
     }
 
     public String getNombreFacultad() {

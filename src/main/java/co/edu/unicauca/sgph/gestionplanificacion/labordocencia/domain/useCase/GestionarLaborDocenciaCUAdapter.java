@@ -2,7 +2,6 @@ package co.edu.unicauca.sgph.gestionplanificacion.labordocencia.domain.useCase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -223,7 +223,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 			mensaje.setDescripcion("Error al leer el archivo");
 		}
 		MensajeOutDTO mensaje = this.validarAsignaturas(asignaturas);
-		if (mensaje.getError()) {
+		if (Boolean.TRUE.equals(mensaje.getError())) {
 			return mensaje;
 		}
 		// Guardar
@@ -313,7 +313,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		asignaturaOutDTO.setNombrePrograma(entidad.getPrograma().getNombre());
 		asignaturaOutDTO.setNombreFacultad(entidad.getPrograma().getFacultad().getNombre());
 		asignaturaOutDTO.setSemestre(entidad.getSemestre());
-		asignaturaOutDTO.setAgrupadores(entidad.getAgrupadores().stream().map(this::mapAgrupador).collect(Collectors.toList()));
+		asignaturaOutDTO.setAgrupadores(entidad.getAgrupadores().stream().map(this::mapAgrupador).toList());
 		asignaturaOutDTO.setIdFacultad(entidad.getPrograma().getFacultad().getIdFacultad());
 		if (entidad.getEstado() != null) {
 			asignaturaOutDTO.setEstado(entidad.getEstado().name());

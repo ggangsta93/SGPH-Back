@@ -16,11 +16,13 @@ import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.
 public interface AsignaturaRepositoryInt extends JpaRepository<AsignaturaEntity, Long> {
 		
 	/**
-	 * Método encargado de obtener las materias de un programa
+	 * Método encargado de consultar las asignaturas por programa y estado<br>
 	 * 
 	 * @author apedro
 	 * 
 	 * @param idPrograma
+	 * @param estadoAsignaturaEnum Estado de la asignatura (Si es nulo se obtienen
+	 *                             todos)
 	 * @return
 	 */
 	@Query("SELECT asi "

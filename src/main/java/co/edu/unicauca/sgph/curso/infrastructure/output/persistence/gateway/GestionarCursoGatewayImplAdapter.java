@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.repository.AsignaturaRepositoryInt;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
@@ -15,8 +14,6 @@ import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.repository.CursoRepositoryInt;
-import co.edu.unicauca.sgph.docente.domain.model.Docente;
-import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
 
 @Service
 public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIntPort {
