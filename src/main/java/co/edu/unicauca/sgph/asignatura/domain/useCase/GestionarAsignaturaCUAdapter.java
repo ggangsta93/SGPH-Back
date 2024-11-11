@@ -11,6 +11,7 @@ import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 
 public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPort {
@@ -33,11 +34,14 @@ public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPor
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort#consultarAsignaturasPorIdPrograma(java.lang.Long)
+	 * @see co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort#consultarAsignaturasPorIdProgramaYEstado(java.lang.Long,
+	 *      co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum)
 	 */
 	@Override
-	public List<Asignatura> consultarAsignaturasPorIdPrograma(Long idPrograma) {
-		return this.gestionarAsignaturaGatewayIntPort.consultarAsignaturasPorIdPrograma(idPrograma);
+	public List<Asignatura> consultarAsignaturasPorIdProgramaYEstado(Long idPrograma,
+			EstadoAsignaturaEnum estadoAsignaturaEnum) {
+		return this.gestionarAsignaturaGatewayIntPort.consultarAsignaturasPorIdProgramaYEstado(idPrograma,
+				estadoAsignaturaEnum);
 	}
 
 	@Override

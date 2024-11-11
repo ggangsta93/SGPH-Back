@@ -17,6 +17,7 @@ import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.Asignatur
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 
@@ -48,16 +49,17 @@ public class AsignaturaController extends CommonEJB {
 	}
 
 	/**
-	 * Método encargado de consultar las asignaturas por programa <br>
+	 * Método encargado de consultar las asignaturas activas por programa<br>
 	 * 
 	 * @author apedro
 	 * 
 	 * @param idPrograma
 	 * @return
 	 */
-	@GetMapping("/consultarAsignaturasPorIdPrograma")
-	public List<AsignaturaOutDTO> consultarAsignaturasPorIdPrograma(@RequestParam Long idPrograma) {
-		List<Asignatura> asignaturas = this.gestionarAsignaturaCUIntPort.consultarAsignaturasPorIdPrograma(idPrograma);
+	@GetMapping("/consultarAsignaturasActivasPorIdPrograma")
+	public List<AsignaturaOutDTO> consultarAsignaturasActivasPorIdPrograma(@RequestParam Long idPrograma) {
+		List<Asignatura> asignaturas = this.gestionarAsignaturaCUIntPort
+				.consultarAsignaturasPorIdProgramaYEstado(idPrograma, EstadoAsignaturaEnum.ACTIVO);
 		return this.asignaturaRestMapper.toLstAsignaturaOutDTO(asignaturas);
 	}
 	

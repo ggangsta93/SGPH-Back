@@ -26,8 +26,9 @@ public interface AsignaturaRepositoryInt extends JpaRepository<AsignaturaEntity,
 	@Query("SELECT asi "
 			+ " FROM AsignaturaEntity asi "
 			+ " WHERE asi.programa.idPrograma =:idPrograma "
+			+ " AND (:estadoAsignaturaEnum IS NULL OR asi.estado =:estadoAsignaturaEnum) "
 			+ " ORDER BY asi.semestre ")
-    public List<AsignaturaEntity> consultarAsignaturasPorIdPrograma(@Param("idPrograma") Long idPrograma);
+    public List<AsignaturaEntity> consultarAsignaturasPorIdProgramaYEstado(@Param("idPrograma") Long idPrograma, EstadoAsignaturaEnum estadoAsignaturaEnum);
 
 	Page<AsignaturaEntity> findByProgramaIdProgramaAndSemestre(Long idPrograma, Optional<Integer> semestre, Pageable pageable);
 

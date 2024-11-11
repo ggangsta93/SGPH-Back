@@ -46,32 +46,6 @@ public class PlanificacionManualController extends CommonEJB{
 		this.planificacionManualRestMapper = planificacionManualRestMapper;
 	}
 
-	/*
-	 * @Deprecated
-	 * 
-	 * @GetMapping("/consultarCruceHorarioDocente") public List<Object[]>
-	 * consultarCruceHorarioDocente(@RequestParam Long idCurso, @RequestParam
-	 * DiaSemanaEnum dia,
-	 * 
-	 * @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaInicio,
-	 * 
-	 * @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaFin) { return
-	 * this.gestionarHorarioCUIntPort.consultarCruceHorarioDocente(idCurso, dia,
-	 * horaInicio, horaFin); }
-	 * 
-	 * @Deprecated
-	 * 
-	 * @GetMapping("/consultarCruceHorarioAula") public List<HorarioOutDTO>
-	 * consultarCruceHorarioAula(@RequestParam List<Long> lstIdAula,
-	 * 
-	 * @RequestParam DiaSemanaEnum dia, @RequestParam @DateTimeFormat(pattern =
-	 * "HH:mm") LocalTime horaInicio,
-	 * 
-	 * @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaFin) { return
-	 * this.horarioRestMapper.toLstHorarioOutDTO(this.gestionarHorarioCUIntPort
-	 * .consultarCruceHorarioAula(lstIdAula, dia, horaInicio, horaFin)); }
-	 */
-
 	/*************************************************
 	 * Planificación manual
 	 *************************************************/

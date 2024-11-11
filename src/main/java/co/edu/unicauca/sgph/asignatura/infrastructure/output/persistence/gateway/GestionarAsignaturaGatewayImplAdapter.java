@@ -12,16 +12,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoDTO;
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
-import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
-import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
-import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
-import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.repository.ProgramaRepositoryInt;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -40,17 +39,18 @@ import org.springframework.stereotype.Service;
 import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AgrupadorEspacioFisicoDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.repository.AsignaturaRepositoryInt;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
+import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
+import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.repository.ProgramaRepositoryInt;
 
 @Service
 public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignaturaGatewayIntPort {
@@ -98,14 +98,14 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 				Asignatura.class);
 
 	}
-
-	/**
-	 * @see co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort#consultarAsignaturasPorIdPrograma(java.lang.Long)
+	
+	/** 
+	 * @see co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort#consultarAsignaturasPorIdProgramaYEstado(java.lang.Long, co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum)
 	 */
 	@Override
-	public List<Asignatura> consultarAsignaturasPorIdPrograma(Long idPrograma) {
+	public List<Asignatura> consultarAsignaturasPorIdProgramaYEstado(Long idPrograma, EstadoAsignaturaEnum estadoAsignaturaEnum) {
 		List<AsignaturaEntity> lstAsignaturaEntity = this.asignaturaRepositoryInt
-				.consultarAsignaturasPorIdPrograma(idPrograma);
+				.consultarAsignaturasPorIdProgramaYEstado(idPrograma, estadoAsignaturaEnum);
 		if (lstAsignaturaEntity.isEmpty()) {
 			return new ArrayList<>();
 		} else {
@@ -283,7 +283,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 			predicate2 = criteriaBuilder.and(criteriaBuilder.equal(root2.get("semestre"), filtro.getSemestre()), predicate2);
 		}
 		if (filtro.getEstado() != null) {
-			predicate2 = criteriaBuilder.and(criteriaBuilder.equal(root2.get("estado"), filtro.getSemestre()), predicate2);
+			predicate2 = criteriaBuilder.and(criteriaBuilder.equal(root2.get("estado"), filtro.getEstado()), predicate2);
 		}
 		if (filtro.getIdProgramas() != null) {
 			List<Expression<Boolean>> expressions = new ArrayList<>();
@@ -316,7 +316,7 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		asignaturaOutDTO.setAgrupadores(entidad.getAgrupadores().stream().map(this::mapAgrupador).collect(Collectors.toList()));
 		asignaturaOutDTO.setIdFacultad(entidad.getPrograma().getFacultad().getIdFacultad());
 		if (entidad.getEstado() != null) {
-			asignaturaOutDTO.setEstado(entidad.getEstado().getDescripcionEstado());
+			asignaturaOutDTO.setEstado(entidad.getEstado().name());
 		}
 		asignaturaOutDTO.setAplicaEspacioSecundario(entidad.getAplicaEspacioSecundario());
 		return asignaturaOutDTO;
