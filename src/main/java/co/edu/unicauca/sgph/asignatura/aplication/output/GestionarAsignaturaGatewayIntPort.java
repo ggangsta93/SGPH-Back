@@ -35,6 +35,20 @@ public interface GestionarAsignaturaGatewayIntPort {
 	 */
 	public List<Asignatura> consultarAsignaturasPorIdProgramaYEstado(Long idPrograma,
 			EstadoAsignaturaEnum estadoAsignaturaEnum);
+	
+	
+	/**
+	 * Método encargado de consultar las asignaturas de los cursos del periodo
+	 * vigente para un programa<br>
+	 * 
+	 * @author apedro
+	 * 
+	 * @param idPrograma
+	 * @param idPeriodoAcademicoVigente Periodo académico vigente 
+	 * 
+	 * @return
+	 */
+	public List<Asignatura> consultarAsignaturasDeLosCursosPorIdPrograma(Long idPrograma, Long idPeriodoAcademicoVigente);
 
     AsignaturaOutDTO obtenerAsignaturaPorId(Long idAsignatura);
 

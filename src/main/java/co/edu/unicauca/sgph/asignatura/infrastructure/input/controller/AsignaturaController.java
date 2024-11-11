@@ -63,6 +63,22 @@ public class AsignaturaController extends CommonEJB {
 		return this.asignaturaRestMapper.toLstAsignaturaOutDTO(asignaturas);
 	}
 	
+	/**
+	 * Método encargado de consultar las asignaturas de los cursos del periodo
+	 * vigente para un programa<br>
+	 * 
+	 * @author apedro
+	 * 
+	 * @param idPrograma
+	 * @return
+	 */
+	@GetMapping("/consultarAsignaturasDeLosCursosPorIdPrograma")
+	public List<AsignaturaOutDTO> consultarAsignaturasDeLosCursosPorIdPrograma(@RequestParam Long idPrograma) {
+		List<Asignatura> asignaturas = this.gestionarAsignaturaCUIntPort
+				.consultarAsignaturasDeLosCursosPorIdPrograma(idPrograma);
+		return this.asignaturaRestMapper.toLstAsignaturaOutDTO(asignaturas);
+	}
+
 	@GetMapping("/consultarAsignaturaPorId")
 	public AsignaturaOutDTO obtenerAsignaturaPorId(@RequestParam Long idAsignatura) {
 		return this.gestionarAsignaturaCUIntPort.obtenerAsignaturaPorId(idAsignatura);

@@ -374,6 +374,22 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		mensaje.setDescripcion("Asignaturas cargadas correctamente");
 		return mensaje;
 	}
-
+	
+	/** 
+	 * @see co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort#consultarAsignaturasDeLosCursosPorIdPrograma(java.lang.Long, java.lang.Long)
+	 */
+	@Override
+	public List<Asignatura> consultarAsignaturasDeLosCursosPorIdPrograma(Long idPrograma,
+			Long idPeriodoAcademicoVigente) {
+		List<AsignaturaEntity> lstAsignaturaEntity = this.asignaturaRepositoryInt
+				.consultarAsignaturasDeLosCursosPorIdProgramaYPeriodoAcademicoVigente(idPrograma,
+						idPeriodoAcademicoVigente);
+		if (lstAsignaturaEntity.isEmpty()) {
+			return new ArrayList<>();
+		} else {
+			return this.asignaturaMapper.map(lstAsignaturaEntity, new TypeToken<List<Asignatura>>() {
+			}.getType());
+		}
+	}
 
 }

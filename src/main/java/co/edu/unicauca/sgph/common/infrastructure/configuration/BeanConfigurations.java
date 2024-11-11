@@ -80,8 +80,10 @@ public class BeanConfigurations {
 	@Bean
 	GestionarAsignaturaCUAdapter crearGestionarAsignaturaCUInt(
 			GestionarAsignaturaGatewayIntPort gestionarProgramaGatewayIntPort,
-			AsignaturaFormatterResultsIntPort asignaturaFormatterResultsIntPort) {
-		return new GestionarAsignaturaCUAdapter(gestionarProgramaGatewayIntPort, asignaturaFormatterResultsIntPort);
+			AsignaturaFormatterResultsIntPort asignaturaFormatterResultsIntPort,
+			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort) {
+		return new GestionarAsignaturaCUAdapter(gestionarProgramaGatewayIntPort, asignaturaFormatterResultsIntPort,
+				gestionarPeriodoAcademicoGatewayIntPort);
 	}
 
 	@Bean

@@ -121,7 +121,6 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 		// Se valida que exista periodo académico vigente
 		if (Objects.isNull(periodoAcademicoVigente)) {
 			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
-
 		}
 
 		Page<CursoPlanificacionOutDTO> listaCursosDTO = this.gestionarPlanificacionManualGatewayIntPort

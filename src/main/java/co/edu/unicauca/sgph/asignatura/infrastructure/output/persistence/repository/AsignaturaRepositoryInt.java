@@ -31,6 +31,25 @@ public interface AsignaturaRepositoryInt extends JpaRepository<AsignaturaEntity,
 			+ " AND (:estadoAsignaturaEnum IS NULL OR asi.estado =:estadoAsignaturaEnum) "
 			+ " ORDER BY asi.semestre ")
     public List<AsignaturaEntity> consultarAsignaturasPorIdProgramaYEstado(@Param("idPrograma") Long idPrograma, EstadoAsignaturaEnum estadoAsignaturaEnum);
+		
+	/**
+	 * Método encargado de consultar las asignaturas de los cursos del periodo
+	 * vigente de un programa<br>
+	 * 
+	 * @author apedro
+	 * 
+	 * @param idPrograma
+	 * @param idPeriodoAcademicoVigente 
+	 * @return
+	 */
+	@Query("SELECT DISTINCT(asi) "
+			+ " FROM CursoEntity cur "
+			+ " JOIN cur.asignatura asi "
+			+ " WHERE asi.programa.idPrograma =:idPrograma "
+			+ " AND cur.periodoAcademico.idPeriodoAcademico =:idPeriodoAcademicoVigente "
+			+ " ORDER BY asi.semestre ")
+    public List<AsignaturaEntity> consultarAsignaturasDeLosCursosPorIdProgramaYPeriodoAcademicoVigente(Long idPrograma, Long idPeriodoAcademicoVigente);	
+	
 
 	Page<AsignaturaEntity> findByProgramaIdProgramaAndSemestre(Long idPrograma, Optional<Integer> semestre, Pageable pageable);
 
