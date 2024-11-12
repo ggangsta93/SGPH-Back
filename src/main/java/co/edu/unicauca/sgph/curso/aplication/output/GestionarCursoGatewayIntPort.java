@@ -1,8 +1,12 @@
 package co.edu.unicauca.sgph.curso.aplication.output;
 
 import java.util.List;
+import java.util.Optional;
 
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
+import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
+import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 
 public interface GestionarCursoGatewayIntPort {
 
@@ -71,4 +75,8 @@ public interface GestionarCursoGatewayIntPort {
 	
 	public Boolean existsCursoByGrupoYCupoYPeriodoYAsignatura(String grupo, Integer cupo, Long idPeriodo,
 			Long idAsignatura);
+	
+	public List<Curso> findCursoByGrupoYCupoYPeriodoYAsignatura(String grupo, Long idAsignatura);
+	
+	public int actualizarCurso(PeriodoAcademicoEntity periodoAcademico, Integer cupo, String grupo, Long asignaturaId) ;
 }

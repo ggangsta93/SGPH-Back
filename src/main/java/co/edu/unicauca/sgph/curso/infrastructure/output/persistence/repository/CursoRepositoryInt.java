@@ -2,12 +2,18 @@ package co.edu.unicauca.sgph.curso.infrastructure.output.persistence.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
+import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
+import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 
 public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
 
@@ -87,4 +93,17 @@ public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
 	@Query("SELECT c FROM CursoEntity c WHERE c.grupo = :grupo AND c.cupo = :cupo AND c.periodoAcademico.idPeriodoAcademico = :periodoAcademico AND c.asignatura.idAsignatura = :idAsignatura")
 	public List<CursoEntity> existsCursoByGrupoYCupoYPeriodoYAsignatura(@Param("grupo") String grupo, @Param("cupo") Integer cupo, @Param("periodoAcademico") Long periodoAcademico, @Param("idAsignatura") Long idAsignatura);
 
+	@Query("SELECT c FROM CursoEntity c WHERE c.grupo = :grupo AND c.asignatura.id = :idAsignatura")
+	List<CursoEntity> findCursoByGrupoYCupoYPeriodoYAsignatura(
+	    @Param("grupo") String grupo,
+	    @Param("idAsignatura") Long idAsignatura
+	);
+
+	@Modifying
+	@Transactional
+    @Query("UPDATE CursoEntity c SET c.periodoAcademico = :periodoAcademico, c.cupo = :cupo WHERE c.grupo = :grupo AND c.asignatura.id = :asignaturaId")
+    int actualizarCurso(@Param("periodoAcademico") PeriodoAcademicoEntity periodoAcademico,
+                        @Param("cupo") 	Integer cupo,
+                        @Param("grupo") String grupo,
+                        @Param("asignaturaId") Long asignaturaId);
 }

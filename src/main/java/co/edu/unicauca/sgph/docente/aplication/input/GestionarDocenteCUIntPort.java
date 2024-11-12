@@ -72,7 +72,7 @@ public interface GestionarDocenteCUIntPort {
 
 	ReporteDocenteDTO consultaLaborDocente(ReporteDocenteDTO idPrograma);
 	
-	public List<String> procesarLaborDocenteDesdeJson(List<DocenteLaborDTO> docenteLaborDTOList, Long idFacultad) throws IOException;
+	public List<String> procesarLaborDocenteDesdeJson(List<DocenteLaborDTO> docenteLaborDTOList, Long idFacultad, Long idPrograma) throws IOException;
 	
 	public Long contarDocentes();
 }

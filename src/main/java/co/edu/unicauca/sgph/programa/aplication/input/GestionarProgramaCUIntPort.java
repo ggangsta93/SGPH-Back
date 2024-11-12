@@ -39,4 +39,6 @@ public interface GestionarProgramaCUIntPort {
 	 * @return
 	 */
 	public List<Programa> consultarProgramasPermitidosPorUsuario();
+	
+	public Programa consultarProgramaPorId(Long idProgrma);
 }

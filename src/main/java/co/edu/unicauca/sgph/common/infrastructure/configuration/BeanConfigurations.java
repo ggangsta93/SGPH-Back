@@ -3,6 +3,8 @@ package co.edu.unicauca.sgph.common.infrastructure.configuration;
 import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
 import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
 import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
@@ -109,7 +111,8 @@ public class BeanConfigurations {
 			GestionarProgramaCUIntPort gestionarProgramaCUIntPort,
 			GestionarFacultadCUIntPort gestionarFacultadCUIntPort,
 			RestTemplate restTemplate,  
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            ModelMapper modelMapper) {
 		return new GestionarDocenteCUAdapter(
 				gestionarDocenteGatewayIntPort,
 				docenteFormatterResultsIntPort,
@@ -122,7 +125,8 @@ public class BeanConfigurations {
 				gestionarProgramaCUIntPort,
 				gestionarFacultadCUIntPort,
 				restTemplate, 
-		        objectMapper);
+		        objectMapper,
+		        modelMapper);
 	}
 
 	@Bean

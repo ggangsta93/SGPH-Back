@@ -1,18 +1,24 @@
 package co.edu.unicauca.sgph.curso.infrastructure.output.persistence.gateway;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.repository.CursoRepositoryInt;
+import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 
 @Service
 public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIntPort {
@@ -44,9 +50,15 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 	 * @see co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort#guardarCurso(co.edu.unicauca.sgph.curso.domain.model.Curso)
 	 */
 	@Override
+	@Transactional
 	public Curso guardarCurso(Curso curso) {
-		return this.modelMapper.map(this.cursoRepositoryInt.save(this.modelMapper.map(curso, CursoEntity.class)),
-				Curso.class);
+		CursoEntity cursoEntity = this.modelMapper.map(curso, CursoEntity.class);
+	    CursoEntity savedEntity = this.cursoRepositoryInt.save(cursoEntity);
+
+	    // Forzar sincronización con la base de datos
+	    this.cursoRepositoryInt.flush();
+
+	    return this.modelMapper.map(savedEntity, Curso.class);
 	}
 
 	/**
@@ -115,5 +127,17 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 		return !cursos.isEmpty();
 	}
 
-	
+	@Override
+	public List<Curso> findCursoByGrupoYCupoYPeriodoYAsignatura(String grupo, Long idAsignatura) {
+		List<CursoEntity> lstCursoEntity = this.cursoRepositoryInt
+				.findCursoByGrupoYCupoYPeriodoYAsignatura(grupo, idAsignatura);
+		return this.modelMapper.map(lstCursoEntity, new TypeToken<List<Curso>>() {
+		}.getType());
+	}
+
+	@Override
+	public int actualizarCurso(PeriodoAcademicoEntity periodoAcademico, Integer cupo, String grupo, Long asignaturaId) {
+		Integer actualizacion = this.cursoRepositoryInt.actualizarCurso(periodoAcademico, cupo, grupo, asignaturaId);
+		return actualizacion;
+	}
 }

@@ -150,8 +150,8 @@ public class DocenteController extends CommonEJB{
 	@Autowired
 	private Validator validator;
 	
-	@PostMapping("/importar/{idFacultad}")
-	public ResponseEntity<?> importarLaborDocente(@RequestBody List<DocenteLaborDTO> docenteLaborDTOList, @PathVariable Long idFacultad, BindingResult result) {
+	@PostMapping("/importar/{idFacultad}/{idPrograma}")
+	public ResponseEntity<?> importarLaborDocente(@RequestBody List<DocenteLaborDTO> docenteLaborDTOList, @PathVariable Long idFacultad, @PathVariable Long idPrograma, BindingResult result) {
 	    // Verificar si hay errores de validación en la lista de DocenteLaborDTO
 		List<String> erroresConContexto = new ArrayList<>();
 
@@ -183,7 +183,7 @@ public class DocenteController extends CommonEJB{
 
 	    try {
 	        // Procesar la lista validada y llamar al servicio
-	        List<String> mensajes = this.gestionarDocenteCUIntPort.procesarLaborDocenteDesdeJson(docenteLaborDTOList, idFacultad);
+	        List<String> mensajes = this.gestionarDocenteCUIntPort.procesarLaborDocenteDesdeJson(docenteLaborDTOList, idFacultad, idPrograma);
 	        return ResponseEntity.ok(mensajes);
 
 	    } catch (ConstraintViolationException ex) {

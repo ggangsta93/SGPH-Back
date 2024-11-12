@@ -1,8 +1,15 @@
 package co.edu.unicauca.sgph.curso.aplication.input;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
+
+import org.springframework.data.repository.query.Param;
 
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
+import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 
 public interface GestionarCursoCUIntPort {
 
@@ -57,4 +64,9 @@ public interface GestionarCursoCUIntPort {
 	Boolean existsCursoByGrupoYAsignatura(String grupo, Long idAsignatura);
 	
 	Boolean existsCursoByGrupoYCupoYPeriodoYAsignatura(String grupo, Integer cupo, Long idPeriodo, Long idAsignatura);
+	
+	List<Curso> findCursoByGrupoYCupoYPeriodoYAsignatura(String grupo, Long idAsignatura);
+	
+	@Transactional
+	int actualizarCurso(PeriodoAcademicoEntity periodoAcademico, Integer cupo, String grupo, Long asignaturaId);
 }

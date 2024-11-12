@@ -55,4 +55,9 @@ public class GestionarProgramaCUAdapter implements GestionarProgramaCUIntPort {
 	public List<Programa> consultarProgramasPermitidosPorUsuario() {
 		return this.gestionarProgramaGatewayIntPort.consultarProgramasPermitidosPorUsuario();
 	}
+
+	@Override
+	public Programa consultarProgramaPorId(Long idProgrma) {
+		return this.gestionarProgramaGatewayIntPort.consultarProgramaPorId(idProgrma);
+	}
 }

@@ -1,11 +1,16 @@
 package co.edu.unicauca.sgph.curso.domain.useCase;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
 import co.edu.unicauca.sgph.curso.aplication.output.CursoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
+import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 
 public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
 
@@ -76,4 +81,15 @@ public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
 			Long idAsignatura) {
 		return this.gestionarCursoGatewayIntPort.existsCursoByGrupoYCupoYPeriodoYAsignatura(grupo, cupo, idPeriodo, idAsignatura);
 	}
+
+	@Override
+	public List<Curso> findCursoByGrupoYCupoYPeriodoYAsignatura(String grupo, Long idAsignatura) {
+		return this.gestionarCursoGatewayIntPort.findCursoByGrupoYCupoYPeriodoYAsignatura(grupo, idAsignatura);
+	}
+
+	@Override
+	public int actualizarCurso(PeriodoAcademicoEntity periodoAcademico, Integer cupo, String grupo, Long asignaturaId) {
+		return this.gestionarCursoGatewayIntPort.actualizarCurso(periodoAcademico, cupo, grupo, asignaturaId);
+	}
+
 }

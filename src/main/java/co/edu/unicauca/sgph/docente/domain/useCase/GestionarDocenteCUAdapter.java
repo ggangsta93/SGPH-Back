@@ -6,15 +6,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,6 +42,7 @@ import co.edu.unicauca.sgph.facultad.aplication.input.GestionarFacultadCUIntPort
 import co.edu.unicauca.sgph.facultad.domain.model.Facultad;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
 import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
 import co.edu.unicauca.sgph.persona.domain.model.Persona;
 import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
@@ -61,6 +66,7 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	private final GestionarFacultadCUIntPort gestionarFacultadCUIntPort;
 	private final ObjectMapper objectMapper;
 	private final RestTemplate restTemplate;
+	private final ModelMapper modelMapper;
 	
 	@Autowired
 	private JwtProvider jwtProvider; 
@@ -77,7 +83,8 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 			GestionarProgramaCUIntPort gestionarProgramaCUIntPort,
 			GestionarFacultadCUIntPort gestionarFacultadCUIntPort,
 			RestTemplate restTemplate,
-            ObjectMapper objectMapper) {
+            ObjectMapper objectMapper,
+            ModelMapper modelMapper) {
 		this.gestionarDocenteGatewayIntPort = gestionarDocenteGatewayIntPort;
 		this.docenteFormatterResultsIntPort = docenteFormatterResultsIntPort;
 		this.gestionarPeriodoAcademicoGatewayIntPort = gestionarPeriodoAcademicoGatewayIntPort;
@@ -90,6 +97,7 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 		this.gestionarFacultadCUIntPort = gestionarFacultadCUIntPort;
 		this.restTemplate = restTemplate; 
         this.objectMapper = objectMapper;
+        this.modelMapper = modelMapper;
 	}
 
 	@Override
@@ -268,7 +276,7 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	}
 
 	@Override
-	public List<String> procesarLaborDocenteDesdeJson(List<DocenteLaborDTO> docenteLaborDTOList, Long idFacultad) throws IOException {
+	public List<String> procesarLaborDocenteDesdeJson(List<DocenteLaborDTO> docenteLaborDTOList, Long idFacultad, Long idPrograma) throws IOException {
 		List<String> mensajes = new ArrayList<>();
 
 	    // Crear una instancia de Validator
@@ -288,9 +296,14 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	        }
 	    }
 
-	    // Consultar programas y mapear los nombres de los programas
-	    List<Programa> programas = gestionarProgramaCUIntPort.consultarProgramasPorIdFacultad(Collections.singletonList(idFacultad));
-	    Set<String> programasNombres = programas.stream().map(Programa::getNombre).collect(Collectors.toSet());
+	    // Consultar el programa específico para validar que los datos pertenezcan a este programa
+	    Programa programa = gestionarProgramaCUIntPort.consultarProgramaPorId(idPrograma);
+	    if (programa == null) {
+	        mensajes.add("Programa no encontrado para idPrograma: " + idPrograma);
+	        return mensajes;
+	    }
+
+	    Set<String> programasNombres = Collections.singleton(programa.getNombre());
 
 	    int cursosCreados = 0;
 	    int asignaturasCreadas = 0;
@@ -298,9 +311,11 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 
 	    for (DocenteLaborDTO docenteLaborDTO : docenteLaborDTOList) {
 	        String programaNombre = docenteLaborDTO.getNombrePrograma();
+	        
+	        // Verificar si el nombre del programa coincide con el programa especificado por `idPrograma`
 	        if (programasNombres.contains(programaNombre)) {
 	            guardarPersona(docenteLaborDTO);
-	            
+
 	            if (guardarDocente(docenteLaborDTO, idFacultad)) {
 	                docentesCreados++;
 	            } 
@@ -413,8 +428,10 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	    }
 	}
 
+	@Transactional
 	private boolean guardarCurso(DocenteLaborDTO docenteLaborDTO, List<String> mensajes, boolean asignaturaCreada) {
 	    Asignatura asignatura = gestionarAsignaturaCUIntPort.obtenerAsignaturaPorCodigo(docenteLaborDTO.getCodigo()).get(0);
+	    
 	    PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort.consultarPeriodoAcademicoVigente();
 	    
 	    if (periodoAcademicoVigente == null) {
@@ -422,26 +439,31 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	        return false;
 	    }
 
-	    boolean cursoExiste = gestionarCursoCUIntPort.existsCursoByGrupoYCupoYPeriodoYAsignatura(
-	        docenteLaborDTO.getGrupo(),
+	    PeriodoAcademicoEntity periodoAcademicoEntity = modelMapper.map(periodoAcademicoVigente, PeriodoAcademicoEntity.class);
+
+	    int rowsUpdated = gestionarCursoCUIntPort.actualizarCurso(
+	        periodoAcademicoEntity,
 	        docenteLaborDTO.getCantidadEstudiantes(),
-	        periodoAcademicoVigente.getIdPeriodoAcademico(),
+	        docenteLaborDTO.getGrupo(),
 	        asignatura.getIdAsignatura()
 	    );
 
-	    if (!cursoExiste) {
+	    if (rowsUpdated > 0) {
+	        return true;
+	    } else {
 	        Curso curso = new Curso();
 	        curso.setGrupo(docenteLaborDTO.getGrupo());
 	        curso.setPeriodoAcademico(periodoAcademicoVigente);
 	        curso.setAsignatura(asignatura);
 	        curso.setCupo(docenteLaborDTO.getCantidadEstudiantes());
 
-	        gestionarCursoCUIntPort.guardarCurso(curso);;
+	        gestionarCursoCUIntPort.guardarCurso(curso);
 	        return true;
-	    } else {	        
-	        return false;
 	    }
 	}
+
+
+
 
 	@Override
 	public Long contarDocentes() {
