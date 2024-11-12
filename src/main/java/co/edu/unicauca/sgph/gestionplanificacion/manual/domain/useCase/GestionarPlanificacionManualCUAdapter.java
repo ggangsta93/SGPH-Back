@@ -1104,12 +1104,12 @@ public class GestionarPlanificacionManualCUAdapter implements GestionarPlanifica
 			throw new RuntimeException(NO_EXISTE_PERIODO_ACADEMICO_VIGENTE);
 		}
 
-		if (Boolean.TRUE.equals(this.cursoPerteneceAlPeriodoAcademicoVigente(idCurso,
+		if (Boolean.FALSE.equals(this.cursoPerteneceAlPeriodoAcademicoVigente(idCurso,
 				periodoAcademicoVigente.getIdPeriodoAcademico()))) {
 			throw new RuntimeException(CURSO_NO_PERTENECE_A_PERIODO_ACADEMICO_VIGENTE);
 		}
 				
-		Object[] infoBasicaCurso = new Object[3];
+		Object[] infoBasicaCurso = new Object[4];
 
 		this.validarRestriccionesInicialesYConsultarInfoBasicaCurso(crearActualizarHorarioCursoInDTO, infoBasicaCurso,
 				eliminarFranjas);
