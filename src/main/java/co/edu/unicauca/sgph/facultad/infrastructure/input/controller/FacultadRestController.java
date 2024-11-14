@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.facultad.aplication.input.GestionarFacultadCUIntPort;
-import co.edu.unicauca.sgph.facultad.domain.model.Facultad;
 import co.edu.unicauca.sgph.facultad.infrastructure.input.DTORequest.FacultadInDTO;
 import co.edu.unicauca.sgph.facultad.infrastructure.input.DTOResponse.FacultadOutDTO;
 import co.edu.unicauca.sgph.facultad.infrastructure.input.mapper.FacultadRestMapper;

@@ -50,7 +50,7 @@ public class CursoController extends CommonEJB {
 	/**
 	 * Método encargado de guardar o actualizar un curso <br>
 	 * 
-	 * @author apedro
+	 * @author jhurtado
 	 * 
 	 * @param cursoInDTO
 	 * @return

@@ -10,9 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
-import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
-import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 
 public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
@@ -20,13 +18,12 @@ public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
 	/**
 	 * Método encargado de consultar un curso por grupo y asignatura <br>
 	 * 
-	 * @author apedro
+	 * @author jhurtado
 	 * 
 	 * @param grupo
 	 * @param idAsignatura
 	 * @return
-	 */
-	
+	 */	
 	public CursoEntity findByGrupoAndAsignatura(String grupo, AsignaturaEntity asignatura);
 
 	/**

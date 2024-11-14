@@ -57,6 +57,7 @@ public interface GestionarAsignaturaCUIntPort {
 
 	MensajeOutDTO cargaMasivaAsignaturas(AsignaturaInDTO asignatura);
 	List<Asignatura> obtenerAsignaturasPorOids(List<String> oid);
+	
 	List<Asignatura> guardarAsignaturasDesdeJson(String archivoBase64);
 	List<Asignatura> obtenerAsignaturaPorCodigo(String Codigo);
 	Long contarAsignaturas();

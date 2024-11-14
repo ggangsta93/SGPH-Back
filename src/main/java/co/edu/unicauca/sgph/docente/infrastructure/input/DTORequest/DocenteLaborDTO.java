@@ -4,9 +4,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import co.edu.unicauca.sgph.docente.infrastructure.input.validation.ExisteCodigoDocente;
-import co.edu.unicauca.sgph.docente.infrastructure.input.validation.ExisteIdPersonaDocente;
 //@ExisteCodigoDocente
 //@ExisteIdPersonaDocente
 public class DocenteLaborDTO {

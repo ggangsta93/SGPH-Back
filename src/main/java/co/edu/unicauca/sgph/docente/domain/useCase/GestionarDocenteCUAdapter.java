@@ -460,9 +460,6 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	    }
 	}
 
-
-
-
 	@Override
 	public Long contarDocentes() {
 		return this.gestionarDocenteGatewayIntPort.contarDocente();

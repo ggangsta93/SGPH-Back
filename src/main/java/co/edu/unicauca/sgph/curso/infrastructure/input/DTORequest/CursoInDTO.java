@@ -60,5 +60,4 @@ public class CursoInDTO {
 		this.esValidar = esValidar;
 	}
 	
-	
 }

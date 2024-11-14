@@ -383,12 +383,6 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 		mensaje.setDescripcion("Asignaturas cargadas correctamente");
 		return mensaje;
 	}
-
-	@Override
-	public Boolean existeCodigoAsignatura(String codigo) {
-		Optional<AsignaturaEntity> asignatura = this.asignaturaRepositoryInt.findByCodigoAsignatura(codigo);		
-		return asignatura.isPresent();
-	}
 	
 	/** 
 	 * @see co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort#consultarAsignaturasDeLosCursosPorIdPrograma(java.lang.Long, java.lang.Long)
@@ -405,6 +399,12 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 			return this.asignaturaMapper.map(lstAsignaturaEntity, new TypeToken<List<Asignatura>>() {
 			}.getType());
 		}
+	}
+	
+	@Override
+	public Boolean existeCodigoAsignatura(String codigo) {
+		Optional<AsignaturaEntity> asignatura = this.asignaturaRepositoryInt.findByCodigoAsignatura(codigo);		
+		return asignatura.isPresent();
 	}
 
 	@Transactional

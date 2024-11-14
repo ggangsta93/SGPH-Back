@@ -45,7 +45,7 @@ public class AsignaturaController extends CommonEJB {
 	/**
 	 * Método encargado de guardar o actualizar una asignatura <br>
 	 * 
-	 * @author apedro
+	 * @author jhurtado
 	 * 
 	 * @param asignaturaInDTO
 	 * @return

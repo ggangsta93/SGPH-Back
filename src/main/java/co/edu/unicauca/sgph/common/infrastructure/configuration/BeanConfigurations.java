@@ -225,5 +225,5 @@ public class BeanConfigurations {
     RestTemplate restTemplate() {
         return new RestTemplate();
     }	
-	
+
 }

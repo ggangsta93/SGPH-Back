@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import co.edu.unicauca.sgph.departamento.domain.model.Departamento;
 import co.edu.unicauca.sgph.departamento.infrastructure.output.persistence.entity.DepartamentoEntity;
 
 public interface DepartamentoRepositoryInt extends JpaRepository<DepartamentoEntity, Long> {

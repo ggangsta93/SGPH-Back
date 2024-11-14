@@ -1,15 +1,11 @@
 package co.edu.unicauca.sgph.curso.domain.useCase;
 
 import java.util.List;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
 
 import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
 import co.edu.unicauca.sgph.curso.aplication.output.CursoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
-import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 
 public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
