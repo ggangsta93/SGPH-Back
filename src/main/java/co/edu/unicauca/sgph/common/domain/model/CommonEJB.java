@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
 public abstract class CommonEJB {
-
+	
 	/**
 	 * Método encargado de manejar la validación de errores en las peticiones.<br>
 	 * 
@@ -19,7 +19,7 @@ public abstract class CommonEJB {
 	 * @return ResponseEntity con los errores de validación.
 	 * 
 	 */
-	protected ResponseEntity<?> validacion(BindingResult result, Set<String> codes) {
+	protected ResponseEntity<?> validarCampos(BindingResult result, Set<String> codes) {
 		Map<String, String> errores = new HashMap<>();
 		// Se validan restricciones de campos
 		result.getAllErrors().forEach(error -> {
@@ -31,7 +31,7 @@ public abstract class CommonEJB {
 		result.getFieldErrors().forEach(error -> {
 			errores.put(error.getField(), "El campo " + error.getField() + " " + error.getDefaultMessage());
 		});
-		return ResponseEntity.accepted().body(errores);
+		return ResponseEntity.badRequest().body(errores);
 	}
 	
 	/**

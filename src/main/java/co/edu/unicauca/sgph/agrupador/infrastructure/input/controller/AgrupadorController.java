@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +29,6 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.Mensa
 
 @RestController
 @RequestMapping("/AdministrarAgrupador")
-@CrossOrigin(origins = "http://localhost:4200")
 public class AgrupadorController extends CommonEJB{
 
 	// Gestionadores
@@ -95,9 +93,20 @@ public class AgrupadorController extends CommonEJB{
 						.consultarAgrupadoresEspaciosFisicosAsociadosACursoPorIdCurso(idCurso));
 	}
 
-	@PostMapping("/filtrarGrupos")
-	public Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(@RequestBody FiltroGrupoDTO filtro) {
-		return this.gestionarAgrupadorEspacioFisicoCUIntPort.filtrarGrupos(filtro);
+	@GetMapping("/filtrarGrupos")
+	public Page<AgrupadorEspacioFisicoOutDTO> filtrarGrupos(
+	        @RequestParam(value = "listaIdFacultades", required = false) List<Long> listaIdFacultades,
+	        @RequestParam(value = "nombre", required = false) String nombre,
+	        @RequestParam(value = "pageNumber", required = true) Integer pageNumber,
+	        @RequestParam(value = "pageSize", required = true) Integer pageSize) {
+
+	    FiltroGrupoDTO filtro = new FiltroGrupoDTO();
+	    filtro.setListaIdFacultades(listaIdFacultades);
+	    filtro.setNombre(nombre);
+	    filtro.setPageNumber(pageNumber);
+	    filtro.setPageSize(pageSize);
+
+	    return this.gestionarAgrupadorEspacioFisicoCUIntPort.filtrarGrupos(filtro);
 	}
 
 	@PostMapping("/guardarGrupo")
@@ -107,7 +116,7 @@ public class AgrupadorController extends CommonEJB{
 		validaciones.add("ExisteNombreAgrupador");
 
 		if (result.hasErrors()) {
-			return validacion(result, validaciones);
+			return this.validarCampos(result, validaciones);
 		}
 
 		if (Boolean.FALSE.equals(agrupadorEspacioFisicoInDTO.getEsValidar())) {

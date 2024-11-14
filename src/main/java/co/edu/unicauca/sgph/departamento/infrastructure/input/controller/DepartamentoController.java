@@ -2,7 +2,6 @@ package co.edu.unicauca.sgph.departamento.infrastructure.input.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +14,6 @@ import co.edu.unicauca.sgph.departamento.infrastructure.input.DTORequest.Departa
 import co.edu.unicauca.sgph.departamento.infrastructure.input.DTOResponse.DepartamentoOutDTO;
 import co.edu.unicauca.sgph.departamento.infrastructure.input.mapper.DepartamentoRestMapper;
 
-@CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/AdministrarDepartamento")
 public class DepartamentoController extends CommonEJB {

@@ -14,11 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
@@ -28,7 +28,6 @@ import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTORequest.Per
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.DTOResponse.PeriodoAcademicoOutDTO;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.input.mapper.PeriodoAcademicoRestMapper;
 
-@CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/AdministrarPeriodoAcademico")
 public class PeriodoAcademicoController extends CommonEJB {
@@ -60,7 +59,7 @@ public class PeriodoAcademicoController extends CommonEJB {
 		validaciones.add("FechaInicioGreaterThanUltimaFechaFin");
 
 		if (result.hasErrors()) {
-			return validarCampos(result, validaciones);
+			return this.validarCampos(result, validaciones);
 		}
 
 		if (Boolean.FALSE.equals(periodoAcademicoInDTO.getEsValidar())) {
@@ -87,10 +86,16 @@ public class PeriodoAcademicoController extends CommonEJB {
 	 * @param filtroPeriodoAcademicoDTO
 	 * @return Page de instancias PeriodoAcademico
 	 */
-	@PostMapping("/consultarPeriodosAcademicos")
+	@GetMapping("/consultarPeriodosAcademicos")
 	public Page<PeriodoAcademicoOutDTO> consultarPeriodosAcademicos(
-			@RequestBody FiltroPeriodoAcademicoDTO filtroPeriodoAcademicoDTO) {
-		return this.gestionarPeriodoAcademicoCUIntPort.consultarPeriodosAcademicos(filtroPeriodoAcademicoDTO);
+	        @RequestParam(value = "pagina", required = false) Integer pagina,
+	        @RequestParam(value = "registrosPorPagina", required = false) Integer registrosPorPagina) {
+	    
+	    FiltroPeriodoAcademicoDTO filtro = new FiltroPeriodoAcademicoDTO();
+	    filtro.setPagina(pagina);
+	    filtro.setRegistrosPorPagina(registrosPorPagina);
+
+	    return this.gestionarPeriodoAcademicoCUIntPort.consultarPeriodosAcademicos(filtro);
 	}
 
 	/**
@@ -117,7 +122,7 @@ public class PeriodoAcademicoController extends CommonEJB {
 	 * @author apedro
 	 * 
 	 */
-	@Scheduled(cron = "0 0 0 * * *") // Se ejecuta todos los días a la medianoche
+	@Scheduled(cron = "0 0 0 * * *", zone = "America/Bogota") // Se ejecuta todos los días a la medianoche
 	// @Scheduled(fixedRate = 30000) // Se ejecuta cada hora
 	private void actualizarEstadoPeriodoAcademico() {
 		LocalDate localDate = LocalDate.now();

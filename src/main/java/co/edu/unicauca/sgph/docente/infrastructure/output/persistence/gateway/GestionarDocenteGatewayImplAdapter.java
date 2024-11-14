@@ -8,14 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -23,7 +21,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -32,11 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.repository.AsignaturaRepositoryInt;
-import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.repository.CursoRepositoryInt;
 import co.edu.unicauca.sgph.docente.aplication.output.GestionarDocenteGatewayIntPort;
 import co.edu.unicauca.sgph.docente.domain.model.Docente;
@@ -45,9 +38,7 @@ import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocent
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.DocenteEntity;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.repository.DocenteRepositoryInt;
-import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.entity.PersonaEntity;
 import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.repository.PersonaRepositoryInt;
-import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 
 @Service
 public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatewayIntPort {

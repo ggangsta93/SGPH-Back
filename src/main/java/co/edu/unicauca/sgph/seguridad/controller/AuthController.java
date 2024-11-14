@@ -1,6 +1,7 @@
 package co.edu.unicauca.sgph.seguridad.controller;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -16,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,6 @@ import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.Est
 
 @RestController
 @RequestMapping("/Autenticacion")
-@CrossOrigin
 public class AuthController {
 
 	private final String GOOGLE_TOKEN_INFO_URL = "https://oauth2.googleapis.com/tokeninfo?access_token=";
@@ -101,7 +100,7 @@ public class AuthController {
 			String jwt = jwtProvider.generateToken(authentication);
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 			JwtDto jwtDTO = new JwtDto(jwt, userDetails.getUsername(), userDetails.getAuthorities(),
-					((UsuarioPrincipal) userDetails).getProgramas().stream().map(obj -> obj.getIdPrograma()).toList());
+					((UsuarioPrincipal) userDetails).getProgramas().stream().map(obj -> obj.getIdPrograma()).collect(Collectors.toList()));
 			return new ResponseEntity(jwtDTO, HttpStatus.OK);
 		}
 	}

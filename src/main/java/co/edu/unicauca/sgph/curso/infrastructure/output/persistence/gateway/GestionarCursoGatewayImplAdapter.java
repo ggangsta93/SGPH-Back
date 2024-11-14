@@ -1,7 +1,6 @@
 package co.edu.unicauca.sgph.curso.infrastructure.output.persistence.gateway;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,15 +9,14 @@ import javax.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.AsignaturaEntity;
 import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.repository.CursoRepositoryInt;
-import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
+
 
 @Service
 public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIntPort {

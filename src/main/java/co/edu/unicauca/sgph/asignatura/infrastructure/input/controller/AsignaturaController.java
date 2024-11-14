@@ -7,30 +7,28 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
-import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
 @RestController
 @RequestMapping("/AdministrarAsignatura")
 public class AsignaturaController extends CommonEJB {
@@ -80,19 +78,36 @@ public class AsignaturaController extends CommonEJB {
 	}
 
 	/**
-	 * Método encargado de consultar las asignaturas por programa <br>
+	 * Método encargado de consultar las asignaturas activas por programa<br>
 	 * 
 	 * @author apedro
 	 * 
 	 * @param idPrograma
 	 * @return
 	 */
-	@GetMapping("/consultarAsignaturasPorIdPrograma")
-	public List<AsignaturaOutDTO> consultarAsignaturasPorIdPrograma(@RequestParam Long idPrograma) {
-		List<Asignatura> asignaturas = this.gestionarAsignaturaCUIntPort.consultarAsignaturasPorIdPrograma(idPrograma);
+	@GetMapping("/consultarAsignaturasActivasPorIdPrograma")
+	public List<AsignaturaOutDTO> consultarAsignaturasActivasPorIdPrograma(@RequestParam Long idPrograma) {
+		List<Asignatura> asignaturas = this.gestionarAsignaturaCUIntPort
+				.consultarAsignaturasPorIdProgramaYEstado(idPrograma, EstadoAsignaturaEnum.ACTIVO);
 		return this.asignaturaRestMapper.toLstAsignaturaOutDTO(asignaturas);
 	}
 	
+	/**
+	 * Método encargado de consultar las asignaturas de los cursos del periodo
+	 * vigente para un programa<br>
+	 * 
+	 * @author apedro
+	 * 
+	 * @param idPrograma
+	 * @return
+	 */
+	@GetMapping("/consultarAsignaturasDeLosCursosPorIdPrograma")
+	public List<AsignaturaOutDTO> consultarAsignaturasDeLosCursosPorIdPrograma(@RequestParam Long idPrograma) {
+		List<Asignatura> asignaturas = this.gestionarAsignaturaCUIntPort
+				.consultarAsignaturasDeLosCursosPorIdPrograma(idPrograma);
+		return this.asignaturaRestMapper.toLstAsignaturaOutDTO(asignaturas);
+	}
+
 	@GetMapping("/consultarAsignaturaPorId")
 	public AsignaturaOutDTO obtenerAsignaturaPorId(@RequestParam Long idAsignatura) {
 		return this.gestionarAsignaturaCUIntPort.obtenerAsignaturaPorId(idAsignatura);

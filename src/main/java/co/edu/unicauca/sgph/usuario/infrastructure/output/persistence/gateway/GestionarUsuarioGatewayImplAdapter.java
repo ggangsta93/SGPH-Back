@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.persona.domain.model.Persona;
+import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.gateway.GestionarPersonaGatewayImplAdapter;
 import co.edu.unicauca.sgph.programa.domain.model.Programa;
 import co.edu.unicauca.sgph.usuario.aplication.output.GestionarUsuarioGatewayIntPort;
 import co.edu.unicauca.sgph.usuario.domain.model.Rol;
@@ -29,6 +30,7 @@ import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
+import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.RolUsuarioEnum;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.repository.UsuarioRepositoryInt;
 
@@ -40,13 +42,15 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	private PasswordEncoder passwordEncoder;
 
 	private UsuarioRepositoryInt usuarioRepositoryInt;
+	private GestionarPersonaGatewayImplAdapter gestionarPersonaGatewayImplAdapter;
 	private ModelMapper modelMapper;
 
 	public GestionarUsuarioGatewayImplAdapter(UsuarioRepositoryInt usuarioRepositoryInt, ModelMapper modelMapper,
-			PasswordEncoder passwordEncoder) {
+			PasswordEncoder passwordEncoder, GestionarPersonaGatewayImplAdapter gestionarPersonaGatewayImplAdapter) {
 		this.usuarioRepositoryInt = usuarioRepositoryInt;
 		this.modelMapper = modelMapper;
 		this.passwordEncoder = passwordEncoder;
+		this.gestionarPersonaGatewayImplAdapter = gestionarPersonaGatewayImplAdapter;
 	}
 
 	/**
@@ -184,8 +188,23 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	@Transactional
 	public Usuario guardarUsuario(Usuario usuario) {
 		usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-		return this.modelMapper.map(this.usuarioRepositoryInt.save(this.modelMapper.map(usuario, UsuarioEntity.class)),
-				Usuario.class);
+
+		Usuario user = this.modelMapper
+				.map(this.usuarioRepositoryInt.save(this.modelMapper.map(usuario, UsuarioEntity.class)), Usuario.class);
+
+		// Para modo creación se consulta la información personal
+		if(user.getPersona().getPrimerNombre() == null) {
+			user.setPersona(this.gestionarPersonaGatewayImplAdapter.consultarPersonaPorIdPersona(user.getPersona().getIdPersona()));				
+		}
+		// Para modo creación se consulta el nombre de rol
+		Map<Long, RolUsuarioEnum> rolesMap = this.consultarRoles().stream()
+				.collect(Collectors.toMap(Rol::getIdRol, Rol::getRolUsuario));
+		user.getRoles().forEach(rol -> {
+			if (rol.getRolUsuario() == null) {
+				rol.setRolUsuario(rolesMap.get(rol.getIdRol()));
+			}
+		});
+		return user;
 	}
 
 	/**

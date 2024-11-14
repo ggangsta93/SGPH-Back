@@ -18,12 +18,6 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import co.edu.unicauca.sgph.curso.domain.model.Curso;
-import co.edu.unicauca.sgph.docente.domain.model.Docente;
-import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.entity.PersonaEntity;
-import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.entity.TipoIdentificacionEntity;
-import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.CursoDTO;
-import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -42,9 +36,13 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.enti
 import co.edu.unicauca.sgph.facultad.infrastructure.output.persistence.entity.FacultadEntity;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
+import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.entity.PersonaEntity;
+import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.entity.TipoIdentificacionEntity;
 import co.edu.unicauca.sgph.programa.infrastructure.output.persistence.entity.ProgramaEntity;
 import co.edu.unicauca.sgph.reporte.aplication.output.GestionarReporteGatewayIntPort;
+import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.CursoDTO;
 import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.HorarioDTO;
+import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteSimcaDTO;
 
 @Service

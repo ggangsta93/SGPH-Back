@@ -1,6 +1,10 @@
 package co.edu.unicauca.sgph.asignatura.domain.useCase;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
 import co.edu.unicauca.sgph.asignatura.aplication.output.AsignaturaFormatterResultsIntPort;
@@ -9,18 +13,23 @@ import co.edu.unicauca.sgph.asignatura.domain.model.Asignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.FiltroAsignaturaInDTO;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.AsignaturaOutDTO;
+import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
-import org.springframework.data.domain.Page;
+import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
+import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 
 public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPort {
 
 	private final GestionarAsignaturaGatewayIntPort gestionarAsignaturaGatewayIntPort;
 	private final AsignaturaFormatterResultsIntPort asignaturaFormatterResultsIntPort;
+	private final GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort;
 
 	public GestionarAsignaturaCUAdapter(GestionarAsignaturaGatewayIntPort gestionarAsignaturaGatewayIntPort,
-			AsignaturaFormatterResultsIntPort asignaturaFormatterResultsIntPort) {
+			AsignaturaFormatterResultsIntPort asignaturaFormatterResultsIntPort,
+			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort) {
 		this.gestionarAsignaturaGatewayIntPort = gestionarAsignaturaGatewayIntPort;
 		this.asignaturaFormatterResultsIntPort = asignaturaFormatterResultsIntPort;
+		this.gestionarPeriodoAcademicoGatewayIntPort = gestionarPeriodoAcademicoGatewayIntPort;
 	}
 
 	/**
@@ -32,11 +41,14 @@ public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPor
 	}
 
 	/**
-	 * @see co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort#consultarAsignaturasPorIdPrograma(java.lang.Long)
+	 * @see co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort#consultarAsignaturasPorIdProgramaYEstado(java.lang.Long,
+	 *      co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum)
 	 */
 	@Override
-	public List<Asignatura> consultarAsignaturasPorIdPrograma(Long idPrograma) {
-		return this.gestionarAsignaturaGatewayIntPort.consultarAsignaturasPorIdPrograma(idPrograma);
+	public List<Asignatura> consultarAsignaturasPorIdProgramaYEstado(Long idPrograma,
+			EstadoAsignaturaEnum estadoAsignaturaEnum) {
+		return this.gestionarAsignaturaGatewayIntPort.consultarAsignaturasPorIdProgramaYEstado(idPrograma,
+				estadoAsignaturaEnum);
 	}
 
 	@Override
@@ -64,6 +76,25 @@ public class GestionarAsignaturaCUAdapter implements GestionarAsignaturaCUIntPor
 		return this.gestionarAsignaturaGatewayIntPort.obtenerAsignaturasPorListaOids(oid);
 	}
 
+	/**
+	 * @see co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort#consultarAsignaturasDeLosCursosPorIdPrograma(java.lang.Long)
+	 */
+	@Override
+	public List<Asignatura> consultarAsignaturasDeLosCursosPorIdPrograma(Long idPrograma) {
+
+		// Se consulta periodo académico vigente
+		PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort
+				.consultarPeriodoAcademicoVigente();
+
+		// Se valida que exista periodo académico vigente
+		if (Objects.isNull(periodoAcademicoVigente)) {
+			return new ArrayList<>();
+		}
+
+		return this.gestionarAsignaturaGatewayIntPort.consultarAsignaturasDeLosCursosPorIdPrograma(idPrograma,
+				periodoAcademicoVigente.getIdPeriodoAcademico());
+	}
+	
 	@Override
 	public List<Asignatura> guardarAsignaturasDesdeJson(String archivoBase64) {
 		return this.gestionarAsignaturaGatewayIntPort.guardarAsignaturasDesdeJson(archivoBase64);

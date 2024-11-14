@@ -1,10 +1,8 @@
 package co.edu.unicauca.sgph.reporte.infraestructure.input.DTO;
 
-import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
-import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.HorarioInDTO;
-
 import java.time.LocalTime;
-import java.util.List;
+
+import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 
 public class HorarioDTO {
     private DiaSemanaEnum dia;

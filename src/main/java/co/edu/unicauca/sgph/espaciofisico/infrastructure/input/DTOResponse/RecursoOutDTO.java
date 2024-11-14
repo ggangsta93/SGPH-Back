@@ -1,7 +1,5 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse;
 
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
-
 public class RecursoOutDTO {
 	private Long idRecursoEspacioFisico;
 	private Long idRecurso;

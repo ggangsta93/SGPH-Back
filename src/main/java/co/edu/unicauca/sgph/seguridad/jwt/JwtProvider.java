@@ -24,7 +24,7 @@ public class JwtProvider {
 
     private SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     
-    private int expiration=36000;
+    private int expiration=7200;//2 horas el tiempo de caducidad
 
     public String generateToken(Authentication authentication){
         UsuarioPrincipal usuarioPrincipal = (UsuarioPrincipal) authentication.getPrincipal();

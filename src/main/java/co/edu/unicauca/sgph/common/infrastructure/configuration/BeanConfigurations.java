@@ -1,9 +1,5 @@
 package co.edu.unicauca.sgph.common.infrastructure.configuration;
 
-import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
-import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
-import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +10,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import co.edu.unicauca.sgph.agrupador.aplication.output.AgrupadorEspacioFisicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.agrupador.aplication.output.GestionarAgrupadorEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.agrupador.domain.useCase.GestionarAgrupadorEspacioFisicoCUAdapter;
+import co.edu.unicauca.sgph.asignatura.aplication.input.GestionarAsignaturaCUIntPort;
 import co.edu.unicauca.sgph.asignatura.aplication.output.AsignaturaFormatterResultsIntPort;
 import co.edu.unicauca.sgph.asignatura.aplication.output.GestionarAsignaturaGatewayIntPort;
 import co.edu.unicauca.sgph.asignatura.domain.useCase.GestionarAsignaturaCUAdapter;
+import co.edu.unicauca.sgph.curso.aplication.input.GestionarCursoCUIntPort;
 import co.edu.unicauca.sgph.curso.aplication.output.CursoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.curso.aplication.output.GestionarCursoGatewayIntPort;
 import co.edu.unicauca.sgph.curso.domain.useCase.GestionarCursoCUAdapter;
@@ -47,10 +45,10 @@ import co.edu.unicauca.sgph.gestionplanificacion.manual.domain.useCase.Gestionar
 import co.edu.unicauca.sgph.horario.aplication.output.GestionarHorarioGatewayIntPort;
 import co.edu.unicauca.sgph.horario.aplication.output.HorarioFormatterResultsIntPort;
 import co.edu.unicauca.sgph.horario.domain.useCase.GestionarHorarioCUAdapter;
-import co.edu.unicauca.sgph.periodoacademico.aplication.input.GestionarPeriodoAcademicoCUIntPort;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.GestionarPeriodoAcademicoGatewayIntPort;
 import co.edu.unicauca.sgph.periodoacademico.aplication.output.PeriodoAcademicoFormatterResultsIntPort;
 import co.edu.unicauca.sgph.periodoacademico.domain.useCase.GestionarPeriodoAcademicoCUAdapter;
+import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
 import co.edu.unicauca.sgph.persona.aplication.output.GestionarPersonaGatewayIntPort;
 import co.edu.unicauca.sgph.persona.aplication.output.PersonaFormatterResultsIntPort;
 import co.edu.unicauca.sgph.persona.domain.useCase.GestionarPersonaCUAdapter;
@@ -88,8 +86,10 @@ public class BeanConfigurations {
 	@Bean
 	GestionarAsignaturaCUAdapter crearGestionarAsignaturaCUInt(
 			GestionarAsignaturaGatewayIntPort gestionarProgramaGatewayIntPort,
-			AsignaturaFormatterResultsIntPort asignaturaFormatterResultsIntPort) {
-		return new GestionarAsignaturaCUAdapter(gestionarProgramaGatewayIntPort, asignaturaFormatterResultsIntPort);
+			AsignaturaFormatterResultsIntPort asignaturaFormatterResultsIntPort,
+			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort) {
+		return new GestionarAsignaturaCUAdapter(gestionarProgramaGatewayIntPort, asignaturaFormatterResultsIntPort,
+				gestionarPeriodoAcademicoGatewayIntPort);
 	}
 
 	@Bean
@@ -212,15 +212,18 @@ public class BeanConfigurations {
 			GestionarLaborDocenciaGatewayIntPort gestionarLaborDocenciaGatewayIntPort,
 			GestionarDocenteGatewayIntPort gestionarDocenteGatewayIntPort,
 			GestionarCursoGatewayIntPort gestionarCursoGatewayIntPort,
-			GestionarAsignaturaGatewayIntPort gestionarAsignaturaGatewayIntPort) {
+			GestionarAsignaturaGatewayIntPort gestionarAsignaturaGatewayIntPort,
+			GestionarProgramaGatewayIntPort gestionarProgramaGatewayIntPort,
+			GestionarPeriodoAcademicoGatewayIntPort gestionarPeriodoAcademicoGatewayIntPort,
+			GestionarPersonaGatewayIntPort gestionarPersonaGatewayIntPort) {
 		return new GestionarLaborDocenciaCUAdapter(gestionarLaborDocenciaGatewayIntPort, gestionarDocenteGatewayIntPort,
-				gestionarCursoGatewayIntPort, gestionarAsignaturaGatewayIntPort);
+				gestionarCursoGatewayIntPort, gestionarAsignaturaGatewayIntPort, gestionarProgramaGatewayIntPort,
+				gestionarPeriodoAcademicoGatewayIntPort, gestionarPersonaGatewayIntPort);
 	}
-
+	
 	@Bean
-	public RestTemplate restTemplate() {
-	    return new RestTemplate();
-	}
-
+    RestTemplate restTemplate() {
+        return new RestTemplate();
+    }	
 	
 }

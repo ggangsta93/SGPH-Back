@@ -1,8 +1,5 @@
 package co.edu.unicauca.sgph.reporte.infraestructure.input.DTO;
 
-import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
-
-import java.time.LocalTime;
 import java.util.List;
 
 public class CursoDTO {

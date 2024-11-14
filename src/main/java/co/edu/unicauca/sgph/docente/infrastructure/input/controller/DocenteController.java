@@ -1,10 +1,8 @@
 package co.edu.unicauca.sgph.docente.infrastructure.input.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,17 +11,12 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.Validator;
 
-import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
-import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,8 +32,10 @@ import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.DocenteLabor
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocenteDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.mapper.DocenteRestMapper;
+import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 
-@CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/AdministrarDocente")
 public class DocenteController extends CommonEJB{
@@ -63,7 +58,7 @@ public class DocenteController extends CommonEJB{
 		validaciones.add("ExisteIdPersonaDocente");
 		
 		if (result.hasErrors()) {
-			return validarCampos(result, validaciones);
+			return this.validarCampos(result, validaciones);
 		}
 		
 		if (Boolean.FALSE.equals(docenteInDTO.getEsValidar())) {
@@ -110,9 +105,24 @@ public class DocenteController extends CommonEJB{
 	 * @param filtroDocenteDTO DTO con los filtros de busqueda
 	 * @return
 	 */
-	@PostMapping("/consultarDocentes")
-	public Page<DocenteOutDTO> consultarDocentes(@RequestBody FiltroDocenteDTO filtroDocenteDTO) {
-		return this.gestionarDocenteCUIntPort.consultarDocentes(filtroDocenteDTO);
+	@GetMapping("/consultarDocentes")
+	public Page<DocenteOutDTO> consultarDocentes(
+		    @RequestParam(required = false) String nombre,
+		    @RequestParam(required = false) String numeroIdentificacion,
+		    @RequestParam(required = false) String codigo,
+		    @RequestParam(required = false) EstadoDocenteEnum estado,
+		    @RequestParam(defaultValue = "0") Integer pagina,
+		    @RequestParam(defaultValue = "10") Integer registrosPorPagina) {
+
+	    FiltroDocenteDTO filtroDocenteDTO = new FiltroDocenteDTO();
+	    filtroDocenteDTO.setNombre(nombre);
+	    filtroDocenteDTO.setNumeroIdentificacion(numeroIdentificacion);
+	    filtroDocenteDTO.setCodigo(codigo);
+	    filtroDocenteDTO.setEstado(estado);
+	    filtroDocenteDTO.setPagina(pagina);
+	    filtroDocenteDTO.setRegistrosPorPagina(registrosPorPagina);
+
+	    return this.gestionarDocenteCUIntPort.consultarDocentes(filtroDocenteDTO);
 	}
 
 	/**

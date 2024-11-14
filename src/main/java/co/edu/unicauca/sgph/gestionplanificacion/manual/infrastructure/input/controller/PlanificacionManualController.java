@@ -3,9 +3,8 @@ package co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.co
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
+import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
+import co.edu.unicauca.sgph.common.enums.EstadoCursoHorarioEnum;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.aplication.input.GestionarPlanificacionManualCUIntPort;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.EliminarHorarioInDTO;
 import co.edu.unicauca.sgph.gestionplanificacion.manual.infrastructure.input.DTORequest.FiltroCursoPlanificacionDTO;
@@ -31,9 +32,7 @@ import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.CrearActuali
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.FiltroFranjaHorariaDisponibleCursoDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.CrearActualizarDocentesCursoOutDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.CrearActualizarHorarioCursoOutDTO;
-import co.edu.unicauca.sgph.seguridad.entity.UsuarioPrincipal;
 
-@CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
 @RequestMapping("/PlanificacionManual")
 public class PlanificacionManualController extends CommonEJB{
@@ -46,32 +45,6 @@ public class PlanificacionManualController extends CommonEJB{
 		this.gestionarPlanificacionManualCUIntPort = gestionarPlanificacionManualCUIntPort;
 		this.planificacionManualRestMapper = planificacionManualRestMapper;
 	}
-
-	/*
-	 * @Deprecated
-	 * 
-	 * @GetMapping("/consultarCruceHorarioDocente") public List<Object[]>
-	 * consultarCruceHorarioDocente(@RequestParam Long idCurso, @RequestParam
-	 * DiaSemanaEnum dia,
-	 * 
-	 * @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaInicio,
-	 * 
-	 * @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaFin) { return
-	 * this.gestionarHorarioCUIntPort.consultarCruceHorarioDocente(idCurso, dia,
-	 * horaInicio, horaFin); }
-	 * 
-	 * @Deprecated
-	 * 
-	 * @GetMapping("/consultarCruceHorarioAula") public List<HorarioOutDTO>
-	 * consultarCruceHorarioAula(@RequestParam List<Long> lstIdAula,
-	 * 
-	 * @RequestParam DiaSemanaEnum dia, @RequestParam @DateTimeFormat(pattern =
-	 * "HH:mm") LocalTime horaInicio,
-	 * 
-	 * @RequestParam @DateTimeFormat(pattern = "HH:mm") LocalTime horaFin) { return
-	 * this.horarioRestMapper.toLstHorarioOutDTO(this.gestionarHorarioCUIntPort
-	 * .consultarCruceHorarioAula(lstIdAula, dia, horaInicio, horaFin)); }
-	 */
 
 	/*************************************************
 	 * Planificación manual
@@ -86,12 +59,29 @@ public class PlanificacionManualController extends CommonEJB{
 	 * @param filtroCursoPlanificacionDTO DTO con los filtros de busqueda
 	 * @return
 	 */
-	@PostMapping("/consultarCursosPlanificacionPorFiltro")
+	@GetMapping("/consultarCursosPlanificacionPorFiltro")
 	public Page<CursoPlanificacionOutDTO> consultarCursosPlanificacionPorFiltro(
-			@RequestBody FiltroCursoPlanificacionDTO filtroCursoPlanificacionDTO) {
-		return this.gestionarPlanificacionManualCUIntPort
-				.consultarCursosPlanificacionPorFiltro(filtroCursoPlanificacionDTO);
-	}
+		    @RequestParam(required = false) EstadoCursoHorarioEnum estadoCursoHorario,
+		    @RequestParam(required = false) List<Long> listaIdFacultad,
+		    @RequestParam(required = false) List<Long> listaIdPrograma,
+		    @RequestParam(required = false) List<Long> listaIdAsignatura,
+		    @RequestParam(required = false) Integer semestre,
+		    @RequestParam(required = true) Integer pagina,
+		    @RequestParam(required = true) Integer registrosPorPagina,
+		    @RequestParam(required = false) Integer cantidadDocentes) {
+
+		    FiltroCursoPlanificacionDTO filtroCursoPlanificacionDTO = new FiltroCursoPlanificacionDTO();
+		    filtroCursoPlanificacionDTO.setEstadoCursoHorario(estadoCursoHorario);
+		    filtroCursoPlanificacionDTO.setListaIdFacultad(listaIdFacultad);
+		    filtroCursoPlanificacionDTO.setListaIdPrograma(listaIdPrograma);
+		    filtroCursoPlanificacionDTO.setListaIdAsignatura(listaIdAsignatura);
+		    filtroCursoPlanificacionDTO.setSemestre(semestre);
+		    filtroCursoPlanificacionDTO.setPagina(pagina);
+		    filtroCursoPlanificacionDTO.setRegistrosPorPagina(registrosPorPagina);
+		    filtroCursoPlanificacionDTO.setCantidadDocentes(cantidadDocentes);
+
+		    return this.gestionarPlanificacionManualCUIntPort.consultarCursosPlanificacionPorFiltro(filtroCursoPlanificacionDTO);
+	}	
 
 	/**
 	 * Método encargado de consultar la información gneral de los cursos de un
@@ -116,9 +106,14 @@ public class PlanificacionManualController extends CommonEJB{
 	 * @return
 	 */
 	@PostMapping("/crearActualizarHorarioCursoDTO")
-	public CrearActualizarHorarioCursoOutDTO crearActualizarHorarioCursoDTO(
+	public ResponseEntity<CrearActualizarHorarioCursoOutDTO> crearActualizarHorarioCursoDTO(
 			@RequestBody CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO) {
-		return this.gestionarPlanificacionManualCUIntPort.crearActualizarHorarioCurso(crearActualizarHorarioCursoInDTO);
+		CrearActualizarHorarioCursoOutDTO crearActualizarHorarioCursoOutDTO = this.gestionarPlanificacionManualCUIntPort
+				.crearActualizarHorarioCurso(crearActualizarHorarioCursoInDTO);
+		if (crearActualizarHorarioCursoOutDTO.getEsExitoso().equals(Boolean.FALSE)) {
+			return ResponseEntity.badRequest().body(crearActualizarHorarioCursoOutDTO);
+		}
+		return ResponseEntity.ok(crearActualizarHorarioCursoOutDTO);
 	}
 
 	/**
@@ -131,10 +126,14 @@ public class PlanificacionManualController extends CommonEJB{
 	 * @return
 	 */
 	@PostMapping("/crearActualizarHorarioSecundarioCurso")
-	public CrearActualizarHorarioCursoOutDTO crearActualizarHorarioSecundarioCurso(
+	public ResponseEntity<CrearActualizarHorarioCursoOutDTO> crearActualizarHorarioSecundarioCurso(
 			@RequestBody CrearActualizarHorarioCursoInDTO crearActualizarHorarioCursoInDTO) {
-		return this.gestionarPlanificacionManualCUIntPort
+		CrearActualizarHorarioCursoOutDTO crearActualizarHorarioCursoOutDTO = this.gestionarPlanificacionManualCUIntPort
 				.crearActualizarHorarioSecundarioCurso(crearActualizarHorarioCursoInDTO);
+		if (crearActualizarHorarioCursoOutDTO.getEsExitoso().equals(Boolean.FALSE)) {
+			return ResponseEntity.badRequest().body(crearActualizarHorarioCursoOutDTO);
+		}
+		return ResponseEntity.ok(crearActualizarHorarioCursoOutDTO);
 	}
 
 	/**
@@ -161,13 +160,36 @@ public class PlanificacionManualController extends CommonEJB{
 	 * 
 	 * @param filtroFranjaHorariaDisponibleCursoDTO
 	 * @return
-	 */
-	@PostMapping("/consultarFranjasHorariasDisponiblesPorCurso")
+	 */	
+	@GetMapping("/consultarFranjasHorariasDisponiblesPorCurso")
 	public List<FranjaHorariaCursoDTO> consultarFranjasHorariasDisponiblesPorCurso(
-			@RequestBody FiltroFranjaHorariaDisponibleCursoDTO filtroFranjaHorariaDisponibleCursoDTO) {
-		return this.gestionarPlanificacionManualCUIntPort
-				.consultarFranjasHorariasDisponiblesPorCurso(filtroFranjaHorariaDisponibleCursoDTO);
-	}
+	        @RequestParam(required = false) Long idCurso,
+	        @RequestParam(required = false) Long idAsignatura,
+	        @RequestParam(required = false) String horaInicio,
+	        @RequestParam(required = false) String horaFin,
+	        @RequestParam(required = false) Long duracion,
+	        @RequestParam(required = false) List<Long> listaIdUbicacion,
+	        @RequestParam(required = false) List<DiaSemanaEnum> listaDiaSemanaEnum,
+	        @RequestParam(required = false) List<Long> listaIdAgrupadorEspacioFisico,
+	        @RequestParam(required = false) List<Long> listaIdTipoEspacioFisico,
+	        @RequestParam(required = false) String salon,
+	        @RequestParam(required = false) Boolean esPrincipal) {
+
+	    FiltroFranjaHorariaDisponibleCursoDTO filtro = new FiltroFranjaHorariaDisponibleCursoDTO();
+	    filtro.setIdCurso(idCurso);
+	    filtro.setIdAsignatura(idAsignatura);
+	    filtro.setHoraInicio(horaInicio);
+	    filtro.setHoraFin(horaFin);
+	    filtro.setDuracion(duracion);
+	    filtro.setListaIdUbicacion(listaIdUbicacion);
+	    filtro.setListaDiaSemanaEnum(listaDiaSemanaEnum);
+	    filtro.setListaIdAgrupadorEspacioFisico(listaIdAgrupadorEspacioFisico);
+	    filtro.setListaIdTipoEspacioFisico(listaIdTipoEspacioFisico);
+	    filtro.setSalon(salon);
+	    filtro.setEsPrincipal(esPrincipal);
+
+	    return this.gestionarPlanificacionManualCUIntPort.consultarFranjasHorariasDisponiblesPorCurso(filtro);
+	}	
 
 	/**
 	 * Método encargado de obtener las franjas horarias de un curso dado el
@@ -246,10 +268,12 @@ public class PlanificacionManualController extends CommonEJB{
 	 * @param eliminarHorarioDTO Información necesaria para eliminar el horario de
 	 *                           un programa
 	 * @return Booleano que indica si se eliminó con exito el horario
-	 */
-	@PostMapping("/eliminarHorarioPrograma")
-	public Boolean eliminarHorarioPrograma(@RequestBody EliminarHorarioInDTO eliminarHorarioDTO) {
-		return this.gestionarPlanificacionManualCUIntPort.eliminarHorarioPrograma(eliminarHorarioDTO);
+	 */	
+	@DeleteMapping("/eliminarHorarioPrograma")
+	public Boolean eliminarHorarioPrograma(@RequestParam Long idPrograma) {
+	    EliminarHorarioInDTO eliminarHorarioDTO = new EliminarHorarioInDTO();
+	    eliminarHorarioDTO.setIdPrograma(idPrograma);
+	    return this.gestionarPlanificacionManualCUIntPort.eliminarHorarioPrograma(eliminarHorarioDTO);
 	}
 	
 	/*************************************************

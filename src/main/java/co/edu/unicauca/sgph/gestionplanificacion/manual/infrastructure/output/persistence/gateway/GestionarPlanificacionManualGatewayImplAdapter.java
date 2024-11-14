@@ -555,6 +555,8 @@ public class GestionarPlanificacionManualGatewayImplAdapter implements Gestionar
 		queryBuilder.append(
 				"WHERE asignatura.semestre = (SELECT asig.semestre FROM CursoEntity cur JOIN cur.asignatura asig WHERE cur.idCurso = :idCurso) ");
 		queryBuilder.append(
+				"AND asignatura.semestre != -1 ");
+		queryBuilder.append(
 				"AND asignatura.programa.idPrograma = (SELECT asig.programa.idPrograma FROM CursoEntity cur JOIN cur.asignatura asig WHERE cur.idCurso = :idCurso) ");
 		queryBuilder.append("AND curso.periodoAcademico.idPeriodoAcademico = :idPeriodoAcademicoVigente ");
 

@@ -13,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import co.edu.unicauca.sgph.seguridad.jwt.JwtEntryPoint;
 import co.edu.unicauca.sgph.seguridad.jwt.JwtTokenFilter;
@@ -52,6 +54,11 @@ public class MainSecurity {
         .authorizeHttpRequests(authorizeRequests -> 
             authorizeRequests
                 .antMatchers("/Autenticacion/**").permitAll()
+                .antMatchers("/AdministrarPeriodoAcademico/guardarPeriodoAcademico").hasAnyRole("PLANIFICADOR")
+                .antMatchers("/AdministrarAgrupador/guardarGrupo").hasRole("PLANIFICADOR")
+                .antMatchers("/AdministrarAgrupador/guardarAsignacion").hasRole("PLANIFICADOR")
+                .antMatchers("/PlanificacionManual/consultarFranjasEspacioFisicoPorIdEspacioFisico").hasRole("PRESTAMISTA")
+                .antMatchers("/PlanificacionManual/consultarFranjasDocentePorIdPersona").hasRole("PRESTAMISTA")
                 .antMatchers("/PlanificacionManual/**").hasRole("PLANIFICADOR")
                 .antMatchers("/AdministrarPrograma/consultarProgramasPermitidosPorUsuario").hasRole("PLANIFICADOR")
                 .antMatchers("/AdministrarUsuario/**").hasRole("ADMINISTRADOR")
@@ -68,4 +75,18 @@ public class MainSecurity {
 
 		return http.build();
 	}
+	
+	@Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+			public void addCorsMappings(CorsRegistry registry) {                
+                registry.addMapping("/**")
+                .allowedOriginPatterns("http://localhost:4200","http://localhost","http://159.89.37.197","https://sgph-unicauca.netlify.app")
+                .allowedMethods("*")         // Aceptar cualquier método HTTP
+                .allowedHeaders("*")         // Aceptar cualquier encabezado
+                .allowCredentials(true);     // Permitir credenciales
+			}
+        };
+    }
 }
