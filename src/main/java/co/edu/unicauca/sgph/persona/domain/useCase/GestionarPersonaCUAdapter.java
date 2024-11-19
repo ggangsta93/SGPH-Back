@@ -1,6 +1,9 @@
 package co.edu.unicauca.sgph.persona.domain.useCase;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
 import co.edu.unicauca.sgph.persona.aplication.output.GestionarPersonaGatewayIntPort;
@@ -45,5 +48,20 @@ public class GestionarPersonaCUAdapter implements GestionarPersonaCUIntPort {
 	@Override
 	public Persona consultarPersonaPorEmail(String email) {
 		return this.gestionarPersonaGatewayIntPort.consultarPersonaPorEmail(email);
+	}
+
+	@Override
+	public Page<Persona> consultarPersonasPaginadas(Pageable pageable) {
+		return this.gestionarPersonaGatewayIntPort.consultarPersonasPaginadas(pageable);
+	}
+
+	@Override
+	public Persona obtenerPersonaPorId(Long idPersona) {
+		return this.gestionarPersonaGatewayIntPort.obtenerPersonaPorId(idPersona);
+	}
+
+	@Override
+	public void eliminarPersona(Long idPersona) {
+		this.gestionarPersonaGatewayIntPort.eliminarPersona(idPersona);
 	}
 }

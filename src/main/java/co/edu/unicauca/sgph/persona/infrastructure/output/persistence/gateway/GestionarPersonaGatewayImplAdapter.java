@@ -1,5 +1,6 @@
 package co.edu.unicauca.sgph.persona.infrastructure.output.persistence.gateway;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,6 +9,7 @@ import javax.persistence.PersistenceContext;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import co.edu.unicauca.sgph.persona.aplication.output.GestionarPersonaGatewayIntPort;
@@ -120,5 +122,44 @@ public class GestionarPersonaGatewayImplAdapter implements GestionarPersonaGatew
 			return null;
 		}
 		return this.modelMapper.map(personaEntity, Persona.class);
+	}
+
+	@Override
+	public Page<Persona> consultarPersonasPaginadas(Pageable pageable) {
+	    Page<PersonaEntity> personasEntities = personaRepositoryInt.findAll(pageable);
+
+	    return personasEntities.map(personaEntity -> modelMapper.map(personaEntity, Persona.class));
+	    // Mapear manualmente cada PersonaEntity a Persona
+	    /*return personasEntities.map(personaEntity -> {
+	        Persona persona = new Persona();
+	        persona.setIdPersona(personaEntity.getIdPersona());
+	        persona.setPrimerNombre(personaEntity.getPrimerNombre());
+	        persona.setSegundoApellido(personaEntity.getSegundoNombre());
+	        persona.setPrimerApellido(personaEntity.getPrimerApellido());
+	        persona.setSegundoApellido(personaEntity.getSegundoApellido());
+	        persona.setNumeroIdentificacion(personaEntity.getNumeroIdentificacion());
+	        
+	        // Mapear TipoIdentificacionEntity a TipoIdentificacion
+	        TipoIdentificacion tipoIdentificacion = new TipoIdentificacion();
+	        tipoIdentificacion.setIdTipoIdentificacion(personaEntity.getTipoIdentificacion().getIdTipoIdentificacion());
+	        tipoIdentificacion.setCodigoTipoIdentificacion(personaEntity.getTipoIdentificacion().getCodigoTipoIdentificacion());
+	        persona.setTipoIdentificacion(tipoIdentificacion);
+	        
+	        return persona;
+	    });*/
+	}
+
+	@Override
+	public Persona obtenerPersonaPorId(Long idPersona) {
+		PersonaEntity personaEntity = this.personaRepositoryInt.consultarPersonaPorIdPersona(idPersona);
+		if (Objects.isNull(personaEntity)) {
+			return null;
+		}
+		return this.modelMapper.map(personaEntity, Persona.class);
+	}
+
+	@Override
+	public void eliminarPersona(Long idPersona) {
+		this.personaRepositoryInt.deleteById(idPersona);		
 	}
 }

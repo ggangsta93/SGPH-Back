@@ -1,6 +1,9 @@
 package co.edu.unicauca.sgph.persona.aplication.input;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
 
 import co.edu.unicauca.sgph.persona.domain.model.Persona;
 import co.edu.unicauca.sgph.persona.domain.model.TipoIdentificacion;
@@ -36,4 +39,11 @@ public interface GestionarPersonaCUIntPort {
 	 * @return
 	 */
     Persona consultarPersonaPorEmail(String email);
+    
+    Page<Persona> consultarPersonasPaginadas(Pageable pageable);
+    
+    Persona obtenerPersonaPorId(Long idPersona);
+    
+    void eliminarPersona(Long idPersona);
+
 }

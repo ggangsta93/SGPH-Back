@@ -1,5 +1,6 @@
 package co.edu.unicauca.sgph.persona.infrastructure.input.controller;
 
+import org.springframework.data.domain.Pageable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -7,10 +8,15 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -99,4 +105,34 @@ public class PersonaController extends CommonEJB {
 		Persona persona = this.gestionarPersonaCUIntPort.consultarPersonaPorEmail(email);
 		return this.personaRestMapper.toPersonaOutDTO(persona);
 	}
+	
+	@GetMapping("/consultarPersonasPaginadas")
+	public ResponseEntity<Page<Persona>> consultarPersonasPaginadas(
+	    @RequestParam int page,
+	    @RequestParam int size,
+	    @RequestParam String sortBy,
+	    @RequestParam String sortOrder
+	) {
+	    Pageable pageable = (Pageable) PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortOrder), sortBy));
+	    Page<Persona> personas = gestionarPersonaCUIntPort.consultarPersonasPaginadas(pageable);
+	    return ResponseEntity.ok(personas);
+	}
+
+	 @GetMapping("/obtenerPersona/{idPersona}")
+	 public ResponseEntity<Persona> obtenerPersonaPorId(@PathVariable Long idPersona) {
+		 Persona persona = gestionarPersonaCUIntPort.obtenerPersonaPorId(idPersona);
+	     return ResponseEntity.ok(persona);
+	 }
+	 
+	 @DeleteMapping("/eliminarPersona/{idPersona}")
+	 public ResponseEntity<?> eliminarPersona(@PathVariable Long idPersona) {
+	     try {
+	         this.gestionarPersonaCUIntPort.eliminarPersona(idPersona);
+	         return ResponseEntity.noContent().build(); // 204 No Content
+	     } catch (Exception e) {
+	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar la persona");
+	     }
+	 }
+
+	
 }

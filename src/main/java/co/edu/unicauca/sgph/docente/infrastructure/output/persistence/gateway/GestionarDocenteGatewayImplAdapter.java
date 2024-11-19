@@ -529,4 +529,10 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 	public Long contarDocente() {
 		return this.docenteRepositoryInt.contarDocentes();
 	}
+
+	@Override
+	public Boolean eliminarCargue(Long idPrograma, Long idPeriodo) {
+		return true;
+		//return this.docenteRepositoryInt.eliminarCargue(idPrograma, idPeriodo);
+	}
 }

@@ -103,4 +103,6 @@ public interface GestionarDocenteGatewayIntPort {
 	public Long obtenerIdDepartamentoPorNombre(String nombreDepartamento);
 	
 	public Long contarDocente();
+	
+	public Boolean eliminarCargue(Long idPrograma, Long idPeriodo);
 }

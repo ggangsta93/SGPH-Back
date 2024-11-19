@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -208,4 +209,18 @@ public class DocenteController extends CommonEJB{
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar los datos: " + e.getMessage());
 	    }
 	}
+	
+	@DeleteMapping("/eliminar")
+	public ResponseEntity<?> eliminarCargueLaborDocente(@RequestParam Long idPrograma, @RequestParam Long idPeriodo) {
+	    try {
+	        // Lógica para eliminar el cargue
+	    	 this.gestionarDocenteCUIntPort.eliminarCargue(idPrograma, idPeriodo);
+	        return ResponseEntity.ok("El cargue de la labor docente se eliminó correctamente.");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("Error al eliminar el cargue de la labor docente: " + e.getMessage());
+	    }
+	}
 }
+
+	

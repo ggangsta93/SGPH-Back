@@ -75,4 +75,6 @@ public interface GestionarDocenteCUIntPort {
 	public List<String> procesarLaborDocenteDesdeJson(List<DocenteLaborDTO> docenteLaborDTOList, Long idFacultad, Long idPrograma) throws IOException;
 	
 	public Long contarDocentes();
+	
+	public Boolean eliminarCargue(Long idPrograma, Long idPeriodo);
 }

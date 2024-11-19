@@ -1,5 +1,7 @@
 package co.edu.unicauca.sgph.persona.infrastructure.output.persistence.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,4 +43,7 @@ public interface PersonaRepositoryInt extends JpaRepository<PersonaEntity, Long>
 	@Query("SELECT ti FROM TipoIdentificacionEntity ti")
 	public List<TipoIdentificacionEntity> consultarTiposIdentificacion();
 	PersonaEntity findByEmail(String email);
+	
+	Page<PersonaEntity> findAll(Pageable pageable);
+	
 }

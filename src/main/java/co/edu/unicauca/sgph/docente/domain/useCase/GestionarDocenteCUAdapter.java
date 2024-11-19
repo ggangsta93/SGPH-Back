@@ -465,4 +465,9 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 		return this.gestionarDocenteGatewayIntPort.contarDocente();
 	}
 
+	@Override
+	public Boolean eliminarCargue(Long idPrograma, Long idPeriodo) {
+		return this.gestionarDocenteGatewayIntPort.eliminarCargue(idPrograma, idPeriodo);
+	}
+
 }
