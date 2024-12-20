@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.docente.aplication.input.GestionarDocenteCUIntPort;
@@ -161,6 +169,7 @@ public class DocenteController extends CommonEJB{
 	@Autowired
 	private Validator validator;
 	
+
 	@PostMapping("/importar/{idFacultad}/{idPrograma}")
 	public ResponseEntity<?> importarLaborDocente(@RequestBody List<DocenteLaborDTO> docenteLaborDTOList, @PathVariable Long idFacultad, @PathVariable Long idPrograma, BindingResult result) {
 	    // Verificar si hay errores de validación en la lista de DocenteLaborDTO
@@ -209,6 +218,7 @@ public class DocenteController extends CommonEJB{
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar los datos: " + e.getMessage());
 	    }
 	}
+
 	
 	@DeleteMapping("/eliminar")
 	public ResponseEntity<?> eliminarCargueLaborDocente(@RequestParam Long idPrograma, @RequestParam Long idPeriodo) {

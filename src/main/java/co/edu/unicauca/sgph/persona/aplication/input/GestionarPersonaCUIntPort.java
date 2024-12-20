@@ -46,4 +46,6 @@ public interface GestionarPersonaCUIntPort {
     
     void eliminarPersona(Long idPersona);
 
+    Persona editarPersona(Persona persona);
+   
 }

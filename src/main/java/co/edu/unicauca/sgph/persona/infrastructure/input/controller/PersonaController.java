@@ -45,27 +45,35 @@ public class PersonaController extends CommonEJB {
 
 	@PostMapping("/guardarPersona")
 	public ResponseEntity<?> guardarPersona(@Valid @RequestBody PersonaInDTO personaInDTO, BindingResult result) {
-		Set<String> validaciones = new HashSet<String>();
-		validaciones.add("ExisteEmail");
-		validaciones.add("ExistePersonaPorIdentificacion");
+	    Set<String> validaciones = new HashSet<>();
+	    validaciones.add("ExisteEmail");
+	    validaciones.add("ExistePersonaPorIdentificacion");
 
-		if (result.hasErrors()) {
-			return this.validarCampos(result, validaciones);
-		}
+	    // Validaciones genéricas de campos
+	    if (result.hasErrors()) {
+	        return this.validarCampos(result, validaciones);
+	    }
 
-		if (Boolean.FALSE.equals(personaInDTO.getEsValidar())) {
-			PersonaOutDTO personaOutDTO = this.personaRestMapper.toPersonaOutDTO(
-					this.gestionarPersonaCUIntPort.guardarPersona(this.personaRestMapper.toPersona(personaInDTO)));
+	    PersonaOutDTO personaOutDTO;
 
-			if (Objects.equals(personaOutDTO.getIdPersona(), personaOutDTO.getIdPersona())) {
-				return new ResponseEntity<PersonaOutDTO>(personaOutDTO, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<PersonaOutDTO>(personaOutDTO, HttpStatus.OK);
-			}
-		} else {
-			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
-		}
+	    if (personaInDTO.getIdPersona() != null) {
+	        // Lógica de edición
+	        personaOutDTO = this.personaRestMapper.toPersonaOutDTO(
+	                this.gestionarPersonaCUIntPort.editarPersona(this.personaRestMapper.toPersona(personaInDTO)));
+	    } else {
+	        // Lógica de creación
+	        if (Boolean.FALSE.equals(personaInDTO.getEsValidar())) {
+	            personaOutDTO = this.personaRestMapper.toPersonaOutDTO(
+	                    this.gestionarPersonaCUIntPort.guardarPersona(this.personaRestMapper.toPersona(personaInDTO)));
+	        } else {
+	            // Retorna un valor indicando que no se ejecutará creación
+	            return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+	        }
+	    }
+
+	    return new ResponseEntity<>(personaOutDTO, HttpStatus.OK);
 	}
+
 
 	/**
 	 * Método encargado de consultar una persona con el tipo y número de identificación<br>
@@ -133,6 +141,5 @@ public class PersonaController extends CommonEJB {
 	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar la persona");
 	     }
 	 }
-
 	
 }

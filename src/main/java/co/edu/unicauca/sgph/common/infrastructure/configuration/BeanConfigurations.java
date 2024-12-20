@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -222,8 +223,14 @@ public class BeanConfigurations {
 	}
 	
 	@Bean
+	public WebClient webClient(WebClient.Builder builder) {
+	    return builder
+	        .baseUrl("http://10.200.1.181:8081/api/v1") // URL base del servicio externo
+	        .build();
+	}
+
+	@Bean
     RestTemplate restTemplate() {
         return new RestTemplate();
     }	
-
 }

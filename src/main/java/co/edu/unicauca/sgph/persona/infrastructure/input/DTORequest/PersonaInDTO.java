@@ -1,7 +1,10 @@
 package co.edu.unicauca.sgph.persona.infrastructure.input.DTORequest;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import co.edu.unicauca.sgph.persona.infrastructure.input.validation.ExisteEmail;
 import co.edu.unicauca.sgph.persona.infrastructure.input.validation.ExistePersonaPorIdentificacion;
@@ -14,17 +17,25 @@ public class PersonaInDTO {
 	@NotNull
 	private Long idTipoIdentificacion;
 	@NotEmpty
+	@NotBlank(message = "El número de identificación es obligatorio")
+    @Size(min = 5, max = 15, message = "El número de identificación debe tener entre 5 y 15 caracteres")    
 	private String numeroIdentificacion;
 	@NotEmpty
+	@NotBlank(message = "El nombre es obligatorio")
+    @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")    
 	private String primerNombre;
 
 	private String segundoNombre;
 	@NotEmpty
+	@NotBlank(message = "El apellido es obligatorio")
+    @Size(min = 2, max = 50, message = "El apellido debe tener entre 2 y 50 caracteres")    
 	private String primerApellido;
 
 	private String segundoApellido;
 
 	@NotEmpty
+	@NotBlank(message = "El email es obligatorio")
+    @Email(message = "El email debe ser válido")
 	private String email;
 
 	/**

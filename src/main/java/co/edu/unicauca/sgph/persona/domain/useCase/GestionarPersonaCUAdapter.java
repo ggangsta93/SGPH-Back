@@ -64,4 +64,22 @@ public class GestionarPersonaCUAdapter implements GestionarPersonaCUIntPort {
 	public void eliminarPersona(Long idPersona) {
 		this.gestionarPersonaGatewayIntPort.eliminarPersona(idPersona);
 	}
+
+	@Override
+	public Persona editarPersona(Persona persona) {
+		Persona personaExistente = gestionarPersonaGatewayIntPort.findById(persona.getIdPersona())
+                .orElseThrow(() -> new IllegalArgumentException("Persona no encontrada con el ID: " + persona.getIdPersona()));
+
+        // Actualiza los campos editables
+        personaExistente.setTipoIdentificacion(persona.getTipoIdentificacion());
+        personaExistente.setNumeroIdentificacion(persona.getNumeroIdentificacion());
+        personaExistente.setPrimerNombre(persona.getPrimerNombre());
+        personaExistente.setSegundoNombre(persona.getSegundoNombre());
+        personaExistente.setPrimerApellido(persona.getPrimerApellido());
+        personaExistente.setSegundoApellido(persona.getSegundoApellido());
+        personaExistente.setEmail(persona.getEmail());
+
+        // Guarda la persona
+        return gestionarPersonaGatewayIntPort.guardarPersona(personaExistente);
+	}
 }

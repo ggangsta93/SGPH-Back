@@ -28,6 +28,7 @@ import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarUbicacionCUI
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroFranjaLibreDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EdificioOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoOutDTO;
@@ -76,9 +77,10 @@ public class EspacioFisicoController extends CommonEJB {
 	@Transactional
 	public ResponseEntity<?> guardarEspacioFisico(@Valid @RequestBody EspacioFisicoInDTO espacioFisicoInDTO, BindingResult result) {
 		Set<String> validaciones = new HashSet<String>();
-		validaciones.add("ExisteOidEspacioFisico");
-		validaciones.add("ExisteNombreEspacioFisico");
-		
+	    // Validaciones específicas para creación
+	    validaciones.add("ExisteOidEspacioFisico");
+	    validaciones.add("ExisteNombreEspacioFisico");
+	    
 		if (result.hasErrors()) {
 			return validarCampos(result, validaciones);
 		}
@@ -261,4 +263,17 @@ public class EspacioFisicoController extends CommonEJB {
 	private MensajeOutDTO cargaMasivaEspacioFisico(@RequestBody EspacioFisicoInDTO espacioFisico) {
 		return this.gestionarEspacioFisicoCUIntPort.cargaMasivaEspacioFisico(espacioFisico);
 	}
+	
+	@PostMapping("/consultarFranjasLibres")
+	public ResponseEntity<List<EspacioFisicoDTO>> consultarFranjasLibres(@Valid @RequestBody FiltroFranjaLibreDTO filtroFranjaLibreDTO) {
+	    // Llamar al puerto de entrada correspondiente
+	    List<EspacioFisicoDTO> franjasLibres = this.gestionarEspacioFisicoCUIntPort.consultarFranjasLibres(filtroFranjaLibreDTO);
+	    
+	    if (franjasLibres.isEmpty()) {
+	        return ResponseEntity.noContent().build();
+	    }
+	    
+	    return ResponseEntity.ok(franjasLibres);
+	}
+
 }

@@ -269,57 +269,8 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 
 	@Override
 	public List<DocenteLaborDTO> cargarLaborDocente(String nombrePrograma, String periodoVigente) throws IOException {
-		String filePath = "Y:/ARCHIVOS DE LAS TICs/LaborAcademica2023-2024.xlsx";
-
-        FileInputStream fileInputStream = new FileInputStream(filePath);
-        Workbook workbook = null;
-
-        // Determina el tipo de archivo
-        if (filePath.toLowerCase().endsWith("xlsx") || filePath.toLowerCase().endsWith("xls")) {
-            workbook = new XSSFWorkbook(fileInputStream);
-        } 
-        if (workbook == null) {
-            throw new IOException("El archivo no es un archivo Excel válido.");
-        }
-		Sheet sheet = workbook.getSheetAt(0);
-		List<DocenteLaborDTO> docenteLaborDTOList = new ArrayList<>();
-
-		for (Row row : sheet) {
-			try {
-				
-				if (row.getRowNum() == 0) continue; // Skip header row
-				DocenteLaborDTO docente = new DocenteLaborDTO();
-				
-				if(nombrePrograma.equalsIgnoreCase(getStringCellValue(row, 9)) && periodoVigente.equals(getStringCellValue(row, 1))) {
-					docente.setNombrePrograma(getStringCellValue(row, 9));
-					docente.setOidPeriodo((int) row.getCell(0).getNumericCellValue());
-					docente.setPeriodo(getStringCellValue(row, 1));
-					docente.setIdentificacion(String.valueOf(row.getCell(2).getNumericCellValue()));
-					docente.setPrimerApellido(getStringCellValue(row, 3));
-					docente.setSegundoApellido(getStringCellValue(row, 4));
-					docente.setPrimerNombre(getStringCellValue(row, 5));
-					docente.setSegundoNombre(getStringCellValue(row, 6));
-					docente.setCorreo(getStringCellValue(row, 7));
-					docente.setNombreMateria(getStringCellValue(row, 8));					
-					docente.setOid(String.valueOf(row.getCell(10)==null? null:row.getCell(10)));
-					//Se quitan las comas a los OID
-					docente.setOid(docente.getOid()==null? null: docente.getOid().replace(",","") );					
-					docente.setCodigo(String.valueOf(row.getCell(11)==null? null:row.getCell(11)));
-					docente.setTipoMateria(String.valueOf(getIntCellValue(row, 12)));
-					docente.setGrupo(String.valueOf(row.getCell(13)==null? null:row.getCell(13)));
-
-					//docente.setHorasTeoricas(String.valueOf(getIntCellValue(row, 14))); //La hora teorica lo tiene la asignatura
-					docenteLaborDTOList.add(docente);
-					
-					
-				}
-			} catch (Exception e) {
-				int i = row.getRowNum();
-			}
-		}
-
-		workbook.close();
-		return docenteLaborDTOList;
+		return null;
+		
 
 	}
 
@@ -338,76 +289,9 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 	}
 
 	public static List<DocenteLaborDTO> mockLeerExcelBase64(String base64Excel) throws IOException {
+		return null;
 		
-		String filePath = "Y:/ARCHIVOS DE LAS TICs/LaborAcademica2023-2024.xlsx";
-
-        FileInputStream fileInputStream = new FileInputStream(filePath);
-        Workbook workbook = null;
-
-        // Determina el tipo de archivo
-        if (filePath.toLowerCase().endsWith("xlsx") || filePath.toLowerCase().endsWith("xls")) {
-            workbook = new XSSFWorkbook(fileInputStream);
-        } 
-        if (workbook == null) {
-            throw new IOException("El archivo no es un archivo Excel válido.");
-        }
-		Sheet sheet = workbook.getSheetAt(0);
-		List<DocenteLaborDTO> docenteLaborDTOList = new ArrayList<>();
-
-		for (Row row : sheet) {
-			try {
-				
-				if (row.getRowNum() == 0) continue; // Skip header row
-				if (row.getRowNum() == 94) {
-					DocenteLaborDTO docente = new DocenteLaborDTO();
-				}
-				DocenteLaborDTO docente = new DocenteLaborDTO();
-				docente.setOidPeriodo((int) row.getCell(0).getNumericCellValue());
-				docente.setPeriodo(getStringCellValue(row, 1));
-				docente.setIdentificacion(String.valueOf(row.getCell(2).getNumericCellValue()));
-				docente.setPrimerApellido(getStringCellValue(row, 3));
-				docente.setSegundoApellido(getStringCellValue(row, 4));
-				docente.setPrimerNombre(getStringCellValue(row, 5));
-				docente.setSegundoNombre(getStringCellValue(row, 6));
-				docente.setCorreo(getStringCellValue(row, 7));
-				docente.setNombreMateria(getStringCellValue(row, 8));
-				docente.setNombrePrograma(getStringCellValue(row, 9));
-				int valorOid = getIntCellValue(row, 10);
-				docente.setOid(String.valueOf(valorOid));
-				Object cellValue = row.getCell(11);
-				if (cellValue == null) {
-					docente.setCodigo("");
-				} else if (cellValue instanceof Number) {
-					docente.setCodigo(String.valueOf(((Number) cellValue).intValue()));
-				} else if (cellValue instanceof String) {
-					docente.setCodigo((String) cellValue);
-				} else {
-					// En caso de otro tipo de dato, manejarlo según sea necesario
-					docente.setCodigo(cellValue.toString());
-				}
-				docente.setTipoMateria(String.valueOf(getIntCellValue(row, 12)));
-				Object cellValueGrupo = row.getCell(13);
-				if (cellValueGrupo == null) {
-					docente.setGrupo("");
-				} else if (cellValueGrupo instanceof Number) {
-					docente.setGrupo(String.valueOf(((Number) cellValue).intValue()));
-				} else if (cellValueGrupo instanceof String) {
-					docente.setGrupo((String) cellValue);
-				} else {
-					docente.setGrupo(cellValueGrupo.toString());
-				}
-				//docente.setHorasTeoricas(String.valueOf(getIntCellValue(row, 14)));
-				docenteLaborDTOList.add(docente);
-				if (!validarGrupoYDocente(docente)) {
-					throw new IOException("Información faltante");
-				}
-			} catch (Exception e) {
-				int i = row.getRowNum();
-			}
-		}
-
-		workbook.close();
-		return docenteLaborDTOList;
+		
 	}
 	
 	private static String getStringCellValue(Row row, int cellIndex) {
@@ -428,48 +312,8 @@ public class GestionarDocenteGatewayImplAdapter implements GestionarDocenteGatew
 		return true;
 	}
 	public static String generarExcelBase64(List<DocenteLaborDTO> docenteLaborDTOList) throws IOException {
-		Workbook workbook = new XSSFWorkbook(); // o HSSFWorkbook() si necesitas XLS
-		Sheet sheet = workbook.createSheet("Docentes");
-
-		// Crear encabezados
-		Row headerRow = sheet.createRow(0);
-		String[] headers = {"OID Período", "Período", "Identificación", "Primer Apellido", "Segundo Apellido",
-				"Primer Nombre", "Segundo Nombre", "Correo", "Nombre Materia", "Nombre Programa",
-				"OID", "Código", "Tipo Materia", "Grupo", "Horas Teóricas"};
-		for (int i = 0; i < headers.length; i++) {
-			Cell cell = headerRow.createCell(i);
-			cell.setCellValue(headers[i]);
-		}
-
-		// Agregar datos
-		int rowNum = 1;
-		for (DocenteLaborDTO docente : docenteLaborDTOList) {
-			Row row = sheet.createRow(rowNum++);
-
-			row.createCell(0).setCellValue(docente.getOidPeriodo());
-			row.createCell(1).setCellValue(docente.getPeriodo());
-			row.createCell(2).setCellValue(docente.getIdentificacion());
-			row.createCell(3).setCellValue(docente.getPrimerApellido());
-			row.createCell(4).setCellValue(docente.getSegundoApellido());
-			row.createCell(5).setCellValue(docente.getPrimerNombre());
-			row.createCell(6).setCellValue(docente.getSegundoNombre());
-			row.createCell(7).setCellValue(docente.getCorreo());
-			row.createCell(8).setCellValue(docente.getNombreMateria());
-			row.createCell(9).setCellValue(docente.getNombrePrograma());
-			row.createCell(10).setCellValue(docente.getOid());
-			row.createCell(11).setCellValue(docente.getCodigo());
-			row.createCell(12).setCellValue(docente.getTipoMateria());
-			row.createCell(13).setCellValue(docente.getGrupo());
-			row.createCell(14).setCellValue(docente.getHorasTeoricas());
-		}
-
-		// Convertir a Base64
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		workbook.write(outputStream);
-		workbook.close();
-
-		byte[] excelBytes = outputStream.toByteArray();
-		return Base64.encodeBase64String(excelBytes);
+		return null;
+		
 	}
 	
 	public Long obtenerIdDepartamentoPorNombre(String nombreDepartamento) {

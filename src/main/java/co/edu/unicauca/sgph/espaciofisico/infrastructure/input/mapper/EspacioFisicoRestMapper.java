@@ -44,14 +44,20 @@ public interface EspacioFisicoRestMapper {
 	List<TipoEspacioFisicoOutDTO> toLstTipoEspacioFisicoOutDTO(List<TipoEspacioFisico> lstTipoEspacioFisico);
 
 	default List<AgrupadorEspacioFisico> toAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
-		List<AgrupadorEspacioFisico> agrupadores = new ArrayList<>();
-		for (Long idAgrupadorEspacioFisico : lstIdAgrupadorEspacioFisico) {
-			AgrupadorEspacioFisico agrupadorEspacioFisico = new AgrupadorEspacioFisico();
-			agrupadorEspacioFisico.setIdAgrupadorEspacioFisico(idAgrupadorEspacioFisico);
-			agrupadores.add(agrupadorEspacioFisico);
-		}
-		return agrupadores;
+	    // Verificar si la lista es null, si es así, retornar una lista vacía
+	    if (lstIdAgrupadorEspacioFisico == null) {
+	        return new ArrayList<>();
+	    }
+	    
+	    List<AgrupadorEspacioFisico> agrupadores = new ArrayList<>();
+	    for (Long idAgrupadorEspacioFisico : lstIdAgrupadorEspacioFisico) {
+	        AgrupadorEspacioFisico agrupadorEspacioFisico = new AgrupadorEspacioFisico();
+	        agrupadorEspacioFisico.setIdAgrupadorEspacioFisico(idAgrupadorEspacioFisico);
+	        agrupadores.add(agrupadorEspacioFisico);
+	    }
+	    return agrupadores;
 	}
+
 
 	default List<Long> toLstIdAgrupadorEspacioFisico(List<AgrupadorEspacioFisico> agrupadores) {
 		List<Long> lstIdAgrupadorEspacioFisico = new ArrayList<>();

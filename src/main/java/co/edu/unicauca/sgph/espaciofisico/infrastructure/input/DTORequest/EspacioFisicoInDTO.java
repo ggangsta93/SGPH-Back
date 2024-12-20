@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ExisteNombreEspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ExisteOidEspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
@@ -16,6 +18,7 @@ public class EspacioFisicoInDTO {
 	private Long idEspacioFisico;
 
 	@NotEmpty
+	@JsonProperty("OID")
 	private String OID;
 
 	@NotNull

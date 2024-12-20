@@ -29,6 +29,10 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 
 	private String salon;
 	
+	private Integer pagina;
+
+	private Integer registrosPorPagina;
+	
 	/*
 	 * Indicador que define si el horario a consultar es para horario principal o
 	 * secundario
@@ -122,4 +126,22 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 	public void setEsPrincipal(Boolean esPrincipal) {
 		this.esPrincipal = esPrincipal;
 	}
+
+	public Integer getPagina() {
+		return pagina;
+	}
+
+	public void setPagina(Integer pagina) {
+		this.pagina = pagina;
+	}
+
+	public Integer getRegistrosPorPagina() {
+		return registrosPorPagina;
+	}
+
+	public void setRegistrosPorPagina(Integer registrosPorPagina) {
+		this.registrosPorPagina = registrosPorPagina;
+	}
+	
+	
 }

@@ -1,21 +1,33 @@
 package co.edu.unicauca.sgph.horario.infrastructure.output.persistence.gateway;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
+import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.HorarioEspacio;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
 import co.edu.unicauca.sgph.horario.aplication.output.GestionarHorarioGatewayIntPort;
 import co.edu.unicauca.sgph.horario.domain.model.Horario;
+import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.FiltroFranjaHorariaDisponibleCursoDTO;
+import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.FranjaLibreOutDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEspacioEntity;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.repository.HorarioEspacioRepositoryInt;
@@ -122,4 +134,72 @@ public class GestionarHorarioGatewayImplAdapter implements GestionarHorarioGatew
 				.setIdEspacioFisico(horarioEspacio.getEspacioFisico().getIdEspacioFisico());
 		this.horarioEspacioRepositoryInt.delete(horarioEspacioEntity);
 	}
+
+	@Override
+	public Page<FranjaLibreOutDTO> consultarFranjasLibres(FiltroFranjaHorariaDisponibleCursoDTO filtro) {
+	    // Convertir el enum de día a la cadena exacta que está en la base.
+	    // Asumiendo que tu enum tiene valores LUNES, MARTES, etc.
+	    String dia = null;
+	    if (filtro.getListaDiaSemanaEnum() != null && !filtro.getListaDiaSemanaEnum().isEmpty()) {
+	        // Por ejemplo, si tu enum ya está en mayúsculas y en español:
+	        // DiaSemanaEnum.LUNES -> "LUNES"
+	        dia = filtro.getListaDiaSemanaEnum().get(0).name();
+	    }
+
+	    Pageable pageable = PageRequest.of(filtro.getPagina(), filtro.getRegistrosPorPagina());
+
+	    List<Long> listaIdUbicacion = (filtro.getListaIdUbicacion() != null && !filtro.getListaIdUbicacion().isEmpty())
+	            ? filtro.getListaIdUbicacion()
+	            : null;
+
+	    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("H:mm:ss");
+	    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+	    String horaInicio = null;
+	    if (filtro.getHoraInicio() != null) {
+	        LocalTime time = LocalTime.parse(filtro.getHoraInicio(), inputFormatter);
+	        horaInicio = time.format(outputFormatter);
+	    }
+
+	    String horaFin = null;
+	    if (filtro.getHoraFin() != null) {
+	        LocalTime time = LocalTime.parse(filtro.getHoraFin(), inputFormatter);
+	        horaFin = time.format(outputFormatter);
+	    }
+
+	    if (filtro.getListaDiaSemanaEnum() == null || filtro.getListaDiaSemanaEnum().isEmpty()) {
+	        System.out.println("No se recibió ningún día en el filtro");
+	    } else {
+	        System.out.println("Día recibido: " + filtro.getListaDiaSemanaEnum().get(0).name());
+	    }
+
+	    
+	    Long idEspacioFisico = filtro.getIdAsignatura();
+
+	    Page<Object[]> resultado = horarioRepositoryInt.filtrarFranjasLibres(
+	        idEspacioFisico,
+	        dia,
+	        horaInicio,
+	        horaFin,
+	        filtro.getSalon(),
+	        listaIdUbicacion,
+	        pageable
+	    );
+
+	    return resultado.map(row -> {
+	        DiaSemanaEnum diaEnum = DiaSemanaEnum.valueOf((String) row[1]);
+	        return new FranjaLibreOutDTO(
+	            ((Number) row[0]).longValue(),
+	            diaEnum,
+	            LocalTime.parse((String) row[2]),
+	            LocalTime.parse((String) row[3]),
+	            (String) row[4],
+	            ((Number) row[5]).longValue(),
+	            (String) row[6],
+	            (String) row[7],
+	            Collections.emptyList()
+	        );
+	    });
+	}
+
 }

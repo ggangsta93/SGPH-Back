@@ -3,6 +3,7 @@ package co.edu.unicauca.sgph.persona.infrastructure.output.persistence.gateway;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,6 +26,7 @@ public class GestionarPersonaGatewayImplAdapter implements GestionarPersonaGatew
 	private EntityManager entityManager;
 
 	private PersonaRepositoryInt personaRepositoryInt;
+	private TipoIdentificacion tipoIdentificacion;
 	private ModelMapper modelMapper;
 
 	public GestionarPersonaGatewayImplAdapter(PersonaRepositoryInt personaRepositoryInt, ModelMapper modelMapper) {
@@ -162,4 +164,23 @@ public class GestionarPersonaGatewayImplAdapter implements GestionarPersonaGatew
 	public void eliminarPersona(Long idPersona) {
 		this.personaRepositoryInt.deleteById(idPersona);		
 	}
+
+	@Override
+	public Optional<Persona> findById(Long idPersona) {
+		return personaRepositoryInt.findById(idPersona).map(this::toPersona);
+	}
+	
+	private Persona toPersona(PersonaEntity personaEntity) {
+	    Persona persona = new Persona();
+	    persona.setIdPersona(personaEntity.getIdPersona());
+	    persona.setTipoIdentificacion(tipoIdentificacion);
+	    persona.setNumeroIdentificacion(personaEntity.getNumeroIdentificacion());
+	    persona.setPrimerNombre(personaEntity.getPrimerNombre());
+	    persona.setSegundoNombre(personaEntity.getSegundoNombre());
+	    persona.setPrimerApellido(personaEntity.getPrimerApellido());
+	    persona.setSegundoApellido(personaEntity.getSegundoApellido());
+	    persona.setEmail(personaEntity.getEmail());
+	    return persona;
+	}
+
 }

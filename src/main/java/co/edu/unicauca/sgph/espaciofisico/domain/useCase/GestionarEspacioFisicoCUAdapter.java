@@ -13,6 +13,7 @@ import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroFranjaLibreDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.EspacioFisicoDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.RecursoOutDTO;
@@ -123,5 +124,10 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	@Override
 	public MensajeOutDTO cargaMasivaEspacioFisico(EspacioFisicoInDTO espacioFisico) {
 		return this.gestionarEspacioFisicoGatewayIntPort.cargaMasivaEspaciosFisicos(espacioFisico);
+	}
+
+	@Override
+	public List<EspacioFisicoDTO> consultarFranjasLibres(FiltroFranjaLibreDTO filtroFranjaLibreDTO) {
+		return null;
 	}
 }
