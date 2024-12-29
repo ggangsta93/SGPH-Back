@@ -1,6 +1,7 @@
 package co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.entity;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
-import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.entity.HorarioEntity;
-import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
 
 @Entity
 @Table(name = "RESERVA_TEMPORAL")
@@ -29,13 +28,26 @@ public class ReservaTemporalEntity {
     @JoinColumn(name = "ID_ESPACIO_FISICO", nullable = false)
     private EspacioFisicoEntity espacioFisico;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_USUARIO", nullable = false)
-    private UsuarioEntity usuario;
+    @Column(name = "USUARIO", nullable = false)
+    private String usuario;
+    
+    @Column(name = "TIPO_IDENTIFICACION")
+    private String tipoIdentificacion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_HORARIO", nullable = false)
-    private HorarioEntity horario;
+    @Column(name = "NUMERO_IDENTIFICACION")
+    private String numeroIdentificacion;
+
+    @Column(name = "CORREO")
+    private String Correo;
+
+    @Column(name = "TIPO_SOLICITANTE")
+    private String tipoSolicitante;
+
+    @Column(name = "HORA_INICIO", columnDefinition = "TIME")
+	private LocalTime horaInicio;
+
+	@Column(name = "HORA_FIN", columnDefinition = "TIME")
+	private LocalTime horaFin;
 
     @Column(name = "FECHA_RESERVA", nullable = false)
     private LocalDate fechaReserva;
@@ -43,7 +55,7 @@ public class ReservaTemporalEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ESTADO", nullable = false)
     private EstadoReservaEntity estado;
-
+    
     @Column(name = "OBSERVACIONES")
     private String observaciones;
 
@@ -61,22 +73,6 @@ public class ReservaTemporalEntity {
 
 	public void setEspacioFisico(EspacioFisicoEntity espacioFisico) {
 		this.espacioFisico = espacioFisico;
-	}
-
-	public UsuarioEntity getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(UsuarioEntity usuario) {
-		this.usuario = usuario;
-	}
-
-	public HorarioEntity getHorario() {
-		return horario;
-	}
-
-	public void setHorario(HorarioEntity horario) {
-		this.horario = horario;
 	}
 
 	public LocalDate getFechaReserva() {
@@ -102,4 +98,61 @@ public class ReservaTemporalEntity {
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
 	}
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+
+	public String getTipoIdentificacion() {
+		return tipoIdentificacion;
+	}
+
+	public void setTipoIdentificacion(String tipoIdentificacion) {
+		this.tipoIdentificacion = tipoIdentificacion;
+	}
+
+	public String getNumeroIdentificacion() {
+		return numeroIdentificacion;
+	}
+
+	public void setNumeroIdentificacion(String numeroIdentificacion) {
+		this.numeroIdentificacion = numeroIdentificacion;
+	}
+
+	public String getCorreo() {
+		return Correo;
+	}
+
+	public void setCorreo(String correo) {
+		Correo = correo;
+	}
+
+	public String getTipoSolicitante() {
+		return tipoSolicitante;
+	}
+
+	public void setTipoSolicitante(String tipoSolicitante) {
+		this.tipoSolicitante = tipoSolicitante;
+	}
+
+	public LocalTime getHoraInicio() {
+		return horaInicio;
+	}
+
+	public void setHoraInicio(LocalTime horaInicio) {
+		this.horaInicio = horaInicio;
+	}
+
+	public LocalTime getHoraFin() {
+		return horaFin;
+	}
+
+	public void setHoraFin(LocalTime horaFin) {
+		this.horaFin = horaFin;
+	}
+	
 }

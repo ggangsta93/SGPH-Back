@@ -11,6 +11,7 @@ import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
+import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioReservasDTO;
 
 public class GestionarUsuarioCUAdapter implements GestionarUsuarioCUIntPort {
 
@@ -60,5 +61,10 @@ public class GestionarUsuarioCUAdapter implements GestionarUsuarioCUIntPort {
 	@Override
 	public Usuario consultarUsuarioPorIdPersona(Long idPersona) {
 		return this.gestionarUsuarioGatewayIntPort.consultarUsuarioPorIdPersona(idPersona);
+	}
+
+	@Override
+	public UsuarioReservasDTO obtenerDatosUsuarioExterno(String username) {
+		return this.gestionarUsuarioGatewayIntPort.obtenerDatosUsuarioExterno(username);
 	}
 }

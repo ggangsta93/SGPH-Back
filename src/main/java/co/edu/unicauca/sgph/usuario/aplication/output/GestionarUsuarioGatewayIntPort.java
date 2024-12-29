@@ -8,6 +8,7 @@ import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
+import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioReservasDTO;
 
 public interface GestionarUsuarioGatewayIntPort {
 
@@ -95,4 +96,6 @@ public interface GestionarUsuarioGatewayIntPort {
 	 * @return
 	 */
 	public Usuario consultarUsuarioPorNombreUsuario(String nombreUsuario);
+	
+	public UsuarioReservasDTO obtenerDatosUsuarioExterno(String username);
 }

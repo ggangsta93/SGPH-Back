@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
 
 @Entity
 @Table(name = "log_reservas")
@@ -27,9 +26,8 @@ public class LogReservasEntity {
     @JoinColumn(name = "ID_RESERVA", nullable = false)
     private ReservaTemporalEntity reserva;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_USUARIO", nullable = false)
-    private UsuarioEntity usuario;
+    @Column(name = "USUARIO", nullable = false)
+    private String usuario;
 
     @Column(name = "FECHA_MODIFICACION", nullable = false)
     private LocalDateTime fechaModificacion;
@@ -56,11 +54,11 @@ public class LogReservasEntity {
 		this.reserva = reserva;
 	}
 
-	public UsuarioEntity getUsuario() {
+	public String getUsuario() {
 		return usuario;
 	}
 
-	public void setUsuario(UsuarioEntity usuario) {
+	public void setUsuario(String usuario) {
 		this.usuario = usuario;
 	}
 

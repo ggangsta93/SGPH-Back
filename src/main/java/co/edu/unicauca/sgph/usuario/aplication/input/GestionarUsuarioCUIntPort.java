@@ -8,6 +8,7 @@ import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
+import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioReservasDTO;
 
 public interface GestionarUsuarioCUIntPort {
 
@@ -61,4 +62,6 @@ public interface GestionarUsuarioCUIntPort {
 	public Usuario cambiarEstadoUsuarioPorIdUsuario(Long idUsuario);
 
 	Usuario consultarUsuarioPorIdPersona(Long idPersona);
+	
+	public UsuarioReservasDTO obtenerDatosUsuarioExterno(String username);
 }

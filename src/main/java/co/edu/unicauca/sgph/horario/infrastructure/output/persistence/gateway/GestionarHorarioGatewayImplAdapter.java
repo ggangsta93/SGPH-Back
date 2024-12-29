@@ -194,7 +194,7 @@ public class GestionarHorarioGatewayImplAdapter implements GestionarHorarioGatew
 	            LocalTime.parse((String) row[2]),
 	            LocalTime.parse((String) row[3]),
 	            (String) row[4],
-	            ((Number) row[5]).longValue(),
+	            row[5] != null ? ((Number) row[5]).longValue() : 0L,
 	            (String) row[6],
 	            (String) row[7],
 	            Collections.emptyList()

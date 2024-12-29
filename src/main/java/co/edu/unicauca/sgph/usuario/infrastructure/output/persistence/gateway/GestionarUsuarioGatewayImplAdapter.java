@@ -15,11 +15,17 @@ import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.edu.unicauca.sgph.persona.domain.model.Persona;
 import co.edu.unicauca.sgph.persona.infrastructure.output.persistence.gateway.GestionarPersonaGatewayImplAdapter;
@@ -29,6 +35,7 @@ import co.edu.unicauca.sgph.usuario.domain.model.Rol;
 import co.edu.unicauca.sgph.usuario.domain.model.Usuario;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTORequest.FiltroUsuarioDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioOutDTO;
+import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.UsuarioReservasDTO;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.EstadoUsuarioEnum;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.RolUsuarioEnum;
 import co.edu.unicauca.sgph.usuario.infrastructure.output.persistence.entity.UsuarioEntity;
@@ -40,17 +47,19 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 	@PersistenceContext
 	private EntityManager entityManager;
 	private PasswordEncoder passwordEncoder;
+	private final RestTemplate restTemplate;
 
 	private UsuarioRepositoryInt usuarioRepositoryInt;
 	private GestionarPersonaGatewayImplAdapter gestionarPersonaGatewayImplAdapter;
 	private ModelMapper modelMapper;
 
 	public GestionarUsuarioGatewayImplAdapter(UsuarioRepositoryInt usuarioRepositoryInt, ModelMapper modelMapper,
-			PasswordEncoder passwordEncoder, GestionarPersonaGatewayImplAdapter gestionarPersonaGatewayImplAdapter) {
+			PasswordEncoder passwordEncoder, GestionarPersonaGatewayImplAdapter gestionarPersonaGatewayImplAdapter, RestTemplate restTemplate) {
 		this.usuarioRepositoryInt = usuarioRepositoryInt;
 		this.modelMapper = modelMapper;
 		this.passwordEncoder = passwordEncoder;
 		this.gestionarPersonaGatewayImplAdapter = gestionarPersonaGatewayImplAdapter;
+		this.restTemplate = restTemplate;
 	}
 
 	/**
@@ -339,4 +348,29 @@ public class GestionarUsuarioGatewayImplAdapter implements GestionarUsuarioGatew
 		}	
 		return null;
 	}
+
+	@Override
+	public UsuarioReservasDTO obtenerDatosUsuarioExterno(String username) {
+		String url = "http://10.200.1.181:8081/api/v1/labor/dataTercero/" + username;
+
+		try {
+	        // Realizar la llamada al servicio externo
+	        ResponseEntity<UsuarioReservasDTO> response = restTemplate.exchange(
+	            url,
+	            HttpMethod.GET,
+	            null,
+	            new ParameterizedTypeReference<UsuarioReservasDTO>() {}
+	        );
+ 
+	        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+	            return response.getBody();
+	        } else {
+	            throw new RuntimeException("No se pudieron obtener los datos del usuario desde el servicio externo");
+	        }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al consumir el servicio externo: " + e.getMessage());
+        }
+	}
+	
+	
 }

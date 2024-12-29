@@ -1,7 +1,10 @@
 package co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 
@@ -28,6 +31,9 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 	private List<Long> listaIdTipoEspacioFisico;
 
 	private String salon;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private LocalDate fecha;
 	
 	private Integer pagina;
 
@@ -142,6 +148,13 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 	public void setRegistrosPorPagina(Integer registrosPorPagina) {
 		this.registrosPorPagina = registrosPorPagina;
 	}
-	
+
+	public LocalDate getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(LocalDate fecha) {
+		this.fecha = fecha;
+	}
 	
 }
