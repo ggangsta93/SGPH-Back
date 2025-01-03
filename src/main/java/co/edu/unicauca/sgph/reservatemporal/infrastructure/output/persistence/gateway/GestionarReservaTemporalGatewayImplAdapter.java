@@ -1,6 +1,10 @@
 package co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.gateway;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +28,7 @@ import co.edu.unicauca.sgph.reservatemporal.domain.model.ReservaTemporal;
 import co.edu.unicauca.sgph.reservatemporal.infrastructure.input.DTORequest.ReservaTemporalInDTO;
 import co.edu.unicauca.sgph.reservatemporal.infrastructure.input.DTOResponse.ReservaTemporalOutDTO;
 import co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.entity.EstadoReservaEntity;
+import co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.entity.EstadoReservaEnum;
 import co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.entity.LogReservasEntity;
 import co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.entity.ReservaTemporalEntity;
 import co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.repository.EstadoReservaRepository;
@@ -186,4 +191,224 @@ public class GestionarReservaTemporalGatewayImplAdapter implements GestionarRese
 	        );
 	    });
 	}
+
+	@Override
+	public Page<ReservaTemporal> consultarReservas(String tipoIdentificacion, String identificacion, String estadoReserva,
+			Pageable pageable) {
+		
+		EstadoReservaEnum estadoEnum = null;
+
+	    // Verificar si se envía un estado válido
+	    if (estadoReserva != null && !estadoReserva.isBlank()) {
+	        try {
+	            estadoEnum = EstadoReservaEnum.valueOf(estadoReserva);
+	        } catch (IllegalArgumentException e) {
+	            throw new RuntimeException("El estado proporcionado no es válido: " + estadoReserva);
+	        }
+	    }
+
+	    // Si no se envían tipoIdentificación ni identificación, pero sí el estado
+	    if ((tipoIdentificacion == null || tipoIdentificacion.isBlank())
+	            && (identificacion == null || identificacion.isBlank())) {
+
+	        // Filtrar solo por estado
+	        return reservaTemporalRepositoryInt.findByFilters(null, null, estadoEnum, pageable)
+	                .map(entity -> mapToReservaTemporal(entity));
+	    }
+
+	    // Filtrar por tipoIdentificación, identificación y/o estado
+	    return reservaTemporalRepositoryInt.findByFilters(tipoIdentificacion, identificacion, estadoEnum, pageable)
+	            .map(entity -> mapToReservaTemporal(entity));
+	}
+
+	/**
+	 * Método auxiliar para mapear ReservaTemporalEntity a ReservaTemporal.
+	 *
+	 * @param entity La entidad ReservaTemporalEntity.
+	 * @return El objeto de dominio ReservaTemporal.
+	 */
+	private ReservaTemporal mapToReservaTemporal(ReservaTemporalEntity entity) {
+	    ReservaTemporal dominio = new ReservaTemporal();
+
+	    dominio.setIdReserva(entity.getIdReserva());
+	    dominio.setFechaReserva(entity.getFechaReserva());
+	    dominio.setObservaciones(entity.getObservaciones());
+	    dominio.setUsuario(entity.getUsuario());
+	    dominio.setCorreo(entity.getCorreo());
+	    dominio.setNumeroIdentificacion(entity.getNumeroIdentificacion());
+	    dominio.setTipoIdentificacion(entity.getTipoIdentificacion());
+	    dominio.setTipoSolicitante(entity.getTipoSolicitante());
+
+	    // Mapear horaInicio y horaFin
+	    if (entity.getHoraInicio() != null) {
+	        dominio.setHoraInicio(entity.getHoraInicio().toString());
+	    }
+	    if (entity.getHoraFin() != null) {
+	        dominio.setHoraFin(entity.getHoraFin().toString());
+	    }
+
+	    // Mapear estado
+	    if (entity.getEstado() != null) {
+	        dominio.setEstado(entity.getEstado().getDescripcion().toString());
+	    }
+
+	    // Mapear espacio físico
+	    if (entity.getEspacioFisico() != null) {
+	        dominio.setIdEspacioFisico(entity.getEspacioFisico().getIdEspacioFisico());
+	        dominio.setSalon(entity.getEspacioFisico().getSalon());
+	        if (entity.getEspacioFisico().getUbicacion() != null) {
+	            dominio.setIdUbicacion(entity.getEspacioFisico().getUbicacion().getIdUbicacion());
+	        }
+	    }
+
+	    return dominio;
+	}
+	
+	@Override
+	public ReservaTemporal aprobarReserva(Long reservaId, String motivo) {
+		// Obtener la reserva con sus detalles
+	    ReservaTemporalEntity entity = reservaTemporalRepositoryInt
+	            .findByIdWithDetails(reservaId)
+	            .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+
+	    // Cambiar estado a RESERVA_APROBADA
+	    EstadoReservaEntity estadoAprobada = estadoReservaRepository.findByDescripcion(EstadoReservaEnum.RESERVA_APROBADA)
+	            .orElseThrow(() -> new RuntimeException("Estado RESERVA_APROBADA no encontrado"));
+	    entity.setEstado(estadoAprobada);
+
+	    // Actualizar observaciones con el motivo
+	    entity.setObservacionesPrestamista(motivo);
+
+	    // Guardar cambios
+	    reservaTemporalRepositoryInt.save(entity);
+
+	    LogReservasEntity logReservasEntity = new LogReservasEntity();
+	    logReservasEntity.setAccion("APROBAR_RESERVA");
+	    logReservasEntity.setUsuario(entity.getUsuario());
+	    logReservasEntity.setFechaModificacion(LocalDateTime.now().withNano(0));
+	    logReservasEntity.setReserva(entity);
+	    logReservasEntity.setObservaciones(motivo); // Registrar motivo en las observaciones
+	    logReservasRepository.save(logReservasEntity);
+	    
+	    // Mapear a dominio
+	    ReservaTemporal dominio = new ReservaTemporal();
+	    dominio.setIdReserva(entity.getIdReserva());
+	    dominio.setFechaReserva(entity.getFechaReserva());
+	    dominio.setObservaciones(entity.getObservaciones());
+	    dominio.setUsuario(entity.getUsuario());
+	    dominio.setCorreo(entity.getCorreo());
+	    dominio.setNumeroIdentificacion(entity.getNumeroIdentificacion());
+	    dominio.setTipoIdentificacion(entity.getTipoIdentificacion());
+	    dominio.setTipoSolicitante(entity.getTipoSolicitante());
+	    dominio.setObservacionesPrestamista(entity.getObservacionesPrestamista());    
+	    if (entity.getHoraInicio() != null) {
+	        dominio.setHoraInicio(entity.getHoraInicio().toString());
+	    }
+	    if (entity.getHoraFin() != null) {
+	        dominio.setHoraFin(entity.getHoraFin().toString());
+	    }
+	    if (entity.getEstado() != null) {
+	        dominio.setEstado(entity.getEstado().getDescripcion().toString());
+	    }
+
+	    if (entity.getEspacioFisico() != null) {
+	        dominio.setIdEspacioFisico(entity.getEspacioFisico().getIdEspacioFisico());
+	        dominio.setSalon(entity.getEspacioFisico().getSalon());
+	        if (entity.getEspacioFisico().getUbicacion() != null) {
+	            dominio.setIdUbicacion(entity.getEspacioFisico().getUbicacion().getIdUbicacion());
+	        }
+	    }
+
+	    return dominio;
+	}
+
+	@Override
+	public ReservaTemporal rechazarReserva(Long reservaId, String motivo) {
+		// Obtener la reserva con sus detalles
+	    ReservaTemporalEntity entity = reservaTemporalRepositoryInt
+	            .findByIdWithDetails(reservaId)
+	            .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+
+	    // Cambiar estado a RESERVA_APROBADA
+	    EstadoReservaEntity estadoRechazada = estadoReservaRepository.findByDescripcion(EstadoReservaEnum.RESERVA_RECHAZADA)
+	            .orElseThrow(() -> new RuntimeException("Estado RESERVA_RECHAZADA no encontrado"));
+	    entity.setEstado(estadoRechazada);
+
+	    // Actualizar observaciones con el motivo
+	    entity.setObservacionesPrestamista(motivo);
+
+	    // Guardar cambios
+	    reservaTemporalRepositoryInt.save(entity);
+	    
+	    LogReservasEntity logReservasEntity = new LogReservasEntity();
+	    logReservasEntity.setAccion("RECHAZAR_RESERVA");
+	    logReservasEntity.setUsuario(entity.getUsuario());
+	    logReservasEntity.setFechaModificacion(LocalDateTime.now().withNano(0));
+	    logReservasEntity.setReserva(entity);
+	    logReservasEntity.setObservaciones(motivo); // Registrar motivo en las observaciones
+	    logReservasRepository.save(logReservasEntity);
+
+	    // Mapear a dominio
+	    ReservaTemporal dominio = new ReservaTemporal();
+	    dominio.setIdReserva(entity.getIdReserva());
+	    dominio.setFechaReserva(entity.getFechaReserva());
+	    dominio.setObservaciones(entity.getObservaciones());
+	    dominio.setUsuario(entity.getUsuario());
+	    dominio.setCorreo(entity.getCorreo());
+	    dominio.setNumeroIdentificacion(entity.getNumeroIdentificacion());
+	    dominio.setTipoIdentificacion(entity.getTipoIdentificacion());
+	    dominio.setTipoSolicitante(entity.getTipoSolicitante());
+	    dominio.setObservacionesPrestamista(entity.getObservacionesPrestamista());    
+	    if (entity.getHoraInicio() != null) {
+	        dominio.setHoraInicio(entity.getHoraInicio().toString());
+	    }
+	    if (entity.getHoraFin() != null) {
+	        dominio.setHoraFin(entity.getHoraFin().toString());
+	    }
+	    if (entity.getEstado() != null) {
+	        dominio.setEstado(entity.getEstado().getDescripcion().toString());
+	    }
+
+	    if (entity.getEspacioFisico() != null) {
+	        dominio.setIdEspacioFisico(entity.getEspacioFisico().getIdEspacioFisico());
+	        dominio.setSalon(entity.getEspacioFisico().getSalon());
+	        if (entity.getEspacioFisico().getUbicacion() != null) {
+	            dominio.setIdUbicacion(entity.getEspacioFisico().getUbicacion().getIdUbicacion());
+	        }
+	    }
+
+	    return dominio;
+	}
+
+	@Override
+	public void finalizarReservasVencidasProgramadas() {
+		LocalDateTime now = LocalDateTime.now(); // Fecha y hora actual
+		LocalDate currentDate = LocalDate.now();
+	    LocalTime currentTime = LocalTime.now();
+
+	    // Buscar reservas vencidas
+	    List<ReservaTemporalEntity> reservasVencidas = 
+	        reservaTemporalRepositoryInt.findReservasAprobadasVencidas(currentDate, currentTime);
+
+	    for (ReservaTemporalEntity reserva : reservasVencidas) {
+	        // Cambiar el estado a RESERVA_FINALIZADA
+	        EstadoReservaEntity estadoFinalizado = estadoReservaRepository
+	            .findByDescripcion(EstadoReservaEnum.RESERVA_FINALIZADA)
+	            .orElseThrow(() -> new RuntimeException("Estado RESERVA_FINALIZADA no encontrado"));
+	        reserva.setEstado(estadoFinalizado);
+
+	        // Guardar los cambios
+	        reservaTemporalRepositoryInt.save(reserva);
+
+	        // Registrar en el log
+	        LogReservasEntity logReservasEntity = new LogReservasEntity();
+	        logReservasEntity.setAccion("FINALIZAR_RESERVA");
+	        logReservasEntity.setUsuario(reserva.getUsuario());
+	        logReservasEntity.setFechaModificacion(LocalDateTime.now().withNano(0));
+	        logReservasEntity.setReserva(reserva);
+	        logReservasEntity.setObservaciones("Reserva finalizada automáticamente al cumplirse la fecha y hora.");
+	        logReservasRepository.save(logReservasEntity);
+	    }
+	}
+
 }

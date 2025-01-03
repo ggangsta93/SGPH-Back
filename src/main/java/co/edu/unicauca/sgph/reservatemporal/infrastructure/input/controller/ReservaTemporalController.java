@@ -4,9 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,8 +56,18 @@ public class ReservaTemporalController {
 
 
     @GetMapping("/consultarReservas")
-    public List<ReservaTemporalOutDTO> consultarReservas() {
-        return this.mapper.toLstReservaTemporalOutDTO(this.gestionarReservaTemporalCUIntPort.consultarReservas());
+    public ResponseEntity<Page<ReservaTemporalInDTO>> consultarReservas(
+    		@RequestParam(required = false) String tipoIdentificacion,
+    		@RequestParam(required = false) String identificacion,
+    		@RequestParam(required = false) String estado,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        // Llama al caso de uso para obtener las reservas paginadas
+        Page<ReservaTemporalInDTO> reservas = this.gestionarReservaTemporalCUIntPort.consultarReservas(
+                tipoIdentificacion, identificacion, estado, PageRequest.of(page, size));
+        
+        // Devuelve las reservas en la respuesta
+        return ResponseEntity.ok(reservas);
     }
 	
     @GetMapping("/formulario")
@@ -109,4 +121,31 @@ public class ReservaTemporalController {
 	    // Retorna la respuesta con el objeto paginado
 	    return ResponseEntity.ok(franjasLibres);
 	}
+    
+    @PostMapping("/aprobarReserva")
+    public ResponseEntity<ReservaTemporalInDTO> aprobarReserva(
+            @RequestParam Long reservaId,
+            @RequestParam String motivo) {
+        // Llamar al caso de uso para aprobar la reserva
+        ReservaTemporalInDTO reservaAprobada = gestionarReservaTemporalCUIntPort.aprobarReserva(reservaId, motivo);
+        
+        // Retornar la reserva aprobada como respuesta
+        return ResponseEntity.ok(reservaAprobada);
+    }
+
+    @PostMapping("/rechazarReserva")
+    public ResponseEntity<ReservaTemporalInDTO> rechazarReserva(
+            @RequestParam Long reservaId,
+            @RequestParam String motivo) {
+        // Llamar al caso de uso para rechazar la reserva
+        ReservaTemporalInDTO reservaRechazada = gestionarReservaTemporalCUIntPort.rechazarReserva(reservaId, motivo);
+        
+        // Retornar la reserva rechazada como respuesta
+        return ResponseEntity.ok(reservaRechazada);
+    }
+    
+    @Scheduled(cron = "0 0/5 * * * ?") // Cada 5 minutos
+    public void finalizarReservasVencidasProgramadas() {
+        gestionarReservaTemporalCUIntPort.finalizarReservasVencidasProgramadas();
+    }
 }

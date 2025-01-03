@@ -38,7 +38,7 @@ public class ReservaTemporalEntity {
     private String numeroIdentificacion;
 
     @Column(name = "CORREO")
-    private String Correo;
+    private String correo;
 
     @Column(name = "TIPO_SOLICITANTE")
     private String tipoSolicitante;
@@ -58,6 +58,9 @@ public class ReservaTemporalEntity {
     
     @Column(name = "OBSERVACIONES")
     private String observaciones;
+    
+    @Column(name = "OBSERVACIONES_PRESTAMISTA")
+    private String observacionesPrestamista;
 
 	public Long getIdReserva() {
 		return idReserva;
@@ -123,14 +126,6 @@ public class ReservaTemporalEntity {
 		this.numeroIdentificacion = numeroIdentificacion;
 	}
 
-	public String getCorreo() {
-		return Correo;
-	}
-
-	public void setCorreo(String correo) {
-		Correo = correo;
-	}
-
 	public String getTipoSolicitante() {
 		return tipoSolicitante;
 	}
@@ -154,5 +149,21 @@ public class ReservaTemporalEntity {
 	public void setHoraFin(LocalTime horaFin) {
 		this.horaFin = horaFin;
 	}
-	
+
+	public String getCorreo() {
+		return correo;
+	}
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
+
+	public String getObservacionesPrestamista() {
+		return observacionesPrestamista;
+	}
+
+	public void setObservacionesPrestamista(String observacionesPrestamista) {
+		this.observacionesPrestamista = observacionesPrestamista;
+	}
+
 }

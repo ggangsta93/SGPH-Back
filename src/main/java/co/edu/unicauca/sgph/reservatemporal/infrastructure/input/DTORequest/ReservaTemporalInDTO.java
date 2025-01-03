@@ -21,6 +21,8 @@ public class ReservaTemporalInDTO {
     private LocalTime horaInicio;
     private LocalTime horaFin;
     private DiaSemanaEnum dia;
+    private String observacionesPrestamista;
+    private Long idReserva;
     
 	public Long getIdEspacioFisico() {
 		return idEspacioFisico;
@@ -106,5 +108,16 @@ public class ReservaTemporalInDTO {
 	public void setHoraFin(LocalTime horaFin) {
 		this.horaFin = horaFin;
 	}
-	
+	public String getObservacionesPrestamista() {
+		return observacionesPrestamista;
+	}
+	public void setObservacionesPrestamista(String observacionesPrestamista) {
+		this.observacionesPrestamista = observacionesPrestamista;
+	}
+	public Long getIdReserva() {
+		return idReserva;
+	}
+	public void setIdReserva(Long idReserva) {
+		this.idReserva = idReserva;
+	}
 }

@@ -1,7 +1,10 @@
 package co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +12,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.entity.EstadoReservaEntity;
+import co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.entity.EstadoReservaEnum;
 import co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.entity.ReservaTemporalEntity;
 
 public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTemporalEntity, Long>{
@@ -62,10 +67,12 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 		       AND NOT EXISTS (
 		           SELECT 1
 		             FROM reserva_temporal r
+		             JOIN estado_reserva e ON r.id_estado = e.id_estado
 		            WHERE r.id_espacio_fisico = ef.id_espacio_fisico
 		              AND r.fecha_reserva = :fechaReserva
 		              AND franja.horaInicio < r.hora_fin
 		              AND franja.horaFin    > r.hora_inicio
+		              AND e.descripcion NOT IN ('RESERVA_RECHAZADA', 'RESERVA_FINALIZADA')
 		       )
 		""",
 		countQuery = """
@@ -108,10 +115,12 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 		       AND NOT EXISTS (
 		           SELECT 1
 		             FROM reserva_temporal r
+		             JOIN estado_reserva e ON r.id_estado = e.id_estado
 		            WHERE r.id_espacio_fisico = ef.id_espacio_fisico
 		              AND r.fecha_reserva = :fechaReserva
 		              AND franja.horaInicio < r.hora_fin
 		              AND franja.horaFin    > r.hora_inicio
+		              AND e.descripcion NOT IN ('RESERVA_RECHAZADA', 'RESERVA_FINALIZADA')
 		       )
 		""",
 		nativeQuery = true)
@@ -125,6 +134,31 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 		    @Param("fechaReserva") LocalDate fechaReserva,
 		    Pageable pageable
 		);
+
+		@Query("SELECT r FROM ReservaTemporalEntity r " +
+		           "WHERE (:tipoIdentificacion IS NULL OR r.tipoIdentificacion = :tipoIdentificacion) " +
+		           "AND (:numeroIdentificacion IS NULL OR r.numeroIdentificacion = :numeroIdentificacion)" +
+				   "AND (:estado IS NULL OR r.estado.descripcion = :estado)")
+		    Page<ReservaTemporalEntity> findByFilters(
+		            @Param("tipoIdentificacion") String tipoIdentificacion,
+		            @Param("numeroIdentificacion") String numeroIdentificacion,
+		            @Param("estado") EstadoReservaEnum estado,
+		            Pageable pageable);
+		
+		@Query("""
+			    SELECT r 
+			    FROM ReservaTemporalEntity r
+			    JOIN FETCH r.espacioFisico ef
+			    LEFT JOIN FETCH ef.ubicacion u
+			    WHERE r.idReserva = :reservaId
+			""")
+			Optional<ReservaTemporalEntity> findByIdWithDetails(@Param("reservaId") Long reservaId);
+
+		@Query("SELECT r FROM ReservaTemporalEntity r " +
+				"WHERE (r.estado.descripcion = 'RESERVA_APROBADA' OR r.estado.descripcion = 'RESERVA_PENDIENTE') " +
+			       "AND (r.fechaReserva < :currentDate OR (r.fechaReserva = :currentDate AND r.horaFin <= :currentTime))")
+			List<ReservaTemporalEntity> findReservasAprobadasVencidas(@Param("currentDate") LocalDate currentDate, 
+				    @Param("currentTime") LocalTime currentTime);
 
 
 }

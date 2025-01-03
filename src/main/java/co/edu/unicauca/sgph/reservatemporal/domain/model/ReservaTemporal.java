@@ -12,6 +12,16 @@ public class ReservaTemporal {
     private LocalDate fechaReserva;
     private String estado;
     private String observaciones;
+    private String salon;
+    private Long idUbicacion;
+    private String usuario;
+    private String correo;
+    private String tipoIdentificacion;
+    private String numeroIdentificacion;
+    private String tipoSolicitante;
+    private String horaInicio;
+    private String horaFin;
+    private String observacionesPrestamista;
 
     public ReservaTemporal() {
     }
@@ -67,6 +77,85 @@ public class ReservaTemporal {
 	public void setObservaciones(String observaciones) {
 		this.observaciones = observaciones;
 	}
-    
-    
+
+	public String getSalon() {
+		return salon;
+	}
+
+	public void setSalon(String salon) {
+		this.salon = salon;
+	}
+
+	public Long getIdUbicacion() {
+		return idUbicacion;
+	}
+
+	public void setIdUbicacion(Long idUbicacion) {
+		this.idUbicacion = idUbicacion;
+	}
+
+	public String getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+
+	public String getCorreo() {
+		return correo;
+	}
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
+
+	public String getTipoIdentificacion() {
+		return tipoIdentificacion;
+	}
+
+	public void setTipoIdentificacion(String tipoIdentificacion) {
+		this.tipoIdentificacion = tipoIdentificacion;
+	}
+
+	public String getNumeroIdentificacion() {
+		return numeroIdentificacion;
+	}
+
+	public void setNumeroIdentificacion(String numeroIdentificacion) {
+		this.numeroIdentificacion = numeroIdentificacion;
+	}
+
+	public String getTipoSolicitante() {
+		return tipoSolicitante;
+	}
+
+	public void setTipoSolicitante(String tipoSolicitante) {
+		this.tipoSolicitante = tipoSolicitante;
+	}
+
+	public String getHoraInicio() {
+		return horaInicio;
+	}
+
+	public void setHoraInicio(String horaInicio) {
+		this.horaInicio = horaInicio;
+	}
+
+	public String getHoraFin() {
+		return horaFin;
+	}
+
+	public void setHoraFin(String horaFin) {
+		this.horaFin = horaFin;
+	}
+
+	public String getObservacionesPrestamista() {
+		return observacionesPrestamista;
+	}
+
+	public void setObservacionesPrestamista(String observacionesPrestamista) {
+		this.observacionesPrestamista = observacionesPrestamista;
+	}
+   
 }

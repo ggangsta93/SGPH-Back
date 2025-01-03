@@ -4,7 +4,7 @@ spring:
   application:
     name: sgph
   datasource:
-    url: jdbc:mysql://localhost/sgph?useSSL=false&serverTimezone=GMT&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost/sgph?useSSL=false&serverTimezone=America/Bogota&allowPublicKeyRetrieval=true
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -23,7 +23,9 @@ spring:
       ddl-auto: update
   messages:
       basename: messages
-
+  task:
+    scheduling:
+      enabled: true
 
 logging:
   level:
