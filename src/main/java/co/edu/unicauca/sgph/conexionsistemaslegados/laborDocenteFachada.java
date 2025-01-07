@@ -65,7 +65,6 @@ public class laborDocenteFachada implements  GestionarLaborDocenciaGatewayIntPor
 				
 				if(nombrePrograma.equalsIgnoreCase(getStringCellValue(row, 9)) && periodoVigente.equals(getStringCellValue(row, 1))) {
 					docente.setNombrePrograma(getStringCellValue(row, 9));
-					docente.setOidPeriodo((int) row.getCell(0).getNumericCellValue());
 					docente.setPeriodo(getStringCellValue(row, 1));
 					docente.setIdentificacion(String.valueOf(row.getCell(2).getNumericCellValue()));
 					docente.setPrimerApellido(getStringCellValue(row, 3));
@@ -74,11 +73,6 @@ public class laborDocenteFachada implements  GestionarLaborDocenciaGatewayIntPor
 					docente.setSegundoNombre(getStringCellValue(row, 6));
 					docente.setCorreo(getStringCellValue(row, 7));
 					docente.setNombreMateria(getStringCellValue(row, 8));					
-					docente.setOid(String.valueOf(row.getCell(10)==null? null:row.getCell(10)));
-					//Se quitan las comas a los OID
-					docente.setOid(docente.getOid()==null? null: docente.getOid().replace(",","") );					
-					docente.setCodigo(String.valueOf(row.getCell(11)==null? null:row.getCell(11)));
-					docente.setTipoMateria(String.valueOf(getIntCellValue(row, 12)));
 					docente.setGrupo(String.valueOf(row.getCell(13)==null? null:row.getCell(13)));
 
 					//docente.setHorasTeoricas(String.valueOf(getIntCellValue(row, 14))); //La hora teorica lo tiene la asignatura

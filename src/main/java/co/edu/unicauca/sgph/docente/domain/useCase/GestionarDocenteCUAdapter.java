@@ -189,13 +189,27 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 		
 		// Se valida las restricciones de las asignaturas del sistema contra las del cargue
 		
-		//TODO: Falta validar que asignaturas OID no se encuentran en el sistema
-		//TODO: Falta validar que todas las asignaturas esten en estado ACTIVO
-		List<String> oidAsignaturas = laborAcademica.stream().map(d -> d.getOid()).distinct().collect(Collectors.toList());
+		// Queremos List<String>, pero getOidAsignatura() es Long
+		List<String> oidAsignaturas = laborAcademica.stream()
+		    .map(d -> String.valueOf(d.getOidAsignatura()))  // Convertir Long a String
+		    .distinct()
+		    .collect(Collectors.toList());
+
 		List<Asignatura> asignaturas = this.gestionarAsignaturaCUIntPort.obtenerAsignaturasPorOids(oidAsignaturas);
 		Boolean valido = asignaturas.size() == oidAsignaturas.size();
 		if (!valido) {			
-			List<String> OIDDiferencia = oidAsignaturas.stream().filter(OID -> !(asignaturas.stream().map(asig -> asig.getOID()).collect(Collectors.toList()).contains(OID))).collect(Collectors.toList());
+			// Devuelve List<Long>
+			List<String> OIDDiferencia = oidAsignaturas.stream()
+				    .filter(oid -> {
+				       // Cada asignatura tiene un getOID() de tipo Long, 
+				       // conviértelo a String para comparar con `oid`:
+				       List<String> oidsEnSistema = asignaturas.stream()
+				           .map(asig -> String.valueOf(asig.getOID()))  // (Long -> String)
+				           .collect(Collectors.toList());
+				       return !oidsEnSistema.contains(oid);
+				    })
+				    .collect(Collectors.toList());
+
 			mensaje.setDescripcion(
 					"Hay asignaturas pendientes por registrar o activar en el sistema:\nEn la consulta hay "
 							+ oidAsignaturas.size() + " -> OID: " + String.join(", ", oidAsignaturas)
@@ -233,7 +247,11 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	private void crearCurso(DocenteLaborDTO docenteLaborDTO, Docente docenteNuevo, List<Asignatura> asignatura, PeriodoAcademico periodoAcademico) {
 		Curso curso = new Curso();
 		curso.setDocentes(Arrays.asList(docenteNuevo));
-		Asignatura asignaturaExistente = asignatura.stream().filter(a -> a.getOID() == docenteLaborDTO.getOid()).collect(Collectors.toList()).get(0);
+		Asignatura asignaturaExistente = asignatura.stream()
+			    .filter(a -> a.getOID().equals(docenteLaborDTO.getOidAsignatura()))
+			    .collect(Collectors.toList())
+			    .get(0);
+
 		curso.setAsignatura(asignaturaExistente);
 		curso.setCupo(40); // TODO CUPO
 		curso.setGrupo(docenteLaborDTO.getGrupo());
@@ -335,7 +353,7 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	    mensajes.add(String.format("Total docentes registrados actualmente: %d", totalDocentesActualmente));
 	    mensajes.add(String.format("Cantidad de nuevas asignaturas creadas: %d", asignaturasCreadas));
 	    mensajes.add(String.format("Total asignaturas registradas actualmente: %d", totalAsignaturasActualmente));
-	    mensajes.add(String.format("Cantidad de nuevos cursos creados: %d", cursosCreados));
+	    mensajes.add(String.format("Total cursos registrados actualmente: %d", cursosCreados));
 
 	    return mensajes;
 	}
@@ -404,11 +422,11 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	}
 
 	private boolean guardarAsignatura(DocenteLaborDTO docenteLaborDTO, List<String> mensajes) {
-	    List<Asignatura> asignaturasExistentes = gestionarAsignaturaCUIntPort.obtenerAsignaturaPorCodigo(docenteLaborDTO.getCodigo());
+	    List<Asignatura> asignaturasExistentes = gestionarAsignaturaCUIntPort.obtenerAsignaturaPorCodigo(docenteLaborDTO.getCodigoMateria());
 	    if (asignaturasExistentes.isEmpty()) {
 	        Asignatura asignatura = new Asignatura();
 	        asignatura.setNombre(docenteLaborDTO.getNombreMateria());
-	        asignatura.setCodigoAsignatura(docenteLaborDTO.getCodigo());
+	        asignatura.setCodigoAsignatura(docenteLaborDTO.getCodigoMateria());
 	        asignatura.setSemestre(docenteLaborDTO.getSemestre());
 	        asignatura.setHorasSemana(docenteLaborDTO.getHorasSemanales());
 
@@ -428,7 +446,7 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 
 	@Transactional
 	private boolean guardarCurso(DocenteLaborDTO docenteLaborDTO, List<String> mensajes, boolean asignaturaCreada) {
-	    Asignatura asignatura = gestionarAsignaturaCUIntPort.obtenerAsignaturaPorCodigo(docenteLaborDTO.getCodigo()).get(0);
+	    Asignatura asignatura = gestionarAsignaturaCUIntPort.obtenerAsignaturaPorCodigo(docenteLaborDTO.getCodigoMateria()).get(0);
 	    
 	    PeriodoAcademico periodoAcademicoVigente = gestionarPeriodoAcademicoGatewayIntPort.consultarPeriodoAcademicoVigente();
 	    

@@ -7,105 +7,128 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 //@ExisteCodigoDocente
 //@ExisteIdPersonaDocente
 public class DocenteLaborDTO {
-	@JsonProperty("OIDPERIODO")
-    private int oidPeriodo;
-
 	@NotEmpty
-    @JsonProperty("PERIODO")
+    @JsonProperty("periodo")
     private String periodo;
-    
+
     @NotNull
-    @JsonProperty("OIDTIPOIDENTIFICACION")
+    @JsonProperty("oidTipoIdentificacion")
     private Long oidTipoIdentificacion;
 
     @NotEmpty
-    @JsonProperty("TIPOIDENTIFICACION")
+    @JsonProperty("tipoIdentificacion")
     private String tipoIdentificacion;
 
     @NotEmpty
-    @JsonProperty("IDENTIFICACION")
+    @JsonProperty("identificacion")
     private String identificacion;
 
     @NotEmpty
-    @JsonProperty("PRIMERAPELLIDO")
+    @JsonProperty("primerApellido")
     private String primerApellido;
 
-    @JsonProperty("SEGUNDOAPELLIDO")
+    @JsonProperty("segundoApellido")
     private String segundoApellido;
 
     @NotEmpty
-    @JsonProperty("PRIMERNOMBRE")
+    @JsonProperty("primerNombre")
     private String primerNombre;
 
-    @JsonProperty("SEGUNDONOMBRE")
+    @JsonProperty("segundoNombre")
     private String segundoNombre;
 
     @NotEmpty
-    @JsonProperty("CORREO")
+    @JsonProperty("correo")
     private String correo;
 
-    @NotEmpty
-    @JsonProperty("NOMBREMATERIA")
-    private String nombreMateria;
-
-    @NotEmpty
-    @JsonProperty("NOMBREPROGRAMA")
-    private String nombrePrograma;
-
-    @JsonProperty("OID")
-    private String oid;
-
-    @NotEmpty
-    @JsonProperty("CODIGOMATERIA")
-    private String codigo;
-
-    @NotEmpty
-    @JsonProperty("TIPOASIGNATURA")
-    private String tipoMateria;
-
-    @NotEmpty
-    @JsonProperty("GRUPO")
-    private String grupo;
-
-    @NotEmpty
-    @JsonProperty("HORASTEORICAS")
-    private String horasTeoricas;
-
     @NotNull
-    @JsonProperty("SEMESTRE")
-    private Integer semestre;
-
-    @JsonProperty("OIDPENSUM")
-    private Long oidPensum;
-
-    @NotNull
-    @JsonProperty("OIDDEPARTAMENTO")
+    @JsonProperty("oidDepartamento")
     private Long oidDepartamento;
 
     @NotEmpty
-    @JsonProperty("DEPARTAMENTO")
+    @JsonProperty("departamento")
     private String departamento;
 
     @NotNull
-    @JsonProperty("PROGRAMAASIGNATURA")
+    @JsonProperty("programaAsignatura")
     private Long programaAsignatura;
 
+    @NotEmpty
+    @JsonProperty("nombrePrograma")
+    private String nombrePrograma;
+
+    // Campo que no tenías y que sí viene en el JSON
     @NotNull
-    @JsonProperty("HORASSEMANALES")
+    @JsonProperty("oidAsignatura")
+    private Long oidAsignatura;
+
+    @NotEmpty
+    @JsonProperty("codigoMateria")
+    private String codigoMateria;
+
+    @NotEmpty
+    @JsonProperty("nombreMateria")
+    private String nombreMateria;
+
+    // Viene como entero en el JSON
+    @NotNull
+    @JsonProperty("tipoAsignatura")
+    private Integer tipoAsignatura;
+
+    @NotEmpty
+    @JsonProperty("grupo")
+    private String grupo;
+
+    // Viene como entero en el JSON
+    @NotNull
+    @JsonProperty("horasTeoricas")
+    private Integer horasTeoricas;
+
+    @NotNull
+    @JsonProperty("oidPensum")
+    private Long oidPensum;
+
+    @NotNull
+    @JsonProperty("horasSemanales")
     private Integer horasSemanales;
-    
+
     @NotNull
-    @JsonProperty("CANTIDADESTUDIANTES")
+    @JsonProperty("semestre")
+    private Integer semestre;
+
+    @NotNull
+    @JsonProperty("cantidadEstudiantes")
     private Integer cantidadEstudiantes;
 
-	public int getOidPeriodo() {
-		return oidPeriodo;
-	}
-
-	public void setOidPeriodo(int oidPeriodo) {
-		this.oidPeriodo = oidPeriodo;
-	}
-
+    @Override
+    public String toString() {
+        return "DocenteLaborDTO{" +
+               "periodo='" + periodo + '\'' +
+               ", oidTipoIdentificacion=" + oidTipoIdentificacion +
+               ", tipoIdentificacion='" + tipoIdentificacion + '\'' +
+               ", identificacion='" + identificacion + '\'' +
+               ", primerApellido='" + primerApellido + '\'' +
+               ", segundoApellido='" + segundoApellido + '\'' +
+               ", primerNombre='" + primerNombre + '\'' +
+               ", segundoNombre='" + segundoNombre + '\'' +
+               ", correo='" + correo + '\'' +
+               ", oidDepartamento=" + oidDepartamento +
+               ", departamento='" + departamento + '\'' +
+               ", programaAsignatura=" + programaAsignatura +
+               ", nombrePrograma='" + nombrePrograma + '\'' +
+               ", oidAsignatura=" + oidAsignatura +
+               ", codigoMateria='" + codigoMateria + '\'' +
+               ", nombreMateria='" + nombreMateria + '\'' +
+               ", tipoAsignatura=" + tipoAsignatura +
+               ", grupo='" + grupo + '\'' +
+               ", horasTeoricas=" + horasTeoricas +
+               ", oidPensum=" + oidPensum +
+               ", horasSemanales=" + horasSemanales +
+               ", semestre=" + semestre +
+               ", cantidadEstudiantes=" + cantidadEstudiantes +
+               '}';
+    }    
+    
 	public String getPeriodo() {
 		return periodo;
 	}
@@ -178,78 +201,6 @@ public class DocenteLaborDTO {
 		this.correo = correo;
 	}
 
-	public String getNombreMateria() {
-		return nombreMateria;
-	}
-
-	public void setNombreMateria(String nombreMateria) {
-		this.nombreMateria = nombreMateria;
-	}
-
-	public String getNombrePrograma() {
-		return nombrePrograma;
-	}
-
-	public void setNombrePrograma(String nombrePrograma) {
-		this.nombrePrograma = nombrePrograma;
-	}
-
-	public String getOid() {
-		return oid;
-	}
-
-	public void setOid(String oid) {
-		this.oid = oid;
-	}
-
-	public String getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
-	}
-
-	public String getTipoMateria() {
-		return tipoMateria;
-	}
-
-	public void setTipoMateria(String tipoMateria) {
-		this.tipoMateria = tipoMateria;
-	}
-
-	public String getGrupo() {
-		return grupo;
-	}
-
-	public void setGrupo(String grupo) {
-		this.grupo = grupo;
-	}
-
-	public String getHorasTeoricas() {
-		return horasTeoricas;
-	}
-
-	public void setHorasTeoricas(String horasTeoricas) {
-		this.horasTeoricas = horasTeoricas;
-	}
-
-	public Integer getSemestre() {
-		return semestre;
-	}
-
-	public void setSemestre(Integer semestre) {
-		this.semestre = semestre;
-	}
-
-	public Long getOidPensum() {
-		return oidPensum;
-	}
-
-	public void setOidPensum(Long oidPensum) {
-		this.oidPensum = oidPensum;
-	}
-
 	public Long getOidDepartamento() {
 		return oidDepartamento;
 	}
@@ -274,12 +225,84 @@ public class DocenteLaborDTO {
 		this.programaAsignatura = programaAsignatura;
 	}
 
+	public String getNombrePrograma() {
+		return nombrePrograma;
+	}
+
+	public void setNombrePrograma(String nombrePrograma) {
+		this.nombrePrograma = nombrePrograma;
+	}
+
+	public Long getOidAsignatura() {
+		return oidAsignatura;
+	}
+
+	public void setOidAsignatura(Long oidAsignatura) {
+		this.oidAsignatura = oidAsignatura;
+	}
+
+	public String getCodigoMateria() {
+		return codigoMateria;
+	}
+
+	public void setCodigoMateria(String codigoMateria) {
+		this.codigoMateria = codigoMateria;
+	}
+
+	public String getNombreMateria() {
+		return nombreMateria;
+	}
+
+	public void setNombreMateria(String nombreMateria) {
+		this.nombreMateria = nombreMateria;
+	}
+
+	public Integer getTipoAsignatura() {
+		return tipoAsignatura;
+	}
+
+	public void setTipoAsignatura(Integer tipoAsignatura) {
+		this.tipoAsignatura = tipoAsignatura;
+	}
+
+	public String getGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(String grupo) {
+		this.grupo = grupo;
+	}
+
+	public Integer getHorasTeoricas() {
+		return horasTeoricas;
+	}
+
+	public void setHorasTeoricas(Integer horasTeoricas) {
+		this.horasTeoricas = horasTeoricas;
+	}
+
+	public Long getOidPensum() {
+		return oidPensum;
+	}
+
+	public void setOidPensum(Long oidPensum) {
+		this.oidPensum = oidPensum;
+	}
+
 	public Integer getHorasSemanales() {
 		return horasSemanales;
 	}
 
 	public void setHorasSemanales(Integer horasSemanales) {
 		this.horasSemanales = horasSemanales;
+	}
+
+	public Integer getSemestre() {
+		return semestre;
+	}
+
+	public void setSemestre(Integer semestre) {
+		this.semestre = semestre;
 	}
 
 	public Integer getCantidadEstudiantes() {
@@ -289,5 +312,6 @@ public class DocenteLaborDTO {
 	public void setCantidadEstudiantes(Integer cantidadEstudiantes) {
 		this.cantidadEstudiantes = cantidadEstudiantes;
 	}
+    
 	
 }

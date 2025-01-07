@@ -43,6 +43,8 @@ import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutD
 import co.edu.unicauca.sgph.docente.infrastructure.input.mapper.DocenteRestMapper;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
+import co.edu.unicauca.sgph.periodoacademico.aplication.input.GestionarPeriodoAcademicoCUIntPort;
+import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
 import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 
 @RestController
@@ -54,10 +56,12 @@ public class DocenteController extends CommonEJB{
 
 	private GestionarDocenteCUIntPort gestionarDocenteCUIntPort;
 	private DocenteRestMapper docenteRestMapper;
+	private GestionarPeriodoAcademicoCUIntPort periodoAcademicoCUIntPort;
 
-	public DocenteController(GestionarDocenteCUIntPort gestionarDocenteCUIntPort, DocenteRestMapper docenteRestMapper) {
+	public DocenteController(GestionarDocenteCUIntPort gestionarDocenteCUIntPort, DocenteRestMapper docenteRestMapper, GestionarPeriodoAcademicoCUIntPort periodoAcademicoCUIntPort) {
 		this.gestionarDocenteCUIntPort = gestionarDocenteCUIntPort;
 		this.docenteRestMapper = docenteRestMapper;
+		this.periodoAcademicoCUIntPort = periodoAcademicoCUIntPort;
 	}
 
 	@PostMapping("/guardarDocente")
@@ -171,51 +175,92 @@ public class DocenteController extends CommonEJB{
 	
 
 	@PostMapping("/importar/{idFacultad}/{idPrograma}")
-	public ResponseEntity<?> importarLaborDocente(@RequestBody List<DocenteLaborDTO> docenteLaborDTOList, @PathVariable Long idFacultad, @PathVariable Long idPrograma, BindingResult result) {
-	    // Verificar si hay errores de validación en la lista de DocenteLaborDTO
-		List<String> erroresConContexto = new ArrayList<>();
+	public ResponseEntity<?> importarLaborDocente(
+	        @PathVariable Long idFacultad,
+	        @PathVariable Long idPrograma) {
+	    List<DocenteLaborDTO> docenteLaborDTOList = new ArrayList<>();
+	    List<String> erroresConContexto = new ArrayList<>();
 
-	    // Validar cada objeto DocenteLaborDTO en la lista
-	    for (int i = 0; i < docenteLaborDTOList.size(); i++) {
-	        DocenteLaborDTO dto = docenteLaborDTOList.get(i);
-	        Set<ConstraintViolation<DocenteLaborDTO>> violaciones = validator.validate(dto);
+	    PeriodoAcademico periodo = periodoAcademicoCUIntPort.consultarPeriodoAcademicoVigente();
+	    
+	    try {
+	        // 1. Configuración del cliente WebClient
+	        WebClient webClient = WebClient.builder()
+	                .baseUrl("http://10.200.1.181:8081/api/v1")
+	                .exchangeStrategies(ExchangeStrategies.builder()
+	                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024)) // 10 MB
+	                        .build())
+	                .build();
 
-	        if (!violaciones.isEmpty()) {
-	            for (ConstraintViolation<DocenteLaborDTO> violacion : violaciones) {
-	                String mensajeError = String.format(
-	                    "Error en el registro %d (Asignatura: %s, Grupo: %s, Identificación: %s): %s - %s",
-	                    i + 1,
-	                    dto.getNombreMateria() != null ? dto.getNombreMateria() : "N/A",
-	                    dto.getGrupo() != null ? dto.getGrupo() : "N/A",
-	                    dto.getIdentificacion() != null ? dto.getIdentificacion() : "N/A",
-	                    violacion.getPropertyPath(),
-	                    violacion.getMessage()
-	                );
-	                erroresConContexto.add(mensajeError);
+	        String periodoActual = periodo.getAnio() + "-" + periodo.getPeriodo();// Cambiar dinámicamente según corresponda
+
+	        // 2. Realizar la llamada al servicio externo
+	        String jsonResponse = webClient.post()
+	                .uri(uriBuilder -> uriBuilder
+	                        .path("/labor/materias/{periodo}")
+	                        .build(periodoActual))
+	                .bodyValue(List.of(idPrograma)) // Enviar idPrograma como body
+	                .retrieve()
+	                .bodyToMono(String.class) // Obtener la respuesta como JSON crudo
+	                .block();
+
+	        // Registrar el JSON recibido para depuración
+	        System.out.println("Respuesta del servicio externo: " + jsonResponse);
+
+	        // 3. Mapear el JSON al DTO
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // Ignorar propiedades desconocidas
+
+	        docenteLaborDTOList = objectMapper.readValue(
+	                jsonResponse,
+	                new TypeReference<List<DocenteLaborDTO>>() {});
+
+	        // Depurar datos deserializados
+	        System.out.println("Datos mapeados correctamente: " + docenteLaborDTOList);
+
+	        // 4. Validar si se obtuvieron datos
+	        if (docenteLaborDTOList == null || docenteLaborDTOList.isEmpty()) {
+	            return ResponseEntity.badRequest()
+	                    .body("No se obtuvieron datos desde el servicio externo para el periodo y programa especificados.");
+	        }
+
+	        // 5. Validar los datos obtenidos
+	        for (int i = 0; i < docenteLaborDTOList.size(); i++) {
+	            DocenteLaborDTO dto = docenteLaborDTOList.get(i);
+	            Set<ConstraintViolation<DocenteLaborDTO>> violaciones = validator.validate(dto);
+
+	            if (!violaciones.isEmpty()) {
+	                for (ConstraintViolation<DocenteLaborDTO> violacion : violaciones) {
+	                    String mensajeError = String.format(
+	                            "Error en el registro %d (Asignatura: %s, Grupo: %s, Identificación: %s): %s - %s",
+	                            i + 1,
+	                            dto.getNombreMateria() != null ? dto.getNombreMateria() : "N/A",
+	                            dto.getGrupo() != null ? dto.getGrupo() : "N/A",
+	                            dto.getIdentificacion() != null ? dto.getIdentificacion() : "N/A",
+	                            violacion.getPropertyPath(),
+	                            violacion.getMessage()
+	                    );
+	                    erroresConContexto.add(mensajeError);
+	                }
 	            }
 	        }
-	    }
 
-	    // Si hay errores de validación, devolver la respuesta con los errores
-	    if (!erroresConContexto.isEmpty()) {
-	        return ResponseEntity.badRequest().body(erroresConContexto);
-	    }
+	        // Si hay errores de validación, devolver la respuesta con los errores
+	        if (!erroresConContexto.isEmpty()) {
+	            return ResponseEntity.badRequest().body(erroresConContexto);
+	        }
 
-	    try {
-	        // Procesar la lista validada y llamar al servicio
+	        // 6. Procesar los datos obtenidos
 	        List<String> mensajes = this.gestionarDocenteCUIntPort.procesarLaborDocenteDesdeJson(docenteLaborDTOList, idFacultad, idPrograma);
 	        return ResponseEntity.ok(mensajes);
 
-	    } catch (ConstraintViolationException ex) {
-	        StringBuilder errorMessage = new StringBuilder("Errores de validación: ");
-	        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
-	            errorMessage.append(String.format("%s: %s; ", violation.getPropertyPath(), violation.getMessage()));
-	        }
-	        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage.toString());
-	    } catch (DataIntegrityViolationException ex) {
-	        return ResponseEntity.status(HttpStatus.CONFLICT).body("Error de integridad de datos: " + ex.getMostSpecificCause().getMessage());
+	    } catch (WebClientResponseException e) {
+	        // Manejo de errores específicos de WebClient
+	        return ResponseEntity.status(e.getStatusCode())
+	                .body("Error en la llamada al servicio externo: " + e.getResponseBodyAsString());
 	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar los datos: " + e.getMessage());
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("Error al procesar los datos: " + e.getMessage());
 	    }
 	}
 

@@ -104,8 +104,10 @@ public class GestionarLaborDocenciaCUAdapter implements GestionarLaborDocenciaCU
 
 		// TODO: Falta validar que asignaturas OID no se encuentran en el sistema
 		// TODO: Falta validar que todas las asignaturas esten en estado ACTIVO
-		List<String> oidAsignaturas = laborAcademica.stream().map(d -> d.getOid()).distinct()
-				.collect(Collectors.toList());
+		List<String> oidAsignaturas = laborAcademica.stream()
+			    .map(d -> String.valueOf(d.getOidAsignatura())) // (Long -> String)
+			    .distinct()
+			    .collect(Collectors.toList());
 		List<Asignatura> asignaturas = this.gestionarAsignaturaGatewayIntPort
 				.obtenerAsignaturasPorListaOids(oidAsignaturas);
 		Boolean valido = asignaturas.size() == oidAsignaturas.size();
@@ -146,9 +148,6 @@ public class GestionarLaborDocenciaCUAdapter implements GestionarLaborDocenciaCU
 			PeriodoAcademico periodoAcademico) {
 		Curso curso = new Curso();
 		curso.setDocentes(Arrays.asList(docenteNuevo));
-		Asignatura asignaturaExistente = asignatura.stream().filter(a -> a.getOID() == docenteLaborDTO.getOid())
-				.collect(Collectors.toList()).get(0);
-		curso.setAsignatura(asignaturaExistente);
 		curso.setCupo(40); // TODO CUPO
 		curso.setGrupo(docenteLaborDTO.getGrupo());
 		curso.setHorarios(null); // TODO HORARIOS.
@@ -216,7 +215,6 @@ public class GestionarLaborDocenciaCUAdapter implements GestionarLaborDocenciaCU
 		for (DocenteLaborDTO docente : docenteLaborDTOList) {
 			Row row = sheet.createRow(rowNum++);
 
-			row.createCell(0).setCellValue(docente.getOidPeriodo());
 			row.createCell(1).setCellValue(docente.getPeriodo());
 			row.createCell(2).setCellValue(docente.getIdentificacion());
 			row.createCell(3).setCellValue(docente.getPrimerApellido());
@@ -226,9 +224,6 @@ public class GestionarLaborDocenciaCUAdapter implements GestionarLaborDocenciaCU
 			row.createCell(7).setCellValue(docente.getCorreo());
 			row.createCell(8).setCellValue(docente.getNombreMateria());
 			row.createCell(9).setCellValue(docente.getNombrePrograma());
-			row.createCell(10).setCellValue(docente.getOid());
-			row.createCell(11).setCellValue(docente.getCodigo());
-			row.createCell(12).setCellValue(docente.getTipoMateria());
 			row.createCell(13).setCellValue(docente.getGrupo());
 			row.createCell(14).setCellValue(docente.getHorasTeoricas());
 		}
