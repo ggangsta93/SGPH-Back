@@ -72,6 +72,10 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 	@Override
 	public EspacioFisico guardarEspacioFisico(EspacioFisico espacioFisico) {
 		espacioFisico.setEdificio(null);
+		if (espacioFisico.getUbicacion() == null || espacioFisico.getRecursosEspacioFisico() == null) {
+		    throw new IllegalArgumentException("Faltan datos obligatorios en el objeto EspacioFisico.");
+		}
+
 		EspacioFisicoEntity espacioFisicoEntity = this.espacioFisicoRepositoryInt
 				.save(this.modelMapper.map(espacioFisico, EspacioFisicoEntity.class));
 		return this.modelMapper.map(espacioFisicoEntity, EspacioFisico.class);

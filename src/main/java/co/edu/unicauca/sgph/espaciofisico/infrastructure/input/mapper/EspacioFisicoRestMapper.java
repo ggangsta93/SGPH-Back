@@ -24,9 +24,9 @@ public interface EspacioFisicoRestMapper {
 			@Mapping(target = "idEdificio", expression = "java(espacioFisico.getEdificio() != null ? espacioFisico.getEdificio().getIdEdificio() : null)"),
 			@Mapping(target = "nombreEdificio", expression = "java(espacioFisico.getEdificio() != null ? espacioFisico.getEdificio().getNombre() : null)"),
 			@Mapping(target = "idUbicacion", expression = "java(espacioFisico.getUbicacion() != null ? espacioFisico.getUbicacion().getIdUbicacion() : null)"),
-			@Mapping(target = "nombreUbicacion", expression = "java(espacioFisico.getUbicacion() != null ? espacioFisico.getUbicacion().getNombre() : null)"),
+		    @Mapping(target = "nombreUbicacion", expression = "java(espacioFisico.getUbicacion() != null ? espacioFisico.getUbicacion().getNombre() : null)"),
+		    @Mapping(target = "recursos", expression = "java(espacioFisico.getRecursosEspacioFisico() != null ? espacioFisico.getRecursosEspacioFisico().stream().map(recurso -> { RecursoOutDTO recursoOutDTO = new RecursoOutDTO(); recursoOutDTO.setIdRecurso(recurso.getIdRecurso()); recursoOutDTO.setNombre(recurso.getNombre()); return recursoOutDTO; }).collect(Collectors.toList()) : null)"),
 			@Mapping(target = "lstIdAgrupadorEspacioFisico", source = "agrupadores"),
-			@Mapping(target = "recursos", source = "recursosEspacioFisico"),
 			@Mapping(target = "OID", source = "OID")
 	})
 	EspacioFisicoOutDTO toEspacioFisicoOutDTO(EspacioFisico espacioFisico);
@@ -35,7 +35,7 @@ public interface EspacioFisicoRestMapper {
 	@Mapping(target = "recursosEspacioFisico", ignore = true)
 	@Mapping(target = "tipoEspacioFisico", expression = "java(new TipoEspacioFisico(espacioFisicoInDTO.getIdTipoEspacioFisico()))")
 	//@Mapping(target = "edificio", expression = "java(espacioFisicoInDTO.getIdEdificio() != null ? new Edificio(espacioFisicoInDTO.getIdEdificio()) : null)")
-	//@Mapping(target = "ubicacion", expression = "java(new Ubicacion(espacioFisicoInDTO.getIdUbicacion()))")
+	@Mapping(target = "ubicacion", expression = "java(espacioFisicoInDTO.getIdUbicacion() != null ? new Ubicacion(espacioFisicoInDTO.getIdUbicacion()) : null)")
 	@Mapping(target = "agrupadores", source = "espacioFisicoInDTO.lstIdAgrupadorEspacioFisico")
 	EspacioFisico toEspacioFisico(EspacioFisicoInDTO espacioFisicoInDTO);
 

@@ -73,17 +73,20 @@ public class EspacioFisicoController extends CommonEJB {
 		this.ubicacionRestMapper = ubicacionRestMapper;
 	}
 
+	@SuppressWarnings("unused")
 	@PostMapping("/guardarEspacioFisico")
 	@Transactional
 	public ResponseEntity<?> guardarEspacioFisico(@Valid @RequestBody EspacioFisicoInDTO espacioFisicoInDTO, BindingResult result) {
 		Set<String> validaciones = new HashSet<String>();
-	    // Validaciones específicas para creación
-	    validaciones.add("ExisteOidEspacioFisico");
-	    validaciones.add("ExisteNombreEspacioFisico");
-	    
-		if (result.hasErrors()) {
-			return validarCampos(result, validaciones);
-		}
+		validaciones.add("ExisteOidEspacioFisico"); 
+		if (espacioFisicoInDTO.getIdEspacioFisico() == null) {
+				        
+	        validaciones.add("ExisteNombreEspacioFisico"); 
+	        
+	    }    
+		if (result.hasErrors() && result == null) {
+			return validarCampos(result, validaciones);					
+		}		
 		
 		if(Boolean.FALSE.equals(espacioFisicoInDTO.getEsValidar())) {
 			EspacioFisicoOutDTO espacioFisicoOutDTO = this.espacioFisicoRestMapper.toEspacioFisicoOutDTO(
