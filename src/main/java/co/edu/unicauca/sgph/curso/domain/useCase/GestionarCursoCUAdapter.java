@@ -88,4 +88,9 @@ public class GestionarCursoCUAdapter implements GestionarCursoCUIntPort {
 		return this.gestionarCursoGatewayIntPort.actualizarCurso(periodoAcademico, cupo, grupo, asignaturaId);
 	}
 
+	@Override
+	public Long contarCursos() {
+		return this.gestionarCursoGatewayIntPort.contarCursos();
+	}
+
 }

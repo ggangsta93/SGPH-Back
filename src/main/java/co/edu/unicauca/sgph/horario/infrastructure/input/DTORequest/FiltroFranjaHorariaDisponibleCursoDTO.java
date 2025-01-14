@@ -35,6 +35,8 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fecha;
 	
+	private List<Long> listaIdRecursos;
+	
 	private Integer pagina;
 
 	private Integer registrosPorPagina;
@@ -155,6 +157,14 @@ public class FiltroFranjaHorariaDisponibleCursoDTO implements Serializable {
 
 	public void setFecha(LocalDate fecha) {
 		this.fecha = fecha;
+	}
+
+	public List<Long> getListaIdRecursos() {
+		return listaIdRecursos;
+	}
+
+	public void setListaIdRecursos(List<Long> listaIdRecursos) {
+		this.listaIdRecursos = listaIdRecursos;
 	}
 	
 }

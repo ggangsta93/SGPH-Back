@@ -2,8 +2,11 @@ package co.edu.unicauca.sgph.horario.infrastructure.input.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +15,7 @@ import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
 import co.edu.unicauca.sgph.horario.aplication.input.GestionarHorarioCUIntPort;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.FiltroFranjaHorariaDisponibleCursoDTO;
+import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.QRRequestDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.FranjaLibreOutDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.mapper.HorarioRestMapper;
 import org.springframework.data.domain.Page;
@@ -65,4 +69,10 @@ public class HorarioController extends CommonEJB {
 	    // Retorna la respuesta con el objeto paginado
 	    return ResponseEntity.ok(franjasLibres);
 	}
+	
+	 @PostMapping("/guardarQR")
+	    public ResponseEntity<Void> guardarQR(@RequestBody QRRequestDTO qrRequest) {
+	        gestionarHorarioCUIntPort.guardarQR(qrRequest);
+	        return new ResponseEntity<>(HttpStatus.CREATED);
+	    }
 }

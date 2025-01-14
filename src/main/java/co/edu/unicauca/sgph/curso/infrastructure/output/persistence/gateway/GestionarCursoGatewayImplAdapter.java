@@ -138,4 +138,9 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 		Integer actualizacion = this.cursoRepositoryInt.actualizarCurso(periodoAcademico, cupo, grupo, asignaturaId);
 		return actualizacion;
 	}
+
+	@Override
+	public Long contarCursos() {
+		return this.cursoRepositoryInt.contarCursos();
+	}
 }

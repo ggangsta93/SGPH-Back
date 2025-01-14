@@ -278,5 +278,14 @@ public class EspacioFisicoController extends CommonEJB {
 	    
 	    return ResponseEntity.ok(franjasLibres);
 	}
+	
+	@GetMapping("/obtenerRecursosPorEspacioFisico")
+    public ResponseEntity<List<RecursoOutDTO>> obtenerRecursosPorEspacioFisico(@RequestParam Long idEspacioFisico) {
+        List<RecursoOutDTO> recursos = gestionarEspacioFisicoCUIntPort.obtenerRecursosPorEspacioFisico(idEspacioFisico);
+        if (recursos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(recursos);
+    }
 
 }

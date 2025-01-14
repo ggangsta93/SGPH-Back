@@ -64,4 +64,6 @@ public interface GestionarCursoCUIntPort {
 	
 	@Transactional
 	int actualizarCurso(PeriodoAcademicoEntity periodoAcademico, Integer cupo, String grupo, Long asignaturaId);
+	
+	Long contarCursos();
 }

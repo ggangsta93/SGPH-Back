@@ -106,4 +106,7 @@ public interface CursoRepositoryInt extends JpaRepository<CursoEntity, Long> {
                         @Param("cupo") 	Integer cupo,
                         @Param("grupo") String grupo,
                         @Param("asignaturaId") Long asignaturaId);
+	
+	@Query("SELECT COUNT(c) FROM CursoEntity c")
+    Long contarCursos();
 }

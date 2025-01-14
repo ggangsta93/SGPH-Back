@@ -75,5 +75,7 @@ public interface GestionarCursoGatewayIntPort {
 	
 	public List<Curso> findCursoByGrupoYCupoYPeriodoYAsignatura(String grupo, Long idAsignatura);
 	
-	public int actualizarCurso(PeriodoAcademicoEntity periodoAcademico, Integer cupo, String grupo, Long asignaturaId) ;
+	public int actualizarCurso(PeriodoAcademicoEntity periodoAcademico, Integer cupo, String grupo, Long asignaturaId);
+	
+	public Long contarCursos();
 }

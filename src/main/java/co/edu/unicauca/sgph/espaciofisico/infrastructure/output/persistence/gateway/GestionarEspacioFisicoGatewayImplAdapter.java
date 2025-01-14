@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -28,6 +29,8 @@ import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.A
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.RecursoEspacioFisico;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.RecursoFisico;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
@@ -71,14 +74,64 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 
 	@Override
 	public EspacioFisico guardarEspacioFisico(EspacioFisico espacioFisico) {
-		espacioFisico.setEdificio(null);
-		if (espacioFisico.getUbicacion() == null || espacioFisico.getRecursosEspacioFisico() == null) {
-		    throw new IllegalArgumentException("Faltan datos obligatorios en el objeto EspacioFisico.");
-		}
+		// Mapear EspacioFisico a EspacioFisicoEntity
+	    EspacioFisicoEntity espacioFisicoEntity = modelMapper.map(espacioFisico, EspacioFisicoEntity.class);
 
-		EspacioFisicoEntity espacioFisicoEntity = this.espacioFisicoRepositoryInt
-				.save(this.modelMapper.map(espacioFisico, EspacioFisicoEntity.class));
-		return this.modelMapper.map(espacioFisicoEntity, EspacioFisico.class);
+	    // Guardar EspacioFisicoEntity si es necesario
+	    if (espacioFisicoEntity.getIdEspacioFisico() == null) {
+	        espacioFisicoEntity = espacioFisicoRepositoryInt.save(espacioFisicoEntity);
+	    } else {
+	        EspacioFisicoEntity espacioFisicoEncontrado = espacioFisicoRepositoryInt.findById(espacioFisicoEntity.getIdEspacioFisico())
+	                .orElseThrow(() -> new EntityNotFoundException(
+	                        "Espacio Físico no encontrado con ID: " + espacioFisico.getIdEspacioFisico()));
+
+	        // Actualizar espacioFisicoEntity con el valor encontrado
+	        espacioFisicoEntity = espacioFisicoEncontrado;
+	    }
+
+	    // Procesar los recursos asociados al espacio físico
+	    List<RecursoEspacioFisicoEntity> recursosProcesados = new ArrayList<>();
+
+	    if (espacioFisico.getRecursosEspacioFisico() != null) {
+	        for (RecursoEspacioFisico recurso : espacioFisico.getRecursosEspacioFisico()) {
+	            // Validar que el recurso tiene un recurso físico asociado con ID válido
+	            if (recurso.getIdRecursoEspacioFisico() == null) {
+	                throw new IllegalArgumentException("El recurso físico enviado es inválido o no tiene ID.");
+	            }
+
+	            // Recuperar el recurso físico de la base de datos
+	            RecursoFisicoEntity recursoFisicoEntity = recursoFisicoRepositoryInt.findById(recurso.getIdRecursoEspacioFisico())
+	                    .orElseThrow(() -> new EntityNotFoundException(
+	                            "Recurso Físico no encontrado con ID: " + recurso.getIdRecursoEspacioFisico()));
+
+	            // Verificar si ya existe una relación entre el espacio físico y el recurso físico
+	            Optional<RecursoEspacioFisicoEntity> recursoExistente = recursoEspacioFisicoRepositoryInt.findByEspacioFisicoAndRecursoFisico(
+	                    espacioFisicoEntity.getIdEspacioFisico(),
+	                    recurso.getIdRecursoEspacioFisico()
+	            );
+
+	            if (recursoExistente.isPresent()) {
+	                // Si ya existe, actualizar los atributos necesarios
+	                RecursoEspacioFisicoEntity recursoActual = recursoExistente.get();
+	                recursoActual.setCantidad(recurso.getCantidad()); // Actualizar cantidad
+	                recursosProcesados.add(recursoActual);
+	            } else {
+	                // Si no existe, crear uno nuevo
+	                RecursoEspacioFisicoEntity recursoNuevo = new RecursoEspacioFisicoEntity();
+	                recursoNuevo.setEspacioFisico(espacioFisicoEntity); // Asignar el espacio físico
+	                recursoNuevo.setRecursoFisico(recursoFisicoEntity); // Asignar el recurso físico
+	                recursoNuevo.setCantidad(recurso.getCantidad());    // Asignar la cantidad
+	                recursosProcesados.add(recursoNuevo);
+	            }
+	        }
+	    }
+
+	    // Guardar todos los recursos procesados
+	    recursoEspacioFisicoRepositoryInt.saveAll(recursosProcesados);
+
+	    // Retornar el espacio físico actualizado
+	    espacioFisico.setIdEspacioFisico(espacioFisicoEntity.getIdEspacioFisico());
+	    return espacioFisico;
 	}
 
 	/**
@@ -573,6 +626,11 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 	    // Si pasa todas las validaciones, el mensaje es satisfactorio
 	    mensaje.setDescripcion("Espacios físicos cargados correctamente");
 	    return mensaje;
+	}
+
+	@Override
+	public List<RecursoOutDTO> obtenerRecursosPorEspacioFisico(Long idEspacioFisico) {
+		return null;
 	}
 
 }

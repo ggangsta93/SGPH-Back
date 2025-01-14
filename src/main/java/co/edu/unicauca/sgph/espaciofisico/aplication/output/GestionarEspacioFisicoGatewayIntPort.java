@@ -134,4 +134,6 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	public Boolean existsEspacioFisicoByNombre(String salon);
 	
 	MensajeOutDTO cargaMasivaEspaciosFisicos(EspacioFisicoInDTO espacioFisico);
+	
+	List<RecursoOutDTO> obtenerRecursosPorEspacioFisico(Long idEspacioFisico);
 }

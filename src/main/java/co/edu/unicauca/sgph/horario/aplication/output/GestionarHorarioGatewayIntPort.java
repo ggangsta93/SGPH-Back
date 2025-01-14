@@ -75,4 +75,5 @@ public interface GestionarHorarioGatewayIntPort {
 	
 	public Page<FranjaLibreOutDTO> consultarFranjasLibres(FiltroFranjaHorariaDisponibleCursoDTO filtro);
 
+	void registrarQR(String nombre, String ruta);
 }

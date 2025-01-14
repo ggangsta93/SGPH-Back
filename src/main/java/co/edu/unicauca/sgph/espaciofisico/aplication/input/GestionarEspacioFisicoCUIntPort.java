@@ -110,4 +110,5 @@ public interface GestionarEspacioFisicoCUIntPort {
 	
 	List<EspacioFisicoDTO> consultarFranjasLibres(FiltroFranjaLibreDTO filtroFranjaLibreDTO);
 
+	List<RecursoOutDTO> obtenerRecursosPorEspacioFisico(Long idEspacioFisico);
 }

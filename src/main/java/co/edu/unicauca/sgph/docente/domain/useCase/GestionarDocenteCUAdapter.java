@@ -353,7 +353,8 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	    mensajes.add(String.format("Total docentes registrados actualmente: %d", totalDocentesActualmente));
 	    mensajes.add(String.format("Cantidad de nuevas asignaturas creadas: %d", asignaturasCreadas));
 	    mensajes.add(String.format("Total asignaturas registradas actualmente: %d", totalAsignaturasActualmente));
-	    mensajes.add(String.format("Total cursos registrados actualmente: %d", cursosCreados));
+	    mensajes.add(String.format("Cantidad de nuevos cursos creados: %d", cursosCreados));
+	    mensajes.add(String.format("Total cursos registrados actualmente: %d", gestionarCursoCUIntPort.contarCursos()));
 
 	    return mensajes;
 	}
@@ -465,7 +466,7 @@ public class GestionarDocenteCUAdapter implements GestionarDocenteCUIntPort {
 	    );
 
 	    if (rowsUpdated > 0) {
-	        return true;
+	        return false;
 	    } else {
 	        Curso curso = new Curso();
 	        curso.setGrupo(docenteLaborDTO.getGrupo());

@@ -92,6 +92,7 @@ public class ReservaTemporalController {
 	    @RequestParam(required = false) String salon,
 	    @RequestParam(required = false) List<Long> ubicacion,
 	    @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReserva,
+	    @RequestParam(required = false) List<Long> recursos,
 	    @RequestParam(defaultValue = "0") Integer pagina,
 	    @RequestParam(defaultValue = "10") Integer registrosPorPagina
 	) {
@@ -115,6 +116,8 @@ public class ReservaTemporalController {
 	    filtro.setPagina(pagina);
 	    filtro.setRegistrosPorPagina(registrosPorPagina);
 
+	    filtro.setListaIdRecursos(recursos);
+	    
 	    // Llama al caso de uso para obtener las franjas libres paginadas
 	    Page<FranjaLibreOutDTO> franjasLibres = gestionarReservaTemporalCUIntPort.consultarFranjasLibres(filtro);
 

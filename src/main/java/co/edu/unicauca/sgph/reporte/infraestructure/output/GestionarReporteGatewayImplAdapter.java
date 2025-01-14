@@ -140,13 +140,20 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 	        sheet.setColumnWidth(i, 256 * 30); // Columnas de días (aproximadamente 246 píxeles)
 	    }
 
-	    // Filas de horas (de 07:00 a 22:00)
+	 // Crear la tabla completa con bordes (de 07:00 a 22:00 para todos los días)
 	    for (int hora = 7; hora <= 22; hora++) {
-	        Row row = sheet.createRow(hora - 6); // Inicia en la fila 1
-	        Cell cell = row.createCell(0);
-	        cell.setCellValue(String.format("%02d:00", hora));
-	        cell.setCellStyle(contentCellStyle);
-	        row.setHeight((short) (60 * 15)); // Altura de fila en unidades (60 píxeles aprox)
+	        Row row = sheet.createRow(hora - 6);
+	        // Crear celda de la columna de horas
+	        Cell hourCell = row.createCell(0);
+	        hourCell.setCellValue(String.format("%02d:00", hora));
+	        hourCell.setCellStyle(contentCellStyle);
+	        row.setHeight((short) (60 * 15)); // Altura de fila
+
+	        // Crear celdas vacías con bordes para cada día
+	        for (int col = 1; col <= 7; col++) {
+	            Cell cell = row.createCell(col);
+	            cell.setCellStyle(contentCellStyle);
+	        }
 	    }
 
 	    // Mapeo de días a columnas
@@ -484,13 +491,20 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 	        sheet.setColumnWidth(i, 256 * 30);
 	    }
 
-	    // Filas de horas (de 07:00 a 22:00)
+	 // Crear la tabla completa con bordes (de 07:00 a 22:00 para todos los días)
 	    for (int hora = 7; hora <= 22; hora++) {
 	        Row row = sheet.createRow(hora - 6);
-	        Cell cell = row.createCell(0);
-	        cell.setCellValue(String.format("%02d:00", hora));
-	        cell.setCellStyle(contentCellStyle);
+	        // Crear celda de la columna de horas
+	        Cell hourCell = row.createCell(0);
+	        hourCell.setCellValue(String.format("%02d:00", hora));
+	        hourCell.setCellStyle(contentCellStyle);
 	        row.setHeight((short) (60 * 15)); // Altura de fila
+
+	        // Crear celdas vacías con bordes para cada día
+	        for (int col = 1; col <= 7; col++) {
+	            Cell cell = row.createCell(col);
+	            cell.setCellStyle(contentCellStyle);
+	        }
 	    }
 
 	    // Mapeo de días a columnas
@@ -643,19 +657,30 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 	        }
 	    }
 
-	    // Llenar la hoja con franjas agrupadas
+	    // Llenar la hoja con franjas agrupadas, asegurando que todas las celdas tengan bordes
 	    int rowIndex = 1;
 	    for (String hora : horas) {
 	        Row row = sheet.createRow(rowIndex++);
+	        // Crear celda para la hora
 	        Cell hourCell = row.createCell(0);
 	        hourCell.setCellValue(hora);
 	        hourCell.setCellStyle(contentCellStyle);
 
+	        // Crear celdas vacías con bordes para cada día
+	        for (int col = 1; col <= 7; col++) {
+	            Cell cell = row.createCell(col);
+	            cell.setCellStyle(contentCellStyle);
+	        }
+
+	        // Llenar las celdas con los salones disponibles
 	        Map<Integer, List<String>> salonesPorDia = franjasAgrupadas.getOrDefault(hora, new HashMap<>());
 	        for (Map.Entry<Integer, List<String>> entry : salonesPorDia.entrySet()) {
 	            int col = entry.getKey();
 	            List<String> salones = entry.getValue();
-	            Cell cell = row.createCell(col);
+	            Cell cell = row.getCell(col);
+	            if (cell == null) {
+	                cell = row.createCell(col);
+	            }
 	            cell.setCellValue(String.join(", ", salones));
 	            cell.setCellStyle(contentCellStyle);
 	        }

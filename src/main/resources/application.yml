@@ -36,3 +36,7 @@ logging:
     name: consolaSGPH.log
   
 
+# Nueva propiedad para la ruta del directorio donde guardar los QR
+qr:
+  directory:
+    path: "C:/Users/Personal/Documents/PROGRAMAS SGPH/SGPH_ACTUALIZADO/QR_espaciosFisicos"

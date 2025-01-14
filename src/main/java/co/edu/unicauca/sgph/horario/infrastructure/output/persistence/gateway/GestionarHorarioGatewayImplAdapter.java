@@ -1,5 +1,8 @@
 package co.edu.unicauca.sgph.horario.infrastructure.output.persistence.gateway;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -14,9 +17,11 @@ import javax.persistence.PersistenceContext;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
 import org.springframework.data.domain.Pageable;
 
 import co.edu.unicauca.sgph.common.enums.DiaSemanaEnum;
@@ -42,6 +47,9 @@ public class GestionarHorarioGatewayImplAdapter implements GestionarHorarioGatew
 	private HorarioRepositoryInt horarioRepositoryInt;
 	private HorarioEspacioRepositoryInt horarioEspacioRepositoryInt;
 	private ModelMapper modelMapper;
+	
+	@Value("${qr.directory.path}") // Ruta configurada en application.yml
+    private String qrDirectoryPath;
 
 	public GestionarHorarioGatewayImplAdapter(HorarioRepositoryInt horarioRepositoryInt, ModelMapper modelMapper,
 			HorarioEspacioRepositoryInt horarioEspacioRepositoryInt) {
@@ -200,6 +208,31 @@ public class GestionarHorarioGatewayImplAdapter implements GestionarHorarioGatew
 	            Collections.emptyList()
 	        );
 	    });
+	}
+
+	@Override
+	public void registrarQR(String nombre, String base64QR) {
+		// Decodificar el QR de base64
+        byte[] qrDataBytes = Base64Utils.decodeFromString(base64QR);
+
+        // Crear la ruta completa del archivo
+        String filePath = qrDirectoryPath + File.separator + nombre;
+
+        try {
+            // Verificar si el directorio existe, si no, crearlo
+            File directory = new File(qrDirectoryPath);
+            if (!directory.exists()) {
+                directory.mkdirs(); // Crear directorios si no existen
+            }
+
+            // Guardar el archivo
+            try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                fos.write(qrDataBytes);
+                System.out.println("QR guardado exitosamente en: " + filePath);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar el QR en el servidor: " + filePath, e);
+        }
 	}
 
 }

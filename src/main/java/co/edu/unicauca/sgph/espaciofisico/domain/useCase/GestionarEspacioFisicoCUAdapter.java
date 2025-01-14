@@ -130,4 +130,9 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	public List<EspacioFisicoDTO> consultarFranjasLibres(FiltroFranjaLibreDTO filtroFranjaLibreDTO) {
 		return null;
 	}
+
+	@Override
+	public List<RecursoOutDTO> obtenerRecursosPorEspacioFisico(Long idEspacioFisico) {
+		return this.gestionarEspacioFisicoGatewayIntPort.obtenerRecursosPorEspacioFisico(idEspacioFisico);
+	}
 }

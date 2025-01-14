@@ -52,6 +52,17 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 		       AND (:horaFin    IS NULL OR franja.horaFin    <= :horaFin)
 		       AND (:salon IS NULL OR LOWER(ef.salon) LIKE LOWER(CONCAT('%', :salon, '%')))
 		       AND (:ubicacion IS NULL OR ef.id_ubicacion IN (:ubicacion))
+			   AND (				    
+				    :recursosSize = 0 
+				    OR ef.id_espacio_fisico IN (
+				        SELECT ref.id_espacio_fisico
+				        FROM RECURSO_ESPACIO_FISICO ref
+				        WHERE ref.id_recurso_fisico IN (:recursos) -- Lista válida
+				        GROUP BY ref.id_espacio_fisico
+				        HAVING COUNT(DISTINCT ref.id_recurso_fisico) >= :recursosSize
+				    )
+				)
+
 
 		       -- Se excluyen las franjas ocupadas en horario_espaciofisico
 		       AND NOT EXISTS (
@@ -73,6 +84,7 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 		              AND franja.horaInicio < r.hora_fin
 		              AND franja.horaFin    > r.hora_inicio
 		              AND e.descripcion NOT IN ('RESERVA_RECHAZADA', 'RESERVA_FINALIZADA')
+		              AND e.descripcion IN ('RESERVA_APROBADA', 'RESERVA_PENDIENTE')
 		       )
 		""",
 		countQuery = """
@@ -100,6 +112,17 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 		       AND (:horaFin    IS NULL OR franja.horaFin    <= :horaFin)
 		       AND (:salon IS NULL OR LOWER(ef.salon) LIKE LOWER(CONCAT('%', :salon, '%')))
 		       AND (:ubicacion IS NULL OR ef.id_ubicacion IN (:ubicacion))
+			   AND (
+				    :recursosSize = 0 
+				    OR ef.id_espacio_fisico IN (
+				        SELECT ref.id_espacio_fisico
+				        FROM RECURSO_ESPACIO_FISICO ref
+				        WHERE ref.id_recurso_fisico IN (:recursos) -- Lista válida
+				        GROUP BY ref.id_espacio_fisico
+				        HAVING COUNT(DISTINCT ref.id_recurso_fisico) >= :recursosSize
+				    )
+				)
+
 
 		       -- Exclusión en horario_espaciofisico
 		       AND NOT EXISTS (
@@ -121,6 +144,7 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 		              AND franja.horaInicio < r.hora_fin
 		              AND franja.horaFin    > r.hora_inicio
 		              AND e.descripcion NOT IN ('RESERVA_RECHAZADA', 'RESERVA_FINALIZADA')
+		              AND e.descripcion IN ('RESERVA_APROBADA', 'RESERVA_PENDIENTE')
 		       )
 		""",
 		nativeQuery = true)
@@ -132,6 +156,8 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 		    @Param("salon") String salon,
 		    @Param("ubicacion") List<Long> ubicacion,
 		    @Param("fechaReserva") LocalDate fechaReserva,
+		    @Param("recursos") List<Long> recursos,
+		    @Param("recursosSize") Long recursosSize,
 		    Pageable pageable
 		);
 
@@ -159,6 +185,14 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 			       "AND (r.fechaReserva < :currentDate OR (r.fechaReserva = :currentDate AND r.horaFin <= :currentTime))")
 			List<ReservaTemporalEntity> findReservasAprobadasVencidas(@Param("currentDate") LocalDate currentDate, 
 				    @Param("currentTime") LocalTime currentTime);
+
+		boolean existsByFechaReservaAndEspacioFisico_IdEspacioFisicoAndHoraInicioAndHoraFinAndEstado_IdEstado(
+			    LocalDate fechaReserva,
+			    Long idEspacioFisico,
+			    LocalTime horaInicio,
+			    LocalTime horaFin,
+			    Long idEstado
+			);
 
 
 }

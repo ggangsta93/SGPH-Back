@@ -72,6 +72,23 @@ public class GestionarReservaTemporalGatewayImplAdapter implements GestionarRese
 	@Override
 	public ReservaTemporalOutDTO guardarReserva(ReservaTemporalInDTO inDTO) {
 
+		// Buscar el estado "RESERVA_PENDIENTE" en la base de datos
+	    EstadoReservaEntity estadoReservaPendiente = estadoReservaRepository.findById(2L) // 2L = ID de RESERVA_PENDIENTE
+	        .orElseThrow(() -> new RuntimeException("Estado de reserva no encontrado"));
+
+	    // Verificar si ya existe una reserva con los mismos parámetros y estado RESERVA_PENDIENTE
+	    boolean existeReservaPendiente = reservaTemporalRepositoryInt.existsByFechaReservaAndEspacioFisico_IdEspacioFisicoAndHoraInicioAndHoraFinAndEstado_IdEstado(
+	        inDTO.getFechaReserva(),
+	        inDTO.getIdEspacioFisico(),
+	        inDTO.getHoraInicio(),
+	        inDTO.getHoraFin(),
+	        estadoReservaPendiente.getIdEstado() // ID del estado RESERVA_PENDIENTE
+	    );
+
+	    if (existeReservaPendiente) {
+	        throw new RuntimeException("Ya existe una reserva para el mismo salón, fecha y horario.");
+	    }
+		
 	    // Mapear el DTO a la entidad
 	    ReservaTemporalEntity reservaEntity = new ReservaTemporalEntity();
 	    reservaEntity.setUsuario(inDTO.getUsuario());
@@ -128,6 +145,14 @@ public class GestionarReservaTemporalGatewayImplAdapter implements GestionarRese
 	                                   ? filtro.getListaIdUbicacion()
 	                                   : null;
 
+	 // Tomar la lista de recursos (si viene vacía, pasamos null)
+	    List<Long> listaIdRecursos = (filtro.getListaIdRecursos() != null
+	                                  && !filtro.getListaIdRecursos().isEmpty())
+	                                  ? filtro.getListaIdRecursos()
+	                                  : null;
+	    
+	    Long totalRecursos = (listaIdRecursos != null) ? (long) listaIdRecursos.size() : 0L;
+
 	    // Preparar formateadores para las horas
 	    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("H:mm:ss");
 	    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -161,7 +186,9 @@ public class GestionarReservaTemporalGatewayImplAdapter implements GestionarRese
 	            horaFin,
 	            filtro.getSalon(),
 	            listaIdUbicacion,
-	            filtro.getFecha(),    // Aquí pasas la fecha que viene en el DTO
+	            filtro.getFecha(), 
+	            filtro.getListaIdRecursos(),
+	            totalRecursos,
 	            pageable
 	    );
 
