@@ -71,10 +71,17 @@ public class ReservaTemporalController {
     }
 	
     @GetMapping("/formulario")
-    public ResponseEntity<FormularioReservaDTO> cargarFormulario(@RequestParam String username) {
+    public ResponseEntity<?> cargarFormulario(@RequestParam String username) {
         // 1. Obtener datos del usuario desde el servicio externo
     	UsuarioReservasDTO usuario = gestionarUsuarioCUIntPort.obtenerDatosUsuarioExterno(username);
 
+    	// 2. Validar si el usuario está ACTIVO
+        if (!"ACTIVO".equalsIgnoreCase(usuario.getPrograma().get(0).getEstado())) {
+            // Retornar un error si el usuario no está activo
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("El usuario no está activo. No puede acceder a este formulario.");
+        }
+    	
         // 2. Crear el DTO del formulario con los datos del usuario
         FormularioReservaDTO formulario = new FormularioReservaDTO();
         formulario.setUsuario(usuario);

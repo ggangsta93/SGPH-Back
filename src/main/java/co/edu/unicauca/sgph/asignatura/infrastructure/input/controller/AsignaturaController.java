@@ -52,12 +52,14 @@ public class AsignaturaController extends CommonEJB {
 	 */
 	@PostMapping("/guardarAsignatura")
 	public ResponseEntity<?> guardarAsignatura(@Valid @RequestBody AsignaturaInDTO asignaturaInDTO, BindingResult result) {
-		Set<String> validaciones = new HashSet<String>();
-		validaciones.add("ExisteCodigoAsignatura");
-		validaciones.add("ExisteOidAsignatura");
+		if(asignaturaInDTO.getIdAsignatura() == null) {
+			Set<String> validaciones = new HashSet<String>();
+			validaciones.add("ExisteCodigoAsignatura");
+			validaciones.add("ExisteOidAsignatura");
 		
-		if (result.hasErrors()) {
-			return validarCampos(result, validaciones);
+			if (result.hasErrors()) {
+				return validarCampos(result, validaciones);
+			}
 		}
 		
 		if (Boolean.FALSE.equals(asignaturaInDTO.getEsValidar())) {

@@ -9,12 +9,14 @@ public class JwtDto {
     private String token;
     private String bearer = "Bearer";
     private String nombreUsuario;
+    private String estadoUsuario;
     private List<Long> lstIdPrograma;
-    private Collection<? extends GrantedAuthority> authorities;
+    private Collection<? extends GrantedAuthority> authorities;    
 
-    public JwtDto(String token, String nombreUsuario, Collection<? extends GrantedAuthority> authorities, List<Long> lstIdPrograma) {
+    public JwtDto(String token, String nombreUsuario, String estadoUsuario, Collection<? extends GrantedAuthority> authorities, List<Long> lstIdPrograma) {
         this.token = token;
         this.nombreUsuario = nombreUsuario;
+        this.estadoUsuario = estadoUsuario;
         this.authorities = authorities;
         this.lstIdPrograma=lstIdPrograma;
     }
@@ -58,4 +60,13 @@ public class JwtDto {
 	public void setLstIdPrograma(List<Long> lstIdPrograma) {
 		this.lstIdPrograma = lstIdPrograma;
 	}
+
+	public String getEstadoUsuario() {
+		return estadoUsuario;
+	}
+
+	public void setEstadoUsuario(String estadoUsuario) {
+		this.estadoUsuario = estadoUsuario;
+	}
+	
 }
