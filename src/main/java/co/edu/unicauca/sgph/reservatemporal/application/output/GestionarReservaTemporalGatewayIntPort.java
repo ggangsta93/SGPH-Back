@@ -27,4 +27,6 @@ public interface GestionarReservaTemporalGatewayIntPort {
     ReservaTemporal rechazarReserva(Long reservaId, String motivo);
     
     void finalizarReservasVencidasProgramadas();
+    
+    byte[] generarExcelHistorialReservasPorPeriodo(Long idPeriodo);
 }

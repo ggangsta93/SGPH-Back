@@ -2,6 +2,7 @@ package co.edu.unicauca.sgph.reservatemporal.domain.model;
 
 import java.time.LocalDate;
 
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 import lombok.Data;
 
 @Data
@@ -22,6 +23,7 @@ public class ReservaTemporal {
     private String horaInicio;
     private String horaFin;
     private String observacionesPrestamista;
+    private Long periodo;
 
     public ReservaTemporal() {
     }
@@ -157,5 +159,13 @@ public class ReservaTemporal {
 	public void setObservacionesPrestamista(String observacionesPrestamista) {
 		this.observacionesPrestamista = observacionesPrestamista;
 	}
-   
+
+	public Long getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(Long periodo) {
+		this.periodo = periodo;
+	}
+
 }

@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -158,4 +160,15 @@ public class ReservaTemporalController {
     public void finalizarReservasVencidasProgramadas() {
         gestionarReservaTemporalCUIntPort.finalizarReservasVencidasProgramadas();
     }
+    
+    @GetMapping("/descargarHistorialReservas")
+    public ResponseEntity<byte[]> descargarHistorialReservas(@RequestParam Long idPeriodo) {
+        byte[] excelFile = gestionarReservaTemporalCUIntPort.generarExcelHistorialReservasPorPeriodo(idPeriodo);
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=historial_reservas.xlsx")
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(excelFile);
+    }
+
 }

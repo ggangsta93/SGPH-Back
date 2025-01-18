@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
 
 @Entity
 @Table(name = "RESERVA_TEMPORAL")
@@ -61,6 +62,10 @@ public class ReservaTemporalEntity {
     
     @Column(name = "OBSERVACIONES_PRESTAMISTA")
     private String observacionesPrestamista;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_PERIODO_ACADEMICO", nullable = false)
+    private PeriodoAcademicoEntity periodo;
 
 	public Long getIdReserva() {
 		return idReserva;
@@ -164,6 +169,14 @@ public class ReservaTemporalEntity {
 
 	public void setObservacionesPrestamista(String observacionesPrestamista) {
 		this.observacionesPrestamista = observacionesPrestamista;
+	}
+
+	public PeriodoAcademicoEntity getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(PeriodoAcademicoEntity periodo) {
+		this.periodo = periodo;
 	}
 
 }

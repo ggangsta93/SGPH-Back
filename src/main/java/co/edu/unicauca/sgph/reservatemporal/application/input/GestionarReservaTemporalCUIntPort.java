@@ -23,4 +23,6 @@ public interface GestionarReservaTemporalCUIntPort {
     ReservaTemporalInDTO rechazarReserva(Long reservaId, String motivo);
     
     void finalizarReservasVencidasProgramadas();
+    
+    byte[] generarExcelHistorialReservasPorPeriodo(Long idPeriodo);
 }

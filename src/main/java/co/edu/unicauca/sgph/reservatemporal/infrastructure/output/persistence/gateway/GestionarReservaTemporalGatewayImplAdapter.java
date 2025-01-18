@@ -1,14 +1,23 @@
 package co.edu.unicauca.sgph.reservatemporal.infrastructure.output.persistence.gateway;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
@@ -23,6 +32,9 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repo
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.FiltroFranjaHorariaDisponibleCursoDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.FranjaLibreOutDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.output.persistence.repository.HorarioRepositoryInt;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.EstadoPeriodoAcademicoEnum;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.repository.PeriodoAcademicoRepositoryInt;
 import co.edu.unicauca.sgph.reservatemporal.application.output.GestionarReservaTemporalGatewayIntPort;
 import co.edu.unicauca.sgph.reservatemporal.domain.model.ReservaTemporal;
 import co.edu.unicauca.sgph.reservatemporal.infrastructure.input.DTORequest.ReservaTemporalInDTO;
@@ -45,16 +57,19 @@ public class GestionarReservaTemporalGatewayImplAdapter implements GestionarRese
     private final LogReservasRepository logReservasRepository;
     private final NotificacionesReservaRepository notificacionesReservaRepository;
     private final EstadoReservaRepository estadoReservaRepository;
+    private final PeriodoAcademicoRepositoryInt periodoAcademicoRepositoryInt;
 
     public GestionarReservaTemporalGatewayImplAdapter(ReservaTemporalRepositoryInt repository, ModelMapper mapper,
     		CursoRepositoryInt cursoRepositoryInt, HorarioRepositoryInt horarioRepositoryInt, EspacioFisicoRepositoryInt espacioFisicoRepositoryInt,
-    		LogReservasRepository logReservasRepository, NotificacionesReservaRepository notificacionesReservaRepository, EstadoReservaRepository estadoReservaRepository) {
+    		LogReservasRepository logReservasRepository, NotificacionesReservaRepository notificacionesReservaRepository, EstadoReservaRepository estadoReservaRepository,
+    		PeriodoAcademicoRepositoryInt periodoAcademicoRepositoryInt) {
         this.reservaTemporalRepositoryInt = repository;
         this.mapper = mapper;
         this.espacioFisicoRepositoryInt = espacioFisicoRepositoryInt;  
         this.logReservasRepository = logReservasRepository;
         this.notificacionesReservaRepository = notificacionesReservaRepository;
         this.estadoReservaRepository = estadoReservaRepository;
+        this.periodoAcademicoRepositoryInt = periodoAcademicoRepositoryInt;
     }
     
 	@Override
@@ -100,6 +115,7 @@ public class GestionarReservaTemporalGatewayImplAdapter implements GestionarRese
 	    reservaEntity.setObservaciones(inDTO.getObservaciones());
 	    reservaEntity.setHoraInicio(inDTO.getHoraInicio());
 	    reservaEntity.setHoraFin(inDTO.getHoraFin());
+	    reservaEntity.setPeriodo(periodoAcademicoRepositoryInt.consultarPeriodoAcademicoVigente());
 	    // Asignar espacio físico
 	    EspacioFisicoEntity espacioFisico = espacioFisicoRepositoryInt.findById(inDTO.getIdEspacioFisico())
 	        .orElseThrow(() -> new RuntimeException("Espacio físico no encontrado"));
@@ -233,18 +249,24 @@ public class GestionarReservaTemporalGatewayImplAdapter implements GestionarRese
 	            throw new RuntimeException("El estado proporcionado no es válido: " + estadoReserva);
 	        }
 	    }
+	    
+	    // Consultar el periodo académico vigente
+	    PeriodoAcademicoEntity periodoVigente = periodoAcademicoRepositoryInt.consultarPeriodoAcademicoVigente();
+	    if (periodoVigente == null || periodoVigente.getEstado() != EstadoPeriodoAcademicoEnum.ABIERTO) {
+	        throw new RuntimeException("No hay un periodo académico vigente disponible.");
+	    }
 
 	    // Si no se envían tipoIdentificación ni identificación, pero sí el estado
 	    if ((tipoIdentificacion == null || tipoIdentificacion.isBlank())
 	            && (identificacion == null || identificacion.isBlank())) {
 
 	        // Filtrar solo por estado
-	        return reservaTemporalRepositoryInt.findByFilters(null, null, estadoEnum, pageable)
+	        return reservaTemporalRepositoryInt.findByFilters(null, null, estadoEnum, periodoVigente.getIdPeriodoAcademico(), pageable)
 	                .map(entity -> mapToReservaTemporal(entity));
 	    }
 
 	    // Filtrar por tipoIdentificación, identificación y/o estado
-	    return reservaTemporalRepositoryInt.findByFilters(tipoIdentificacion, identificacion, estadoEnum, pageable)
+	    return reservaTemporalRepositoryInt.findByFilters(tipoIdentificacion, identificacion, estadoEnum, periodoVigente.getIdPeriodoAcademico(), pageable)
 	            .map(entity -> mapToReservaTemporal(entity));
 	}
 
@@ -436,6 +458,120 @@ public class GestionarReservaTemporalGatewayImplAdapter implements GestionarRese
 	        logReservasEntity.setObservaciones("Reserva finalizada automáticamente al cumplirse la fecha y hora.");
 	        logReservasRepository.save(logReservasEntity);
 	    }
+	}
+
+	@Override
+	public byte[] generarExcelHistorialReservasPorPeriodo(Long idPeriodo) {
+		// Obtén los datos
+	    List<Object[]> historial = reservaTemporalRepositoryInt.findHistorialReservasPorPeriodo(idPeriodo);
+
+	    // Crea el archivo Excel
+	    XSSFWorkbook workbook = new XSSFWorkbook();
+	    XSSFSheet sheet = workbook.createSheet("Historial Reservas");
+
+	    // Estilos
+	    XSSFCellStyle headerStyle = workbook.createCellStyle();
+	    XSSFFont headerFont = workbook.createFont();
+	    headerFont.setBold(true);
+	    headerFont.setColor(IndexedColors.WHITE.getIndex());
+	    headerStyle.setFont(headerFont);
+	    headerStyle.setFillForegroundColor(IndexedColors.BLUE.getIndex());
+	    headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+	    headerStyle.setBorderBottom(BorderStyle.THIN);
+	    headerStyle.setBorderTop(BorderStyle.THIN);
+	    headerStyle.setBorderLeft(BorderStyle.THIN);
+	    headerStyle.setBorderRight(BorderStyle.THIN);
+
+	    XSSFCellStyle dataStyle = workbook.createCellStyle();
+	    dataStyle.setBorderBottom(BorderStyle.THIN);
+	    dataStyle.setBorderTop(BorderStyle.THIN);
+	    dataStyle.setBorderLeft(BorderStyle.THIN);
+	    dataStyle.setBorderRight(BorderStyle.THIN);
+
+	    // Encabezados
+	    Row header = sheet.createRow(0);
+	    String[] columnas = {
+	        "Acción", "Fecha Modificación", "Tipo Identificación", "Número Identificación", "Correo", 
+	        "Tipo Solicitante", "Fecha Reserva", "Hora Inicio", "Hora Fin", "Observaciones", 
+	        "Observaciones Prestamista", "Salón"
+	    };
+	    for (int i = 0; i < columnas.length; i++) {
+	        Cell cell = header.createCell(i);
+	        cell.setCellValue(columnas[i]);
+	        cell.setCellStyle(headerStyle);
+	    }
+
+	    // Datos
+	    int rowNum = 1;
+	    for (Object[] row : historial) {
+	        ReservaTemporalEntity reserva = (ReservaTemporalEntity) row[0];
+	        LogReservasEntity log = (LogReservasEntity) row[1];
+
+	        Row dataRow = sheet.createRow(rowNum++);
+	        Cell cell0 = dataRow.createCell(0);
+	        cell0.setCellValue(log.getAccion());
+	        cell0.setCellStyle(dataStyle);
+
+	        Cell cell1 = dataRow.createCell(1);
+	        cell1.setCellValue(log.getFechaModificacion().toString());
+	        cell1.setCellStyle(dataStyle);
+
+	        Cell cell2 = dataRow.createCell(2);
+	        cell2.setCellValue(reserva.getTipoIdentificacion());
+	        cell2.setCellStyle(dataStyle);
+
+	        Cell cell3 = dataRow.createCell(3);
+	        cell3.setCellValue(reserva.getNumeroIdentificacion());
+	        cell3.setCellStyle(dataStyle);
+
+	        Cell cell4 = dataRow.createCell(4);
+	        cell4.setCellValue(reserva.getCorreo());
+	        cell4.setCellStyle(dataStyle);
+
+	        Cell cell5 = dataRow.createCell(5);
+	        cell5.setCellValue(reserva.getTipoSolicitante());
+	        cell5.setCellStyle(dataStyle);
+
+	        Cell cell6 = dataRow.createCell(6);
+	        cell6.setCellValue(reserva.getFechaReserva().toString());
+	        cell6.setCellStyle(dataStyle);
+
+	        Cell cell7 = dataRow.createCell(7);
+	        cell7.setCellValue(reserva.getHoraInicio().toString());
+	        cell7.setCellStyle(dataStyle);
+
+	        Cell cell8 = dataRow.createCell(8);
+	        cell8.setCellValue(reserva.getHoraFin().toString());
+	        cell8.setCellStyle(dataStyle);
+
+	        Cell cell9 = dataRow.createCell(9);
+	        cell9.setCellValue(reserva.getObservaciones());
+	        cell9.setCellStyle(dataStyle);
+
+	        Cell cell10 = dataRow.createCell(10);
+	        cell10.setCellValue(reserva.getObservacionesPrestamista());
+	        cell10.setCellStyle(dataStyle);
+
+	        Cell cell11 = dataRow.createCell(11);
+	        cell11.setCellValue(reserva.getEspacioFisico().getSalon());
+	        cell11.setCellStyle(dataStyle);
+	    }
+
+	    // Ajustar columnas al contenido
+	    for (int i = 0; i < columnas.length; i++) {
+	        sheet.autoSizeColumn(i);
+	    }
+
+	    // Escribe los datos a un array de bytes
+	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	    try {
+	        workbook.write(bos);
+	        workbook.close();
+	    } catch (IOException e) {
+	        throw new RuntimeException("Error al generar el archivo Excel", e);
+	    }
+
+	    return bos.toByteArray();
 	}
 
 }

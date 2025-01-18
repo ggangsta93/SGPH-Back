@@ -164,11 +164,13 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 		@Query("SELECT r FROM ReservaTemporalEntity r " +
 		           "WHERE (:tipoIdentificacion IS NULL OR r.tipoIdentificacion = :tipoIdentificacion) " +
 		           "AND (:numeroIdentificacion IS NULL OR r.numeroIdentificacion = :numeroIdentificacion)" +
-				   "AND (:estado IS NULL OR r.estado.descripcion = :estado)")
+				   "AND (:estado IS NULL OR r.estado.descripcion = :estado)" +
+			       "AND r.periodo.idPeriodoAcademico = :idPeriodo")
 		    Page<ReservaTemporalEntity> findByFilters(
 		            @Param("tipoIdentificacion") String tipoIdentificacion,
 		            @Param("numeroIdentificacion") String numeroIdentificacion,
 		            @Param("estado") EstadoReservaEnum estado,
+		            @Param("idPeriodo") Long idPeriodo,
 		            Pageable pageable);
 		
 		@Query("""
@@ -194,5 +196,12 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 			    Long idEstado
 			);
 
+		@Query("SELECT r FROM ReservaTemporalEntity r WHERE r.periodo.idPeriodoAcademico = :idPeriodo")
+	    List<ReservaTemporalEntity> findByPeriodoAcademico(@Param("idPeriodo") Long idPeriodo);
+
+		@Query("SELECT r, l FROM ReservaTemporalEntity r " +
+			       "JOIN LogReservasEntity l ON r.idReserva = l.reserva.idReserva " +
+			       "WHERE r.periodo.idPeriodoAcademico = :idPeriodo")
+			List<Object[]> findHistorialReservasPorPeriodo(@Param("idPeriodo") Long idPeriodo);
 
 }
