@@ -57,10 +57,10 @@ public class ReservaTemporalEntity {
     @JoinColumn(name = "ID_ESTADO", nullable = false)
     private EstadoReservaEntity estado;
     
-    @Column(name = "OBSERVACIONES")
+    @Column(name = "OBSERVACIONES", length = 1000)
     private String observaciones;
     
-    @Column(name = "OBSERVACIONES_PRESTAMISTA")
+    @Column(name = "OBSERVACIONES_PRESTAMISTA", length = 1000)
     private String observacionesPrestamista;
     
     @ManyToOne(fetch = FetchType.LAZY)

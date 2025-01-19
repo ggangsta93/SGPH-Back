@@ -81,5 +81,10 @@ public class GestionarReservaTemporalCUAdapter implements GestionarReservaTempor
 	public byte[] generarExcelHistorialReservasPorPeriodo(Long idPeriodo) {
 		return gestionarReservaTemporalGatewayIntPort.generarExcelHistorialReservasPorPeriodo(idPeriodo);
 	}
+
+	@Override
+	public ReservaTemporal cancelarReserva(Long reservaId, String motivo) {
+		return gestionarReservaTemporalGatewayIntPort.cancelarReserva(reservaId, motivo);
+	}
 	
 }

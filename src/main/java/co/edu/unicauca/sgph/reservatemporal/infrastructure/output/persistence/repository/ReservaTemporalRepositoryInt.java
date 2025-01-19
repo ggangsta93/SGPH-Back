@@ -83,7 +83,7 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 		              AND r.fecha_reserva = :fechaReserva
 		              AND franja.horaInicio < r.hora_fin
 		              AND franja.horaFin    > r.hora_inicio
-		              AND e.descripcion NOT IN ('RESERVA_RECHAZADA', 'RESERVA_FINALIZADA')
+		              AND e.descripcion NOT IN ('RESERVA_RECHAZADA', 'RESERVA_FINALIZADA', 'RESERVA_CANCELADA')
 		              AND e.descripcion IN ('RESERVA_APROBADA', 'RESERVA_PENDIENTE')
 		       )
 		""",
@@ -143,7 +143,7 @@ public interface ReservaTemporalRepositoryInt extends JpaRepository<ReservaTempo
 		              AND r.fecha_reserva = :fechaReserva
 		              AND franja.horaInicio < r.hora_fin
 		              AND franja.horaFin    > r.hora_inicio
-		              AND e.descripcion NOT IN ('RESERVA_RECHAZADA', 'RESERVA_FINALIZADA')
+		              AND e.descripcion NOT IN ('RESERVA_RECHAZADA', 'RESERVA_FINALIZADA', 'RESERVA_CANCELADA')
 		              AND e.descripcion IN ('RESERVA_APROBADA', 'RESERVA_PENDIENTE')
 		       )
 		""",

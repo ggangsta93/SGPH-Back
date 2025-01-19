@@ -23,6 +23,7 @@ import co.edu.unicauca.sgph.horario.aplication.input.GestionarHorarioCUIntPort;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTORequest.FiltroFranjaHorariaDisponibleCursoDTO;
 import co.edu.unicauca.sgph.horario.infrastructure.input.DTOResponse.FranjaLibreOutDTO;
 import co.edu.unicauca.sgph.reservatemporal.application.input.GestionarReservaTemporalCUIntPort;
+import co.edu.unicauca.sgph.reservatemporal.domain.model.ReservaTemporal;
 import co.edu.unicauca.sgph.reservatemporal.infrastructure.input.DTORequest.ReservaTemporalInDTO;
 import co.edu.unicauca.sgph.reservatemporal.infrastructure.input.DTOResponse.FormularioReservaDTO;
 import co.edu.unicauca.sgph.reservatemporal.infrastructure.input.DTOResponse.ReservaTemporalOutDTO;
@@ -170,5 +171,20 @@ public class ReservaTemporalController {
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
             .body(excelFile);
     }
+    
+    @PostMapping("/cancelarReserva")
+    public ResponseEntity<ReservaTemporalInDTO> cancelarReserva(
+            @RequestParam Long reservaId,
+            @RequestParam String motivo) {
+    	// Llamar al caso de uso para cancelar la reserva
+        ReservaTemporal reservaCancelada = gestionarReservaTemporalCUIntPort.cancelarReserva(reservaId, motivo);
+
+        // Mapear el dominio (ReservaTemporal) al DTO (ReservaTemporalInDTO)
+        ReservaTemporalInDTO reservaCanceladaDTO = mapper.toReservaTemporalInDTO(reservaCancelada);
+
+        // Retornar la reserva cancelada como respuesta
+        return ResponseEntity.ok(reservaCanceladaDTO);
+    }
+
 
 }

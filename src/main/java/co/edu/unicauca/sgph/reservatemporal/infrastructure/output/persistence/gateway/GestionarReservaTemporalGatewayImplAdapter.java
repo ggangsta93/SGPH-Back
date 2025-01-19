@@ -101,7 +101,7 @@ public class GestionarReservaTemporalGatewayImplAdapter implements GestionarRese
 	    );
 
 	    if (existeReservaPendiente) {
-	        throw new RuntimeException("Ya existe una reserva para el mismo salón, fecha y horario.");
+	        throw new RuntimeException("Lo sentimos, su reserva no se pudo realizar porque otra persona realizó la reserva al mismo tiempo.");
 	    }
 		
 	    // Mapear el DTO a la entidad
@@ -572,6 +572,65 @@ public class GestionarReservaTemporalGatewayImplAdapter implements GestionarRese
 	    }
 
 	    return bos.toByteArray();
+	}
+
+	@Override
+	public ReservaTemporal cancelarReserva(Long reservaId, String motivo) {
+		 // Obtener la reserva con sus detalles
+	    ReservaTemporalEntity entity = reservaTemporalRepositoryInt
+	            .findByIdWithDetails(reservaId)
+	            .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
+
+	    // Cambiar estado a RESERVA_CANCELADA
+	    EstadoReservaEntity estadoCancelada = estadoReservaRepository.findByDescripcion(EstadoReservaEnum.RESERVA_CANCELADA)
+	            .orElseThrow(() -> new RuntimeException("Estado RESERVA_CANCELADA no encontrado"));
+	    entity.setEstado(estadoCancelada);
+
+	    // Actualizar observaciones con el motivo
+	    entity.setObservacionesPrestamista(motivo);
+
+	    // Guardar cambios
+	    reservaTemporalRepositoryInt.save(entity);
+
+	    // Registrar en el log
+	    LogReservasEntity logReservasEntity = new LogReservasEntity();
+	    logReservasEntity.setAccion("CANCELAR_RESERVA");
+	    logReservasEntity.setUsuario(entity.getUsuario());
+	    logReservasEntity.setFechaModificacion(LocalDateTime.now().withNano(0));
+	    logReservasEntity.setReserva(entity);
+	    logReservasEntity.setObservaciones(motivo); // Registrar motivo en las observaciones
+	    logReservasRepository.save(logReservasEntity);
+
+	    // Mapear a dominio
+	    ReservaTemporal dominio = new ReservaTemporal();
+	    dominio.setIdReserva(entity.getIdReserva());
+	    dominio.setFechaReserva(entity.getFechaReserva());
+	    dominio.setObservaciones(entity.getObservaciones());
+	    dominio.setUsuario(entity.getUsuario());
+	    dominio.setCorreo(entity.getCorreo());
+	    dominio.setNumeroIdentificacion(entity.getNumeroIdentificacion());
+	    dominio.setTipoIdentificacion(entity.getTipoIdentificacion());
+	    dominio.setTipoSolicitante(entity.getTipoSolicitante());
+	    dominio.setObservacionesPrestamista(entity.getObservacionesPrestamista());
+	    if (entity.getHoraInicio() != null) {
+	        dominio.setHoraInicio(entity.getHoraInicio().toString());
+	    }
+	    if (entity.getHoraFin() != null) {
+	        dominio.setHoraFin(entity.getHoraFin().toString());
+	    }
+	    if (entity.getEstado() != null) {
+	        dominio.setEstado(entity.getEstado().getDescripcion().toString());
+	    }
+
+	    if (entity.getEspacioFisico() != null) {
+	        dominio.setIdEspacioFisico(entity.getEspacioFisico().getIdEspacioFisico());
+	        dominio.setSalon(entity.getEspacioFisico().getSalon());
+	        if (entity.getEspacioFisico().getUbicacion() != null) {
+	            dominio.setIdUbicacion(entity.getEspacioFisico().getUbicacion().getIdUbicacion());
+	        }
+	    }
+
+	    return dominio;
 	}
 
 }

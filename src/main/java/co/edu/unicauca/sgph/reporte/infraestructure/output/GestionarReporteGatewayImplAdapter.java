@@ -681,7 +681,11 @@ public class GestionarReporteGatewayImplAdapter implements GestionarReporteGatew
 	            if (cell == null) {
 	                cell = row.createCell(col);
 	            }
-	            cell.setCellValue(String.join(", ", salones));
+	         // Concatenar "Franja libre" al nombre del salón
+	            List<String> salonesConEtiqueta = salones.stream()
+	                .map(salon -> "Franja libre " + salon )
+	                .collect(Collectors.toList());
+	            cell.setCellValue(String.join(", ", salonesConEtiqueta));
 	            cell.setCellStyle(contentCellStyle);
 	        }
 	        row.setHeight((short) (60 * 15)); // Altura de fila
