@@ -17,6 +17,7 @@ import javax.persistence.TypedQuery;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import co.edu.unicauca.sgph.agrupador.infrastructure.output.persistence.entity.AgrupadorEspacioFisicoEntity;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.GestionarEspacioFisicoGatewayIntPort;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.RecursoEspacioFisico;
-import co.edu.unicauca.sgph.espaciofisico.domain.model.RecursoFisico;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.TipoEspacioFisico;
+import co.edu.unicauca.sgph.espaciofisico.domain.model.Ubicacion;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
@@ -49,6 +51,11 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repo
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.RecursoEspacioFisicoRepositoryInt;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.RecursoFisicoRepositoryInt;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.TipoEspacioFisicoRepositoryInt;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository.UbicacionRepositoryInt;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+
 
 @Service
 public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspacioFisicoGatewayIntPort {
@@ -63,13 +70,17 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 	private ModelMapper modelMapper;
 	@Autowired
 	private RecursoEspacioFisicoRepositoryInt recursoEspacioFisicoRepositoryInt;
+	@Autowired
+	private UbicacionRepositoryInt ubicacionRepositoryInt;
 
 	public GestionarEspacioFisicoGatewayImplAdapter(EspacioFisicoRepositoryInt espacioFisicoRepositoryInt,
-													TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt, ModelMapper modelMapper, RecursoFisicoRepositoryInt recursoFisicoRepositoryInt) {
+													TipoEspacioFisicoRepositoryInt tipoEspacioFisicoRepositoryInt, ModelMapper modelMapper, RecursoFisicoRepositoryInt recursoFisicoRepositoryInt,
+													UbicacionRepositoryInt ubicacionRepositoryInt) {
 		this.espacioFisicoRepositoryInt = espacioFisicoRepositoryInt;
 		this.tipoEspacioFisicoRepositoryInt = tipoEspacioFisicoRepositoryInt;
 		this.modelMapper = modelMapper;
 		this.recursoFisicoRepositoryInt = recursoFisicoRepositoryInt;
+		this.ubicacionRepositoryInt = ubicacionRepositoryInt;
 	}
 
 	@Override
@@ -631,6 +642,86 @@ public class GestionarEspacioFisicoGatewayImplAdapter implements GestionarEspaci
 	@Override
 	public List<RecursoOutDTO> obtenerRecursosPorEspacioFisico(Long idEspacioFisico) {
 		return null;
+	}
+
+	@Override
+	public Map<String, Object> procesarArchivoExcel(MultipartFile file) throws Exception {
+		List<EspacioFisico> espaciosFisicos = new ArrayList<>();
+	    List<String> mensajesErrores = new ArrayList<>();
+
+	    try (Workbook workbook = new XSSFWorkbook(file.getInputStream())) {
+	        Sheet sheet = workbook.getSheetAt(0);
+
+	        for (Row row : sheet) {
+	            if (row.getRowNum() == 0) continue; // Saltar encabezados
+
+	            try {
+	                EspacioFisico espacioFisico = new EspacioFisico();
+
+	                String nombreUbicacion = row.getCell(0).getStringCellValue();
+	                String salon = getCellValueAsString(row.getCell(1));
+	                String tipo = row.getCell(2).getStringCellValue();
+	                String oid = getCellValueAsString(row.getCell(3));
+	                Long capacidad = (long) row.getCell(4).getNumericCellValue();
+	                String estadoStr = row.getCell(5).getStringCellValue();
+	                EstadoEspacioFisicoEnum estado = EstadoEspacioFisicoEnum.valueOf(estadoStr.toUpperCase());
+
+	                // Validar que los campos obligatorios no estén vacíos
+	                if (salon == null || salon.isEmpty()) {
+	                    mensajesErrores.add("Error en la fila " + (row.getRowNum() + 1) + ": El salón es obligatorio.");
+	                    continue;
+	                }
+	                if (oid == null || oid.isEmpty()) {
+	                    mensajesErrores.add("Error en la fila " + (row.getRowNum() + 1) + ": El OID es obligatorio.");
+	                    continue;
+	                }
+
+	                // Buscar entidades relacionadas
+	                UbicacionEntity ubicacion = ubicacionRepositoryInt.findByNombre(nombreUbicacion)
+	                        .orElseThrow(() -> new IllegalArgumentException("Ubicación no encontrada: " + nombreUbicacion));
+	                Ubicacion ubicacionMap = modelMapper.map(ubicacion, Ubicacion.class);
+	                TipoEspacioFisicoEntity tipoEspacio = tipoEspacioFisicoRepositoryInt.findByTipo(tipo)
+	                        .orElseThrow(() -> new IllegalArgumentException("Tipo no encontrado: " + tipo));
+	                TipoEspacioFisico tipoMap = modelMapper.map(tipoEspacio, TipoEspacioFisico.class);
+
+	                // Verificar si el OID o el salón ya existen
+	                EspacioFisicoEntity espacioOID = espacioFisicoRepositoryInt.consultarEspacioFisicoPorOID(oid);
+	                
+	                EspacioFisicoEntity espacioSalon = espacioFisicoRepositoryInt.consultarEspacioFisicoPorNombre(salon);
+
+	                if (espacioOID!=null) {
+	                    mensajesErrores.add("Error en la fila " + (row.getRowNum() + 1) + ": El OID '" + oid + "' ya existe.");
+	                    continue;
+	                }
+
+	                if (espacioSalon!=null) {
+	                    mensajesErrores.add("Error en la fila " + (row.getRowNum() + 1) + ": El salón '" + salon + "' ya existe.");
+	                    continue;
+	                }
+
+	                // Crear el objeto EspacioFisico
+	                espacioFisico.setUbicacion(ubicacionMap);
+	                espacioFisico.setSalon(salon);
+	                espacioFisico.setOID(oid);
+	                espacioFisico.setCapacidad(capacidad);
+	                espacioFisico.setEstado(estado);
+	                espacioFisico.setTipoEspacioFisico(tipoMap);
+
+	                espaciosFisicos.add(espacioFisico);
+	            } catch (Exception e) {
+	                mensajesErrores.add("Error en la fila " + (row.getRowNum() + 1) + ": " + e.getMessage());
+	            }
+	        }
+	    } catch (Exception e) {
+	        throw new Exception("Error al procesar el archivo: " + e.getMessage());
+	    }
+
+	    // Retornar espacios físicos procesados y los mensajes de error
+	    Map<String, Object> resultado = new HashMap<>();
+	    resultado.put("espaciosFisicos", espaciosFisicos);
+	    resultado.put("mensajesErrores", mensajesErrores);
+
+	    return resultado;
 	}
 
 }

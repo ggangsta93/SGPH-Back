@@ -1,9 +1,11 @@
 package co.edu.unicauca.sgph.espaciofisico.aplication.output;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import co.edu.unicauca.sgph.espaciofisico.domain.model.Edificio;
 import co.edu.unicauca.sgph.espaciofisico.domain.model.EspacioFisico;
@@ -136,4 +138,6 @@ public interface GestionarEspacioFisicoGatewayIntPort {
 	MensajeOutDTO cargaMasivaEspaciosFisicos(EspacioFisicoInDTO espacioFisico);
 	
 	List<RecursoOutDTO> obtenerRecursosPorEspacioFisico(Long idEspacioFisico);
+	
+	Map<String, Object> procesarArchivoExcel(MultipartFile file) throws Exception;
 }

@@ -9,15 +9,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ExisteNombreEspacioFisico;
 import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ExisteOidEspacioFisico;
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ValidationGroups;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EstadoEspacioFisicoEnum;
 
-@ExisteOidEspacioFisico
-@ExisteNombreEspacioFisico
+@ExisteOidEspacioFisico(groups = ValidationGroups.OnCreate.class)
+@ExisteNombreEspacioFisico(groups = ValidationGroups.OnCreate.class)
 public class EspacioFisicoInDTO {
 
 	private Long idEspacioFisico;
 
-	@NotEmpty
 	@JsonProperty("OID")
 	private String OID;
 
@@ -27,7 +27,7 @@ public class EspacioFisicoInDTO {
 	@NotNull
 	private EstadoEspacioFisicoEnum estado;
 
-	@NotEmpty
+	@NotEmpty(groups = ValidationGroups.OnCreate.class)
 	private String salon;
 
 	private Long idEdificio;

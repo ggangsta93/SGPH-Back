@@ -1,17 +1,21 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.input.controller;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Set;
 
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.Validator;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,12 +23,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEdificioCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarTipoEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarUbicacionCUIntPort;
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ValidationGroups;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoAgrupadorDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.FiltroEspacioFisicoDTO;
@@ -46,6 +52,9 @@ import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.enti
 @RequestMapping("/AdministrarEspacioFisico")
 public class EspacioFisicoController extends CommonEJB {
 
+	 @Autowired
+	 private Validator validator;
+	 
 	// Gestionadores
 	private GestionarEspacioFisicoCUIntPort gestionarEspacioFisicoCUIntPort;
 	private GestionarTipoEspacioFisicoCUIntPort gestionarTipoEspacioFisicoCUIntPort;
@@ -73,31 +82,37 @@ public class EspacioFisicoController extends CommonEJB {
 		this.ubicacionRestMapper = ubicacionRestMapper;
 	}
 
-	@SuppressWarnings("unused")
 	@PostMapping("/guardarEspacioFisico")
 	@Transactional
-	public ResponseEntity<?> guardarEspacioFisico(@Valid @RequestBody EspacioFisicoInDTO espacioFisicoInDTO, BindingResult result) {
-		Set<String> validaciones = new HashSet<String>();
-		validaciones.add("ExisteOidEspacioFisico"); 
-		if (espacioFisicoInDTO.getIdEspacioFisico() == null) {
-				        
-	        validaciones.add("ExisteNombreEspacioFisico"); 
-	        
-	    }    
-		if (result.hasErrors() && result == null) {
-			return validarCampos(result, validaciones);					
-		}		
+	public ResponseEntity<?> guardarEspacioFisico( @RequestBody EspacioFisicoInDTO espacioFisicoInDTO, BindingResult result) {
+		Class<?> validationGroup = (espacioFisicoInDTO.getIdEspacioFisico() == null) 
+                ? ValidationGroups.OnCreate.class 
+                : ValidationGroups.OnUpdate.class;
+
+		// Realizar la validación con el grupo correspondiente
+		Set<ConstraintViolation<EspacioFisicoInDTO>> violations = validator.validate(espacioFisicoInDTO, validationGroup);
+		
+		// Convertir las violaciones en errores del BindingResult
+		for (ConstraintViolation<EspacioFisicoInDTO> violation : violations) {
+		String fieldName = violation.getPropertyPath().toString();
+		String errorMessage = violation.getMessage();
+		result.addError(new FieldError("espacioFisicoInDTO", fieldName, errorMessage));
+		}
+		
+		// Si hay errores, retornar los mensajes de error
+		if (result.hasErrors()) {
+		return ResponseEntity.badRequest().body(result.getAllErrors());
+		}
+
 		
 		if(Boolean.FALSE.equals(espacioFisicoInDTO.getEsValidar())) {
 			EspacioFisicoOutDTO espacioFisicoOutDTO = this.espacioFisicoRestMapper.toEspacioFisicoOutDTO(
 					this.gestionarEspacioFisicoCUIntPort.guardarEspacioFisico(
 							this.espacioFisicoRestMapper.toEspacioFisico(espacioFisicoInDTO)));
 			
-			if (Objects.equals(espacioFisicoOutDTO.getIdEspacioFisico(), espacioFisicoOutDTO.getIdEspacioFisico())) {
-	            return new ResponseEntity<>(espacioFisicoOutDTO, HttpStatus.OK);
-	        } else {
-	            return new ResponseEntity<>(espacioFisicoOutDTO, HttpStatus.OK);
-	        }
+			
+	        return new ResponseEntity<>(espacioFisicoOutDTO, HttpStatus.OK);
+	        
 	    } else {
 	        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
 	    }
@@ -287,5 +302,19 @@ public class EspacioFisicoController extends CommonEJB {
         }
         return ResponseEntity.ok(recursos);
     }
+	
+	@PostMapping("/cargarEspaciosFisicos")
+	public ResponseEntity<?> cargarEspaciosFisicos(@RequestParam("file") MultipartFile file) {
+	    try {
+	    	Map<String, Object> resultado = gestionarEspacioFisicoCUIntPort.cargarEspaciosFisicos(file);
+	        resultado.put("archivo", file.getOriginalFilename());
+	        return ResponseEntity.ok(resultado);
+	    } catch (IllegalArgumentException e) {
+	        return ResponseEntity.badRequest().body("Error de validación: " + e.getMessage());
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno: " + e.getMessage());
+	    }
+	}
+
 
 }

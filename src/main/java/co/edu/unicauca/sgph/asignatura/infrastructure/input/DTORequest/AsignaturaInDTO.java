@@ -7,9 +7,10 @@ import javax.validation.constraints.NotNull;
 
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.validation.ExisteCodigoAsignatura;
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.validation.ExisteOidAsignatura;
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ValidationGroups;
 
-@ExisteCodigoAsignatura
-@ExisteOidAsignatura
+@ExisteCodigoAsignatura(groups = ValidationGroups.OnCreate.class)
+@ExisteOidAsignatura(groups = ValidationGroups.OnCreate.class)
 public class AsignaturaInDTO {
 
 	private Long idAsignatura;
@@ -17,10 +18,9 @@ public class AsignaturaInDTO {
 	@NotEmpty
 	private String nombre;
 
-	@NotEmpty
+	@NotEmpty(groups = ValidationGroups.OnCreate.class)
 	private String codigoAsignatura;
 
-	@NotEmpty
 	private String OID;
 
 	@NotNull

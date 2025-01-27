@@ -1,8 +1,11 @@
 package co.edu.unicauca.sgph.espaciofisico.domain.useCase;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 import co.edu.unicauca.sgph.espaciofisico.aplication.input.GestionarEspacioFisicoCUIntPort;
 import co.edu.unicauca.sgph.espaciofisico.aplication.output.EspacioFisicoFormatterResultsIntPort;
@@ -134,5 +137,42 @@ public class GestionarEspacioFisicoCUAdapter implements GestionarEspacioFisicoCU
 	@Override
 	public List<RecursoOutDTO> obtenerRecursosPorEspacioFisico(Long idEspacioFisico) {
 		return this.gestionarEspacioFisicoGatewayIntPort.obtenerRecursosPorEspacioFisico(idEspacioFisico);
+	}
+
+	@Override
+	public Map<String, Object> cargarEspaciosFisicos(MultipartFile file) throws Exception {
+		if (file.isEmpty()) {
+	        throw new IllegalArgumentException("El archivo está vacío.");
+	    }
+
+	    // Llamar al implementador para procesar el archivo y obtener resultados
+	    Map<String, Object> procesarResultado = gestionarEspacioFisicoGatewayIntPort.procesarArchivoExcel(file);
+
+	    // Extraer los espacios físicos y los mensajes de error
+	    @SuppressWarnings("unchecked")
+	    List<EspacioFisico> espaciosFisicos = (List<EspacioFisico>) procesarResultado.get("espaciosFisicos");
+	    @SuppressWarnings("unchecked")
+	    List<String> mensajesErrores = (List<String>) procesarResultado.get("mensajesErrores");
+
+	    int totalEspaciosCreados = 0;
+
+	    // Guardar los espacios físicos que pasaron la validación
+	    for (EspacioFisico espacioFisico : espaciosFisicos) {
+	        try {
+	            gestionarEspacioFisicoGatewayIntPort.guardarEspacioFisico(espacioFisico);
+	            totalEspaciosCreados++;
+	        } catch (Exception e) {
+	            // Agregar el mensaje de error específico si ocurre un problema al guardar
+	            mensajesErrores.add("Error al guardar el espacio físico (OID: " + espacioFisico.getOID() + "): " + e.getMessage());
+	        }
+	    }
+
+	    // Crear el mapa de respuesta consolidando la información
+	    Map<String, Object> resultado = new HashMap<>();
+	    resultado.put("totalEspaciosFisicos", espaciosFisicos.size());
+	    resultado.put("totalEspaciosCreados", totalEspaciosCreados);
+	    resultado.put("mensajesErrores", mensajesErrores); // Incluye los errores acumulados
+
+	    return resultado;
 	}
 }

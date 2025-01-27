@@ -17,11 +17,23 @@ import org.mapstruct.Named;
 public interface AsignaturaRestMapper {
 
 	@Mapping(target = "idPrograma", source = "asignatura.programa.idPrograma")
-	@Mapping(target = "lstIdAgrupadorEspacioFisico", source = "asignatura.agrupadores")
+	@Mapping(target = "lstIdAgrupadorEspacioFisico", source = "asignatura.agrupadores", qualifiedByName = "toLstIdAgrupadorEspacioFisico")
+	@Mapping(target = "nombrePrograma", source = "asignatura.programa.nombre")
+    @Mapping(target = "nombreFacultad", source = "asignatura.programa.facultad.nombre")
+    @Mapping(target = "idFacultad", source = "asignatura.programa.facultad.idFacultad")
 	AsignaturaOutDTO toAsignaturaOutDTO(Asignatura asignatura);
 
-	@Mapping(target = "programa", expression = "java(new Programa(asignaturaInDTO.getIdPrograma()))")
-	@Mapping(target = "agrupadores", source = " asignaturaInDTO.lstIdAgrupadorEspacioFisico", qualifiedByName = "handleNullList")
+	// Mapear de AsignaturaInDTO a Asignatura (para guardar/actualizar)
+    @Mapping(target = "idAsignatura", source = "idAsignatura") // No se modifica el ID
+    @Mapping(target = "programa", expression = "java(new Programa(asignaturaInDTO.getIdPrograma()))")
+    @Mapping(target = "agrupadores", source = "asignaturaInDTO.lstIdAgrupadorEspacioFisico", qualifiedByName = "toAgrupadorEspacioFisico")
+    @Mapping(target = "nombre", source = "nombre")
+    @Mapping(target = "codigoAsignatura", source = "codigoAsignatura")
+    @Mapping(target = "OID", source = "OID")
+    @Mapping(target = "semestre", source = "semestre")
+    @Mapping(target = "pensum", source = "pensum")
+    @Mapping(target = "horasSemana", source = "horasSemana")
+    @Mapping(target = "aplicaEspacioSecundario", source = "aplicaEspacioSecundario")
 	Asignatura toAsignatura(AsignaturaInDTO asignaturaInDTO);
 
 	@Named("handleNullList")
@@ -30,7 +42,11 @@ public interface AsignaturaRestMapper {
 	}
 	List<AsignaturaOutDTO> toLstAsignaturaOutDTO(List<Asignatura> lstAsignatura);
 
+	@Named("toAgrupadorEspacioFisico")
 	default List<AgrupadorEspacioFisico> toAgrupadorEspacioFisico(List<Long> lstIdAgrupadorEspacioFisico) {
+		if (lstIdAgrupadorEspacioFisico == null) {
+            return new ArrayList<>();
+        }
 		List<AgrupadorEspacioFisico> agrupadores = new ArrayList<>();
 		for (Long idAgrupadorEspacioFisico : lstIdAgrupadorEspacioFisico) {
 			AgrupadorEspacioFisico agrupadorEspacioFisico = new AgrupadorEspacioFisico();
@@ -40,7 +56,11 @@ public interface AsignaturaRestMapper {
 		return agrupadores;
 	}
 
+	@Named("toLstIdAgrupadorEspacioFisico")
 	default List<Long> toLstIdAgrupadorEspacioFisico(List<AgrupadorEspacioFisico> agrupadores) {
+		if (agrupadores == null) {
+            return new ArrayList<>();
+        }
 		List<Long> lstIdAgrupadorEspacioFisico = new ArrayList<>();
 		for (AgrupadorEspacioFisico agrupadorEspacioFisico : agrupadores) {
 			lstIdAgrupadorEspacioFisico.add(agrupadorEspacioFisico.getIdAgrupadorEspacioFisico());

@@ -57,11 +57,11 @@ public class MainSecurity {
                 .antMatchers("/AdministrarPeriodoAcademico/guardarPeriodoAcademico").hasAnyRole("PLANIFICADOR")
                 .antMatchers("/AdministrarAgrupador/guardarGrupo").hasRole("PLANIFICADOR")
                 .antMatchers("/AdministrarAgrupador/guardarAsignacion").hasRole("PLANIFICADOR")
-                .antMatchers("/PlanificacionManual/consultarFranjasEspacioFisicoPorIdEspacioFisico").hasRole("PRESTAMISTA")
                 .antMatchers("/PlanificacionManual/consultarFranjasDocentePorIdPersona").hasRole("PRESTAMISTA")
-                .antMatchers("/PlanificacionManual/**").hasRole("PLANIFICADOR")
                 .antMatchers("/AdministrarPrograma/consultarProgramasPermitidosPorUsuario").hasRole("PLANIFICADOR")
                 .antMatchers("/AdministrarUsuario/**").hasRole("ADMINISTRADOR")
+                .antMatchers("/PlanificacionManual/consultarFranjasEspacioFisicoPorIdEspacioFisico").permitAll()
+                .antMatchers("/AdministrarEspacioFisico/consultarEspacioFisicoPorIdEspacioFisico").permitAll()
                 .anyRequest().authenticated()
         )
         .exceptionHandling(exceptionHandling -> 

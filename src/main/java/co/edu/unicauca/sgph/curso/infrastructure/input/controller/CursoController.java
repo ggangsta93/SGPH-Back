@@ -57,13 +57,15 @@ public class CursoController extends CommonEJB {
 	 */
 	@PostMapping("/guardarCurso")
 	public ResponseEntity<?> guardarCurso(@Valid @RequestBody CursoInDTO cursoInDTO, BindingResult result) {
-		Set<String> validaciones = new HashSet<String>();
-		validaciones.add("ExisteCursoPorAsignaturaActiva");
-		validaciones.add("ExisteCursoConMismoGrupo");
-		
-		if (result.hasErrors()) {
-			return validarCampos(result, validaciones);
-		}	
+		if(cursoInDTO.getIdCurso() == null) {
+			Set<String> validaciones = new HashSet<String>();
+			validaciones.add("ExisteCursoPorAsignaturaActiva");
+			validaciones.add("ExisteCursoConMismoGrupo");
+			
+			if (result.hasErrors()) {
+				return validarCampos(result, validaciones);
+			}	
+		}
 		
 		if (Boolean.FALSE.equals(cursoInDTO.getEsValidar())) {
 			CursoOutDTO cursoOutDTO =  this.cursoRestMapper.toCursoOutDTO(

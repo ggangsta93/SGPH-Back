@@ -1,10 +1,12 @@
 package co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EdificioEntity;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.EspacioFisicoEntity;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.output.persistence.entity.RecursoEspacioFisicoEntity;
 
@@ -136,4 +138,11 @@ public interface EspacioFisicoRepositoryInt extends JpaRepository<EspacioFisicoE
 			+ "FROM EspacioFisicoEntity e "
 			+ "WHERE e.salon = :salon ")
 	public EspacioFisicoEntity consultarEspacioFisicoPorNombre(@Param("salon") String salon);
+	
+	@Query("SELECT ef.edificio " +
+		       "FROM EspacioFisicoEntity ef " +
+		       "WHERE ef.edificio.nombre = :nombreEdificio AND ef.ubicacion.nombre = :nombreUbicacion")
+	Optional<EdificioEntity> findEdificioByNombreAndUbicacion(@Param("nombreEdificio") String nombreEdificio,
+		                                                          @Param("nombreUbicacion") String nombreUbicacion);
+
 }

@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.Validator;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,12 +31,17 @@ import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTOResponse.Asignatu
 import co.edu.unicauca.sgph.asignatura.infrastructure.input.mapper.AsignaturaRestMapper;
 import co.edu.unicauca.sgph.asignatura.infrastructure.output.persistence.entity.EstadoAsignaturaEnum;
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ValidationGroups;
+import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTORequest.EspacioFisicoInDTO;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 
 @RestController
 @RequestMapping("/AdministrarAsignatura")
 public class AsignaturaController extends CommonEJB {
 
+	@Autowired
+	 private Validator validator;
+	
 	private GestionarAsignaturaCUIntPort gestionarAsignaturaCUIntPort;
 	private AsignaturaRestMapper asignaturaRestMapper;
 
@@ -52,14 +61,23 @@ public class AsignaturaController extends CommonEJB {
 	 */
 	@PostMapping("/guardarAsignatura")
 	public ResponseEntity<?> guardarAsignatura(@Valid @RequestBody AsignaturaInDTO asignaturaInDTO, BindingResult result) {
-		if(asignaturaInDTO.getIdAsignatura() == null) {
-			Set<String> validaciones = new HashSet<String>();
-			validaciones.add("ExisteCodigoAsignatura");
-			validaciones.add("ExisteOidAsignatura");
+		Class<?> validationGroup = (asignaturaInDTO.getIdAsignatura() == null) 
+                ? ValidationGroups.OnCreate.class 
+                : ValidationGroups.OnUpdate.class;
+
+		// Realizar la validación con el grupo correspondiente
+		Set<ConstraintViolation<AsignaturaInDTO>> violations = validator.validate(asignaturaInDTO, validationGroup);
 		
-			if (result.hasErrors()) {
-				return validarCampos(result, validaciones);
-			}
+		// Convertir las violaciones en errores del BindingResult
+		for (ConstraintViolation<AsignaturaInDTO> violation : violations) {
+			String fieldName = violation.getPropertyPath().toString();
+			String errorMessage = violation.getMessage();
+			result.addError(new FieldError("asignaturaInDTO", fieldName, errorMessage));
+		}
+		
+		// Si hay errores, retornar los mensajes de error
+		if (result.hasErrors()) {
+			return ResponseEntity.badRequest().body(result.getAllErrors());
 		}
 		
 		if (Boolean.FALSE.equals(asignaturaInDTO.getEsValidar())) {
@@ -69,11 +87,8 @@ public class AsignaturaController extends CommonEJB {
 	                )
 	        );
 
-	        if (Objects.equals(asignaturaOutDTO.getIdAsignatura(), asignaturaOutDTO.getIdAsignatura())) {
-	            return new ResponseEntity<>(asignaturaOutDTO, HttpStatus.OK);
-	        } else {
-	            return new ResponseEntity<>(asignaturaOutDTO, HttpStatus.OK);
-	        }
+	        return new ResponseEntity<>(asignaturaOutDTO, HttpStatus.OK);
+	        
 	    } else {
 	        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
 	    }

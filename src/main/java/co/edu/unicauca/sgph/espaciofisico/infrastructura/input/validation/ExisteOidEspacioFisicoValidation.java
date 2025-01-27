@@ -17,6 +17,9 @@ public class ExisteOidEspacioFisicoValidation implements ConstraintValidator<Exi
 	
 	@Override
 	public boolean isValid(EspacioFisicoInDTO value, ConstraintValidatorContext context) {
+		if (value.getOID() == null || value.getOID().trim().isEmpty()) {
+            return true;
+        }
 		return !this.gestionarEspacioFisicoGatewayIntPort.existsEspacioFisicoByOid(value.getOID());
 	}
 }

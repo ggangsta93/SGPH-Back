@@ -132,33 +132,46 @@ public class GestionarAsignaturaGatewayImplAdapter implements GestionarAsignatur
 	public Page<AsignaturaOutDTO> filtrarAsignaturas(FiltroAsignaturaInDTO filtro) {
 		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
 		Long totalCount = this.contarAsignaturas(filtro, criteriaBuilder);
+		
 		CriteriaQuery<AsignaturaEntity> criteriaQuery = criteriaBuilder.createQuery(AsignaturaEntity.class);
 		Root<AsignaturaEntity> root = criteriaQuery.from(AsignaturaEntity.class);
+		
 		Join<AsignaturaEntity, ProgramaEntity> programaJoin = root.join("programa");
 		Join<ProgramaEntity, FacultadEntity> facultadJoin = programaJoin.join("facultad");
+		
 		Predicate predicate = criteriaBuilder.conjunction();
-		if (filtro.getIdFacultades() != null) {
-			List<Expression<Boolean>> expressions = new ArrayList<>();
-			for (Long idFacultad : filtro.getIdFacultades()) {
-				expressions.add(criteriaBuilder.equal(facultadJoin.get("idFacultad"), idFacultad));
-			}
-			predicate = criteriaBuilder.or(expressions.toArray(new Predicate[0]));
-		}
-		if (filtro.getIdProgramas() != null) {
-			Predicate predicateProgramas = criteriaBuilder.conjunction();
-			List<Expression<Boolean>> expressions = new ArrayList<>();
-			for (Long idPrograma : filtro.getIdProgramas()) {
-				expressions.add(criteriaBuilder.equal(programaJoin.get("idPrograma"), idPrograma));
-			}
-			predicateProgramas = criteriaBuilder.or(expressions.toArray(new Predicate[0]));
-			predicate = criteriaBuilder.and(predicateProgramas, predicate);
-		}
-		if (filtro.getEstado() != null) {
-			predicate = criteriaBuilder.and(criteriaBuilder.equal(root.get("estado"), filtro.getEstado()), predicate);
-		}
-		if (filtro.getSemestre() != null) {
-			predicate = criteriaBuilder.and(criteriaBuilder.equal(root.get("semestre"), filtro.getSemestre()), predicate);
-		}
+		
+		// Filtro por facultades
+	    if (filtro.getIdFacultades() != null && !filtro.getIdFacultades().isEmpty()) {
+	        predicate = criteriaBuilder.and(
+	            root.get("programa").get("facultad").get("idFacultad").in(filtro.getIdFacultades()),
+	            predicate
+	        );
+	    }
+
+	    // Filtro por programas
+	    if (filtro.getIdProgramas() != null && !filtro.getIdProgramas().isEmpty()) {
+	        predicate = criteriaBuilder.and(
+	            programaJoin.get("idPrograma").in(filtro.getIdProgramas()),
+	            predicate
+	        );
+	    }
+
+	    // Filtro por estado
+	    if (filtro.getEstado() != null) {
+	        predicate = criteriaBuilder.and(
+	            criteriaBuilder.equal(root.get("estado"), filtro.getEstado()),
+	            predicate
+	        );
+	    }
+
+	    // Filtro por semestre
+	    if (filtro.getSemestre() != null) {
+	        predicate = criteriaBuilder.and(
+	            criteriaBuilder.equal(root.get("semestre"), filtro.getSemestre()),
+	            predicate
+	        );
+	    }
 		criteriaQuery.where(predicate);
 
 		List<AsignaturaEntity> resultList = em.createQuery(criteriaQuery)
