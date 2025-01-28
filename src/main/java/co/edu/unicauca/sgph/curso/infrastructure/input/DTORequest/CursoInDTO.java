@@ -5,18 +5,18 @@ import javax.validation.constraints.NotNull;
 
 import co.edu.unicauca.sgph.curso.infrastructura.input.validation.ExisteCursoConMismoGrupo;
 import co.edu.unicauca.sgph.curso.infrastructura.input.validation.ExisteCursoPorAsignaturaActiva;
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ValidationGroups;
 
-@ExisteCursoPorAsignaturaActiva
-@ExisteCursoConMismoGrupo
+@ExisteCursoConMismoGrupo(groups = ValidationGroups.OnCreate.class)
 public class CursoInDTO {
 	private Long idCurso;
 
-	@NotEmpty
+	@NotEmpty(groups = ValidationGroups.OnCreate.class)
 	private String grupo;
 	
 	private Integer cupo;
 
-	@NotNull
+	@NotNull(groups = ValidationGroups.OnCreate.class)
 	private Long idAsignatura;
 
 	private Boolean esValidar;

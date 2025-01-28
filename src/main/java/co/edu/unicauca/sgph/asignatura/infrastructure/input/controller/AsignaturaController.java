@@ -60,7 +60,7 @@ public class AsignaturaController extends CommonEJB {
 	 * @return
 	 */
 	@PostMapping("/guardarAsignatura")
-	public ResponseEntity<?> guardarAsignatura(@Valid @RequestBody AsignaturaInDTO asignaturaInDTO, BindingResult result) {
+	public ResponseEntity<?> guardarAsignatura(@RequestBody AsignaturaInDTO asignaturaInDTO, BindingResult result) {
 		Class<?> validationGroup = (asignaturaInDTO.getIdAsignatura() == null) 
                 ? ValidationGroups.OnCreate.class 
                 : ValidationGroups.OnUpdate.class;

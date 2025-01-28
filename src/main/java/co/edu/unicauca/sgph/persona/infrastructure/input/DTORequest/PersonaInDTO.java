@@ -6,36 +6,30 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ValidationGroups;
 import co.edu.unicauca.sgph.persona.infrastructure.input.validation.ExisteEmail;
 import co.edu.unicauca.sgph.persona.infrastructure.input.validation.ExistePersonaPorIdentificacion;
 
-@ExisteEmail
-@ExistePersonaPorIdentificacion
+@ExisteEmail(groups = ValidationGroups.OnCreate.class)
+@ExistePersonaPorIdentificacion(groups = ValidationGroups.OnCreate.class)
 public class PersonaInDTO {
 
 	private Long idPersona;
-	@NotNull
+	@NotNull(groups = ValidationGroups.OnCreate.class)
 	private Long idTipoIdentificacion;
-	@NotEmpty
-	@NotBlank(message = "El número de identificación es obligatorio")
-    @Size(min = 5, max = 15, message = "El número de identificación debe tener entre 5 y 15 caracteres")    
+	@NotEmpty(groups = ValidationGroups.OnCreate.class)  
 	private String numeroIdentificacion;
 	@NotEmpty
-	@NotBlank(message = "El nombre es obligatorio")
-    @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")    
 	private String primerNombre;
 
 	private String segundoNombre;
+	
 	@NotEmpty
-	@NotBlank(message = "El apellido es obligatorio")
-    @Size(min = 2, max = 50, message = "El apellido debe tener entre 2 y 50 caracteres")    
 	private String primerApellido;
 
 	private String segundoApellido;
 
-	@NotEmpty
-	@NotBlank(message = "El email es obligatorio")
-    @Email(message = "El email debe ser válido")
+	@NotEmpty(groups = ValidationGroups.OnCreate.class)
 	private String email;
 
 	/**

@@ -5,16 +5,17 @@ import javax.validation.constraints.NotNull;
 
 import co.edu.unicauca.sgph.docente.infrastructure.input.validation.ExisteCodigoDocente;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ValidationGroups;
 import co.edu.unicauca.sgph.persona.infrastructure.input.validation.ExistePersonaPorIdPersona;
 import co.edu.unicauca.sgph.docente.infrastructure.input.validation.ExisteIdPersonaDocente;
 
-@ExisteCodigoDocente
-@ExisteIdPersonaDocente
+@ExisteCodigoDocente(groups = ValidationGroups.OnCreate.class)
+@ExisteIdPersonaDocente(groups = ValidationGroups.OnCreate.class)
 public class DocenteInDTO {
 
 	private Long idDocente;
 	
-	@NotEmpty
+	@NotEmpty(groups = ValidationGroups.OnCreate.class)
 	private String codigo;
 
 	@NotNull
@@ -23,8 +24,7 @@ public class DocenteInDTO {
 	@NotNull
 	private Long idDepartamento;
 
-	@NotNull
-	@ExistePersonaPorIdPersona
+	@NotNull(groups = ValidationGroups.OnCreate.class)
 	private Long idPersona;
 
 	/**

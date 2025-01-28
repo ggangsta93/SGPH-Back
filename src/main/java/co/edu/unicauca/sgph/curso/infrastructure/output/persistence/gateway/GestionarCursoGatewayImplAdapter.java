@@ -16,6 +16,7 @@ import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.entity.CursoEntity;
 import co.edu.unicauca.sgph.curso.infrastructure.output.persistence.repository.CursoRepositoryInt;
 import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.entity.PeriodoAcademicoEntity;
+import co.edu.unicauca.sgph.periodoacademico.infrastructure.output.persistence.repository.PeriodoAcademicoRepositoryInt;
 
 
 @Service
@@ -25,10 +26,12 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 	private EntityManager entityManager;
 
 	private CursoRepositoryInt cursoRepositoryInt;
+	private PeriodoAcademicoRepositoryInt periodoAcademicoRepositoryInt;
 	private ModelMapper modelMapper;
 
-	public GestionarCursoGatewayImplAdapter(CursoRepositoryInt cursoRepositoryInt, ModelMapper modelMapper) {
+	public GestionarCursoGatewayImplAdapter(CursoRepositoryInt cursoRepositoryInt, ModelMapper modelMapper, PeriodoAcademicoRepositoryInt periodoAcademicoRepositoryInt) {
 		this.cursoRepositoryInt = cursoRepositoryInt;
+		this.periodoAcademicoRepositoryInt = periodoAcademicoRepositoryInt;
 		this.modelMapper = modelMapper;
 	}
 
@@ -50,7 +53,9 @@ public class GestionarCursoGatewayImplAdapter implements GestionarCursoGatewayIn
 	@Override
 	@Transactional
 	public Curso guardarCurso(Curso curso) {
+		PeriodoAcademicoEntity periodoAcademicoEntity = this.periodoAcademicoRepositoryInt.consultarPeriodoAcademicoVigente();
 		CursoEntity cursoEntity = this.modelMapper.map(curso, CursoEntity.class);
+		cursoEntity.setPeriodoAcademico(periodoAcademicoEntity);
 	    CursoEntity savedEntity = this.cursoRepositoryInt.save(cursoEntity);
 
 	    // Forzar sincronización con la base de datos

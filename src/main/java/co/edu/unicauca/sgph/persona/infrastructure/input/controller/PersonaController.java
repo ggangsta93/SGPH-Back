@@ -6,14 +6,18 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.Validator;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.unicauca.sgph.asignatura.infrastructure.input.DTORequest.AsignaturaInDTO;
 import co.edu.unicauca.sgph.common.domain.model.CommonEJB;
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ValidationGroups;
 import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
 import co.edu.unicauca.sgph.persona.domain.model.Persona;
 import co.edu.unicauca.sgph.persona.infrastructure.input.DTORequest.PersonaInDTO;
@@ -35,6 +41,9 @@ import co.edu.unicauca.sgph.usuario.infrastructure.input.DTOResponse.TipoIdentif
 @RequestMapping("/AdministrarPersona")
 public class PersonaController extends CommonEJB {
 
+	@Autowired
+	private Validator validator;
+	
 	private GestionarPersonaCUIntPort gestionarPersonaCUIntPort;
 	private PersonaRestMapper personaRestMapper;
 
@@ -44,34 +53,35 @@ public class PersonaController extends CommonEJB {
 	}
 
 	@PostMapping("/guardarPersona")
-	public ResponseEntity<?> guardarPersona(@Valid @RequestBody PersonaInDTO personaInDTO, BindingResult result) {
-	    Set<String> validaciones = new HashSet<>();
-	    validaciones.add("ExisteEmail");
-	    validaciones.add("ExistePersonaPorIdentificacion");
+	public ResponseEntity<?> guardarPersona(@RequestBody PersonaInDTO personaInDTO, BindingResult result) {
+		Class<?> validationGroup = (personaInDTO.getIdPersona() == null) 
+                ? ValidationGroups.OnCreate.class 
+                : ValidationGroups.OnUpdate.class;
 
-	    // Validaciones genéricas de campos
-	    if (result.hasErrors()) {
-	        return this.validarCampos(result, validaciones);
-	    }
+		// Realizar la validación con el grupo correspondiente
+		Set<ConstraintViolation<PersonaInDTO>> violations = validator.validate(personaInDTO, validationGroup);
+		
+		// Convertir las violaciones en errores del BindingResult
+		for (ConstraintViolation<PersonaInDTO> violation : violations) {
+			String fieldName = violation.getPropertyPath().toString();
+			String errorMessage = violation.getMessage();
+			result.addError(new FieldError("personaInDTO", fieldName, errorMessage));
+		}
+		
+		// Si hay errores, retornar los mensajes de error
+		if (result.hasErrors()) {
+			return ResponseEntity.badRequest().body(result.getAllErrors());
+		}
 
-	    PersonaOutDTO personaOutDTO;
-
-	    if (personaInDTO.getIdPersona() != null) {
-	        // Lógica de edición
-	        personaOutDTO = this.personaRestMapper.toPersonaOutDTO(
-	                this.gestionarPersonaCUIntPort.editarPersona(this.personaRestMapper.toPersona(personaInDTO)));
+	    
+	    if (Boolean.FALSE.equals(personaInDTO.getEsValidar())) {
+	    	PersonaOutDTO personaOutDTO = this.personaRestMapper.toPersonaOutDTO(
+	        this.gestionarPersonaCUIntPort.guardarPersona(this.personaRestMapper.toPersona(personaInDTO)));
+	    		return new ResponseEntity<>(personaOutDTO, HttpStatus.OK);
+	        
 	    } else {
-	        // Lógica de creación
-	        if (Boolean.FALSE.equals(personaInDTO.getEsValidar())) {
-	            personaOutDTO = this.personaRestMapper.toPersonaOutDTO(
-	                    this.gestionarPersonaCUIntPort.guardarPersona(this.personaRestMapper.toPersona(personaInDTO)));
-	        } else {
-	            // Retorna un valor indicando que no se ejecutará creación
-	            return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
-	        }
+	        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
 	    }
-
-	    return new ResponseEntity<>(personaOutDTO, HttpStatus.OK);
 	}
 
 

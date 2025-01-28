@@ -6,13 +6,15 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.validation.Valid;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,12 +30,16 @@ import co.edu.unicauca.sgph.curso.domain.model.Curso;
 import co.edu.unicauca.sgph.curso.infrastructure.input.DTORequest.CursoInDTO;
 import co.edu.unicauca.sgph.curso.infrastructure.input.DTOResponse.CursoOutDTO;
 import co.edu.unicauca.sgph.curso.infrastructure.input.mapper.CursoRestMapper;
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ValidationGroups;
 import co.edu.unicauca.sgph.periodoacademico.aplication.input.GestionarPeriodoAcademicoCUIntPort;
 
 @RestController
 @RequestMapping("/AdministrarCurso")
 public class CursoController extends CommonEJB {
 
+	@Autowired
+	 private Validator validator;
+	
 	private GestionarCursoCUIntPort gestionarCursoCUIntPort;
 	@Autowired
 	private GestionarPeriodoAcademicoCUIntPort gestionarPeriodoAcademicoCUIntPort;
@@ -56,29 +62,35 @@ public class CursoController extends CommonEJB {
 	 * @return
 	 */
 	@PostMapping("/guardarCurso")
-	public ResponseEntity<?> guardarCurso(@Valid @RequestBody CursoInDTO cursoInDTO, BindingResult result) {
-		if(cursoInDTO.getIdCurso() == null) {
-			Set<String> validaciones = new HashSet<String>();
-			validaciones.add("ExisteCursoPorAsignaturaActiva");
-			validaciones.add("ExisteCursoConMismoGrupo");
-			
-			if (result.hasErrors()) {
-				return validarCampos(result, validaciones);
-			}	
+	public ResponseEntity<?> guardarCurso(@RequestBody CursoInDTO cursoInDTO, BindingResult result) {
+		Class<?> validationGroup = (cursoInDTO.getIdCurso() == null) 
+                ? ValidationGroups.OnCreate.class 
+                : ValidationGroups.OnUpdate.class;
+
+		// Realizar la validación con el grupo correspondiente
+		Set<ConstraintViolation<CursoInDTO>> violations = validator.validate(cursoInDTO, validationGroup);
+		
+		// Convertir las violaciones en errores del BindingResult
+		for (ConstraintViolation<CursoInDTO> violation : violations) {
+			String fieldName = violation.getPropertyPath().toString();
+			String errorMessage = violation.getMessage();
+			result.addError(new FieldError("cursoInDTO", fieldName, errorMessage));
+		}
+		
+		// Si hay errores, retornar los mensajes de error
+		if (result.hasErrors()) {
+			return ResponseEntity.badRequest().body(result.getAllErrors());
 		}
 		
 		if (Boolean.FALSE.equals(cursoInDTO.getEsValidar())) {
 			CursoOutDTO cursoOutDTO =  this.cursoRestMapper.toCursoOutDTO(
 					this.gestionarCursoCUIntPort.guardarCurso(this.cursoRestMapper.toCurso(cursoInDTO)));
 			cursoOutDTO.setIdPeriodoAcademico(this.gestionarPeriodoAcademicoCUIntPort.consultarPeriodoAcademicoVigente().getIdPeriodoAcademico());
-			if (Objects.equals(cursoOutDTO.getIdCurso(), cursoOutDTO.getIdCurso())) {
-				return new ResponseEntity<CursoOutDTO>(cursoOutDTO, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<CursoOutDTO>(cursoOutDTO, HttpStatus.OK);
-			}
-		} else {
-			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
-		}
+			return new ResponseEntity<>(cursoOutDTO, HttpStatus.OK);
+	        
+	    } else {
+	        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+	    }
 	}
 	@GetMapping("/obtenerCurso/{id}")
 	public CursoOutDTO obtenerCurso(@PathVariable Long id) {

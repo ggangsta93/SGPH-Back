@@ -1,23 +1,18 @@
 package co.edu.unicauca.sgph.docente.infrastructure.input.controller;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
 import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,9 +37,11 @@ import co.edu.unicauca.sgph.docente.infrastructure.input.DTORequest.FiltroDocent
 import co.edu.unicauca.sgph.docente.infrastructure.input.DTOResponse.DocenteOutDTO;
 import co.edu.unicauca.sgph.docente.infrastructure.input.mapper.DocenteRestMapper;
 import co.edu.unicauca.sgph.docente.infrastructure.output.persistence.entity.EstadoDocenteEnum;
+import co.edu.unicauca.sgph.espaciofisico.infrastructura.input.validation.ValidationGroups;
 import co.edu.unicauca.sgph.espaciofisico.infrastructure.input.DTOResponse.MensajeOutDTO;
 import co.edu.unicauca.sgph.periodoacademico.aplication.input.GestionarPeriodoAcademicoCUIntPort;
 import co.edu.unicauca.sgph.periodoacademico.domain.model.PeriodoAcademico;
+import co.edu.unicauca.sgph.persona.aplication.input.GestionarPersonaCUIntPort;
 import co.edu.unicauca.sgph.reporte.infraestructure.input.DTO.ReporteDocenteDTO;
 
 @RestController
@@ -65,27 +62,35 @@ public class DocenteController extends CommonEJB{
 	}
 
 	@PostMapping("/guardarDocente")
-	public ResponseEntity<?> guardarDocente(@Valid @RequestBody DocenteInDTO docenteInDTO, BindingResult result) {
-		Set<String> validaciones = new HashSet<String>();
-		validaciones.add("ExisteCodigoDocente");
-		validaciones.add("ExisteIdPersonaDocente");
+	public ResponseEntity<?> guardarDocente(@RequestBody DocenteInDTO docenteInDTO, BindingResult result) {
+		Class<?> validationGroup = (docenteInDTO.getIdDocente() == null) 
+                ? ValidationGroups.OnCreate.class 
+                : ValidationGroups.OnUpdate.class;
+
+		// Realizar la validación con el grupo correspondiente
+		Set<ConstraintViolation<DocenteInDTO>> violations = validator.validate(docenteInDTO, validationGroup);
 		
+		// Convertir las violaciones en errores del BindingResult
+		for (ConstraintViolation<DocenteInDTO> violation : violations) {
+			String fieldName = violation.getPropertyPath().toString();
+			String errorMessage = violation.getMessage();
+			result.addError(new FieldError("docenteInDTO", fieldName, errorMessage));
+		}
+		
+		// Si hay errores, retornar los mensajes de error
 		if (result.hasErrors()) {
-			return this.validarCampos(result, validaciones);
+			return ResponseEntity.badRequest().body(result.getAllErrors());
 		}
 		
 		if (Boolean.FALSE.equals(docenteInDTO.getEsValidar())) {
 			DocenteOutDTO docenteOutDTO =  this.docenteRestMapper.toDocenteOutDTO(
 					this.gestionarDocenteCUIntPort.guardarDocente(this.docenteRestMapper.toDocente(docenteInDTO)));
 
-			if (Objects.equals(docenteOutDTO.getIdPersona(), docenteOutDTO.getIdPersona())) {
-				return new ResponseEntity<DocenteOutDTO>(docenteOutDTO, HttpStatus.OK);
-			} else {
-				return new ResponseEntity<DocenteOutDTO>(docenteOutDTO, HttpStatus.OK);
-			}
-		} else {
-			return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
-		}
+			return new ResponseEntity<>(docenteOutDTO, HttpStatus.OK);
+	        
+	    } else {
+	        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+	    }
 		
 	}
 
